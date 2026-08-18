@@ -311,6 +311,34 @@ limit. The email therefore carries a link, plus per-track YouTube links and a
 > The pages carry `noindex, nofollow` so search engines skip them, which is not
 > access control, just tidiness.
 
+#### Turning the player page on
+
+The player is built and committed on every run, but the **email only links to
+it once you switch it on**. Until then the button is simply omitted, so no
+digest ever contains a dead link. The per-track YouTube links work regardless.
+
+Three steps, once:
+
+1. **Make the repository public.** Settings → General → Danger Zone → *Change
+   visibility* → *Change to public*. GitHub asks you to confirm twice, and the
+   second step wants you to type the repository name.
+   *Free plans can only serve Pages from a public repository.*
+2. **Enable Pages.** Settings → Pages → under *Build and deployment*, set
+   **Source** to `Deploy from a branch`, **Branch** to `main`, folder to
+   `/docs`, then *Save*. The first build takes a minute or so.
+3. **Point the email at it.** Settings → Secrets and variables → Actions →
+   **Variables** → *New repository variable*, named `PAGES_BASE_URL`:
+
+   ```
+   https://joor241.github.io/discogs-genre-digest
+   ```
+
+Then run the workflow once with `dry_run` ticked and check the log says
+`Player page will be at ...`. Opening that URL should show the play bars.
+
+To turn the player back off, delete the `PAGES_BASE_URL` variable — the emails
+go back to plain YouTube links with no other change.
+
 #### How publishing works
 
 The workflow writes `docs/archive/<date>.html`, copies it to `docs/index.html`,

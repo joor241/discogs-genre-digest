@@ -79,7 +79,17 @@ jobs:
 
           # Where the published player pages end up. The script appends
           # /archive/<date>.html to build the link it puts in the email.
-          PAGES_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          #
+          # Deliberately a repo variable with NO default, rather than a URL
+          # derived from the repo name: GitHub Pages is not enabled until you
+          # turn it on, and an auto-built URL would put a dead link in every
+          # email until then. Leave it unset and the email simply omits the
+          # player button; the per-track YouTube links still work.
+          #
+          # To switch the player on, see "Turning the player page on" in
+          # README.md, then set the repo variable PAGES_BASE_URL to:
+          #   https://joor241.github.io/discogs-genre-digest
+          PAGES_BASE_URL: ${{ vars.PAGES_BASE_URL }}
         run: >
           python discogs_genre_digest.py
           ${{ inputs.dry_run && '--dry-run' || '' }}
