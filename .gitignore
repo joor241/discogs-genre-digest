@@ -1,0 +1,13 @@
+# Local secrets - never commit these
+.env
+.env.local
+
+# Local digest previews
+digest.html
+*.html
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

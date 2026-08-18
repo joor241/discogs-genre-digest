@@ -1,0 +1,86 @@
+name: Daily Discogs digest
+
+on:
+  schedule:
+    # 07:00 UTC every day = 09:00 Amsterdam in summer, 08:00 in winter.
+    # Cron on GitHub Actions is ALWAYS UTC and ignores repo timezone settings.
+    # Scheduled runs can be delayed by a few minutes when GitHub is busy --
+    # the lookback window absorbs that.
+    #
+    # Keep this in step with LOOKBACK_HOURS in the script: daily + 48h means a
+    # record can show up in two digests running. For fuller emails with no
+    # repeats, use "0 7 */3 * *" with LOOKBACK_HOURS = 74.
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+    # These make the digest adjustable from the GitHub web UI: click
+    # Actions > Daily Discogs digest > Run workflow and fill in the form.
+    # Leave a field blank to use the repo variable, or the default in the script.
+    inputs:
+      genres:
+        description: 'Genres/styles, comma separated (e.g. "techno,deep house"). Use "all" for no filter.'
+        required: false
+        type: string
+      lookback_hours:
+        description: "How many hours back to look (default 26)"
+        required: false
+        type: string
+      dry_run:
+        description: "Print the digest in the log instead of emailing it"
+        required: false
+        type: boolean
+        default: false
+
+# Stop a manual run and the nightly run from overlapping.
+concurrency:
+  group: daily-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    # A normal run takes well under a minute. The headroom is for the day a
+    # shop bulk-lists and the run works through its full lookup budget.
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Build and send digest
+        env:
+          # --- Secrets: Settings > Secrets and variables > Actions > Secrets ---
+          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+
+          # --- Settings: Settings > Secrets and variables > Actions > Variables ---
+          # Optional. Set GENRES_INCLUDE / LOOKBACK_HOURS / SELLERS there to change
+          # them permanently without editing the script. A value typed into the
+          # "Run workflow" form wins over the repo variable for that one run.
+          GENRES_INCLUDE: ${{ inputs.genres || vars.GENRES_INCLUDE }}
+          LOOKBACK_HOURS: ${{ inputs.lookback_hours || vars.LOOKBACK_HOURS }}
+          SELLERS: ${{ vars.SELLERS }}
+          MAX_RELEASE_LOOKUPS: ${{ vars.MAX_RELEASE_LOOKUPS }}
+          USER_AGENT: DiscogsGenreDigest/1.0 +https://github.com/${{ github.repository }}
+        run: python discogs_genre_digest.py ${{ inputs.dry_run && '--dry-run' || '' }} --out digest.html
+
+      - name: Upload digest preview
+        # Always attach the rendered HTML so you can open it from the run page,
+        # including when the job failed after building the digest.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-html
+          path: digest.html
+          if-no-files-found: ignore
+          retention-days: 7
