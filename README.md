@@ -281,13 +281,49 @@ for how the window and the schedule should be kept in step.
 
 ### Listening to the records
 
-Each record carries a red **Play all** button, the individual track links under
-it, and a clickable sleeve.
+Every digest links to a **player page**: one web page with a play bar per
+track, so you can audition the whole day's records without leaving it.
 
-**These open YouTube rather than playing inside the message, and that is a hard
-limit of email, not a shortcut.** Every mail client strips `<script>`,
-`<iframe>` and `<audio>` before rendering — Gmail included — so no embedded
-player can work in any of them. Linking out is the closest thing that exists.
+- Live site: **https://joor241.github.io/discogs-genre-digest/**
+- Each email links to its own dated page under `/archive/YYYY-MM-DD.html`, so
+  an old email still opens the records it was actually about.
+- Pages older than `ARCHIVE_KEEP_DAYS` (30) are pruned automatically. Each page
+  links to the surviving earlier ones at the bottom.
+
+Clicking a track loads a YouTube embed inline. Only one plays at a time —
+starting another stops the first, and clicking the active one again removes the
+player entirely, so nothing keeps playing in the background. Esc also stops.
+
+Players are only created when you click. Building the page with 30+ embeds
+loaded up front would make it crawl.
+
+**Why a separate page, and not just play inside the email:** every mail client
+strips `<script>`, `<iframe>` and `<audio>` before rendering — Gmail included —
+so no embedded player can work in any of them. A real web page has no such
+limit. The email therefore carries a link, plus per-track YouTube links and a
+**Play all** button as a fallback if you would rather not open the page.
+
+> **The player page is public.** GitHub Pages on a free plan is only available
+> for public repositories, and the site is readable by anyone who knows the URL
+> (private Pages is an Enterprise feature). The page contains public Discogs
+> listings and YouTube embeds — no secrets. Your Discogs token and SMTP
+> password live in encrypted GitHub Secrets and are never in the repository.
+> The pages carry `noindex, nofollow` so search engines skip them, which is not
+> access control, just tidiness.
+
+#### How publishing works
+
+The workflow writes `docs/archive/<date>.html`, copies it to `docs/index.html`,
+and pushes to `main`; Pages serves the `docs/` folder. Keeping the site in the
+repo means the dated archive persists in git for free, with no second branch.
+
+Two consequences worth knowing:
+
+- Pages takes 30–60 seconds to build after a push, so a link opened the instant
+  the email lands may 404 briefly. Reload.
+- The publish step runs on dry runs too, so the whole pipeline is testable
+  without emailing yourself. A dry run with experimental genres will briefly
+  put an odd page on the site; the next run overwrites it.
 
 The links come from the `videos` array on the release, which Discogs users
 attach themselves. It arrives in the same API response already fetched for

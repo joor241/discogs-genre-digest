@@ -42,6 +42,10 @@ jobs:
     # shop bulk-lists and the run works through its full lookup budget.
     timeout-minutes: 30
 
+    # Needed to push the generated player pages back to docs/ on main.
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v7
 
@@ -72,7 +76,48 @@ jobs:
           SELLERS: ${{ vars.SELLERS }}
           MAX_RELEASE_LOOKUPS: ${{ vars.MAX_RELEASE_LOOKUPS }}
           USER_AGENT: DiscogsGenreDigest/1.0 +https://github.com/${{ github.repository }}
-        run: python discogs_genre_digest.py ${{ inputs.dry_run && '--dry-run' || '' }} --out digest.html
+
+          # Where the published player pages end up. The script appends
+          # /archive/<date>.html to build the link it puts in the email.
+          PAGES_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: >
+          python discogs_genre_digest.py
+          ${{ inputs.dry_run && '--dry-run' || '' }}
+          --out digest.html
+          --player-dir docs/archive
+
+      - name: Publish the player page
+        # Serving Pages from main's docs/ folder means the dated archive just
+        # lives in git, so nothing extra is needed to make old pages persist.
+        #
+        # This runs on dry runs too, deliberately: it is the only way to test
+        # the publish path without sending yourself an email. The cost is that
+        # a dry run with experimental genres briefly puts an odd page on the
+        # site, which the next run overwrites.
+        run: |
+          set -euo pipefail
+          today="$(date -u +%F)"
+          if [ ! -f "docs/archive/${today}.html" ]; then
+            echo "No player page was generated - nothing to publish."
+            exit 0
+          fi
+          # Landing page is a copy of today's, so the bare site URL is useful.
+          cp "docs/archive/${today}.html" docs/index.html
+          # Stop Pages running the output through Jekyll, which would drop
+          # any file or folder whose name begins with an underscore.
+          touch docs/.nojekyll
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A docs
+          if git diff --cached --quiet; then
+            echo "Site unchanged."
+          else
+            git commit -m "Publish player page for ${today}"
+            # Rebase in case a manual run pushed while this one was working.
+            git pull --rebase --autostash origin main
+            git push origin HEAD:main
+          fi
 
       - name: Upload digest preview
         # Always attach the rendered HTML so you can open it from the run page,

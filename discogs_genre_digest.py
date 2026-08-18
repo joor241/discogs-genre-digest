@@ -109,6 +109,9 @@ PER_PAGE = 100              # max allowed by the API
 # the list after deduplication. Override with MAX_VIDEOS_PER_RELEASE.
 MAX_VIDEOS_PER_RELEASE = 6
 
+# How many days of dated player pages to keep in the archive directory.
+ARCHIVE_KEEP_DAYS = 30
+
 # Hard ceiling on release lookups per run, across all sellers.
 #
 # This exists because shops bulk-list. Rush Hour was measured dumping 2000+
@@ -651,7 +654,275 @@ def listen_html(item: dict, e) -> str:
     return "".join(out)
 
 
-def render_html(sections, cutoff: datetime, genres: list[str], stats: dict) -> str:
+PLAYER_CSS = """
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 24px 16px 64px;
+  background: #0e0e10; color: #e8e8ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.45;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.sub { color: #8a8a92; font-size: 13px; margin: 0 0 28px; }
+h2 {
+  font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #8a8a92; margin: 34px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid #26262b;
+}
+.rec {
+  display: flex; gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid #1c1c21;
+}
+.rec img {
+  width: 68px; height: 68px; border-radius: 5px;
+  background: #26262b; flex: none; object-fit: cover;
+}
+.rec .body { min-width: 0; flex: 1; }
+.rec .title { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.rec .title a { color: #e8e8ea; text-decoration: none; }
+.rec .title a:hover { color: #6ea8ff; }
+.meta { color: #8a8a92; font-size: 12.5px; margin-bottom: 2px; }
+.tags { color: #5f5f68; font-size: 12px; margin-bottom: 9px; }
+.buy {
+  display: inline-block; font-size: 12px; color: #6ea8ff;
+  text-decoration: none; margin-left: 10px;
+}
+.buy:hover { text-decoration: underline; }
+ul.tracks { list-style: none; margin: 0; padding: 0; }
+li.track { margin: 0 0 5px; }
+button.play {
+  display: inline-flex; align-items: center; gap: 9px;
+  width: 100%; text-align: left; cursor: pointer;
+  background: #18181d; color: #d4d4d8;
+  border: 1px solid #26262b; border-radius: 6px;
+  padding: 8px 11px; font-size: 13px; font-family: inherit;
+  transition: background .12s, border-color .12s;
+}
+button.play:hover { background: #202027; border-color: #3a3a44; }
+button.play .ico {
+  flex: none; width: 22px; height: 22px; border-radius: 50%;
+  background: #cc0000; color: #fff; font-size: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+button.play.on { border-color: #cc0000; background: #201417; }
+button.play .tname {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.slot { display: none; }
+.slot.open { display: block; margin: 8px 0 14px; }
+.slot .frame {
+  position: relative; width: 100%; max-width: 420px;
+  aspect-ratio: 16 / 9; border-radius: 7px; overflow: hidden;
+  background: #000;
+}
+.slot iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.none { color: #5f5f68; font-size: 13px; }
+footer {
+  margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
+  color: #5f5f68; font-size: 12px;
+}
+footer a { color: #6ea8ff; }
+@media (max-width: 520px) {
+  .rec img { width: 52px; height: 52px; }
+  .slot .frame { max-width: 100%; }
+}
+"""
+
+# Facade pattern: rows stay lightweight and an iframe is only created when a
+# track is actually clicked. Loading 40+ embeds up front would make the page
+# crawl. Only one player is open at a time, so nothing plays over the top of
+# anything else.
+PLAYER_JS = """
+(function () {
+  var open = null;
+
+  function close(slot) {
+    if (!slot) return;
+    slot.innerHTML = '';
+    slot.classList.remove('open');
+    var btn = slot.parentNode.querySelector('button.play');
+    if (btn) { btn.classList.remove('on'); btn.querySelector('.ico').textContent = '\\u25B6'; }
+  }
+
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest ? ev.target.closest('button.play') : null;
+    if (!btn) return;
+    ev.preventDefault();
+
+    var slot = btn.parentNode.querySelector('.slot');
+    if (!slot) return;
+
+    if (slot === open) { close(open); open = null; return; }
+    close(open);
+
+    var frame = document.createElement('div');
+    frame.className = 'frame';
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/'
+          + encodeURIComponent(btn.getAttribute('data-yt'))
+          + '?autoplay=1&rel=0';
+    f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+    f.setAttribute('allowfullscreen', '');
+    f.setAttribute('title', btn.getAttribute('data-title') || 'player');
+    frame.appendChild(f);
+    slot.appendChild(frame);
+    slot.classList.add('open');
+    btn.classList.add('on');
+    btn.querySelector('.ico').textContent = '\\u25A0';
+    open = slot;
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && open) { close(open); open = null; }
+  });
+})();
+"""
+
+
+def archive_links(directory: str, current_stamp: str) -> list[str]:
+    """Dated pages already in the archive, newest first, minus today's.
+
+    Without this the older pages are unreachable unless you still have the
+    email that linked to them.
+    """
+    if not os.path.isdir(directory):
+        return []
+    stamps = []
+    for name in os.listdir(directory):
+        match = ARCHIVE_NAME_RE.match(name)
+        if match and match.group(1) != current_stamp:
+            stamps.append(match.group(1))
+    return sorted(stamps, reverse=True)
+
+
+def render_player_page(sections, cutoff: datetime, genres: list[str],
+                       stats: dict, generated: datetime,
+                       archive: list[str] | None = None) -> str:
+    """A standalone web page with a play button per track.
+
+    This is the thing the email cannot be: a real page, so it can run script
+    and embed players. The email links here.
+    """
+    e = html.escape
+    filter_text = ", ".join(genres) if genres else "everything (no filter)"
+    total = sum(len(items) for _, items in sections)
+
+    out = [
+        '<!doctype html><html lang="en"><head><meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        '<meta name="robots" content="noindex, nofollow">',
+        f'<title>Record digest &mdash; {e(generated.strftime("%d %b %Y"))}</title>',
+        f'<style>{PLAYER_CSS}</style></head><body><div class="wrap">',
+        '<h1>New on Discogs</h1>',
+        f'<p class="sub">{total} record(s) listed since '
+        f'{e(cutoff.strftime("%a %d %b %Y, %H:%M"))} UTC &middot; {e(filter_text)}</p>',
+    ]
+
+    if not sections:
+        out.append('<p class="none">No new matching listings.</p>')
+
+    for store, items in sections:
+        out.append(f'<h2>{e(store)} &middot; {len(items)}</h2>')
+        for item in items:
+            thumb = (f'<img src="{e(item["thumb"])}" alt="" loading="lazy">'
+                     if item.get("thumb") else '<img alt="">')
+
+            bits = [e(item["price"]), e(item["condition"])]
+            if item.get("label") or item.get("catno"):
+                bits.append(e(" - ".join(p for p in (item.get("label"),
+                                                     item.get("catno")) if p)))
+
+            tracks = []
+            for video in (item.get("videos") or []):
+                if not video.get("yt"):
+                    continue
+                title = video["title"]
+                if len(title) > 70:
+                    title = title[:69].rstrip() + "…"
+                tracks.append(
+                    '<li class="track">'
+                    f'<button class="play" data-yt="{e(video["yt"])}" '
+                    f'data-title="{e(video["title"])}">'
+                    '<span class="ico">&#9654;</span>'
+                    f'<span class="tname">{e(title)}</span></button>'
+                    '<div class="slot"></div></li>'
+                )
+
+            if tracks:
+                track_html = '<ul class="tracks">' + "".join(tracks) + '</ul>'
+            else:
+                track_html = (
+                    f'<p class="none">No clips attached &mdash; '
+                    f'<a class="buy" style="margin:0" '
+                    f'href="{e(youtube_search_url(item["description"]))}">'
+                    'search YouTube</a></p>'
+                )
+
+            out.append(
+                '<div class="rec">' + thumb + '<div class="body">'
+                f'<div class="title"><a href="{e(item["url"])}">'
+                f'{e(item["description"])}</a></div>'
+                f'<div class="meta">{" &middot; ".join(bits)}'
+                f'<a class="buy" href="{e(item["url"])}">Buy on Discogs &rarr;</a></div>'
+                f'<div class="tags">{e(item["tags"])}</div>'
+                + track_html + '</div></div>'
+            )
+
+    if stats.get("unchecked"):
+        out.append(f'<p class="none">{stats["unchecked"]} listing(s) left '
+                   'unchecked &mdash; a store bulk-listed.</p>')
+
+    footer = [
+        f'<footer>Generated {e(generated.strftime("%d %b %Y %H:%M"))} UTC. '
+        'Click a track to play it; only one plays at a time. Press Esc to stop.'
+    ]
+    if archive:
+        links = " &middot; ".join(
+            f'<a href="{e(stamp)}.html">{e(stamp)}</a>' for stamp in archive[:14]
+        )
+        footer.append(f'<div style="margin-top:10px;">Earlier: {links}</div>')
+    footer.append('</footer>')
+    out.append("".join(footer))
+    out.append(f'</div><script>{PLAYER_JS}</script></body></html>')
+    return "\n".join(out)
+
+
+ARCHIVE_NAME_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})\.html$")
+
+
+def prune_archive(directory: str, keep_days: int, today: datetime) -> int:
+    """Delete dated player pages older than keep_days. Returns how many went.
+
+    Only touches files matching YYYY-MM-DD.html, so index.html and anything
+    else in the directory is left alone. File mtimes are useless here because
+    a fresh git checkout resets them, so the date comes from the name.
+    """
+    if keep_days <= 0 or not os.path.isdir(directory):
+        return 0
+
+    oldest = (today - timedelta(days=keep_days)).date()
+    removed = 0
+    for name in os.listdir(directory):
+        match = ARCHIVE_NAME_RE.match(name)
+        if not match:
+            continue
+        try:
+            stamp = datetime.strptime(match.group(1), "%Y-%m-%d").date()
+        except ValueError:
+            continue
+        if stamp < oldest:
+            try:
+                os.remove(os.path.join(directory, name))
+                removed += 1
+            except OSError as exc:
+                LOG.warning("Could not remove old archive page %s: %s", name, exc)
+    return removed
+
+
+def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
+                player_url: str = "") -> str:
     e = html.escape
     filter_text = ", ".join(genres) if genres else "everything (no filter)"
 
@@ -663,6 +934,19 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict) -> s
         f'Listed since {e(cutoff.strftime("%a %d %b %Y, %H:%M"))} UTC &middot; '
         f'filter: {e(filter_text)}</p>',
     ]
+
+    # The email itself can never play audio, so point at the page that can.
+    if player_url and sections:
+        out.append(
+            f'<p style="margin:0 0 24px;"><a href="{e(player_url)}" '
+            'style="display:inline-block;background:#111;color:#fff;'
+            'text-decoration:none;font-size:14px;font-weight:600;'
+            'padding:11px 18px;border-radius:6px;">'
+            '&#127911; Open the player</a>'
+            '<span style="color:#888;font-size:12px;display:block;margin-top:6px;">'
+            'Play every track from one page, without leaving for YouTube each time.'
+            '</span></p>'
+        )
 
     if not sections:
         out.append(
@@ -746,7 +1030,8 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict) -> s
     return "\n".join(out)
 
 
-def render_text(sections, cutoff: datetime, genres: list[str], stats: dict) -> str:
+def render_text(sections, cutoff: datetime, genres: list[str], stats: dict,
+                player_url: str = "") -> str:
     """Plain-text alternative. Improves deliverability and keeps the mail
     readable in clients that block HTML."""
     filter_text = ", ".join(genres) if genres else "everything (no filter)"
@@ -756,6 +1041,8 @@ def render_text(sections, cutoff: datetime, genres: list[str], stats: dict) -> s
         f"Filter: {filter_text}",
         "",
     ]
+    if player_url and sections:
+        lines += [f"Play them all here: {player_url}", ""]
     if not sections:
         lines.append("No new matching listings today.")
     for store, items in sections:
@@ -843,6 +1130,13 @@ def main() -> int:
                              "Needs only DISCOGS_TOKEN.")
     parser.add_argument("--out", metavar="FILE",
                         help="Also write the HTML digest to this file.")
+    parser.add_argument("--player-dir", metavar="DIR",
+                        help="Write the playable web page into this directory as "
+                             "<YYYY-MM-DD>.html, then prune older dated pages.")
+    parser.add_argument("--keep-days", type=int, default=ARCHIVE_KEEP_DAYS,
+                        metavar="N",
+                        help=f"Days of dated player pages to keep "
+                             f"(default {ARCHIVE_KEEP_DAYS}).")
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -895,8 +1189,47 @@ def main() -> int:
             stats["unchecked"],
         )
 
-    html_body = render_html(sections, cutoff, genres, stats)
-    text_body = render_text(sections, cutoff, genres, stats)
+    # The player page and the link the email points at must agree on the
+    # filename, so both are derived from the same timestamp here.
+    generated = datetime.now(timezone.utc)
+    stamp = generated.strftime("%Y-%m-%d")
+
+    player_url = ""
+    base_url = env_str("PAGES_BASE_URL", "").rstrip("/")
+    if base_url:
+        player_url = f"{base_url}/archive/{stamp}.html"
+
+    if args.player_dir:
+        try:
+            os.makedirs(args.player_dir, exist_ok=True)
+
+            # Prune first, so the "earlier digests" nav only lists pages that
+            # still exist after this run.
+            removed = prune_archive(args.player_dir, args.keep_days, generated)
+            if removed:
+                LOG.info("Pruned %d archived page(s) older than %d days",
+                         removed, args.keep_days)
+
+            earlier = archive_links(args.player_dir, stamp)
+            page_path = os.path.join(args.player_dir, f"{stamp}.html")
+            with open(page_path, "w", encoding="utf-8") as handle:
+                handle.write(render_player_page(
+                    sections, cutoff, genres, stats, generated, earlier
+                ))
+            LOG.info("Wrote player page to %s (%d earlier page(s) linked)",
+                     page_path, len(earlier))
+        except OSError as exc:
+            # A failed page must not cost you the email.
+            LOG.error("Could not write the player page: %s", exc)
+            player_url = ""
+
+    if player_url:
+        LOG.info("Player page will be at %s", player_url)
+    elif args.player_dir:
+        LOG.warning("PAGES_BASE_URL is not set - the email will have no player link")
+
+    html_body = render_html(sections, cutoff, genres, stats, player_url)
+    text_body = render_text(sections, cutoff, genres, stats, player_url)
 
     if args.out:
         with open(args.out, "w", encoding="utf-8") as handle:

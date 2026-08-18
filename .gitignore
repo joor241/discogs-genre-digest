@@ -2,9 +2,9 @@
 .env
 .env.local
 
-# Local digest previews
-digest.html
-*.html
+# Local digest preview written by --out. Scoped to the repo root on purpose:
+# a blanket *.html would also swallow the published pages under docs/.
+/digest.html
 
 # Python
 __pycache__/
