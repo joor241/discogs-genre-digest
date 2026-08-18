@@ -447,14 +447,25 @@ def extract_videos(raw: list | None, limit: int = MAX_VIDEOS_PER_RELEASE) -> lis
         if key in seen:
             continue
         seen.add(key)
+        try:
+            dur = int(item.get("duration") or 0)
+        except (TypeError, ValueError):
+            dur = 0
         videos.append({
             "title": ((item.get("title") or "").strip() or "Listen"),
             "uri": uri,
             "yt": vid,
+            "dur": max(0, dur),  # seconds, 0 = unknown
         })
         if len(videos) >= limit:
             break
     return videos
+
+
+def fmt_mmss(seconds: int) -> str:
+    seconds = max(0, int(seconds or 0))
+    m, s = divmod(seconds, 60)
+    return f"{m}:{s:02d}"
 
 
 def playlist_url(videos: list[dict]) -> str:
@@ -691,34 +702,58 @@ h2 {
 }
 .buy:hover { text-decoration: underline; }
 ul.tracks { list-style: none; margin: 0; padding: 0; }
-li.track { margin: 0 0 5px; }
-button.play {
-  display: inline-flex; align-items: center; gap: 9px;
-  width: 100%; text-align: left; cursor: pointer;
-  background: #18181d; color: #d4d4d8;
-  border: 1px solid #26262b; border-radius: 6px;
-  padding: 8px 11px; font-size: 13px; font-family: inherit;
-  transition: background .12s, border-color .12s;
-}
-button.play:hover { background: #202027; border-color: #3a3a44; }
-button.play .ico {
-  flex: none; width: 22px; height: 22px; border-radius: 50%;
-  background: #cc0000; color: #fff; font-size: 10px;
-  display: inline-flex; align-items: center; justify-content: center;
-}
-button.play.on { border-color: #cc0000; background: #201417; }
-button.play .tname {
+li.track { margin: 0 0 9px; }
+li.track .tname {
+  font-size: 12.5px; color: #9a9aa2; margin: 0 0 3px 37px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.slot { display: none; }
-.slot.open { display: block; margin: 8px 0 14px; }
-.slot .frame {
-  position: relative; width: 100%; max-width: 420px;
-  aspect-ratio: 16 / 9; border-radius: 7px; overflow: hidden;
-  background: #000;
+.trow { display: flex; align-items: center; gap: 8px; }
+button.ppbtn {
+  flex: none; width: 28px; height: 28px; border-radius: 50%;
+  background: #cc0000; color: #fff; border: 0; cursor: pointer;
+  font-size: 11px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; transition: background .12s, transform .08s;
 }
-.slot iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+button.ppbtn:hover { background: #e01212; }
+button.ppbtn:active { transform: scale(0.94); }
+button.ppbtn.loading { background: #4a4a52; }
+/* .bar is the seek target: a tall, easy-to-tap hitbox around a thin visual
+   line, so it works on a phone without needing a precise touch. */
+.bar {
+  flex: 1 1 auto; min-width: 0; height: 28px; display: flex; align-items: center;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.bar .track {
+  position: relative; width: 100%; height: 6px; border-radius: 3px;
+  background: #26262b; overflow: hidden;
+}
+.bar .fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+  background: #cc0000; border-radius: 3px;
+}
+.bar:hover .track { background: #303038; }
+.bar:focus-visible { outline: 2px solid #6ea8ff; outline-offset: 3px; border-radius: 4px; }
+.trow.playing .bar .fill { background: #ff3b3b; }
+.time {
+  flex: none; font-variant-numeric: tabular-nums; font-size: 11px;
+  color: #6f6f78; width: 84px; text-align: right;
+}
+a.ytlink {
+  flex: none; color: #6a6a72; text-decoration: none; font-size: 14px;
+  width: 26px; height: 26px; display: inline-flex; align-items: center;
+  justify-content: center; border-radius: 5px;
+}
+a.ytlink:hover { color: #e8e8ea; background: #202027; }
+.trow.errored .bar { opacity: .45; cursor: not-allowed; pointer-events: none; }
+.trow.errored .time { color: #9a5a5a; }
 .none { color: #5f5f68; font-size: 13px; }
+.topnav { margin: 0 0 18px; }
+.topnav a {
+  color: #8a8a92; text-decoration: none; font-size: 13px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+  display: inline-block;
+}
+.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
 footer {
   margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
   color: #5f5f68; font-size: 12px;
@@ -726,57 +761,205 @@ footer {
 footer a { color: #6ea8ff; }
 @media (max-width: 520px) {
   .rec img { width: 52px; height: 52px; }
-  .slot .frame { max-width: 100%; }
+  .time { width: 66px; font-size: 10.5px; }
+  button.ppbtn { width: 32px; height: 32px; }
+  .bar { height: 32px; }
 }
 """
 
-# Facade pattern: rows stay lightweight and an iframe is only created when a
-# track is actually clicked. Loading 40+ embeds up front would make the page
-# crawl. Only one player is open at a time, so nothing plays over the top of
-# anything else.
+# One shared, hidden YouTube player is the actual audio engine; every bar is
+# just a click target that tells it what to load and where to seek. This is
+# the only way to get a Spotify-style scrubber out of YouTube, since a real
+# waveform isn't available -- YouTube doesn't expose audio data to embedders,
+# cross-origin, so the bar is an even fill rather than a true waveform.
+#
+# The player is created once, on page load, rather than on first click.
+# Creating it lazily would mean the very first tap has to build the iframe
+# from scratch before it can play, which is slow AND risks losing the
+# "user gesture" browsers require before they'll allow audio to start,
+# especially on mobile Safari. Pre-built, a tap only has to call
+# loadVideoById/seekTo, which happens synchronously inside the click handler.
 PLAYER_JS = """
 (function () {
-  var open = null;
+  var player = null, ytReady = false, pendingInit = null;
+  var activeBar = null, activeVideoId = null, pendingSeekFraction = null;
+  var pollTimer = null;
 
-  function close(slot) {
-    if (!slot) return;
-    slot.innerHTML = '';
-    slot.classList.remove('open');
-    var btn = slot.parentNode.querySelector('button.play');
-    if (btn) { btn.classList.remove('on'); btn.querySelector('.ico').textContent = '\\u25B6'; }
+  function fmt(t) {
+    if (!isFinite(t) || t < 0) t = 0;
+    var m = Math.floor(t / 60), s = Math.floor(t % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function row(bar) { return bar.closest('.trow'); }
+
+  function paint(bar, fraction, curLabel, durLabel, state) {
+    var fillEl = bar.querySelector('.fill');
+    if (fillEl) fillEl.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+    bar.setAttribute('aria-valuenow', Math.round(fraction * 100));
+    var r = row(bar);
+    if (!r) return;
+    r.classList.toggle('playing', state === 'playing');
+    var t = r.querySelector('.time');
+    if (t) t.textContent = curLabel + ' / ' + durLabel;
+    var btn = r.querySelector('.ppbtn');
+    if (btn) {
+      btn.classList.toggle('loading', state === 'loading');
+      btn.textContent = state === 'playing' ? '\\u23F8' : '\\u25B6';
+    }
+  }
+
+  function knownDuration(bar) {
+    return parseInt(bar.getAttribute('data-dur'), 10) || 0;
+  }
+
+  function durLabel(bar) {
+    var known = knownDuration(bar);
+    return known ? fmt(known) : '--:--';
+  }
+
+  function resetBar(bar) {
+    if (!bar) return;
+    paint(bar, 0, '0:00', durLabel(bar), 'idle');
+  }
+
+  function stopPolling() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  function poll() {
+    if (!player || !activeBar) return;
+    var dur = 0, cur = 0, state = -1;
+    try {
+      dur = player.getDuration() || 0;
+      cur = player.getCurrentTime() || 0;
+      state = player.getPlayerState();
+    } catch (err) { return; }
+    if (pendingSeekFraction !== null && dur > 0) {
+      var target = pendingSeekFraction; pendingSeekFraction = null;
+      player.seekTo(target * dur, true);
+      cur = target * dur;
+    }
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar),
+          state === 1 ? 'playing' : (state === 3 ? 'loading' : 'paused'));
+  }
+
+  function ensurePlayer(cb) {
+    if (player) { cb(); return; }
+    if (!ytReady) { pendingInit = cb; return; }
+    var host = document.getElementById('yt-audio-host');
+    if (!host) return;
+    player = new YT.Player(host, {
+      height: '113', width: '200',
+      playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1 },
+      events: {
+        onReady: function () { cb(); },
+        onStateChange: function (ev) {
+          if (ev.data === YT.PlayerState.ENDED && activeBar) {
+            var d = player.getDuration() || knownDuration(activeBar);
+            paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+            stopPolling();
+          }
+        },
+        onError: function () {
+          if (activeBar) {
+            var r = row(activeBar);
+            if (r) r.classList.add('errored');
+          }
+        }
+      }
+    });
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytReady = true;
+    if (pendingInit) { var cb = pendingInit; pendingInit = null; cb(); }
+  };
+
+  function playFrom(bar, fraction) {
+    var videoId = bar.getAttribute('data-yt');
+    if (!videoId) return;
+    ensurePlayer(function () {
+      if (activeBar && activeBar !== bar) resetBar(activeBar);
+      if (activeVideoId !== videoId) {
+        activeVideoId = videoId;
+        activeBar = bar;
+        var known = knownDuration(bar);
+        pendingSeekFraction = fraction > 0.01 ? fraction : null;
+        player.loadVideoById(videoId);
+        // Best-effort immediate jump using Discogs' own track length, so a
+        // click deep into a bar does not sit at 0:00 waiting for YouTube's
+        // own metadata to arrive. The poll loop re-seeks once the real
+        // duration is confirmed, in case this fires before load is ready.
+        if (known > 0 && pendingSeekFraction !== null) {
+          try { player.seekTo(pendingSeekFraction * known, true); } catch (err) {}
+        }
+      } else {
+        activeBar = bar;
+        var dur = player.getDuration() || knownDuration(bar);
+        if (dur > 0) player.seekTo(fraction * dur, true);
+        player.playVideo();
+      }
+      stopPolling();
+      pollTimer = setInterval(poll, 250);
+      paint(bar, fraction, fmt(fraction * (player.getDuration() || knownDuration(bar))),
+            durLabel(bar), 'loading');
+    });
+  }
+
+  function togglePlayPause(bar) {
+    var videoId = bar.getAttribute('data-yt');
+    if (activeVideoId === videoId && player) {
+      var state = player.getPlayerState();
+      if (state === 1) { player.pauseVideo(); } else { player.playVideo(); }
+    } else {
+      playFrom(bar, 0);
+    }
+  }
+
+  function fractionFromEvent(bar, ev) {
+    var rect = bar.getBoundingClientRect();
+    var x = (ev.clientX !== undefined && ev.clientX !== 0) ? ev.clientX
+          : (ev.changedTouches && ev.changedTouches[0] ? ev.changedTouches[0].clientX : rect.left);
+    return Math.min(1, Math.max(0, (x - rect.left) / rect.width));
   }
 
   document.addEventListener('click', function (ev) {
-    var btn = ev.target.closest ? ev.target.closest('button.play') : null;
-    if (!btn) return;
-    ev.preventDefault();
-
-    var slot = btn.parentNode.querySelector('.slot');
-    if (!slot) return;
-
-    if (slot === open) { close(open); open = null; return; }
-    close(open);
-
-    var frame = document.createElement('div');
-    frame.className = 'frame';
-    var f = document.createElement('iframe');
-    f.src = 'https://www.youtube-nocookie.com/embed/'
-          + encodeURIComponent(btn.getAttribute('data-yt'))
-          + '?autoplay=1&rel=0';
-    f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-    f.setAttribute('allowfullscreen', '');
-    f.setAttribute('title', btn.getAttribute('data-title') || 'player');
-    frame.appendChild(f);
-    slot.appendChild(frame);
-    slot.classList.add('open');
-    btn.classList.add('on');
-    btn.querySelector('.ico').textContent = '\\u25A0';
-    open = slot;
+    var btn = ev.target.closest ? ev.target.closest('button.ppbtn') : null;
+    if (btn) {
+      ev.preventDefault();
+      var pbar = row(btn).querySelector('.bar');
+      if (pbar) togglePlayPause(pbar);
+      return;
+    }
+    if (ev.target.closest && ev.target.closest('a.ytlink')) return; // let it navigate
+    var bar = ev.target.closest ? ev.target.closest('.bar') : null;
+    if (bar) {
+      ev.preventDefault();
+      playFrom(bar, fractionFromEvent(bar, ev));
+    }
   });
 
   document.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Escape' && open) { close(open); open = null; }
+    var el = document.activeElement;
+    if (!el || !el.classList || !el.classList.contains('bar')) return;
+    if (ev.key === ' ' || ev.key === 'Enter') {
+      ev.preventDefault();
+      togglePlayPause(el);
+    } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') {
+      ev.preventDefault();
+      if (!player || activeBar !== el) return;
+      var dur = player.getDuration() || knownDuration(el);
+      var cur = player.getCurrentTime() || 0;
+      player.seekTo(Math.min(dur, Math.max(0, cur + (ev.key === 'ArrowRight' ? 5 : -5))), true);
+    }
   });
+
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
 })();
 """
 
@@ -799,22 +982,44 @@ def archive_links(directory: str, current_stamp: str) -> list[str]:
 
 def render_player_page(sections, cutoff: datetime, genres: list[str],
                        stats: dict, generated: datetime,
-                       archive: list[str] | None = None) -> str:
-    """A standalone web page with a play button per track.
+                       archive: list[str] | None = None,
+                       base_url: str = "") -> str:
+    """A standalone web page with a click-to-seek play bar per track.
 
     This is the thing the email cannot be: a real page, so it can run script
-    and embed players. The email links here.
+    and drive a player. The email links here.
+
+    base_url matters because this same HTML is written to two different
+    places: docs/archive/<date>.html, and a copy of today's page at
+    docs/index.html (so the bare site URL shows something). A link like
+    href="2026-08-17.html" is only correct from inside archive/ -- copied
+    into docs/ root it silently points one directory too high. Passing
+    base_url makes every internal link absolute instead, so both copies of
+    the page work identically regardless of where they end up on disk.
     """
     e = html.escape
     filter_text = ", ".join(genres) if genres else "everything (no filter)"
     total = sum(len(items) for _, items in sections)
+
+    def archive_href(stamp: str) -> str:
+        return f"{base_url}/archive/{stamp}.html" if base_url else f"{stamp}.html"
+
+    settings_href = f"{base_url}/settings.html" if base_url else "settings.html"
 
     out = [
         '<!doctype html><html lang="en"><head><meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         '<meta name="robots" content="noindex, nofollow">',
         f'<title>Record digest &mdash; {e(generated.strftime("%d %b %Y"))}</title>',
-        f'<style>{PLAYER_CSS}</style></head><body><div class="wrap">',
+        f'<style>{PLAYER_CSS}</style></head><body>',
+        # Single shared, hidden audio engine -- see the comment above PLAYER_JS.
+        # Positioned off-screen rather than display:none, because a fully
+        # unrendered iframe is more likely to be blocked from playing by
+        # mobile browsers' autoplay heuristics.
+        '<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;">'
+        '<div id="yt-audio-host"></div></div>',
+        '<div class="wrap">',
+        f'<div class="topnav"><a href="{e(settings_href)}">&#9881; Settings</a></div>',
         '<h1>New on Discogs</h1>',
         f'<p class="sub">{total} record(s) listed since '
         f'{e(cutoff.strftime("%a %d %b %Y, %H:%M"))} UTC &middot; {e(filter_text)}</p>',
@@ -841,13 +1046,21 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                 title = video["title"]
                 if len(title) > 70:
                     title = title[:69].rstrip() + "…"
+                dur = video.get("dur") or 0
+                watch_url = f"https://www.youtube.com/watch?v={video['yt']}"
                 tracks.append(
-                    '<li class="track">'
-                    f'<button class="play" data-yt="{e(video["yt"])}" '
-                    f'data-title="{e(video["title"])}">'
-                    '<span class="ico">&#9654;</span>'
-                    f'<span class="tname">{e(title)}</span></button>'
-                    '<div class="slot"></div></li>'
+                    '<li class="track"><div class="trow">'
+                    f'<button class="ppbtn" aria-label="Play {e(title)}">&#9654;</button>'
+                    '<div class="bar" tabindex="0" role="slider" aria-valuemin="0" '
+                    f'aria-valuemax="100" aria-valuenow="0" aria-label="{e(video["title"])}" '
+                    f'data-yt="{e(video["yt"])}" data-dur="{dur}">'
+                    '<div class="track"><div class="fill"></div></div></div>'
+                    f'<span class="time">0:00 / {fmt_mmss(dur) if dur else "--:--"}</span>'
+                    f'<a class="ytlink" href="{e(watch_url)}" target="_blank" '
+                    f'rel="noopener noreferrer" title="Watch on YouTube" '
+                    f'aria-label="Watch {e(title)} on YouTube">&#8599;</a>'
+                    '</div>'
+                    f'<div class="tname">{e(title)}</div></li>'
                 )
 
             if tracks:
@@ -876,11 +1089,12 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
 
     footer = [
         f'<footer>Generated {e(generated.strftime("%d %b %Y %H:%M"))} UTC. '
-        'Click a track to play it; only one plays at a time. Press Esc to stop.'
+        'Tap a bar to play from that point; only one track plays at a time. '
+        'The arrow opens the original video on YouTube.'
     ]
     if archive:
         links = " &middot; ".join(
-            f'<a href="{e(stamp)}.html">{e(stamp)}</a>' for stamp in archive[:14]
+            f'<a href="{e(archive_href(stamp))}">{e(stamp)}</a>' for stamp in archive[:14]
         )
         footer.append(f'<div style="margin-top:10px;">Earlier: {links}</div>')
     footer.append('</footer>')
@@ -1214,7 +1428,7 @@ def main() -> int:
             page_path = os.path.join(args.player_dir, f"{stamp}.html")
             with open(page_path, "w", encoding="utf-8") as handle:
                 handle.write(render_player_page(
-                    sections, cutoff, genres, stats, generated, earlier
+                    sections, cutoff, genres, stats, generated, earlier, base_url
                 ))
             LOG.info("Wrote player page to %s (%d earlier page(s) linked)",
                      page_path, len(earlier))

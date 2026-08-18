@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Digest settings</title>
+<style>
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 24px 16px 80px;
+  background: #0e0e10; color: #e8e8ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.45;
+}
+.wrap { max-width: 640px; margin: 0 auto; }
+.topnav { margin: 0 0 18px; }
+.topnav a {
+  color: #8a8a92; text-decoration: none; font-size: 13px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+  display: inline-block;
+}
+.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.sub { color: #8a8a92; font-size: 13px; margin: 0 0 24px; }
+.card {
+  background: #16161a; border: 1px solid #232328; border-radius: 10px;
+  padding: 18px 18px 20px; margin: 0 0 18px;
+}
+.card h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .07em;
+  color: #9a9aa2; margin: 0 0 4px; }
+.card .hint { color: #6f6f78; font-size: 12.5px; margin: 0 0 14px; line-height: 1.5; }
+label { display: block; font-size: 12.5px; color: #9a9aa2; margin: 12px 0 5px; }
+label:first-child { margin-top: 0; }
+input[type=text], input[type=password], input[type=number] {
+  width: 100%; background: #0e0e10; border: 1px solid #2c2c33; color: #e8e8ea;
+  border-radius: 6px; padding: 9px 11px; font-size: 14px; font-family: inherit;
+}
+input:focus { outline: none; border-color: #6ea8ff; }
+.row { display: flex; gap: 8px; align-items: center; }
+.row input[type=text] { flex: 1 1 auto; }
+button {
+  font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  border-radius: 7px; padding: 9px 15px; border: 1px solid transparent;
+  min-height: 40px;
+}
+button.primary { background: #cc0000; color: #fff; }
+button.primary:hover { background: #e01212; }
+button.ghost { background: transparent; color: #d4d4d8; border-color: #2c2c33; }
+button.ghost:hover { border-color: #4a4a55; }
+button.small { min-height: 32px; padding: 5px 10px; font-size: 12.5px; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0 0; }
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; background: #202027;
+  border: 1px solid #2c2c33; border-radius: 999px; padding: 5px 6px 5px 12px;
+  font-size: 13px;
+}
+.chip button {
+  min-height: auto; padding: 0; width: 18px; height: 18px; border-radius: 50%;
+  background: #35353d; color: #aaa; font-size: 12px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.chip button:hover { background: #cc0000; color: #fff; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+td { padding: 5px 0; vertical-align: middle; }
+td.rm { width: 34px; text-align: right; }
+td.status { width: 88px; font-size: 11.5px; color: #6f6f78; white-space: nowrap; }
+.status.ok { color: #35c46a; }
+.status.warn { color: #d9a441; }
+.status.err { color: #e05a5a; }
+.addrow { margin-top: 12px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+details { margin-top: 6px; }
+summary { cursor: pointer; font-size: 12.5px; color: #8a8a92; padding: 6px 0; }
+.msg {
+  margin-top: 16px; padding: 11px 13px; border-radius: 7px; font-size: 13px;
+  display: none;
+}
+.msg.show { display: block; }
+.msg.ok { background: #0d2417; border: 1px solid #1e5c38; color: #7be0a0; }
+.msg.err { background: #2a1414; border: 1px solid #5c2020; color: #f0a0a0; }
+.msg.info { background: #16232e; border: 1px solid #234a66; color: #8fc4ee; }
+.msg a { color: inherit; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.readonly {
+  font-size: 12.5px; color: #7a7a82; background: #0e0e10; border: 1px solid #232328;
+  border-radius: 6px; padding: 8px 11px; word-break: break-all;
+}
+ol.steps { font-size: 13px; color: #b0b0b6; padding-left: 20px; margin: 8px 0 0; }
+ol.steps li { margin-bottom: 6px; }
+ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+@media (max-width: 480px) {
+  .two { grid-template-columns: 1fr; }
+  td.status { width: auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav"><a href="index.html">&larr; Back to digest</a></div>
+  <h1>Digest settings</h1>
+  <p class="sub">Add or remove stores, edit the genre filter, and trigger a run &mdash; without touching code.</p>
+
+  <div class="card" id="connectCard">
+    <h2>Connect</h2>
+    <p class="hint">
+      Editing lives on GitHub, so this page needs a token to read and write your
+      repository's settings on your behalf. It is sent straight from your browser
+      to <code>api.github.com</code> and nowhere else, and is never seen by anyone
+      building or maintaining this page.
+    </p>
+    <details id="tokenHelp">
+      <summary>How to get a token (one-time, ~1 minute)</summary>
+      <ol class="steps">
+        <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">github.com/settings/personal-access-tokens/new</a> (sign in if asked).</li>
+        <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick
+          <code>discogs-genre-digest</code>.</li>
+        <li>Under <b>Permissions &rarr; Repository permissions</b>, set <b>Variables</b> to
+          <b>Read and write</b>, and <b>Actions</b> to <b>Read and write</b> (the second one
+          lets "Save &amp; run now" work).</li>
+        <li>Click <b>Generate token</b> and copy it &mdash; GitHub only shows it once.</li>
+      </ol>
+    </details>
+    <label for="tokenInput">Personal access token</label>
+    <div class="row">
+      <input type="password" id="tokenInput" placeholder="github_pat_..." autocomplete="off">
+      <button class="ghost small" id="toggleTokenBtn" type="button">Show</button>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:#b0b0b6;">
+      <input type="checkbox" id="rememberBox" style="width:auto;"> Remember on this device
+    </label>
+    <div class="actions">
+      <button class="primary" id="connectBtn" type="button">Connect</button>
+      <button class="ghost" id="forgetBtn" type="button">Forget token</button>
+    </div>
+    <div class="msg" id="connectMsg"></div>
+  </div>
+
+  <div id="editor" style="display:none;">
+
+    <div class="card">
+      <h2>Genres</h2>
+      <p class="hint">Whole-word match against each record's genres and styles. "house" catches Deep House, not the other way round.</p>
+      <div class="row">
+        <input type="text" id="genreInput" placeholder="Add a genre or style, then press Enter">
+        <button class="ghost small" id="addGenreBtn" type="button">Add</button>
+      </div>
+      <div class="chips" id="genreChips"></div>
+    </div>
+
+    <div class="card">
+      <h2>Stores</h2>
+      <p class="hint">
+        The <b>username</b> is the store's Discogs seller name, from
+        <code>discogs.com/seller/&lt;username&gt;/profile</code> &mdash; often different
+        from their website. Click <b>Check</b> to confirm it exists and has items for sale.
+      </p>
+      <table id="sellerTable"><tbody></tbody></table>
+      <div class="addrow row">
+        <input type="text" id="newSellerUser" placeholder="Discogs username">
+        <input type="text" id="newSellerName" placeholder="Display name">
+        <button class="ghost small" id="addSellerBtn" type="button">Add</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Advanced timing</summary>
+        <div class="two" style="margin-top:10px;">
+          <div>
+            <label for="lookbackInput">Lookback hours</label>
+            <input type="number" id="lookbackInput" min="1" step="1">
+          </div>
+          <div>
+            <label for="budgetInput">Max release lookups / run</label>
+            <input type="number" id="budgetInput" min="1" step="1">
+          </div>
+        </div>
+        <label>Player page base URL (set once during initial setup, shown for reference)</label>
+        <div class="readonly" id="pagesUrlDisplay">&mdash;</div>
+      </details>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="saveBtn" type="button">Save changes</button>
+      <button class="ghost" id="saveRunBtn" type="button">Save &amp; run now</button>
+    </div>
+    <div class="msg" id="saveMsg"></div>
+  </div>
+
+</div>
+<script>
+(function () {
+  "use strict";
+  var OWNER = "joor241", REPO = "discogs-genre-digest";
+  var API = "https://api.github.com/repos/" + OWNER + "/" + REPO;
+  var DEFAULT_LOOKBACK = 48, DEFAULT_BUDGET = 400;
+
+  var tokenInput = document.getElementById("tokenInput");
+  var toggleTokenBtn = document.getElementById("toggleTokenBtn");
+  var rememberBox = document.getElementById("rememberBox");
+  var connectBtn = document.getElementById("connectBtn");
+  var forgetBtn = document.getElementById("forgetBtn");
+  var connectMsg = document.getElementById("connectMsg");
+  var editor = document.getElementById("editor");
+  var genreInput = document.getElementById("genreInput");
+  var addGenreBtn = document.getElementById("addGenreBtn");
+  var genreChips = document.getElementById("genreChips");
+  var sellerBody = document.querySelector("#sellerTable tbody");
+  var newSellerUser = document.getElementById("newSellerUser");
+  var newSellerName = document.getElementById("newSellerName");
+  var addSellerBtn = document.getElementById("addSellerBtn");
+  var lookbackInput = document.getElementById("lookbackInput");
+  var budgetInput = document.getElementById("budgetInput");
+  var pagesUrlDisplay = document.getElementById("pagesUrlDisplay");
+  var saveBtn = document.getElementById("saveBtn");
+  var saveRunBtn = document.getElementById("saveRunBtn");
+  var saveMsg = document.getElementById("saveMsg");
+
+  var token = "";
+  var genres = [];
+  var sellers = []; // [{username, display}]
+
+  function showMsg(el, kind, text) {
+    el.className = "msg show " + kind;
+    el.innerHTML = text;
+  }
+  function hideMsg(el) { el.className = "msg"; }
+
+  function loadStoredToken() {
+    return sessionStorage.getItem("digestToken") || localStorage.getItem("digestToken") || "";
+  }
+  function storeToken(value, remember) {
+    sessionStorage.removeItem("digestToken");
+    localStorage.removeItem("digestToken");
+    if (!value) return;
+    (remember ? localStorage : sessionStorage).setItem("digestToken", value);
+  }
+
+  toggleTokenBtn.addEventListener("click", function () {
+    var show = tokenInput.type === "password";
+    tokenInput.type = show ? "text" : "password";
+    toggleTokenBtn.textContent = show ? "Hide" : "Show";
+  });
+
+  async function ghFetch(path, opts) {
+    opts = opts || {};
+    var headers = Object.assign({
+      "Authorization": "Bearer " + token,
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    }, opts.headers || {});
+    return fetch(API + path, Object.assign({}, opts, { headers: headers }));
+  }
+
+  async function getVariable(name) {
+    var res = await ghFetch("/actions/variables/" + encodeURIComponent(name));
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(name + ": HTTP " + res.status);
+    var data = await res.json();
+    return data.value;
+  }
+
+  async function setVariable(name, value) {
+    var res = await ghFetch("/actions/variables/" + encodeURIComponent(name), {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name, value: value }),
+    });
+    if (res.status === 404) {
+      res = await ghFetch("/actions/variables", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name, value: value }),
+      });
+    }
+    if (!res.ok) {
+      var body = await res.text().catch(function () { return ""; });
+      throw new Error("Saving " + name + " failed: HTTP " + res.status +
+        (body ? " - " + body.slice(0, 180) : ""));
+    }
+  }
+
+  async function dispatchRun() {
+    var res = await ghFetch("/actions/workflows/daily-digest.yml/dispatches", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ref: "main" }),
+    });
+    if (!res.ok) {
+      var body = await res.text().catch(function () { return ""; });
+      throw new Error("Triggering the run failed: HTTP " + res.status +
+        (body ? " - " + body.slice(0, 180) : ""));
+    }
+  }
+
+  // ---- genre chips ----
+  function renderGenres() {
+    genreChips.innerHTML = "";
+    genres.forEach(function (g, i) {
+      var chip = document.createElement("span");
+      chip.className = "chip";
+      var label = document.createElement("span");
+      label.textContent = g;
+      var rm = document.createElement("button");
+      rm.type = "button"; rm.textContent = "×";
+      rm.addEventListener("click", function () { genres.splice(i, 1); renderGenres(); });
+      chip.appendChild(label); chip.appendChild(rm);
+      genreChips.appendChild(chip);
+    });
+  }
+  function addGenre() {
+    var v = genreInput.value.trim().toLowerCase();
+    if (v && genres.indexOf(v) === -1) { genres.push(v); renderGenres(); }
+    genreInput.value = "";
+  }
+  addGenreBtn.addEventListener("click", addGenre);
+  genreInput.addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter") { ev.preventDefault(); addGenre(); }
+  });
+
+  // ---- seller table ----
+  function renderSellers() {
+    sellerBody.innerHTML = "";
+    sellers.forEach(function (s, i) {
+      var tr = document.createElement("tr");
+
+      var tdUser = document.createElement("td");
+      var userInput = document.createElement("input");
+      userInput.type = "text"; userInput.value = s.username;
+      userInput.addEventListener("input", function () { s.username = userInput.value.trim(); });
+      tdUser.appendChild(userInput);
+
+      var tdName = document.createElement("td");
+      tdName.style.paddingLeft = "8px";
+      var nameInput = document.createElement("input");
+      nameInput.type = "text"; nameInput.value = s.display;
+      nameInput.addEventListener("input", function () { s.display = nameInput.value.trim(); });
+      tdName.appendChild(nameInput);
+
+      var tdStatus = document.createElement("td");
+      tdStatus.className = "status";
+      tdStatus.id = "status-" + i;
+      tdStatus.textContent = "";
+
+      var tdCheck = document.createElement("td");
+      tdCheck.className = "rm";
+      var checkBtn = document.createElement("button");
+      checkBtn.type = "button"; checkBtn.className = "ghost small";
+      checkBtn.textContent = "Check";
+      checkBtn.addEventListener("click", function () { checkSeller(i, tdStatus); });
+      tdCheck.appendChild(checkBtn);
+
+      var tdRm = document.createElement("td");
+      tdRm.className = "rm";
+      var rmBtn = document.createElement("button");
+      rmBtn.type = "button"; rmBtn.className = "ghost small";
+      rmBtn.textContent = "×";
+      rmBtn.addEventListener("click", function () { sellers.splice(i, 1); renderSellers(); });
+      tdRm.appendChild(rmBtn);
+
+      tr.appendChild(tdUser); tr.appendChild(tdName);
+      tr.appendChild(tdStatus); tr.appendChild(tdCheck); tr.appendChild(tdRm);
+      sellerBody.appendChild(tr);
+    });
+  }
+
+  async function checkSeller(i, statusEl) {
+    var username = sellers[i].username;
+    if (!username) { statusEl.textContent = "no username"; statusEl.className = "status err"; return; }
+    statusEl.textContent = "checking…"; statusEl.className = "status";
+    try {
+      var res = await fetch(
+        "https://api.discogs.com/users/" + encodeURIComponent(username) + "/inventory?per_page=1",
+        { headers: { "User-Agent": "DiscogsDigestSettings/1.0 +https://" + location.host } }
+      );
+      if (res.status === 404) { statusEl.textContent = "not found"; statusEl.className = "status err"; return; }
+      if (!res.ok) { statusEl.textContent = "HTTP " + res.status; statusEl.className = "status err"; return; }
+      var data = await res.json();
+      var items = (data.pagination && data.pagination.items) || 0;
+      if (items > 0) {
+        statusEl.textContent = items + " for sale";
+        statusEl.className = "status ok";
+      } else {
+        statusEl.textContent = "0 items";
+        statusEl.className = "status warn";
+      }
+    } catch (err) {
+      statusEl.textContent = "network error";
+      statusEl.className = "status err";
+    }
+  }
+
+  addSellerBtn.addEventListener("click", function () {
+    var u = newSellerUser.value.trim(), n = newSellerName.value.trim();
+    if (!u) return;
+    sellers.push({ username: u, display: n || u });
+    newSellerUser.value = ""; newSellerName.value = "";
+    renderSellers();
+  });
+
+  // ---- connect / load / save ----
+  function parseSellers(value) {
+    var out = [];
+    (value || "").split(",").forEach(function (chunk) {
+      chunk = chunk.trim();
+      if (!chunk) return;
+      var eq = chunk.indexOf("=");
+      var u = (eq === -1 ? chunk : chunk.slice(0, eq)).trim();
+      var d = (eq === -1 ? "" : chunk.slice(eq + 1)).trim();
+      if (u) out.push({ username: u, display: d || u });
+    });
+    return out;
+  }
+  function serialiseSellers() {
+    return sellers.filter(function (s) { return s.username; })
+      .map(function (s) { return s.username + "=" + (s.display || s.username); })
+      .join(", ");
+  }
+
+  async function loadCurrentValues() {
+    var genresVal = await getVariable("GENRES_INCLUDE");
+    var sellersVal = await getVariable("SELLERS");
+    var lookbackVal = await getVariable("LOOKBACK_HOURS");
+    var budgetVal = await getVariable("MAX_RELEASE_LOOKUPS");
+    var pagesVal = await getVariable("PAGES_BASE_URL");
+
+    genres = (genresVal || "").split(",").map(function (g) { return g.trim(); }).filter(Boolean);
+    sellers = sellersVal ? parseSellers(sellersVal) : [];
+    lookbackInput.value = lookbackVal || DEFAULT_LOOKBACK;
+    budgetInput.value = budgetVal || DEFAULT_BUDGET;
+    pagesUrlDisplay.textContent = pagesVal || "(not set - the email has no player link yet)";
+
+    renderGenres();
+    renderSellers();
+  }
+
+  async function connect() {
+    var t = tokenInput.value.trim();
+    if (!t) { showMsg(connectMsg, "err", "Paste a token first."); return; }
+    connectBtn.disabled = true;
+    hideMsg(connectMsg);
+    try {
+      token = t;
+      var res = await ghFetch("");
+      if (res.status === 401) throw new Error("Token was rejected (HTTP 401) - check it was copied in full.");
+      if (res.status === 403) throw new Error("Token lacks access to this repository (HTTP 403).");
+      if (!res.ok) throw new Error("HTTP " + res.status + " connecting to GitHub.");
+
+      storeToken(t, rememberBox.checked);
+      showMsg(connectMsg, "ok", "Connected. Loading current settings…");
+      await loadCurrentValues();
+      editor.style.display = "block";
+      showMsg(connectMsg, "ok", "Connected as a token scoped to this repository.");
+    } catch (err) {
+      token = "";
+      showMsg(connectMsg, "err", String(err.message || err));
+    } finally {
+      connectBtn.disabled = false;
+    }
+  }
+  connectBtn.addEventListener("click", connect);
+
+  forgetBtn.addEventListener("click", function () {
+    storeToken("", false);
+    token = "";
+    tokenInput.value = "";
+    editor.style.display = "none";
+    showMsg(connectMsg, "info", "Token forgotten on this device.");
+  });
+
+  async function saveAll(alsoRun) {
+    var btn = alsoRun ? saveRunBtn : saveBtn;
+    saveBtn.disabled = true; saveRunBtn.disabled = true;
+    showMsg(saveMsg, "info", "Saving…");
+    try {
+      await setVariable("GENRES_INCLUDE", genres.length ? genres.join(",") : "all");
+      await setVariable("SELLERS", serialiseSellers());
+      await setVariable("LOOKBACK_HOURS", String(parseInt(lookbackInput.value, 10) || DEFAULT_LOOKBACK));
+      await setVariable("MAX_RELEASE_LOOKUPS", String(parseInt(budgetInput.value, 10) || DEFAULT_BUDGET));
+
+      if (alsoRun) {
+        await dispatchRun();
+        showMsg(saveMsg, "ok",
+          'Saved and triggered a run. Check <a href="https://github.com/' + OWNER + '/' + REPO +
+          '/actions" target="_blank" rel="noopener noreferrer">Actions</a> in a few seconds.');
+      } else {
+        showMsg(saveMsg, "ok", "Saved. Takes effect on the next scheduled run, or run it now from the Actions tab.");
+      }
+    } catch (err) {
+      showMsg(saveMsg, "err", String(err.message || err));
+    } finally {
+      saveBtn.disabled = false; saveRunBtn.disabled = false;
+    }
+  }
+  saveBtn.addEventListener("click", function () { saveAll(false); });
+  saveRunBtn.addEventListener("click", function () { saveAll(true); });
+
+  // Auto-connect if a token was remembered from a previous visit.
+  var stored = loadStoredToken();
+  if (stored) {
+    tokenInput.value = stored;
+    rememberBox.checked = !!localStorage.getItem("digestToken");
+    connect();
+  }
+})();
+</script>
+</body>
+</html>

@@ -164,6 +164,46 @@ looked like.
 
 ## Changing what you get
 
+### The settings page — edit everything from your phone
+
+**https://joor241.github.io/discogs-genre-digest/settings.html**
+
+A page for adding/removing stores and genres and triggering a run, without
+opening GitHub's own UI at all. It's part of the same site as the player page
+(link to it from there too), works on mobile, and needs
+[the player page turned on](#turning-the-player-page-on) first since it's
+served the same way.
+
+It edits the exact same repo Variables the two methods below describe by hand
+(`GENRES_INCLUDE`, `SELLERS`, `LOOKBACK_HOURS`, `MAX_RELEASE_LOOKUPS`) — so use
+whichever is more convenient, they're not different systems. Store rows have a
+**Check** button that queries Discogs live and shows how many items that
+seller currently has for sale, the same sanity check described in
+[Adding a store](#adding-a-store), without leaving the page.
+
+**Why it needs a token, and what that means:** the page itself is static
+(just a file GitHub serves, like the player page) — it has no server of its
+own, so the *only* way it can change your repo's settings is by talking to
+GitHub's API directly from your browser, which needs a GitHub access token.
+The page asks for one on first use and explains exactly how to create it. Two
+things worth knowing:
+
+- The token is a **fine-grained personal access token, scoped to only this one
+  repository**, with permission to read/write its Variables and trigger Action
+  runs — nothing else. It cannot touch any other repo, and cannot read code,
+  issues, or anything not explicitly granted.
+- It's sent straight from your browser to `api.github.com` and stored only in
+  that browser's own local storage (or session storage if you don't tick
+  "remember") — never to any server this project runs, because there isn't
+  one. Since **the page is public** (same reasoning as the player page — see
+  the note in [Listening to the records](#listening-to-the-records)), anyone
+  with physical or malware access to that specific browser profile could in
+  principle read it back out of storage. If that's ever a concern, click
+  **Forget token**, and revoke it at
+  [github.com/settings/tokens](https://github.com/settings/tokens) — since
+  it's scoped to one repo, the blast radius of a leaked token is small either
+  way.
+
 ### Genres — from the GitHub UI, no code editing
 
 Genre filtering matches **whole words, case-insensitively**, against the
@@ -281,8 +321,9 @@ for how the window and the schedule should be kept in step.
 
 ### Listening to the records
 
-Every digest links to a **player page**: one web page with a play bar per
-track, so you can audition the whole day's records without leaving it.
+Every digest links to a **player page**: one web page with a click-to-seek play
+bar per track — tap anywhere along the bar and it plays from that point, like a
+podcast app scrubber, rather than opening a YouTube video frame.
 
 - Live site: **https://joor241.github.io/discogs-genre-digest/**
 - Each email links to its own dated page under `/archive/YYYY-MM-DD.html`, so
@@ -290,18 +331,32 @@ track, so you can audition the whole day's records without leaving it.
 - Pages older than `ARCHIVE_KEEP_DAYS` (30) are pruned automatically. Each page
   links to the surviving earlier ones at the bottom.
 
-Clicking a track loads a YouTube embed inline. Only one plays at a time —
-starting another stops the first, and clicking the active one again removes the
-player entirely, so nothing keeps playing in the background. Esc also stops.
+**How the bar works:** tapping it seeks to that point and plays immediately —
+for a track you've already tapped once, this is instant; for a track you
+haven't touched yet, there's a brief (sub-second, usually) load while YouTube
+fetches it, same as the first tap on any streaming app. The bar shows the real
+track length up front, taken from Discogs' own video metadata, not guessed.
+Only one track plays at a time — starting another stops the first outright.
+A small arrow icon next to each bar opens the original video on YouTube, for
+when you'd rather watch than just listen. Works with touch as well as a mouse,
+and the tap target is taller than the visible line so it's comfortable on a
+phone.
 
-Players are only created when you click. Building the page with 30+ embeds
-loaded up front would make it crawl.
+There's no real waveform drawn on the bar — YouTube doesn't expose audio data
+to embedded players, so a true waveform isn't something this can build. It's
+an even progress fill, same idea as any basic scrubber.
+
+Under the hood, one hidden YouTube player (invisible, not a video frame you
+see) is created once when the page loads and reused for every track — clicking
+a bar just tells it what to load and where to seek, rather than building a new
+embed per click. This is also what makes seeking on an already-loaded track
+truly instant.
 
 **Why a separate page, and not just play inside the email:** every mail client
 strips `<script>`, `<iframe>` and `<audio>` before rendering — Gmail included —
 so no embedded player can work in any of them. A real web page has no such
-limit. The email therefore carries a link, plus per-track YouTube links and a
-**Play all** button as a fallback if you would rather not open the page.
+limit. The email itself still carries per-track YouTube links and a **Play
+all** button as a fallback if you'd rather not open the page at all.
 
 > **The player page is public.** GitHub Pages on a free plan is only available
 > for public repositories, and the site is readable by anyone who knows the URL
@@ -463,5 +518,7 @@ To test the email path too, also set `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` and
 |---|---|
 | `discogs_genre_digest.py` | The whole thing. Config block at the top. |
 | `requirements.txt` | One dependency: `requests`. |
-| `.github/workflows/daily-digest.yml` | The daily schedule and the manual-run form. |
+| `.github/workflows/daily-digest.yml` | The daily schedule, the manual-run form, and publishing to `docs/`. |
 | `.gitignore` | Keeps `.env` and generated HTML out of git. |
+| `docs/settings.html` | The live [settings page](#the-settings-page--edit-everything-from-your-phone) — static, no build step. |
+| `docs/index.html`, `docs/archive/*.html` | Generated by the workflow on every run. Don't hand-edit — they're overwritten. |
