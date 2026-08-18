@@ -277,7 +277,34 @@ for how the window and the schedule should be kept in step.
 3. The inventory response **doesn't include genre**, so for each record that
    passed the cutoff, fetch `GET /releases/{id}` to read its `genres` and
    `styles`, and keep it if it matches your filter.
-4. Render the survivors as HTML and email them.
+4. Render the survivors as HTML and email them, with listen links.
+
+### Listening to the records
+
+Each record carries a red **Play all** button, the individual track links under
+it, and a clickable sleeve.
+
+**These open YouTube rather than playing inside the message, and that is a hard
+limit of email, not a shortcut.** Every mail client strips `<script>`,
+`<iframe>` and `<audio>` before rendering — Gmail included — so no embedded
+player can work in any of them. Linking out is the closest thing that exists.
+
+The links come from the `videos` array on the release, which Discogs users
+attach themselves. It arrives in the same API response already fetched for
+genre filtering, so this costs **no extra requests**. Coverage measured on a
+sample of these shops' listings was 8 out of 8 — when a release has nothing
+attached, the link falls back to a YouTube search for the artist and title.
+
+**Play all** uses YouTube's `watch_videos` endpoint, which builds a throwaway
+playlist from a list of video ids, so one click plays the record end to end.
+
+Two quirks of community-contributed data are handled: the same clip is often
+listed twice (deduplicated by video id), and popular records can carry dozens —
+one Steve Bug 12" had 56 — so the list is capped by `MAX_VIDEOS_PER_RELEASE`
+(default 6). Raise it with a repo variable if you want more.
+
+Note the clips are whatever people uploaded, so they can include remixes or
+live takes that are not on the record itself.
 
 ### Why there's no database
 

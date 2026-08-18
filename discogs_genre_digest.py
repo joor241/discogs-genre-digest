@@ -30,6 +30,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
+from urllib.parse import quote_plus
 
 import requests
 
@@ -100,6 +101,13 @@ RATELIMIT_FLOOR = 5         # when this few requests remain in the window...
 RATELIMIT_SLEEP = 15        # ...pause this long to let the window roll over
 MAX_PAGES = 20              # safety cap on inventory pages per seller per run
 PER_PAGE = 100              # max allowed by the API
+
+# How many "listen" links to show per release.
+#
+# Discogs videos are community-contributed, so a well-known record can carry
+# dozens -- one Steve Bug 12" had 56, which would swamp the email. This caps
+# the list after deduplication. Override with MAX_VIDEOS_PER_RELEASE.
+MAX_VIDEOS_PER_RELEASE = 6
 
 # Hard ceiling on release lookups per run, across all sellers.
 #
@@ -191,7 +199,8 @@ class Discogs:
     backs off when the live rate-limit headers say the window is nearly spent."""
 
     def __init__(self, token: str, user_agent: str,
-                 lookup_budget: int = MAX_RELEASE_LOOKUPS) -> None:
+                 lookup_budget: int = MAX_RELEASE_LOOKUPS,
+                 video_limit: int = MAX_VIDEOS_PER_RELEASE) -> None:
         self.session = requests.Session()
         headers = {"User-Agent": user_agent}
         if token:
@@ -200,7 +209,8 @@ class Discogs:
         self._last_request_at = 0.0
         self.request_count = 0
         self.lookup_budget = lookup_budget
-        # release id -> {"genres": [...], "styles": [...], "thumb": str}
+        self.video_limit = video_limit
+        # release id -> {"genres": [...], "styles": [...], "thumb", "videos"}
         self._release_cache: dict[int, dict] = {}
 
     def _throttle(self) -> None:
@@ -321,6 +331,8 @@ class Discogs:
             "genres": [g for g in (data.get("genres") or []) if g],
             "styles": [s for s in (data.get("styles") or []) if s],
             "thumb": data.get("thumb") or "",
+            # Free: this is the same response we already fetch for genres.
+            "videos": extract_videos(data.get("videos"), self.video_limit),
         }
         self._release_cache[release_id] = info
         return info
@@ -399,6 +411,65 @@ def fetch_recent_listings(api: Discogs, username: str, cutoff: datetime):
         "Raise MAX_PAGES if this store really lists >%d items a day.",
         username, MAX_PAGES, MAX_PAGES * PER_PAGE,
     )
+
+
+YOUTUBE_ID_RE = re.compile(
+    r"(?:youtube\.com/(?:watch\?(?:[^#]*&)?v=|embed/|v/)|youtu\.be/)([A-Za-z0-9_-]{11})"
+)
+
+
+def youtube_id(url: str | None) -> str | None:
+    """Pull the 11-character video id out of a YouTube URL, or None."""
+    match = YOUTUBE_ID_RE.search(url or "")
+    return match.group(1) if match else None
+
+
+def extract_videos(raw: list | None, limit: int = MAX_VIDEOS_PER_RELEASE) -> list[dict]:
+    """Clean up the release's `videos` array into listenable links.
+
+    Discogs videos are community-contributed, which means two problems worth
+    handling: the same clip is frequently listed more than once (deduped here
+    by video id, falling back to the raw URL), and popular records can carry
+    dozens, so the list is capped.
+    """
+    videos: list[dict] = []
+    seen: set[str] = set()
+
+    for item in raw or []:
+        uri = ((item or {}).get("uri") or "").strip()
+        if not uri:
+            continue
+        vid = youtube_id(uri)
+        key = vid or uri
+        if key in seen:
+            continue
+        seen.add(key)
+        videos.append({
+            "title": ((item.get("title") or "").strip() or "Listen"),
+            "uri": uri,
+            "yt": vid,
+        })
+        if len(videos) >= limit:
+            break
+    return videos
+
+
+def playlist_url(videos: list[dict]) -> str:
+    """A one-click "play the whole record" URL.
+
+    YouTube's watch_videos endpoint builds a throwaway playlist from a list of
+    ids, so a single link plays the release back to back. Only worth showing
+    when there are at least two YouTube-hosted clips.
+    """
+    ids = [v["yt"] for v in videos if v.get("yt")]
+    if len(ids) < 2:
+        return ""
+    return "https://www.youtube.com/watch_videos?video_ids=" + ",".join(ids)
+
+
+def youtube_search_url(description: str) -> str:
+    """Fallback for the rare release with no videos attached."""
+    return "https://www.youtube.com/results?search_query=" + quote_plus(description)
 
 
 def normalise_tag(text: str) -> str:
@@ -483,6 +554,7 @@ def collect_seller(api: Discogs, username: str, display_name: str,
             "thumb": info["thumb"],
             "label": release.get("label") or "",
             "catno": release.get("catalog_number") or "",
+            "videos": info.get("videos") or [],
         })
 
     if unchecked:
@@ -533,6 +605,52 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
 # Rendering
 # ---------------------------------------------------------------------------
 
+def listen_html(item: dict, e) -> str:
+    """The listen links for one record.
+
+    Email clients strip <script>, <iframe> and <audio>, so playback cannot
+    happen inside the message itself. These link out instead: one button that
+    plays the whole record, then the individual clips.
+    """
+    videos = item.get("videos") or []
+
+    if not videos:
+        url = youtube_search_url(item["description"])
+        return (
+            '<div style="margin-top:7px;">'
+            f'<a href="{e(url)}" style="color:#777;text-decoration:none;font-size:12px;">'
+            '&#9654;&#65038; Search YouTube</a></div>'
+        )
+
+    out = ['<div style="margin-top:7px;">']
+
+    playlist = playlist_url(videos)
+    if playlist:
+        out.append(
+            f'<a href="{e(playlist)}" style="display:inline-block;background:#cc0000;'
+            'color:#ffffff;text-decoration:none;font-size:12px;font-weight:600;'
+            'padding:5px 10px;border-radius:4px;margin:0 6px 4px 0;">'
+            f'&#9654;&#65038; Play all {len(videos)}</a>'
+        )
+
+    links = []
+    for video in videos:
+        title = video["title"]
+        if len(title) > 42:
+            title = title[:41].rstrip() + "…"
+        links.append(
+            f'<a href="{e(video["uri"])}" style="color:#0b5fff;text-decoration:none;'
+            f'font-size:12px;">{e(title)}</a>'
+        )
+    out.append(
+        '<div style="margin-top:3px;color:#bbb;font-size:12px;line-height:1.7;">'
+        + ' &middot; '.join(links) + '</div>'
+    )
+
+    out.append('</div>')
+    return "".join(out)
+
+
 def render_html(sections, cutoff: datetime, genres: list[str], stats: dict) -> str:
     e = html.escape
     filter_text = ", ".join(genres) if genres else "everything (no filter)"
@@ -559,12 +677,23 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict) -> s
                 f'<span style="color:#888;font-weight:normal;">({len(items)})</span></h2>'
             )
             for item in items:
+                # Clicking the sleeve plays the record where possible, since
+                # that is the thing you most want to do with a new listing.
+                videos = item.get("videos") or []
+                play_target = playlist_url(videos) or (videos[0]["uri"] if videos else "")
+
                 thumb = ""
                 if item["thumb"]:
-                    thumb = (
-                        f'<td width="64" style="padding:0 12px 0 0;vertical-align:top;">'
+                    image = (
                         f'<img src="{e(item["thumb"])}" width="60" height="60" alt="" '
-                        f'style="display:block;border-radius:4px;background:#eee;"></td>'
+                        f'style="display:block;border-radius:4px;background:#eee;">'
+                    )
+                    if play_target:
+                        image = (f'<a href="{e(play_target)}" '
+                                 f'style="text-decoration:none;">{image}</a>')
+                    thumb = (
+                        '<td width="64" style="padding:0 12px 0 0;vertical-align:top;">'
+                        f'{image}</td>'
                     )
 
                 meta = f'{e(item["price"])} &middot; {e(item["condition"])}'
@@ -579,7 +708,7 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict) -> s
 
                 out.append(
                     '<table role="presentation" cellpadding="0" cellspacing="0" border="0" '
-                    'style="width:100%;margin:0 0 14px;"><tr>'
+                    'style="width:100%;margin:0 0 20px;"><tr>'
                     + thumb +
                     '<td style="vertical-align:top;">'
                     f'<a href="{e(item["url"])}" '
@@ -588,6 +717,7 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict) -> s
                     f'<div style="color:#444;font-size:13px;margin-top:2px;">{meta}</div>'
                     + catno +
                     f'<div style="color:#888;font-size:12px;">{e(item["tags"])}</div>'
+                    + listen_html(item, e) +
                     '</td></tr></table>'
                 )
 
@@ -635,6 +765,12 @@ def render_text(sections, cutoff: datetime, genres: list[str], stats: dict) -> s
             lines.append(f"  {item['description']}")
             lines.append(f"    {item['price']} | {item['condition']} | {item['tags']}")
             lines.append(f"    {item['url']}")
+            videos = item.get("videos") or []
+            playlist = playlist_url(videos)
+            if playlist:
+                lines.append(f"    Play all {len(videos)}: {playlist}")
+            elif videos:
+                lines.append(f"    Listen: {videos[0]['uri']}")
         lines.append("")
     if stats.get("unchecked"):
         lines.append(f"NOTE: {stats['unchecked']} listing(s) left unchecked - "
@@ -740,6 +876,7 @@ def main() -> int:
         os.environ["DISCOGS_TOKEN"].strip(),
         env_str("USER_AGENT", USER_AGENT),
         env_int("MAX_RELEASE_LOOKUPS", MAX_RELEASE_LOOKUPS),
+        env_int("MAX_VIDEOS_PER_RELEASE", MAX_VIDEOS_PER_RELEASE),
     )
 
     started = time.monotonic()
