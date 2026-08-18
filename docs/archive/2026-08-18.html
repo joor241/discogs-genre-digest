@@ -39,34 +39,58 @@ h2 {
 }
 .buy:hover { text-decoration: underline; }
 ul.tracks { list-style: none; margin: 0; padding: 0; }
-li.track { margin: 0 0 5px; }
-button.play {
-  display: inline-flex; align-items: center; gap: 9px;
-  width: 100%; text-align: left; cursor: pointer;
-  background: #18181d; color: #d4d4d8;
-  border: 1px solid #26262b; border-radius: 6px;
-  padding: 8px 11px; font-size: 13px; font-family: inherit;
-  transition: background .12s, border-color .12s;
-}
-button.play:hover { background: #202027; border-color: #3a3a44; }
-button.play .ico {
-  flex: none; width: 22px; height: 22px; border-radius: 50%;
-  background: #cc0000; color: #fff; font-size: 10px;
-  display: inline-flex; align-items: center; justify-content: center;
-}
-button.play.on { border-color: #cc0000; background: #201417; }
-button.play .tname {
+li.track { margin: 0 0 9px; }
+li.track .tname {
+  font-size: 12.5px; color: #9a9aa2; margin: 0 0 3px 37px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.slot { display: none; }
-.slot.open { display: block; margin: 8px 0 14px; }
-.slot .frame {
-  position: relative; width: 100%; max-width: 420px;
-  aspect-ratio: 16 / 9; border-radius: 7px; overflow: hidden;
-  background: #000;
+.trow { display: flex; align-items: center; gap: 8px; }
+button.ppbtn {
+  flex: none; width: 28px; height: 28px; border-radius: 50%;
+  background: #cc0000; color: #fff; border: 0; cursor: pointer;
+  font-size: 11px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; transition: background .12s, transform .08s;
 }
-.slot iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+button.ppbtn:hover { background: #e01212; }
+button.ppbtn:active { transform: scale(0.94); }
+button.ppbtn.loading { background: #4a4a52; }
+/* .bar is the seek target: a tall, easy-to-tap hitbox around a thin visual
+   line, so it works on a phone without needing a precise touch. */
+.bar {
+  flex: 1 1 auto; min-width: 0; height: 28px; display: flex; align-items: center;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.bar .track {
+  position: relative; width: 100%; height: 6px; border-radius: 3px;
+  background: #26262b; overflow: hidden;
+}
+.bar .fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+  background: #cc0000; border-radius: 3px;
+}
+.bar:hover .track { background: #303038; }
+.bar:focus-visible { outline: 2px solid #6ea8ff; outline-offset: 3px; border-radius: 4px; }
+.trow.playing .bar .fill { background: #ff3b3b; }
+.time {
+  flex: none; font-variant-numeric: tabular-nums; font-size: 11px;
+  color: #6f6f78; width: 84px; text-align: right;
+}
+a.ytlink {
+  flex: none; color: #6a6a72; text-decoration: none; font-size: 14px;
+  width: 26px; height: 26px; display: inline-flex; align-items: center;
+  justify-content: center; border-radius: 5px;
+}
+a.ytlink:hover { color: #e8e8ea; background: #202027; }
+.trow.errored .bar { opacity: .45; cursor: not-allowed; pointer-events: none; }
+.trow.errored .time { color: #9a5a5a; }
 .none { color: #5f5f68; font-size: 13px; }
+.topnav { margin: 0 0 18px; }
+.topnav a {
+  color: #8a8a92; text-decoration: none; font-size: 13px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+  display: inline-block;
+}
+.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
 footer {
   margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
   color: #5f5f68; font-size: 12px;
@@ -74,63 +98,206 @@ footer {
 footer a { color: #6ea8ff; }
 @media (max-width: 520px) {
   .rec img { width: 52px; height: 52px; }
-  .slot .frame { max-width: 100%; }
+  .time { width: 66px; font-size: 10.5px; }
+  button.ppbtn { width: 32px; height: 32px; }
+  .bar { height: 32px; }
 }
-</style></head><body><div class="wrap">
+</style></head><body>
+<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;"><div id="yt-audio-host"></div></div>
+<div class="wrap">
+<div class="topnav"><a href="https://joor241.github.io/discogs-genre-digest/settings.html">&#9881; Settings</a></div>
 <h1>New on Discogs</h1>
-<p class="sub">7 record(s) listed since Sun 16 Aug 2026, 19:09 UTC &middot; techno, house, electro, acid, disco, italo, new beat, ebm, breakbeat, trance</p>
+<p class="sub">7 record(s) listed since Sun 16 Aug 2026, 19:31 UTC &middot; techno, house, electro, acid, disco, italo, new beat, ebm, breakbeat, trance</p>
 <h2>Clone &middot; 3</h2>
-<div class="rec"><img src="https://i.discogs.com/fVlApcXlYftTkurvHING6YrH0eRmF3RsSNNFf4r-5z8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3ODg5/ODcxLTE3ODQxMzYx/MDEtMzA1My5qcGVn.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4321888407">Mike Tamburini - U-Ep 20th Anniversary  (12&quot;, EP, RP)</a></div><div class="meta">22.99 EUR &middot; Near Mint (NM or M-) &middot; Track Planet Recordings - TPR004<a class="buy" href="https://www.discogs.com/sell/item/4321888407">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, House</div><ul class="tracks"><li class="track"><button class="play" data-yt="b6UShoRYsXk" data-title="Mike Tamburini – Talk (About You)"><span class="ico">&#9654;</span><span class="tname">Mike Tamburini – Talk (About You)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="L7O_Od9iby4" data-title="Mike Tamburini – Soul"><span class="ico">&#9654;</span><span class="tname">Mike Tamburini – Soul</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="w23chkEjuaU" data-title="Mike Tamburini – Feel In Love"><span class="ico">&#9654;</span><span class="tname">Mike Tamburini – Feel In Love</span></button><div class="slot"></div></li></ul></div></div>
-<div class="rec"><img src="https://i.discogs.com/beIGVD89SmeBkGt7XJT4aDzmVqIAek7OKcTHbnqf5Bc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMzNDE3/MzUzLTE3NDIwNTQz/NTQtNDkzNy5qcGVn.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4320446124">Alvar (8) - Moon Ritual (12&quot;, EP)</a></div><div class="meta">130.00 EUR &middot; Near Mint (NM or M-) &middot; Junction Forest - NIGHT001<a class="buy" href="https://www.discogs.com/sell/item/4320446124">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, Progressive House, Progressive Trance, Techno</div><ul class="tracks"><li class="track"><button class="play" data-yt="_RwSDP47HcU" data-title="Alvar A1 I Need"><span class="ico">&#9654;</span><span class="tname">Alvar A1 I Need</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="wrWbFugEdg4" data-title="Alvar A2 Moon Ritual"><span class="ico">&#9654;</span><span class="tname">Alvar A2 Moon Ritual</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="JOzFQ0PSC0Y" data-title="Alvar B1 Deform Reform"><span class="ico">&#9654;</span><span class="tname">Alvar B1 Deform Reform</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="zTEY_0NXdBU" data-title="Alvar B2 Premià De Mar"><span class="ico">&#9654;</span><span class="tname">Alvar B2 Premià De Mar</span></button><div class="slot"></div></li></ul></div></div>
-<div class="rec"><img src="https://i.discogs.com/7CuhN-rjmk3_dLCr_aFVNw88mG5WKhjfO54Be_eWVsU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwNzc0/NTc1LTE2MzU1MjM2/NTktNjY4My5qcGVn.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/3952949356">Partiboi69 - MUPL002 (12&quot;, EP, 180)</a></div><div class="meta">65.00 EUR &middot; Near Mint (NM or M-) &middot; Mutual Pleasure - MUPL002<a class="buy" href="https://www.discogs.com/sell/item/3952949356">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, Ghetto House, Electro, Techno</div><ul class="tracks"><li class="track"><button class="play" data-yt="us2Z3YNw_3c" data-title="Partiboi69 - Freaky Dreamz (ft. Liam Conroy)"><span class="ico">&#9654;</span><span class="tname">Partiboi69 - Freaky Dreamz (ft. Liam Conroy)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="rJUfFzd8nHI" data-title="Partiboi69 - K On My D+C Feat. Juicy Romance (Official Music Video)"><span class="ico">&#9654;</span><span class="tname">Partiboi69 - K On My D+C Feat. Juicy Romance (Official Music Video)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="pQ7OS6HuIGA" data-title="Partiboi69 - Freaking You Out (Official Video)"><span class="ico">&#9654;</span><span class="tname">Partiboi69 - Freaking You Out (Official Video)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="zOWOB7axBFM" data-title="Partiboi69 - My Favourite Number"><span class="ico">&#9654;</span><span class="tname">Partiboi69 - My Favourite Number</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="cgxEPo-5IhI" data-title="Partiboi69 - Jerk It"><span class="ico">&#9654;</span><span class="tname">Partiboi69 - Jerk It</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="yyc-_qqVyis" data-title="Partiboi69 - Wine Dine 69"><span class="ico">&#9654;</span><span class="tname">Partiboi69 - Wine Dine 69</span></button><div class="slot"></div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/fVlApcXlYftTkurvHING6YrH0eRmF3RsSNNFf4r-5z8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3ODg5/ODcxLTE3ODQxMzYx/MDEtMzA1My5qcGVn.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4321888407">Mike Tamburini - U-Ep 20th Anniversary  (12&quot;, EP, RP)</a></div><div class="meta">22.99 EUR &middot; Near Mint (NM or M-) &middot; Track Planet Recordings - TPR004<a class="buy" href="https://www.discogs.com/sell/item/4321888407">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Mike Tamburini – Talk (About You)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Mike Tamburini – Talk (About You)" data-yt="b6UShoRYsXk" data-dur="509"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:29</span><a class="ytlink" href="https://www.youtube.com/watch?v=b6UShoRYsXk" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Mike Tamburini – Talk (About You) on YouTube">&#8599;</a></div><div class="tname">Mike Tamburini – Talk (About You)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Mike Tamburini – Soul">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Mike Tamburini – Soul" data-yt="L7O_Od9iby4" data-dur="394"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:34</span><a class="ytlink" href="https://www.youtube.com/watch?v=L7O_Od9iby4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Mike Tamburini – Soul on YouTube">&#8599;</a></div><div class="tname">Mike Tamburini – Soul</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Mike Tamburini – Feel In Love">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Mike Tamburini – Feel In Love" data-yt="w23chkEjuaU" data-dur="382"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:22</span><a class="ytlink" href="https://www.youtube.com/watch?v=w23chkEjuaU" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Mike Tamburini – Feel In Love on YouTube">&#8599;</a></div><div class="tname">Mike Tamburini – Feel In Love</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/beIGVD89SmeBkGt7XJT4aDzmVqIAek7OKcTHbnqf5Bc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMzNDE3/MzUzLTE3NDIwNTQz/NTQtNDkzNy5qcGVn.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4320446124">Alvar (8) - Moon Ritual (12&quot;, EP)</a></div><div class="meta">130.00 EUR &middot; Near Mint (NM or M-) &middot; Junction Forest - NIGHT001<a class="buy" href="https://www.discogs.com/sell/item/4320446124">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, Progressive House, Progressive Trance, Techno</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Alvar A1 I Need">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Alvar A1 I Need" data-yt="_RwSDP47HcU" data-dur="348"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:48</span><a class="ytlink" href="https://www.youtube.com/watch?v=_RwSDP47HcU" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Alvar A1 I Need on YouTube">&#8599;</a></div><div class="tname">Alvar A1 I Need</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Alvar A2 Moon Ritual">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Alvar A2 Moon Ritual" data-yt="wrWbFugEdg4" data-dur="419"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:59</span><a class="ytlink" href="https://www.youtube.com/watch?v=wrWbFugEdg4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Alvar A2 Moon Ritual on YouTube">&#8599;</a></div><div class="tname">Alvar A2 Moon Ritual</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Alvar B1 Deform Reform">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Alvar B1 Deform Reform" data-yt="JOzFQ0PSC0Y" data-dur="407"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:47</span><a class="ytlink" href="https://www.youtube.com/watch?v=JOzFQ0PSC0Y" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Alvar B1 Deform Reform on YouTube">&#8599;</a></div><div class="tname">Alvar B1 Deform Reform</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Alvar B2 Premià De Mar">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Alvar B2 Premià De Mar" data-yt="zTEY_0NXdBU" data-dur="355"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:55</span><a class="ytlink" href="https://www.youtube.com/watch?v=zTEY_0NXdBU" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Alvar B2 Premià De Mar on YouTube">&#8599;</a></div><div class="tname">Alvar B2 Premià De Mar</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/7CuhN-rjmk3_dLCr_aFVNw88mG5WKhjfO54Be_eWVsU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwNzc0/NTc1LTE2MzU1MjM2/NTktNjY4My5qcGVn.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/3952949356">Partiboi69 - MUPL002 (12&quot;, EP, 180)</a></div><div class="meta">65.00 EUR &middot; Near Mint (NM or M-) &middot; Mutual Pleasure - MUPL002<a class="buy" href="https://www.discogs.com/sell/item/3952949356">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, Ghetto House, Electro, Techno</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Partiboi69 - Freaky Dreamz (ft. Liam Conroy)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Partiboi69 - Freaky Dreamz (ft. Liam Conroy)" data-yt="us2Z3YNw_3c" data-dur="269"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:29</span><a class="ytlink" href="https://www.youtube.com/watch?v=us2Z3YNw_3c" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Partiboi69 - Freaky Dreamz (ft. Liam Conroy) on YouTube">&#8599;</a></div><div class="tname">Partiboi69 - Freaky Dreamz (ft. Liam Conroy)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Partiboi69 - K On My D+C Feat. Juicy Romance (Official Music Video)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Partiboi69 - K On My D+C Feat. Juicy Romance (Official Music Video)" data-yt="rJUfFzd8nHI" data-dur="261"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:21</span><a class="ytlink" href="https://www.youtube.com/watch?v=rJUfFzd8nHI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Partiboi69 - K On My D+C Feat. Juicy Romance (Official Music Video) on YouTube">&#8599;</a></div><div class="tname">Partiboi69 - K On My D+C Feat. Juicy Romance (Official Music Video)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Partiboi69 - Freaking You Out (Official Video)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Partiboi69 - Freaking You Out (Official Video)" data-yt="pQ7OS6HuIGA" data-dur="296"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:56</span><a class="ytlink" href="https://www.youtube.com/watch?v=pQ7OS6HuIGA" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Partiboi69 - Freaking You Out (Official Video) on YouTube">&#8599;</a></div><div class="tname">Partiboi69 - Freaking You Out (Official Video)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Partiboi69 - My Favourite Number">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Partiboi69 - My Favourite Number" data-yt="zOWOB7axBFM" data-dur="300"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:00</span><a class="ytlink" href="https://www.youtube.com/watch?v=zOWOB7axBFM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Partiboi69 - My Favourite Number on YouTube">&#8599;</a></div><div class="tname">Partiboi69 - My Favourite Number</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Partiboi69 - Jerk It">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Partiboi69 - Jerk It" data-yt="cgxEPo-5IhI" data-dur="226"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 3:46</span><a class="ytlink" href="https://www.youtube.com/watch?v=cgxEPo-5IhI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Partiboi69 - Jerk It on YouTube">&#8599;</a></div><div class="tname">Partiboi69 - Jerk It</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Partiboi69 - Wine Dine 69">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Partiboi69 - Wine Dine 69" data-yt="yyc-_qqVyis" data-dur="234"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 3:54</span><a class="ytlink" href="https://www.youtube.com/watch?v=yyc-_qqVyis" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Partiboi69 - Wine Dine 69 on YouTube">&#8599;</a></div><div class="tname">Partiboi69 - Wine Dine 69</div></li></ul></div></div>
 <h2>Offbeat Records &middot; 4</h2>
-<div class="rec"><img src="https://i.discogs.com/oyEvxK0knFvMX6NgQtYKDZI1pr7EsUVnkDbtCr9ftK8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwODgx/NS0xMDk2NjUxMTYw/LmpwZw.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4322733687">Yves Deruyter - To The Rhythm (12&quot;)</a></div><div class="meta">25.00 EUR &middot; Mint (M) &middot; Bonzai Records - BR 98138<a class="buy" href="https://www.discogs.com/sell/item/4322733687">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, Trance</div><ul class="tracks"><li class="track"><button class="play" data-yt="xZsFsLzBhYQ" data-title="Yves Deruyter - To The Rhythm (Original Mix)"><span class="ico">&#9654;</span><span class="tname">Yves Deruyter - To The Rhythm (Original Mix)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="q5gz25fS6TM" data-title="Yves Deruyter - To The Rhythm (M.I.K.E. Remix)"><span class="ico">&#9654;</span><span class="tname">Yves Deruyter - To The Rhythm (M.I.K.E. Remix)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="SQsr80daIaI" data-title="Yves Deruyter - To The Rhythm (Moguai Remix)"><span class="ico">&#9654;</span><span class="tname">Yves Deruyter - To The Rhythm (Moguai Remix)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="YDUQ3U3uJTI" data-title="To The Rhythm (Signum Remix)"><span class="ico">&#9654;</span><span class="tname">To The Rhythm (Signum Remix)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="ICtFuwoGmo8" data-title="Yves Deruyter - To The Rhythm (The M.Experience Remix)"><span class="ico">&#9654;</span><span class="tname">Yves Deruyter - To The Rhythm (The M.Experience Remix)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="DAiOZ9Ofrd0" data-title="Yves Deruyter - To the Rhythm (The M.Experience Remix) (1998)"><span class="ico">&#9654;</span><span class="tname">Yves Deruyter - To the Rhythm (The M.Experience Remix) (1998)</span></button><div class="slot"></div></li></ul></div></div>
-<div class="rec"><img src="https://i.discogs.com/zf4RC4HItLaybTBL2yluJkyr_jxqgQt6_SB0rFGm8oM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1MDcz/Ny0xMjE0MTU0MjQz/LmpwZWc.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4320935889">Foolish Mind - Trip To Africa (12&quot;)</a></div><div class="meta">17.00 EUR &middot; Near Mint (NM or M-) &middot; CIM - 78653<a class="buy" href="https://www.discogs.com/sell/item/4320935889">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, New Beat, Synth-pop</div><ul class="tracks"><li class="track"><button class="play" data-yt="07HUSXnySBM" data-title="Foolish Mind ‎– Trip To Africa"><span class="ico">&#9654;</span><span class="tname">Foolish Mind ‎– Trip To Africa</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="PrrgRI6QX_c" data-title="Foolish Mind - Trip To Africa (Belgium, 1987)"><span class="ico">&#9654;</span><span class="tname">Foolish Mind - Trip To Africa (Belgium, 1987)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="5zyTku93y_U" data-title="Foolish Mind ‎– YOU"><span class="ico">&#9654;</span><span class="tname">Foolish Mind ‎– YOU</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="vHjPtYt8h2U" data-title="Foolish Mind - Trip To Africa (115 BPM) [HQSound][SYNTH-POP][1987]"><span class="ico">&#9654;</span><span class="tname">Foolish Mind - Trip To Africa (115 BPM) [HQSound][SYNTH-POP][1987]</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="PXEV5uU5s6k" data-title="Foolish Mind - You"><span class="ico">&#9654;</span><span class="tname">Foolish Mind - You</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="ZO5pEAOpwo0" data-title="Foolish Mind - You"><span class="ico">&#9654;</span><span class="tname">Foolish Mind - You</span></button><div class="slot"></div></li></ul></div></div>
-<div class="rec"><img src="https://i.discogs.com/IKtE3C96-sORqs-LM6yJQDM__SWd_YtNPITljNxbGxM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1MDc2/My0xNDc3Mjk4NjUw/LTM4OTAuanBlZw.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4320935886">Foolish Mind Featuring Ellice - Self Control (12&quot;, Maxi)</a></div><div class="meta">16.00 EUR &middot; Near Mint (NM or M-) &middot; CIM - 78663<a class="buy" href="https://www.discogs.com/sell/item/4320935886">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, New Beat, Synth-pop</div><ul class="tracks"><li class="track"><button class="play" data-yt="9gPTBmFXdtI" data-title="Foolish Mind - Self Control (12&#x27;&#x27; 1988 CIM)"><span class="ico">&#9654;</span><span class="tname">Foolish Mind - Self Control (12&#x27;&#x27; 1988 CIM)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="x_6nJMaWRKI" data-title="Foolish Mind Featuring Ellice - Self Control (New Beat Version)"><span class="ico">&#9654;</span><span class="tname">Foolish Mind Featuring Ellice - Self Control (New Beat Version)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="Y7sdu1kLygw" data-title="Foolish Mind- Self Control Instrumental (New Beat Version)"><span class="ico">&#9654;</span><span class="tname">Foolish Mind- Self Control Instrumental (New Beat Version)</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="vbkLdkOITKM" data-title="Foolish Mind feat. Ellice – Self Control (1988)"><span class="ico">&#9654;</span><span class="tname">Foolish Mind feat. Ellice – Self Control (1988)</span></button><div class="slot"></div></li></ul></div></div>
-<div class="rec"><img src="https://i.discogs.com/f-r1NHgkxYhHvSHPQLnDcUnosRFzsjZx0YGtv6qDdIU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI5ODIx/MDU3LTE3Mjc3NjU0/NjYtNDM3Ny5wbmc.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4320532164">Eversines - Rocket Science (12&quot;)</a></div><div class="meta">25.00 EUR &middot; Mint (M) &middot; Jamming Is Life - JIL001<a class="buy" href="https://www.discogs.com/sell/item/4320532164">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, Tech House, Techno</div><ul class="tracks"><li class="track"><button class="play" data-yt="rM9r5_fNaY4" data-title="Eversines - a1. Act"><span class="ico">&#9654;</span><span class="tname">Eversines - a1. Act</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="RA2mlw3K874" data-title="Eversines - a2. Rocket Science"><span class="ico">&#9654;</span><span class="tname">Eversines - a2. Rocket Science</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="0QLIhWWyZKk" data-title="Eversines - b1. M"><span class="ico">&#9654;</span><span class="tname">Eversines - b1. M</span></button><div class="slot"></div></li><li class="track"><button class="play" data-yt="GJ2HPuXvNyY" data-title="Eversines - b2. Jamming Is Life"><span class="ico">&#9654;</span><span class="tname">Eversines - b2. Jamming Is Life</span></button><div class="slot"></div></li></ul></div></div>
-<footer>Generated 18 Aug 2026 19:09 UTC. Click a track to play it; only one plays at a time. Press Esc to stop.</footer>
+<div class="rec"><img src="https://i.discogs.com/oyEvxK0knFvMX6NgQtYKDZI1pr7EsUVnkDbtCr9ftK8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwODgx/NS0xMDk2NjUxMTYw/LmpwZw.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4322733687">Yves Deruyter - To The Rhythm (12&quot;)</a></div><div class="meta">25.00 EUR &middot; Mint (M) &middot; Bonzai Records - BR 98138<a class="buy" href="https://www.discogs.com/sell/item/4322733687">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, Trance</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Yves Deruyter - To The Rhythm (Original Mix)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Yves Deruyter - To The Rhythm (Original Mix)" data-yt="xZsFsLzBhYQ" data-dur="543"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 9:03</span><a class="ytlink" href="https://www.youtube.com/watch?v=xZsFsLzBhYQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Yves Deruyter - To The Rhythm (Original Mix) on YouTube">&#8599;</a></div><div class="tname">Yves Deruyter - To The Rhythm (Original Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Yves Deruyter - To The Rhythm (M.I.K.E. Remix)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Yves Deruyter - To The Rhythm (M.I.K.E. Remix)" data-yt="q5gz25fS6TM" data-dur="515"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:35</span><a class="ytlink" href="https://www.youtube.com/watch?v=q5gz25fS6TM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Yves Deruyter - To The Rhythm (M.I.K.E. Remix) on YouTube">&#8599;</a></div><div class="tname">Yves Deruyter - To The Rhythm (M.I.K.E. Remix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Yves Deruyter - To The Rhythm (Moguai Remix)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Yves Deruyter - To The Rhythm (Moguai Remix)" data-yt="SQsr80daIaI" data-dur="474"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:54</span><a class="ytlink" href="https://www.youtube.com/watch?v=SQsr80daIaI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Yves Deruyter - To The Rhythm (Moguai Remix) on YouTube">&#8599;</a></div><div class="tname">Yves Deruyter - To The Rhythm (Moguai Remix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play To The Rhythm (Signum Remix)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="To The Rhythm (Signum Remix)" data-yt="YDUQ3U3uJTI" data-dur="387"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:27</span><a class="ytlink" href="https://www.youtube.com/watch?v=YDUQ3U3uJTI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch To The Rhythm (Signum Remix) on YouTube">&#8599;</a></div><div class="tname">To The Rhythm (Signum Remix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Yves Deruyter - To The Rhythm (The M.Experience Remix)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Yves Deruyter - To The Rhythm (The M.Experience Remix)" data-yt="ICtFuwoGmo8" data-dur="420"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:00</span><a class="ytlink" href="https://www.youtube.com/watch?v=ICtFuwoGmo8" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Yves Deruyter - To The Rhythm (The M.Experience Remix) on YouTube">&#8599;</a></div><div class="tname">Yves Deruyter - To The Rhythm (The M.Experience Remix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Yves Deruyter - To the Rhythm (The M.Experience Remix) (1998)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Yves Deruyter - To the Rhythm (The M.Experience Remix) (1998)" data-yt="DAiOZ9Ofrd0" data-dur="418"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:58</span><a class="ytlink" href="https://www.youtube.com/watch?v=DAiOZ9Ofrd0" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Yves Deruyter - To the Rhythm (The M.Experience Remix) (1998) on YouTube">&#8599;</a></div><div class="tname">Yves Deruyter - To the Rhythm (The M.Experience Remix) (1998)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/zf4RC4HItLaybTBL2yluJkyr_jxqgQt6_SB0rFGm8oM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1MDcz/Ny0xMjE0MTU0MjQz/LmpwZWc.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4320935889">Foolish Mind - Trip To Africa (12&quot;)</a></div><div class="meta">17.00 EUR &middot; Near Mint (NM or M-) &middot; CIM - 78653<a class="buy" href="https://www.discogs.com/sell/item/4320935889">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, New Beat, Synth-pop</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind ‎– Trip To Africa">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind ‎– Trip To Africa" data-yt="07HUSXnySBM" data-dur="429"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:09</span><a class="ytlink" href="https://www.youtube.com/watch?v=07HUSXnySBM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind ‎– Trip To Africa on YouTube">&#8599;</a></div><div class="tname">Foolish Mind ‎– Trip To Africa</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind - Trip To Africa (Belgium, 1987)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind - Trip To Africa (Belgium, 1987)" data-yt="PrrgRI6QX_c" data-dur="420"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:00</span><a class="ytlink" href="https://www.youtube.com/watch?v=PrrgRI6QX_c" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind - Trip To Africa (Belgium, 1987) on YouTube">&#8599;</a></div><div class="tname">Foolish Mind - Trip To Africa (Belgium, 1987)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind ‎– YOU">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind ‎– YOU" data-yt="5zyTku93y_U" data-dur="287"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:47</span><a class="ytlink" href="https://www.youtube.com/watch?v=5zyTku93y_U" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind ‎– YOU on YouTube">&#8599;</a></div><div class="tname">Foolish Mind ‎– YOU</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind - Trip To Africa (115 BPM) [HQSound][SYNTH-POP][1987]">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind - Trip To Africa (115 BPM) [HQSound][SYNTH-POP][1987]" data-yt="vHjPtYt8h2U" data-dur="419"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:59</span><a class="ytlink" href="https://www.youtube.com/watch?v=vHjPtYt8h2U" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind - Trip To Africa (115 BPM) [HQSound][SYNTH-POP][1987] on YouTube">&#8599;</a></div><div class="tname">Foolish Mind - Trip To Africa (115 BPM) [HQSound][SYNTH-POP][1987]</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind - You">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind - You" data-yt="PXEV5uU5s6k" data-dur="282"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:42</span><a class="ytlink" href="https://www.youtube.com/watch?v=PXEV5uU5s6k" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind - You on YouTube">&#8599;</a></div><div class="tname">Foolish Mind - You</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind - You">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind - You" data-yt="ZO5pEAOpwo0" data-dur="295"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:55</span><a class="ytlink" href="https://www.youtube.com/watch?v=ZO5pEAOpwo0" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind - You on YouTube">&#8599;</a></div><div class="tname">Foolish Mind - You</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/IKtE3C96-sORqs-LM6yJQDM__SWd_YtNPITljNxbGxM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1MDc2/My0xNDc3Mjk4NjUw/LTM4OTAuanBlZw.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4320935886">Foolish Mind Featuring Ellice - Self Control (12&quot;, Maxi)</a></div><div class="meta">16.00 EUR &middot; Near Mint (NM or M-) &middot; CIM - 78663<a class="buy" href="https://www.discogs.com/sell/item/4320935886">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, New Beat, Synth-pop</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind - Self Control (12&#x27;&#x27; 1988 CIM)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind - Self Control (12&#x27;&#x27; 1988 CIM)" data-yt="9gPTBmFXdtI" data-dur="423"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:03</span><a class="ytlink" href="https://www.youtube.com/watch?v=9gPTBmFXdtI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind - Self Control (12&#x27;&#x27; 1988 CIM) on YouTube">&#8599;</a></div><div class="tname">Foolish Mind - Self Control (12&#x27;&#x27; 1988 CIM)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind Featuring Ellice - Self Control (New Beat Version)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind Featuring Ellice - Self Control (New Beat Version)" data-yt="x_6nJMaWRKI" data-dur="277"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:37</span><a class="ytlink" href="https://www.youtube.com/watch?v=x_6nJMaWRKI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind Featuring Ellice - Self Control (New Beat Version) on YouTube">&#8599;</a></div><div class="tname">Foolish Mind Featuring Ellice - Self Control (New Beat Version)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind- Self Control Instrumental (New Beat Version)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind- Self Control Instrumental (New Beat Version)" data-yt="Y7sdu1kLygw" data-dur="272"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:32</span><a class="ytlink" href="https://www.youtube.com/watch?v=Y7sdu1kLygw" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind- Self Control Instrumental (New Beat Version) on YouTube">&#8599;</a></div><div class="tname">Foolish Mind- Self Control Instrumental (New Beat Version)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Foolish Mind feat. Ellice – Self Control (1988)">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Foolish Mind feat. Ellice – Self Control (1988)" data-yt="vbkLdkOITKM" data-dur="235"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 3:55</span><a class="ytlink" href="https://www.youtube.com/watch?v=vbkLdkOITKM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Foolish Mind feat. Ellice – Self Control (1988) on YouTube">&#8599;</a></div><div class="tname">Foolish Mind feat. Ellice – Self Control (1988)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/f-r1NHgkxYhHvSHPQLnDcUnosRFzsjZx0YGtv6qDdIU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI5ODIx/MDU3LTE3Mjc3NjU0/NjYtNDM3Ny5wbmc.jpeg" alt="" loading="lazy"><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4320532164">Eversines - Rocket Science (12&quot;)</a></div><div class="meta">25.00 EUR &middot; Mint (M) &middot; Jamming Is Life - JIL001<a class="buy" href="https://www.discogs.com/sell/item/4320532164">Buy on Discogs &rarr;</a></div><div class="tags">Electronic, Tech House, Techno</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Eversines - a1. Act">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Eversines - a1. Act" data-yt="rM9r5_fNaY4" data-dur="381"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:21</span><a class="ytlink" href="https://www.youtube.com/watch?v=rM9r5_fNaY4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Eversines - a1. Act on YouTube">&#8599;</a></div><div class="tname">Eversines - a1. Act</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Eversines - a2. Rocket Science">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Eversines - a2. Rocket Science" data-yt="RA2mlw3K874" data-dur="367"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:07</span><a class="ytlink" href="https://www.youtube.com/watch?v=RA2mlw3K874" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Eversines - a2. Rocket Science on YouTube">&#8599;</a></div><div class="tname">Eversines - a2. Rocket Science</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Eversines - b1. M">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Eversines - b1. M" data-yt="0QLIhWWyZKk" data-dur="378"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:18</span><a class="ytlink" href="https://www.youtube.com/watch?v=0QLIhWWyZKk" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Eversines - b1. M on YouTube">&#8599;</a></div><div class="tname">Eversines - b1. M</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Eversines - b2. Jamming Is Life">&#9654;</button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Eversines - b2. Jamming Is Life" data-yt="GJ2HPuXvNyY" data-dur="380"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:20</span><a class="ytlink" href="https://www.youtube.com/watch?v=GJ2HPuXvNyY" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Eversines - b2. Jamming Is Life on YouTube">&#8599;</a></div><div class="tname">Eversines - b2. Jamming Is Life</div></li></ul></div></div>
+<footer>Generated 18 Aug 2026 19:32 UTC. Tap a bar to play from that point; only one track plays at a time. The arrow opens the original video on YouTube.</footer>
 </div><script>
 (function () {
-  var open = null;
+  var player = null, ytReady = false, pendingInit = null;
+  var activeBar = null, activeVideoId = null, pendingSeekFraction = null;
+  var pollTimer = null;
 
-  function close(slot) {
-    if (!slot) return;
-    slot.innerHTML = '';
-    slot.classList.remove('open');
-    var btn = slot.parentNode.querySelector('button.play');
-    if (btn) { btn.classList.remove('on'); btn.querySelector('.ico').textContent = '\u25B6'; }
+  function fmt(t) {
+    if (!isFinite(t) || t < 0) t = 0;
+    var m = Math.floor(t / 60), s = Math.floor(t % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function row(bar) { return bar.closest('.trow'); }
+
+  function paint(bar, fraction, curLabel, durLabel, state) {
+    var fillEl = bar.querySelector('.fill');
+    if (fillEl) fillEl.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+    bar.setAttribute('aria-valuenow', Math.round(fraction * 100));
+    var r = row(bar);
+    if (!r) return;
+    r.classList.toggle('playing', state === 'playing');
+    var t = r.querySelector('.time');
+    if (t) t.textContent = curLabel + ' / ' + durLabel;
+    var btn = r.querySelector('.ppbtn');
+    if (btn) {
+      btn.classList.toggle('loading', state === 'loading');
+      btn.textContent = state === 'playing' ? '\u23F8' : '\u25B6';
+    }
+  }
+
+  function knownDuration(bar) {
+    return parseInt(bar.getAttribute('data-dur'), 10) || 0;
+  }
+
+  function durLabel(bar) {
+    var known = knownDuration(bar);
+    return known ? fmt(known) : '--:--';
+  }
+
+  function resetBar(bar) {
+    if (!bar) return;
+    paint(bar, 0, '0:00', durLabel(bar), 'idle');
+  }
+
+  function stopPolling() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  function poll() {
+    if (!player || !activeBar) return;
+    var dur = 0, cur = 0, state = -1;
+    try {
+      dur = player.getDuration() || 0;
+      cur = player.getCurrentTime() || 0;
+      state = player.getPlayerState();
+    } catch (err) { return; }
+    if (pendingSeekFraction !== null && dur > 0) {
+      var target = pendingSeekFraction; pendingSeekFraction = null;
+      player.seekTo(target * dur, true);
+      cur = target * dur;
+    }
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar),
+          state === 1 ? 'playing' : (state === 3 ? 'loading' : 'paused'));
+  }
+
+  function ensurePlayer(cb) {
+    if (player) { cb(); return; }
+    if (!ytReady) { pendingInit = cb; return; }
+    var host = document.getElementById('yt-audio-host');
+    if (!host) return;
+    player = new YT.Player(host, {
+      height: '113', width: '200',
+      playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1 },
+      events: {
+        onReady: function () { cb(); },
+        onStateChange: function (ev) {
+          if (ev.data === YT.PlayerState.ENDED && activeBar) {
+            var d = player.getDuration() || knownDuration(activeBar);
+            paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+            stopPolling();
+          }
+        },
+        onError: function () {
+          if (activeBar) {
+            var r = row(activeBar);
+            if (r) r.classList.add('errored');
+          }
+        }
+      }
+    });
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytReady = true;
+    if (pendingInit) { var cb = pendingInit; pendingInit = null; cb(); }
+  };
+
+  function playFrom(bar, fraction) {
+    var videoId = bar.getAttribute('data-yt');
+    if (!videoId) return;
+    ensurePlayer(function () {
+      if (activeBar && activeBar !== bar) resetBar(activeBar);
+      if (activeVideoId !== videoId) {
+        activeVideoId = videoId;
+        activeBar = bar;
+        var known = knownDuration(bar);
+        pendingSeekFraction = fraction > 0.01 ? fraction : null;
+        player.loadVideoById(videoId);
+        // Best-effort immediate jump using Discogs' own track length, so a
+        // click deep into a bar does not sit at 0:00 waiting for YouTube's
+        // own metadata to arrive. The poll loop re-seeks once the real
+        // duration is confirmed, in case this fires before load is ready.
+        if (known > 0 && pendingSeekFraction !== null) {
+          try { player.seekTo(pendingSeekFraction * known, true); } catch (err) {}
+        }
+      } else {
+        activeBar = bar;
+        var dur = player.getDuration() || knownDuration(bar);
+        if (dur > 0) player.seekTo(fraction * dur, true);
+        player.playVideo();
+      }
+      stopPolling();
+      pollTimer = setInterval(poll, 250);
+      paint(bar, fraction, fmt(fraction * (player.getDuration() || knownDuration(bar))),
+            durLabel(bar), 'loading');
+    });
+  }
+
+  function togglePlayPause(bar) {
+    var videoId = bar.getAttribute('data-yt');
+    if (activeVideoId === videoId && player) {
+      var state = player.getPlayerState();
+      if (state === 1) { player.pauseVideo(); } else { player.playVideo(); }
+    } else {
+      playFrom(bar, 0);
+    }
+  }
+
+  function fractionFromEvent(bar, ev) {
+    var rect = bar.getBoundingClientRect();
+    var x = (ev.clientX !== undefined && ev.clientX !== 0) ? ev.clientX
+          : (ev.changedTouches && ev.changedTouches[0] ? ev.changedTouches[0].clientX : rect.left);
+    return Math.min(1, Math.max(0, (x - rect.left) / rect.width));
   }
 
   document.addEventListener('click', function (ev) {
-    var btn = ev.target.closest ? ev.target.closest('button.play') : null;
-    if (!btn) return;
-    ev.preventDefault();
-
-    var slot = btn.parentNode.querySelector('.slot');
-    if (!slot) return;
-
-    if (slot === open) { close(open); open = null; return; }
-    close(open);
-
-    var frame = document.createElement('div');
-    frame.className = 'frame';
-    var f = document.createElement('iframe');
-    f.src = 'https://www.youtube-nocookie.com/embed/'
-          + encodeURIComponent(btn.getAttribute('data-yt'))
-          + '?autoplay=1&rel=0';
-    f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-    f.setAttribute('allowfullscreen', '');
-    f.setAttribute('title', btn.getAttribute('data-title') || 'player');
-    frame.appendChild(f);
-    slot.appendChild(frame);
-    slot.classList.add('open');
-    btn.classList.add('on');
-    btn.querySelector('.ico').textContent = '\u25A0';
-    open = slot;
+    var btn = ev.target.closest ? ev.target.closest('button.ppbtn') : null;
+    if (btn) {
+      ev.preventDefault();
+      var pbar = row(btn).querySelector('.bar');
+      if (pbar) togglePlayPause(pbar);
+      return;
+    }
+    if (ev.target.closest && ev.target.closest('a.ytlink')) return; // let it navigate
+    var bar = ev.target.closest ? ev.target.closest('.bar') : null;
+    if (bar) {
+      ev.preventDefault();
+      playFrom(bar, fractionFromEvent(bar, ev));
+    }
   });
 
   document.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Escape' && open) { close(open); open = null; }
+    var el = document.activeElement;
+    if (!el || !el.classList || !el.classList.contains('bar')) return;
+    if (ev.key === ' ' || ev.key === 'Enter') {
+      ev.preventDefault();
+      togglePlayPause(el);
+    } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') {
+      ev.preventDefault();
+      if (!player || activeBar !== el) return;
+      var dur = player.getDuration() || knownDuration(el);
+      var cur = player.getCurrentTime() || 0;
+      player.seekTo(Math.min(dur, Math.max(0, cur + (ev.key === 'ArrowRight' ? 5 : -5))), true);
+    }
   });
+
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
 })();
 </script></body></html>
