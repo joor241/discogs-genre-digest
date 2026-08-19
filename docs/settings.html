@@ -103,6 +103,28 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
   <h1>Digest settings</h1>
   <p class="sub">Add or remove stores, edit the genre filter, and trigger a run &mdash; without touching code.</p>
 
+  <div class="card">
+    <h2>Fastest way &mdash; no token needed</h2>
+    <p class="hint">
+      You're already signed in to GitHub in your normal browser, so editing values
+      there is quicker than setting up a token here. Use this unless you specifically
+      want the nicer editor and live store-checking below.
+    </p>
+    <div class="actions">
+      <a href="https://github.com/joor241/discogs-genre-digest/settings/variables/actions" target="_blank" rel="noopener noreferrer">
+        <button class="primary" type="button">Edit values on GitHub &rarr;</button>
+      </a>
+      <a href="https://github.com/joor241/discogs-genre-digest/actions/workflows/daily-digest.yml" target="_blank" rel="noopener noreferrer">
+        <button class="ghost" type="button">Run once with different settings &rarr;</button>
+      </a>
+    </div>
+    <p class="hint" style="margin:12px 0 0;">
+      First link opens the Variables list &mdash; click a name (e.g. <code>GENRES_INCLUDE</code>)
+      to edit its value inline. Second link opens a one-off "Run workflow" form for trying
+      different genres or a longer lookback without changing anything permanently.
+    </p>
+  </div>
+
   <div class="card" id="connectCard">
     <h2>Connect</h2>
     <p class="hint">
@@ -258,6 +280,12 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
   async function getVariable(name) {
     var res = await ghFetch("/actions/variables/" + encodeURIComponent(name));
     if (res.status === 404) return null;
+    if (res.status === 403 || res.status === 401) {
+      throw new Error("Token can't read " + name + " (HTTP " + res.status + "). " +
+        "On the token's page, check the <b>Variables</b> permission is set to " +
+        "<b>Read and write</b> &mdash; it's separate from Actions and easy to miss, " +
+        "since every permission defaults to No access.");
+    }
     if (!res.ok) throw new Error(name + ": HTTP " + res.status);
     var data = await res.json();
     return data.value;
