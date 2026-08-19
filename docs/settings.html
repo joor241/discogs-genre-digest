@@ -206,6 +206,17 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
             <input type="number" id="budgetInput" min="1" step="1">
           </div>
         </div>
+        <div class="two" style="margin-top:10px;">
+          <div>
+            <label for="pagesInput">Max inventory pages / seller (100 listings each)</label>
+            <input type="number" id="pagesInput" min="1" step="1">
+          </div>
+        </div>
+        <p class="hint" style="margin:10px 0 0;">
+          Raise both to see everything a busy store lists, not just the newest few
+          hundred. A run can then take much longer (up to the workflow's timeout) -
+          that's expected, and free either way.
+        </p>
         <label>Player page base URL (set once during initial setup, shown for reference)</label>
         <div class="readonly" id="pagesUrlDisplay">&mdash;</div>
       </details>
@@ -224,7 +235,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
   "use strict";
   var OWNER = "joor241", REPO = "discogs-genre-digest";
   var API = "https://api.github.com/repos/" + OWNER + "/" + REPO;
-  var DEFAULT_LOOKBACK = 48, DEFAULT_BUDGET = 400;
+  var DEFAULT_LOOKBACK = 48, DEFAULT_BUDGET = 400, DEFAULT_PAGES = 20;
 
   var tokenInput = document.getElementById("tokenInput");
   var toggleTokenBtn = document.getElementById("toggleTokenBtn");
@@ -244,6 +255,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
   var addSellerBtn = document.getElementById("addSellerBtn");
   var lookbackInput = document.getElementById("lookbackInput");
   var budgetInput = document.getElementById("budgetInput");
+  var pagesInput = document.getElementById("pagesInput");
   var pagesUrlDisplay = document.getElementById("pagesUrlDisplay");
   var saveBtn = document.getElementById("saveBtn");
   var saveRunBtn = document.getElementById("saveRunBtn");
@@ -484,6 +496,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     var sellersVal = await getVariable("SELLERS");
     var lookbackVal = await getVariable("LOOKBACK_HOURS");
     var budgetVal = await getVariable("MAX_RELEASE_LOOKUPS");
+    var maxPagesVal = await getVariable("MAX_PAGES");
     var pagesVal = await getVariable("PAGES_BASE_URL");
 
     genres = (genresVal || "").split(",").map(function (g) { return g.trim(); }).filter(Boolean);
@@ -495,6 +508,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     sellers = sellersVal ? parseSellers(sellersVal) : [];
     lookbackInput.value = lookbackVal || DEFAULT_LOOKBACK;
     budgetInput.value = budgetVal || DEFAULT_BUDGET;
+    pagesInput.value = maxPagesVal || DEFAULT_PAGES;
     pagesUrlDisplay.textContent = pagesVal || "(not set - the email has no player link yet)";
 
     renderGenres();
@@ -546,6 +560,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
       await setVariable("SELLERS", serialiseSellers());
       await setVariable("LOOKBACK_HOURS", String(parseInt(lookbackInput.value, 10) || DEFAULT_LOOKBACK));
       await setVariable("MAX_RELEASE_LOOKUPS", String(parseInt(budgetInput.value, 10) || DEFAULT_BUDGET));
+      await setVariable("MAX_PAGES", String(parseInt(pagesInput.value, 10) || DEFAULT_PAGES));
 
       if (alsoRun) {
         await dispatchRun();

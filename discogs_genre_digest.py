@@ -106,7 +106,9 @@ MAX_ATTEMPTS = 4            # attempts per request before giving up
 MIN_REQUEST_INTERVAL = 1.1  # seconds between calls -> ~54/min, under the 60/min cap
 RATELIMIT_FLOOR = 5         # when this few requests remain in the window...
 RATELIMIT_SLEEP = 15        # ...pause this long to let the window roll over
-MAX_PAGES = 20              # safety cap on inventory pages per seller per run
+MAX_PAGES = 20              # safety cap on inventory pages per seller per run.
+                             # Override with MAX_PAGES to see more than 2000
+                             # listings/seller in the lookback window.
 PER_PAGE = 100              # max allowed by the API
 
 # How many "listen" links to show per release.
@@ -212,7 +214,8 @@ class Discogs:
 
     def __init__(self, token: str, user_agent: str,
                  lookup_budget: int = MAX_RELEASE_LOOKUPS,
-                 video_limit: int = MAX_VIDEOS_PER_RELEASE) -> None:
+                 video_limit: int = MAX_VIDEOS_PER_RELEASE,
+                 max_pages: int = MAX_PAGES) -> None:
         self.session = requests.Session()
         headers = {"User-Agent": user_agent}
         if token:
@@ -222,6 +225,7 @@ class Discogs:
         self.request_count = 0
         self.lookup_budget = lookup_budget
         self.video_limit = video_limit
+        self.max_pages = max_pages
         # release id -> {"genres": [...], "styles": [...], "thumb", "videos"}
         self._release_cache: dict[int, dict] = {}
 
@@ -383,7 +387,7 @@ def fetch_recent_listings(api: Discogs, username: str, cutoff: datetime):
     than the cutoff we can stop, so we never page through a whole inventory.
     """
     page = 1
-    while page <= MAX_PAGES:
+    while page <= api.max_pages:
         data = api.get(
             f"/users/{username}/inventory",
             params={
@@ -421,8 +425,8 @@ def fetch_recent_listings(api: Discogs, username: str, cutoff: datetime):
 
     LOG.warning(
         "[%s] stopped at the %d-page safety cap - some new listings may be missing. "
-        "Raise MAX_PAGES if this store really lists >%d items a day.",
-        username, MAX_PAGES, MAX_PAGES * PER_PAGE,
+        "Raise MAX_PAGES if this store really lists >%d items in the lookback window.",
+        username, api.max_pages, api.max_pages * PER_PAGE,
     )
 
 
@@ -1413,12 +1417,16 @@ def main() -> int:
     LOG.info("Genre filter: %s", ", ".join(genres) if genres else "(none - keeping everything)")
     LOG.info("Format filter: %s", ", ".join(formats) if formats else "(none - keeping everything)")
     LOG.info("Sellers: %s", ", ".join(sellers))
+    LOG.info("Caps: %d page(s)/seller (%d listings), %d release lookup(s)/run",
+             env_int("MAX_PAGES", MAX_PAGES), env_int("MAX_PAGES", MAX_PAGES) * PER_PAGE,
+             env_int("MAX_RELEASE_LOOKUPS", MAX_RELEASE_LOOKUPS))
 
     api = Discogs(
         os.environ["DISCOGS_TOKEN"].strip(),
         env_str("USER_AGENT", USER_AGENT),
         env_int("MAX_RELEASE_LOOKUPS", MAX_RELEASE_LOOKUPS),
         env_int("MAX_VIDEOS_PER_RELEASE", MAX_VIDEOS_PER_RELEASE),
+        env_int("MAX_PAGES", MAX_PAGES),
     )
 
     started = time.monotonic()

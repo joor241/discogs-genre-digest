@@ -38,9 +38,13 @@ concurrency:
 jobs:
   digest:
     runs-on: ubuntu-latest
-    # A normal run takes well under a minute. The headroom is for the day a
-    # shop bulk-lists and the run works through its full lookup budget.
-    timeout-minutes: 30
+    # A normal run takes well under a minute. The generous headroom is for
+    # "show me everything, even thousands" configs (a high MAX_PAGES /
+    # MAX_RELEASE_LOOKUPS): at the ~54 req/min pace Discogs allows, evaluating
+    # a few thousand releases can genuinely take over an hour. This costs
+    # nothing extra either way -- GitHub Actions minutes are unlimited and
+    # free on a public repo regardless of job duration.
+    timeout-minutes: 180
 
     # Needed to push the generated player pages back to docs/ on main.
     permissions:
@@ -76,6 +80,7 @@ jobs:
           LOOKBACK_HOURS: ${{ inputs.lookback_hours || vars.LOOKBACK_HOURS }}
           SELLERS: ${{ vars.SELLERS }}
           MAX_RELEASE_LOOKUPS: ${{ vars.MAX_RELEASE_LOOKUPS }}
+          MAX_PAGES: ${{ vars.MAX_PAGES }}
           USER_AGENT: DiscogsGenreDigest/1.0 +https://github.com/${{ github.repository }}
 
           # Where the published player pages end up. The script appends

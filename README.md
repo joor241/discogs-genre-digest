@@ -491,6 +491,34 @@ listed by two shops is only fetched once.
 
 A normal run is a handful of requests and finishes in well under a minute.
 
+### Seeing everything, even thousands
+
+Two safety caps exist purely to stop one bulk-listing seller from making a run
+take forever or blow past its API budget:
+
+| Cap | Default | What it bounds |
+|---|---|---|
+| `MAX_PAGES` | 20 | Inventory pages read per seller (100 listings/page, so 2,000 listings). |
+| `MAX_RELEASE_LOOKUPS` | 400 | Release-detail lookups (genre/format checks) per run, across all sellers. |
+
+Both are ordinary repo Variables, same as everything else — set them from the
+[settings page](#the-settings-page--edit-everything-from-your-phone) or by
+hand. Raise them high enough and effectively nothing gets left out, even for a
+seller with a huge catalog (Demonfuzz Records, one of the shops this instance
+tracks, has 120,000+ items listed in total).
+
+The real trade-off is time, not money: at Discogs' ~54 req/min pace, checking
+a few thousand releases can take over an hour. That's fine — GitHub Actions
+minutes are unlimited and free for a public repo no matter how long a job
+runs, and the workflow's `timeout-minutes` is set generously (180) to give
+a large run room to actually finish rather than getting killed partway through.
+If you raise the caps enough that even that isn't enough, raise
+`timeout-minutes` in `daily-digest.yml` too.
+
+When a run does hit `MAX_RELEASE_LOOKUPS` before finishing, nothing is silently
+dropped without you knowing — the email says how many listings were left
+unchecked, and the log names the seller responsible.
+
 ### If one store breaks
 
 A store that gets renamed, deleted, or is temporarily failing is logged and
