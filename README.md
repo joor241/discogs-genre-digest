@@ -175,7 +175,8 @@ opening GitHub's own UI at all. It's part of the same site as the player page
 served the same way.
 
 It edits the exact same repo Variables the two methods below describe by hand
-(`GENRES_INCLUDE`, `SELLERS`, `LOOKBACK_HOURS`, `MAX_RELEASE_LOOKUPS`) — so use
+(`GENRES_INCLUDE`, `FORMATS_INCLUDE`, `SELLERS`, `LOOKBACK_HOURS`,
+`MAX_RELEASE_LOOKUPS`) — so use
 whichever is more convenient, they're not different systems. Store rows have a
 **Check** button that queries Discogs live and shows how many items that
 seller currently has for sale, the same sanity check described in
@@ -253,6 +254,33 @@ items, so expect a very long email.
 
 The same pattern works for `LOOKBACK_HOURS` (how many hours back to look) and
 `SELLERS`.
+
+### Formats — filtering to vinyl
+
+Every listing shows its format(s) (Vinyl, CD, Cassette, File, ...) right next
+to the price and condition. By default, only **Vinyl** is kept.
+
+This comes from the release's own `formats` field on Discogs — the same
+release-detail lookup already made for genre filtering, so checking format
+costs no extra API calls. A release can legitimately carry more than one
+format (e.g. a 12" that ships with a download code is tagged both `Vinyl` and
+`File`) — it's kept if it matches *any* of the formats you list.
+
+Change it the same three ways as genres — repo variable `FORMATS_INCLUDE`,
+or a one-off in the code. There's no per-run dispatch-form input for it (the
+manual "Run workflow" form only overrides genres/lookback), since format is
+more of a set-once-and-forget preference than something you'd want to try
+differently on a single run.
+
+```
+FORMATS_INCLUDE = Vinyl              # default: vinyl only
+FORMATS_INCLUDE = Vinyl, CD          # vinyl or CD
+FORMATS_INCLUDE = all                # no format filtering at all
+```
+
+Matching is case-insensitive but otherwise exact against Discogs' own format
+names — a small fixed vocabulary, so unlike genres there's no whole-word
+subtlety to worry about.
 
 ### Adding a store
 

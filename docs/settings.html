@@ -173,6 +173,12 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     </div>
 
     <div class="card">
+      <h2>Formats</h2>
+      <p class="hint">Kept if a listing matches ANY checked format. Nothing checked = keep every format.</p>
+      <div class="chips" id="formatChips" style="gap:10px;"></div>
+    </div>
+
+    <div class="card">
       <h2>Stores</h2>
       <p class="hint">
         The <b>username</b> is the store's Discogs seller name, from
@@ -230,6 +236,8 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
   var genreInput = document.getElementById("genreInput");
   var addGenreBtn = document.getElementById("addGenreBtn");
   var genreChips = document.getElementById("genreChips");
+  var formatChips = document.getElementById("formatChips");
+  var FORMAT_OPTIONS = ["Vinyl", "CD", "Cassette", "File"];
   var sellerBody = document.querySelector("#sellerTable tbody");
   var newSellerUser = document.getElementById("newSellerUser");
   var newSellerName = document.getElementById("newSellerName");
@@ -243,6 +251,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
 
   var token = "";
   var genres = [];
+  var formats = []; // subset of FORMAT_OPTIONS, lowercased
   var sellers = []; // [{username, display}]
 
   function showMsg(el, kind, text) {
@@ -349,6 +358,27 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     if (ev.key === "Enter") { ev.preventDefault(); addGenre(); }
   });
 
+  // ---- format checkboxes ----
+  function renderFormats() {
+    formatChips.innerHTML = "";
+    FORMAT_OPTIONS.forEach(function (name) {
+      var label = document.createElement("label");
+      label.style.cssText = "display:flex;align-items:center;gap:6px;font-size:13px;color:#d4d4d8;";
+      var box = document.createElement("input");
+      box.type = "checkbox"; box.style.width = "auto";
+      box.checked = formats.indexOf(name.toLowerCase()) !== -1;
+      box.addEventListener("change", function () {
+        var lower = name.toLowerCase();
+        var i = formats.indexOf(lower);
+        if (box.checked && i === -1) formats.push(lower);
+        if (!box.checked && i !== -1) formats.splice(i, 1);
+      });
+      label.appendChild(box);
+      label.appendChild(document.createTextNode(name));
+      formatChips.appendChild(label);
+    });
+  }
+
   // ---- seller table ----
   function renderSellers() {
     sellerBody.innerHTML = "";
@@ -450,18 +480,25 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
 
   async function loadCurrentValues() {
     var genresVal = await getVariable("GENRES_INCLUDE");
+    var formatsVal = await getVariable("FORMATS_INCLUDE");
     var sellersVal = await getVariable("SELLERS");
     var lookbackVal = await getVariable("LOOKBACK_HOURS");
     var budgetVal = await getVariable("MAX_RELEASE_LOOKUPS");
     var pagesVal = await getVariable("PAGES_BASE_URL");
 
     genres = (genresVal || "").split(",").map(function (g) { return g.trim(); }).filter(Boolean);
+    // "all"/"*" (the convention used to mean "no filter") and an unset
+    // variable both render as nothing checked here.
+    formats = (formatsVal && !/^(all|\*)$/i.test(formatsVal.trim()))
+      ? formatsVal.split(",").map(function (f) { return f.trim().toLowerCase(); }).filter(Boolean)
+      : [];
     sellers = sellersVal ? parseSellers(sellersVal) : [];
     lookbackInput.value = lookbackVal || DEFAULT_LOOKBACK;
     budgetInput.value = budgetVal || DEFAULT_BUDGET;
     pagesUrlDisplay.textContent = pagesVal || "(not set - the email has no player link yet)";
 
     renderGenres();
+    renderFormats();
     renderSellers();
   }
 
@@ -505,6 +542,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     showMsg(saveMsg, "info", "Saving…");
     try {
       await setVariable("GENRES_INCLUDE", genres.length ? genres.join(",") : "all");
+      await setVariable("FORMATS_INCLUDE", formats.length ? formats.join(",") : "all");
       await setVariable("SELLERS", serialiseSellers());
       await setVariable("LOOKBACK_HOURS", String(parseInt(lookbackInput.value, 10) || DEFAULT_LOOKBACK));
       await setVariable("MAX_RELEASE_LOOKUPS", String(parseInt(budgetInput.value, 10) || DEFAULT_BUDGET));

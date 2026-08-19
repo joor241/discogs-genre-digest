@@ -61,6 +61,13 @@ GENRES_INCLUDE = [
     "breakbeat", "trance",
 ]
 
+# Formats to keep, matched case-insensitively against the release's format
+# names (as Discogs categorises them: "Vinyl", "CD", "Cassette", "File", ...).
+# A release can carry more than one -- e.g. "Vinyl" + "File" for a record that
+# ships with a download code -- and is kept if ANY of its formats matches.
+# Empty list = keep everything.
+FORMATS_INCLUDE = ["Vinyl"]
+
 # How far back to look, in hours.
 #
 # The digest is stateless: it asks "was this listed in the last N hours?"
@@ -153,8 +160,10 @@ def env_flag(name: str, default: bool = False) -> bool:
     return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
-def env_genres(name: str, default: list[str]) -> list[str]:
-    """Comma-separated genre list, e.g. GENRES_INCLUDE="techno,deep house,electro".
+def env_csv_list(name: str, default: list[str]) -> list[str]:
+    """Comma-separated list, e.g. GENRES_INCLUDE="techno,deep house,electro"
+    or FORMATS_INCLUDE="Vinyl,CD". Shared by the genre and format filters,
+    since both are "comma list, empty means no filtering" in the same way.
 
     Unset or empty keeps the in-code default -- GitHub Actions passes an empty
     string for variables and inputs that were never set, so empty cannot mean
@@ -334,8 +343,9 @@ class Discogs:
             "genres": [g for g in (data.get("genres") or []) if g],
             "styles": [s for s in (data.get("styles") or []) if s],
             "thumb": data.get("thumb") or "",
-            # Free: this is the same response we already fetch for genres.
+            # Free: these are the same response we already fetch for genres.
             "videos": extract_videos(data.get("videos"), self.video_limit),
+            "formats": [f.get("name") for f in (data.get("formats") or []) if f.get("name")],
         }
         self._release_cache[release_id] = info
         return info
@@ -511,6 +521,18 @@ def matches_genre(tags: list[str], wanted_norm: list[str]) -> bool:
     return any(f" {want} " in hay for want in wanted_norm for hay in haystacks)
 
 
+def matches_format(formats: list[str], wanted_lower: list[str]) -> bool:
+    """Case-insensitive match against Discogs' own format-name vocabulary
+    (Vinyl, CD, Cassette, File, ...). Plain equality is enough here, unlike
+    genre matching -- these are a small, clean, fixed set of names rather than
+    free-text tags, so there's no "electro"-inside-"Electronic" style trap.
+    """
+    if not wanted_lower:
+        return True
+    have = {f.lower() for f in formats if f}
+    return any(want in have for want in wanted_lower)
+
+
 def format_price(listing: dict) -> str:
     price = listing.get("price") or {}
     value = price.get("value")
@@ -523,8 +545,9 @@ def format_price(listing: dict) -> str:
         return f"{value} {currency}".strip()
 
 
-def collect_seller(api: Discogs, username: str, display_name: str,
-                   cutoff: datetime, wanted_norm: list[str]) -> tuple[list[dict], int, int]:
+def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datetime,
+                   wanted_norm: list[str], wanted_formats: list[str]
+                   ) -> tuple[list[dict], int, int]:
     """Return (matching items, listings past the date cutoff, listings left
     unchecked because the release-lookup budget ran out)."""
     matched: list[dict] = []
@@ -557,6 +580,8 @@ def collect_seller(api: Discogs, username: str, display_name: str,
         tags = info["genres"] + info["styles"]
         if not matches_genre(tags, wanted_norm):
             continue
+        if not matches_format(info.get("formats") or [], wanted_formats):
+            continue
 
         matched.append({
             "description": release.get("description") or release.get("title") or "Unknown release",
@@ -569,6 +594,7 @@ def collect_seller(api: Discogs, username: str, display_name: str,
             "label": release.get("label") or "",
             "catno": release.get("catalog_number") or "",
             "videos": info.get("videos") or [],
+            "formats": info.get("formats") or [],
         })
 
     if unchecked:
@@ -585,8 +611,10 @@ def collect_seller(api: Discogs, username: str, display_name: str,
 
 
 def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
-                 genres: list[str]) -> tuple[list[tuple[str, list[dict]]], dict]:
+                 genres: list[str], formats: list[str]
+                 ) -> tuple[list[tuple[str, list[dict]]], dict]:
     wanted_norm = [n for n in (normalise_tag(g) for g in genres) if n]
+    wanted_formats = [f.lower() for f in formats if f]
     sections: list[tuple[str, list[dict]]] = []
     stats = {"considered": 0, "matched": 0, "unchecked": 0, "failed_sellers": []}
 
@@ -594,7 +622,7 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
         LOG.info("Checking %s (%s)...", display_name, username)
         try:
             matched, considered, unchecked = collect_seller(
-                api, username, display_name, cutoff, wanted_norm
+                api, username, display_name, cutoff, wanted_norm, wanted_formats
             )
         except DiscogsError as exc:
             # A dead store must not take the whole digest down.
@@ -1035,6 +1063,8 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                      if item.get("thumb") else '<img alt="">')
 
             bits = [e(item["price"]), e(item["condition"])]
+            if item.get("formats"):
+                bits.append(e(", ".join(item["formats"])))
             if item.get("label") or item.get("catno"):
                 bits.append(e(" - ".join(p for p in (item.get("label"),
                                                      item.get("catno")) if p)))
@@ -1197,6 +1227,8 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                 meta = f'{e(item["price"])} &middot; {e(item["condition"])}'
                 if item["sleeve"]:
                     meta += f' / {e(item["sleeve"])} sleeve'
+                if item.get("formats"):
+                    meta += f' &middot; {e(", ".join(item["formats"]))}'
 
                 catno = ""
                 if item["label"] or item["catno"]:
@@ -1366,7 +1398,8 @@ def main() -> int:
         require_env(["SMTP_HOST", "SMTP_USER", "SMTP_PASS", "MAIL_TO"])
 
     sellers = env_sellers("SELLERS", SELLERS)
-    genres = env_genres("GENRES_INCLUDE", GENRES_INCLUDE)
+    genres = env_csv_list("GENRES_INCLUDE", GENRES_INCLUDE)
+    formats = env_csv_list("FORMATS_INCLUDE", FORMATS_INCLUDE)
     lookback = env_int("LOOKBACK_HOURS", LOOKBACK_HOURS)
     if lookback <= 0:
         LOG.warning("LOOKBACK_HOURS must be positive - using %s", LOOKBACK_HOURS)
@@ -1378,6 +1411,7 @@ def main() -> int:
     cutoff = datetime.now(timezone.utc) - timedelta(hours=lookback)
     LOG.info("Lookback %sh (cutoff %s UTC)", lookback, cutoff.strftime("%Y-%m-%d %H:%M"))
     LOG.info("Genre filter: %s", ", ".join(genres) if genres else "(none - keeping everything)")
+    LOG.info("Format filter: %s", ", ".join(formats) if formats else "(none - keeping everything)")
     LOG.info("Sellers: %s", ", ".join(sellers))
 
     api = Discogs(
@@ -1388,7 +1422,7 @@ def main() -> int:
     )
 
     started = time.monotonic()
-    sections, stats = build_digest(api, sellers, cutoff, genres)
+    sections, stats = build_digest(api, sellers, cutoff, genres, formats)
     elapsed = time.monotonic() - started
 
     LOG.info(
