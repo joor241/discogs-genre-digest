@@ -77,6 +77,9 @@ jobs:
           # "Run workflow" form wins over the repo variable for that one run.
           GENRES_INCLUDE: ${{ inputs.genres || vars.GENRES_INCLUDE }}
           FORMATS_INCLUDE: ${{ vars.FORMATS_INCLUDE }}
+          # Per-store override, format "user1: techno, house; user2: disco".
+          # A store not listed here just uses GENRES_INCLUDE above.
+          GENRES_BY_STORE: ${{ vars.GENRES_BY_STORE }}
           LOOKBACK_HOURS: ${{ inputs.lookback_hours || vars.LOOKBACK_HOURS }}
           SELLERS: ${{ vars.SELLERS }}
           MAX_RELEASE_LOOKUPS: ${{ vars.MAX_RELEASE_LOOKUPS }}

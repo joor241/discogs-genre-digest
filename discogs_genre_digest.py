@@ -68,6 +68,18 @@ GENRES_INCLUDE = [
 # Empty list = keep everything.
 FORMATS_INCLUDE = ["Vinyl"]
 
+# Per-store genre/style override. A store not mentioned here uses the global
+# GENRES_INCLUDE above; a store listed here uses ONLY its own list instead
+# (replaces, does not add to, the global one). Give a store's list as
+# empty/"all"/"*" via GENRES_BY_STORE to switch off genre filtering for just
+# that one store while the rest keep the global filter.
+#
+# Example: Offbeat mostly stocks trance/new-beat, Clone mostly house --
+# GENRES_BY_STORE = {"offbeat__records": ["trance", "new beat"], "clone.nl": ["house"]}
+#
+# Empty dict (the default) means every store uses the same global filter.
+GENRES_BY_STORE: dict[str, list[str]] = {}
+
 # How far back to look, in hours.
 #
 # The digest is stateless: it asks "was this listed in the last N hours?"
@@ -198,6 +210,35 @@ def env_sellers(name: str, default: dict[str, str]) -> dict[str, str]:
         if username:
             sellers[username] = display.strip() or username
     return sellers or dict(default)
+
+
+def env_genres_by_store(name: str, default: dict[str, list[str]]) -> dict[str, list[str]]:
+    """Per-seller genre override, format: "user1: techno, house; user2: disco".
+
+    A username not mentioned here is absent from the returned dict, which
+    build_digest() reads as "use the global GENRES_INCLUDE filter for this
+    store". A username IS present but with an empty list when its terms are
+    "all"/"*", which means "no genre filtering for this one store" -- that is
+    deliberately a different, distinguishable state from "not overridden".
+    """
+    raw = os.environ.get(name)
+    if raw is None or not raw.strip():
+        return dict(default)
+    result: dict[str, list[str]] = {}
+    for block in raw.split(";"):
+        block = block.strip()
+        if not block:
+            continue
+        username, sep, term_part = block.partition(":")
+        username = username.strip()
+        if not username or not sep:
+            continue
+        term_part = term_part.strip()
+        if term_part.lower() in {"all", "*"}:
+            result[username] = []
+        else:
+            result[username] = [t.strip() for t in term_part.split(",") if t.strip()]
+    return result or dict(default)
 
 
 # ---------------------------------------------------------------------------
@@ -615,18 +656,37 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
 
 
 def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
-                 genres: list[str], formats: list[str]
-                 ) -> tuple[list[tuple[str, list[dict]]], dict]:
-    wanted_norm = [n for n in (normalise_tag(g) for g in genres) if n]
+                 genres: list[str], formats: list[str],
+                 genres_by_store: dict[str, list[str]] | None = None
+                 ) -> tuple[list[tuple[str, list[dict], str | None]], dict]:
+    """Each section is (display_name, matched_items, genre_label).
+
+    genre_label is None when the store used the global genre filter (the
+    common case, rendered with no extra note), or a string describing the
+    store's own override when genres_by_store applies to it -- so the digest
+    can show, right under that store's heading, that it was filtered
+    differently rather than leaving that silent.
+    """
+    genres_by_store = genres_by_store or {}
+    default_norm = [n for n in (normalise_tag(g) for g in genres) if n]
     wanted_formats = [f.lower() for f in formats if f]
-    sections: list[tuple[str, list[dict]]] = []
+    sections: list[tuple[str, list[dict], str | None]] = []
     stats = {"considered": 0, "matched": 0, "unchecked": 0, "failed_sellers": []}
 
     for username, display_name in sellers.items():
-        LOG.info("Checking %s (%s)...", display_name, username)
+        override = genres_by_store.get(username)
+        if override is not None:
+            seller_norm = [n for n in (normalise_tag(g) for g in override) if n]
+            genre_label = ", ".join(override) if override else "everything (no genre filter)"
+        else:
+            seller_norm = default_norm
+            genre_label = None
+
+        LOG.info("Checking %s (%s)%s...", display_name, username,
+                 f" [genres: {genre_label}]" if genre_label is not None else "")
         try:
             matched, considered, unchecked = collect_seller(
-                api, username, display_name, cutoff, wanted_norm, wanted_formats
+                api, username, display_name, cutoff, seller_norm, wanted_formats
             )
         except DiscogsError as exc:
             # A dead store must not take the whole digest down.
@@ -642,7 +702,7 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
         stats["matched"] += len(matched)
         stats["unchecked"] += unchecked
         if matched:
-            sections.append((display_name, matched))
+            sections.append((display_name, matched, genre_label))
 
     return sections, stats
 
@@ -1031,7 +1091,7 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
     """
     e = html.escape
     filter_text = ", ".join(genres) if genres else "everything (no filter)"
-    total = sum(len(items) for _, items in sections)
+    total = sum(len(items) for _, items, _ in sections)
 
     def archive_href(stamp: str) -> str:
         return f"{base_url}/archive/{stamp}.html" if base_url else f"{stamp}.html"
@@ -1060,8 +1120,13 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
     if not sections:
         out.append('<p class="none">No new matching listings.</p>')
 
-    for store, items in sections:
-        out.append(f'<h2>{e(store)} &middot; {len(items)}</h2>')
+    for store, items, genre_label in sections:
+        note = (
+            f' <span style="color:#6f6f78;font-weight:normal;font-size:12px;">'
+            f'&mdash; filter: {e(genre_label)}</span>'
+            if genre_label is not None else ''
+        )
+        out.append(f'<h2>{e(store)} &middot; {len(items)}{note}</h2>')
         for item in items:
             thumb = (f'<img src="{e(item["thumb"])}" alt="" loading="lazy">'
                      if item.get("thumb") else '<img alt="">')
@@ -1202,11 +1267,16 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
             'No new matching listings today.</p>'
         )
     else:
-        for store, items in sections:
+        for store, items, genre_label in sections:
+            note = (
+                f' <span style="color:#888;font-weight:normal;font-size:11px;">'
+                f'&mdash; filter: {e(genre_label)}</span>'
+                if genre_label is not None else ''
+            )
             out.append(
                 f'<h2 style="font-size:16px;margin:26px 0 10px;padding-bottom:6px;'
                 f'border-bottom:2px solid #111;">{e(store)} '
-                f'<span style="color:#888;font-weight:normal;">({len(items)})</span></h2>'
+                f'<span style="color:#888;font-weight:normal;">({len(items)})</span>{note}</h2>'
             )
             for item in items:
                 # Clicking the sleeve plays the record where possible, since
@@ -1295,9 +1365,12 @@ def render_text(sections, cutoff: datetime, genres: list[str], stats: dict,
         lines += [f"Play them all here: {player_url}", ""]
     if not sections:
         lines.append("No new matching listings today.")
-    for store, items in sections:
-        lines.append(f"{store} ({len(items)})")
-        lines.append("-" * len(f"{store} ({len(items)})"))
+    for store, items, genre_label in sections:
+        header = f"{store} ({len(items)})"
+        if genre_label is not None:
+            header += f" -- filter: {genre_label}"
+        lines.append(header)
+        lines.append("-" * len(header))
         for item in items:
             lines.append(f"  {item['description']}")
             lines.append(f"    {item['price']} | {item['condition']} | {item['tags']}")
@@ -1404,6 +1477,7 @@ def main() -> int:
     sellers = env_sellers("SELLERS", SELLERS)
     genres = env_csv_list("GENRES_INCLUDE", GENRES_INCLUDE)
     formats = env_csv_list("FORMATS_INCLUDE", FORMATS_INCLUDE)
+    genres_by_store = env_genres_by_store("GENRES_BY_STORE", GENRES_BY_STORE)
     lookback = env_int("LOOKBACK_HOURS", LOOKBACK_HOURS)
     if lookback <= 0:
         LOG.warning("LOOKBACK_HOURS must be positive - using %s", LOOKBACK_HOURS)
@@ -1416,6 +1490,9 @@ def main() -> int:
     LOG.info("Lookback %sh (cutoff %s UTC)", lookback, cutoff.strftime("%Y-%m-%d %H:%M"))
     LOG.info("Genre filter: %s", ", ".join(genres) if genres else "(none - keeping everything)")
     LOG.info("Format filter: %s", ", ".join(formats) if formats else "(none - keeping everything)")
+    for override_user, override_genres in genres_by_store.items():
+        LOG.info("  per-store override for %s: %s", override_user,
+                 ", ".join(override_genres) if override_genres else "(none - keeping everything)")
     LOG.info("Sellers: %s", ", ".join(sellers))
     LOG.info("Caps: %d page(s)/seller (%d listings), %d release lookup(s)/run",
              env_int("MAX_PAGES", MAX_PAGES), env_int("MAX_PAGES", MAX_PAGES) * PER_PAGE,
@@ -1430,7 +1507,7 @@ def main() -> int:
     )
 
     started = time.monotonic()
-    sections, stats = build_digest(api, sellers, cutoff, genres, formats)
+    sections, stats = build_digest(api, sellers, cutoff, genres, formats, genres_by_store)
     elapsed = time.monotonic() - started
 
     LOG.info(

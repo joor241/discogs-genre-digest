@@ -255,6 +255,33 @@ items, so expect a very long email.
 The same pattern works for `LOOKBACK_HOURS` (how many hours back to look) and
 `SELLERS`.
 
+#### Different genres for different stores
+
+`GENRES_INCLUDE` applies to every store by default. To use different terms for
+one store instead — e.g. Offbeat leans trance/new-beat while Clone leans house —
+set the `GENRES_BY_STORE` repo variable:
+
+```
+offbeat__records: trance, new beat; clone.nl: house
+```
+
+Format: `username: term, term; username2: term`, semicolons between stores,
+commas between that store's terms. A store **not** listed here just keeps using
+the global `GENRES_INCLUDE` filter — this replaces it for that store, it doesn't
+add to it. Give a store's list as `all` to turn off genre filtering for just
+that one store while everyone else keeps the global filter:
+
+```
+offbeat__records: all
+```
+
+When a store has its own filter, both the emailed digest and the player page
+show a small "— filter: ..." note under that store's heading, so it's visible
+at a glance which stores are using something different from the rest.
+
+The settings page (`settings.html`) has a **Genres** column per store in the
+same editor used for adding stores — leave it blank to use the global filter.
+
 ### Formats — filtering to vinyl
 
 Every listing shows its format(s) (Vinyl, CD, Cassette, File, ...) right next

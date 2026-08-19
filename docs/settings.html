@@ -184,11 +184,14 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
         The <b>username</b> is the store's Discogs seller name, from
         <code>discogs.com/seller/&lt;username&gt;/profile</code> &mdash; often different
         from their website. Click <b>Check</b> to confirm it exists and has items for sale.
+        Leave <b>Genres</b> blank to use the global genre filter above for that store; fill
+        it in to use different terms for just that one store instead (not in addition to).
       </p>
       <table id="sellerTable"><tbody></tbody></table>
       <div class="addrow row">
         <input type="text" id="newSellerUser" placeholder="Discogs username">
         <input type="text" id="newSellerName" placeholder="Display name">
+        <input type="text" id="newSellerGenres" placeholder="Genres (optional)">
         <button class="ghost small" id="addSellerBtn" type="button">Add</button>
       </div>
     </div>
@@ -251,6 +254,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
   var FORMAT_OPTIONS = ["Vinyl", "CD", "Cassette", "File"];
   var sellerBody = document.querySelector("#sellerTable tbody");
   var newSellerUser = document.getElementById("newSellerUser");
+  var newSellerGenres = document.getElementById("newSellerGenres");
   var newSellerName = document.getElementById("newSellerName");
   var addSellerBtn = document.getElementById("addSellerBtn");
   var lookbackInput = document.getElementById("lookbackInput");
@@ -410,6 +414,14 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
       nameInput.addEventListener("input", function () { s.display = nameInput.value.trim(); });
       tdName.appendChild(nameInput);
 
+      var tdGenres = document.createElement("td");
+      tdGenres.style.paddingLeft = "8px";
+      var genresInput = document.createElement("input");
+      genresInput.type = "text"; genresInput.placeholder = "uses global filter";
+      genresInput.value = s.genres || "";
+      genresInput.addEventListener("input", function () { s.genres = genresInput.value.trim(); });
+      tdGenres.appendChild(genresInput);
+
       var tdStatus = document.createElement("td");
       tdStatus.className = "status";
       tdStatus.id = "status-" + i;
@@ -431,7 +443,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
       rmBtn.addEventListener("click", function () { sellers.splice(i, 1); renderSellers(); });
       tdRm.appendChild(rmBtn);
 
-      tr.appendChild(tdUser); tr.appendChild(tdName);
+      tr.appendChild(tdUser); tr.appendChild(tdName); tr.appendChild(tdGenres);
       tr.appendChild(tdStatus); tr.appendChild(tdCheck); tr.appendChild(tdRm);
       sellerBody.appendChild(tr);
     });
@@ -465,9 +477,10 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
 
   addSellerBtn.addEventListener("click", function () {
     var u = newSellerUser.value.trim(), n = newSellerName.value.trim();
+    var g = newSellerGenres.value.trim();
     if (!u) return;
-    sellers.push({ username: u, display: n || u });
-    newSellerUser.value = ""; newSellerName.value = "";
+    sellers.push({ username: u, display: n || u, genres: g });
+    newSellerUser.value = ""; newSellerName.value = ""; newSellerGenres.value = "";
     renderSellers();
   });
 
@@ -489,11 +502,30 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
       .map(function (s) { return s.username + "=" + (s.display || s.username); })
       .join(", ");
   }
+  function parseGenresByStore(value) {
+    var out = {};
+    (value || "").split(";").forEach(function (block) {
+      block = block.trim();
+      if (!block) return;
+      var colon = block.indexOf(":");
+      if (colon === -1) return;
+      var u = block.slice(0, colon).trim();
+      var g = block.slice(colon + 1).trim();
+      if (u) out[u] = g;
+    });
+    return out;
+  }
+  function serialiseGenresByStore() {
+    return sellers.filter(function (s) { return s.username && s.genres; })
+      .map(function (s) { return s.username + ": " + s.genres; })
+      .join("; ");
+  }
 
   async function loadCurrentValues() {
     var genresVal = await getVariable("GENRES_INCLUDE");
     var formatsVal = await getVariable("FORMATS_INCLUDE");
     var sellersVal = await getVariable("SELLERS");
+    var genresByStoreVal = await getVariable("GENRES_BY_STORE");
     var lookbackVal = await getVariable("LOOKBACK_HOURS");
     var budgetVal = await getVariable("MAX_RELEASE_LOOKUPS");
     var maxPagesVal = await getVariable("MAX_PAGES");
@@ -506,6 +538,8 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
       ? formatsVal.split(",").map(function (f) { return f.trim().toLowerCase(); }).filter(Boolean)
       : [];
     sellers = sellersVal ? parseSellers(sellersVal) : [];
+    var overrides = parseGenresByStore(genresByStoreVal);
+    sellers.forEach(function (s) { s.genres = overrides[s.username] || ""; });
     lookbackInput.value = lookbackVal || DEFAULT_LOOKBACK;
     budgetInput.value = budgetVal || DEFAULT_BUDGET;
     pagesInput.value = maxPagesVal || DEFAULT_PAGES;
@@ -558,6 +592,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
       await setVariable("GENRES_INCLUDE", genres.length ? genres.join(",") : "all");
       await setVariable("FORMATS_INCLUDE", formats.length ? formats.join(",") : "all");
       await setVariable("SELLERS", serialiseSellers());
+      await setVariable("GENRES_BY_STORE", serialiseGenresByStore());
       await setVariable("LOOKBACK_HOURS", String(parseInt(lookbackInput.value, 10) || DEFAULT_LOOKBACK));
       await setVariable("MAX_RELEASE_LOOKUPS", String(parseInt(budgetInput.value, 10) || DEFAULT_BUDGET));
       await setVariable("MAX_PAGES", String(parseInt(pagesInput.value, 10) || DEFAULT_PAGES));
