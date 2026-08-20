@@ -839,13 +839,6 @@ a.ytlink:hover { color: #e8e8ea; background: #202027; }
 .trow.errored .bar { opacity: .45; cursor: not-allowed; pointer-events: none; }
 .trow.errored .time { color: #9a5a5a; }
 .none { color: #5f5f68; font-size: 13px; }
-.topnav { margin: 0 0 18px; }
-.topnav a {
-  color: #8a8a92; text-decoration: none; font-size: 13px;
-  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
-  display: inline-block;
-}
-.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
 footer {
   margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
   color: #5f5f68; font-size: 12px;
@@ -1096,8 +1089,6 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
     def archive_href(stamp: str) -> str:
         return f"{base_url}/archive/{stamp}.html" if base_url else f"{stamp}.html"
 
-    settings_href = f"{base_url}/settings.html" if base_url else "settings.html"
-
     out = [
         '<!doctype html><html lang="en"><head><meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
@@ -1111,7 +1102,6 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         '<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;">'
         '<div id="yt-audio-host"></div></div>',
         '<div class="wrap">',
-        f'<div class="topnav"><a href="{e(settings_href)}">&#9881; Settings</a></div>',
         '<h1>New on Discogs</h1>',
         f'<p class="sub">{total} record(s) listed since '
         f'{e(cutoff.strftime("%a %d %b %Y, %H:%M"))} UTC &middot; {e(filter_text)}</p>',
