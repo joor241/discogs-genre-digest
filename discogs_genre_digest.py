@@ -787,7 +787,15 @@ h2 {
 .rec .title a { color: #e8e8ea; text-decoration: none; }
 .rec .title a:hover { color: #6ea8ff; }
 .meta { color: #8a8a92; font-size: 12.5px; margin-bottom: 2px; }
-.tags { color: #5f5f68; font-size: 12px; margin-bottom: 9px; }
+.price { font-weight: 700; font-size: 15px; color: #e8e8ea; margin-right: 7px; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 10px; margin: 0 5px 4px 0;
+  background: #202027; color: #9a9aa2;
+}
+.badge.format { background: #14202b; color: #7fb3e8; }
+.fineprint { color: #6f6f78; font-size: 11.5px; margin-top: 3px; }
+.tags { color: #5f5f68; font-size: 12px; margin-top: 3px; margin-bottom: 9px; }
 .buy {
   display: inline-block; font-size: 12px; color: #6ea8ff;
   text-decoration: none; margin-left: 10px;
@@ -1121,12 +1129,23 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
             thumb = (f'<img src="{e(item["thumb"])}" alt="" loading="lazy">'
                      if item.get("thumb") else '<img alt="">')
 
-            bits = [e(item["price"]), e(item["condition"])]
+            # Same reasoning as the email: price gets weight, condition/format
+            # become badges, label/catno drops to fine print -- rather than
+            # one undifferentiated middot-joined line.
+            condition_text = item["condition"]
+            if item.get("sleeve") and item["sleeve"] != item["condition"]:
+                condition_text += f' / {item["sleeve"]} sleeve'
+            meta_html = (
+                f'<span class="price">{e(item["price"])}</span>'
+                f'<span class="badge">{e(condition_text)}</span>'
+            )
             if item.get("formats"):
-                bits.append(e(", ".join(item["formats"])))
+                meta_html += f'<span class="badge format">{e(", ".join(item["formats"]))}</span>'
+
+            fine_html = ""
             if item.get("label") or item.get("catno"):
-                bits.append(e(" - ".join(p for p in (item.get("label"),
-                                                     item.get("catno")) if p)))
+                parts = [p for p in (item.get("label"), item.get("catno")) if p]
+                fine_html = f'<div class="fineprint">{e(" - ".join(parts))}</div>'
 
             tracks = []
             for video in (item.get("videos") or []):
@@ -1166,8 +1185,9 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                 '<div class="rec">' + thumb + '<div class="body">'
                 f'<div class="title"><a href="{e(item["url"])}">'
                 f'{e(item["description"])}</a></div>'
-                f'<div class="meta">{" &middot; ".join(bits)}'
+                f'<div class="meta">{meta_html}'
                 f'<a class="buy" href="{e(item["url"])}">Buy on Discogs &rarr;</a></div>'
+                + fine_html +
                 f'<div class="tags">{e(item["tags"])}</div>'
                 + track_html + '</div></div>'
             )
@@ -1288,16 +1308,34 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                         f'{image}</td>'
                     )
 
-                meta = f'{e(item["price"])} &middot; {e(item["condition"])}'
-                if item["sleeve"]:
-                    meta += f' / {e(item["sleeve"])} sleeve'
+                # Price is the thing a reader scans for first, so it gets its
+                # own weight; condition/format become small badges rather than
+                # running text; label/catno drops to visibly lighter fine
+                # print. All three were the same grey/size before, which made
+                # the whole line read as one undifferentiated blob.
+                price_html = (
+                    f'<span style="font-size:15px;font-weight:700;color:#111;'
+                    f'margin-right:7px;">{e(item["price"])}</span>'
+                )
+                condition_text = item["condition"]
+                if item["sleeve"] and item["sleeve"] != item["condition"]:
+                    condition_text += f' / {item["sleeve"]} sleeve'
+                badge = ('display:inline-block;font-size:11px;font-weight:600;'
+                         'padding:3px 8px;border-radius:10px;margin:0 5px 4px 0;')
+                meta = price_html + (
+                    f'<span style="{badge}background:#f0f0f0;color:#555;">'
+                    f'{e(condition_text)}</span>'
+                )
                 if item.get("formats"):
-                    meta += f' &middot; {e(", ".join(item["formats"]))}'
+                    meta += (
+                        f'<span style="{badge}background:#eef4ff;color:#3a5f9e;">'
+                        f'{e(", ".join(item["formats"]))}</span>'
+                    )
 
                 catno = ""
                 if item["label"] or item["catno"]:
                     parts = [p for p in (item["label"], item["catno"]) if p]
-                    catno = (f'<div style="color:#888;font-size:12px;">'
+                    catno = (f'<div style="color:#999;font-size:11.5px;margin-top:5px;">'
                              f'{e(" - ".join(parts))}</div>')
 
                 out.append(
@@ -1308,7 +1346,7 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                     f'<a href="{e(item["url"])}" '
                     f'style="color:#0b5fff;text-decoration:none;font-weight:600;">'
                     f'{e(item["description"])}</a>'
-                    f'<div style="color:#444;font-size:13px;margin-top:2px;">{meta}</div>'
+                    f'<div style="margin-top:5px;">{meta}</div>'
                     + catno +
                     f'<div style="color:#888;font-size:12px;">{e(item["tags"])}</div>'
                     + listen_html(item, e) +
