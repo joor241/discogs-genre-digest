@@ -371,11 +371,15 @@ through the Discogs API:
   the log shows a specific warning ("scraper found 0 items on a page that
   always has some") rather than failing silently, so it's noticeable. Turn it
   off with the `DEEJAY_ENABLED` variable (below) if that happens and you don't
-  want to wait for a fix. Their tracklist "Play" buttons stream through a
+  want to wait for a fix. Their own tracklist "Play" buttons stream through a
   session-gated internal API (checked their player JS directly) rather than a
-  static, predictable URL, so inline playback for this source wasn't pursued —
-  it would mean depending on a second undocumented, changeable mechanism on
-  top of the page-scraping already in play here.
+  static, predictable URL, so those aren't used directly — instead, each
+  matched item is cross-referenced against Discogs' own release search, and
+  its community-submitted YouTube links are borrowed when a confident match
+  is found (see [Listening to the records](#listening-to-the-records)). Not
+  every item gets a match this way, and none get it when
+  `DISCOGS_TOKEN`/Discogs itself is unavailable — those just keep the
+  existing "search YouTube" fallback link.
 
 Neither source has Discogs-style structured genre/style data, so genre
 filtering runs against each item's title and description **text** instead
@@ -409,7 +413,9 @@ page's items are considered each run. `CLONE_AUDIO_MAX_ITEMS` (default `30`)
 caps how many clone.nl items get their tracklist fetched for inline playback
 each run — each one costs an extra request beyond the single feed fetch, so
 this bounds the worst case on a very broad filter. Items beyond the cap still
-appear in the digest, just without playable tracks. Per-store genre overrides
+appear in the digest, just without playable tracks. `DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS`
+(default `20`) does the same for how many deejay.de items get cross-referenced
+against Discogs per run. Per-store genre overrides
 (`GENRES_BY_STORE`, see above) work for these too — use the keys `clone-rss`
 and `deejay`:
 
@@ -491,8 +497,12 @@ a track uses is invisible from the outside — same bar, same tap-to-seek
 behaviour — except direct-MP3 tracks skip the "watch on YouTube" arrow, since
 there's no video to link to. Only one track plays at a time regardless of
 which backend it's using; starting a YouTube track stops a playing MP3 clip
-and vice versa. deejay.de tracks don't have inline playback at all — see
-[Non-Discogs sources](#non-discogs-sources-clonenl-rss-and-deejayde) for why.
+and vice versa. deejay.de items have no track data of their own, so they play
+through the YouTube backend too — but only when a matching Discogs release was
+found with confidence; otherwise it's the "search YouTube" fallback link, same
+as any item nobody has attached video links to. See
+[Non-Discogs sources](#non-discogs-sources-clonenl-rss-and-deejayde) for how
+that matching works.
 
 **Why a separate page, and not just play inside the email:** every mail client
 strips `<script>`, `<iframe>` and `<audio>` before rendering — Gmail included —

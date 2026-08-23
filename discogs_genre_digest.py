@@ -137,6 +137,17 @@ DEEJAY_KEY = "deejay"
 DEEJAY_ENABLED = True
 DEEJAY_MAX_ITEMS = 60  # how many of the page's items to consider each run
 
+# deejay.de items get no video data from deejay.de itself -- their own
+# tracklist player streams through a session-gated internal API rather than
+# a static URL, so it isn't reused here (see README). Instead, each matched
+# item is cross-referenced against Discogs' own release search, and its
+# community-submitted YouTube links are borrowed when a confident match is
+# found (never a guess -- see confident_discogs_match()). This costs one
+# extra Discogs API search per matched item (plus a release-detail fetch on
+# a hit, counted against MAX_RELEASE_LOOKUPS same as everything else), so
+# it's capped independently to bound worst case on a broad filter.
+DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS = 20
+
 # How far back to look, in hours.
 #
 # The digest is stateless: it asks "was this listed in the last N hours?"
@@ -474,6 +485,18 @@ class Discogs:
         self._release_cache[release_id] = info
         return info
 
+    def search_release(self, query: str) -> list[dict]:
+        """Discogs' own release search, used to cross-reference a release
+        from a source that has no video data of its own (deejay.de) against
+        Discogs' community-submitted YouTube links. Not counted against
+        lookup_budget -- that budget is specifically for /releases/{id}
+        detail calls, and search is a distinct, comparatively cheap step."""
+        try:
+            data = self.get("/database/search", params={"q": query, "type": "release", "per_page": 5})
+        except DiscogsError:
+            return []
+        return data.get("results") or []
+
 
 # ---------------------------------------------------------------------------
 # Fetching and filtering
@@ -670,6 +693,71 @@ def matching_terms(text: str, wanted_norm: list[str]) -> list[str]:
     return [w for w in wanted_norm if f" {w} " in hay]
 
 
+def confident_discogs_match(candidate_title: str, artist: str, title: str) -> bool:
+    """True only if a Discogs search result is confidently the same release
+    as (artist, title) -- requires the candidate's own title to contain the
+    artist (whole-word, every word of a multi-word name) AND at least one
+    real word from the title. This is deliberately an ALL-of check, not
+    matches_genre()'s ANY-of semantics: a wrong record borrowed here would
+    show the wrong audio entirely, which is worse than showing none.
+
+    Catalog number alone is not trustworthy for this: verified live that a
+    short code like "PS01" matches 2,157 unrelated Discogs releases on its
+    own, while "artist + PS01" narrows to exactly the right one -- so this
+    is only ever called on results from a query that already included the
+    artist, not on catalog number in isolation.
+    """
+    hay = f" {normalise_tag(candidate_title)} "
+
+    artist_norm = normalise_tag(artist)
+    artist_words = [w for w in artist_norm.split() if len(w) > 1]
+    if not artist_words or not all(f" {w} " in hay for w in artist_words):
+        return False
+
+    title_words = [w for w in normalise_tag(title).split() if len(w) > 2]
+    if title_words and not any(f" {w} " in hay for w in title_words[:4]):
+        return False
+
+    return True
+
+
+def find_discogs_videos(api: "Discogs", artist: str, title: str, catno: str = "") -> list[dict]:
+    """Best-effort: borrow Discogs' community-submitted YouTube links for a
+    release that came from a source with no video data of its own (currently
+    deejay.de). Returns [] rather than a guess when not confident -- see
+    confident_discogs_match() for what "confident" means here.
+
+    Reuses release_info() for the actual release fetch once a candidate id
+    is found, so this gets caching and the lookup_budget cap for free and
+    produces videos in exactly the shape extract_videos() already builds --
+    no separate item-shape handling needed for this path.
+    """
+    query = " ".join(p for p in (artist, title, catno) if p).strip()
+    if not query:
+        return []
+
+    try:
+        results = api.search_release(query)
+    except Exception:  # noqa: BLE001 - a failed cross-reference must not lose the item
+        return []
+
+    for result in results[:5]:
+        candidate_title = result.get("title") or ""
+        if not confident_discogs_match(candidate_title, artist, title):
+            continue
+        release_id = result.get("id")
+        if not release_id:
+            continue
+        try:
+            info = api.release_info(release_id)
+        except DiscogsError:
+            continue
+        if info and info.get("videos"):
+            return info["videos"]
+
+    return []
+
+
 BARE_AMP_RE = re.compile(r'&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-fA-F]+;)')
 
 CLONE_TITLE_RE = re.compile(r'^(?P<desc>.*?)\s*\((?P<format>[^)]+)\)\s*(?:-\s*(?P<catno>\S.*))?$')
@@ -847,7 +935,9 @@ def classify_deejay_format(medium_text: str, url_path: str) -> list[str]:
 
 
 def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_agent: str,
-                      url: str = DEEJAY_URL, max_items: int = DEEJAY_MAX_ITEMS
+                      api: "Discogs | None" = None, url: str = DEEJAY_URL,
+                      max_items: int = DEEJAY_MAX_ITEMS,
+                      discogs_lookup_max_items: int = DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS,
                       ) -> tuple[list[dict], int]:
     """New arrivals scraped from deejay.de's "All / News" page. See the
     DEEJAY_* comments near the top of the file for the real limitations
@@ -911,6 +1001,10 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
         if release_note and release_note.lower() != "release unknown":
             label_line = f"{label_line} - released {release_note}" if label_line else f"released {release_note}"
 
+        tracks: list[dict] = []
+        if api is not None and discogs_lookup_max_items > 0 and len(matched) < discogs_lookup_max_items:
+            tracks = find_discogs_videos(api, artist, raw_title, catno)
+
         matched.append({
             "description": f"{desc_text} ({medium_text})" if medium_text else desc_text,
             "price": price,
@@ -921,7 +1015,7 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
             "thumb": img_match.group(1) if img_match else "",
             "label": label_line,
             "catno": "",
-            "videos": [],
+            "videos": tracks,
             "formats": formats,
         })
 
@@ -1013,6 +1107,7 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
                  clone_audio_max_items: int = CLONE_AUDIO_MAX_ITEMS,
                  deejay_enabled: bool = DEEJAY_ENABLED,
                  deejay_max_items: int = DEEJAY_MAX_ITEMS,
+                 deejay_discogs_max_items: int = DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS,
                  ) -> tuple[list[tuple[str, list[dict], str | None]], dict]:
     """Each section is (display_name, matched_items, genre_label).
 
@@ -1093,7 +1188,8 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
                  f" [genres: {genre_label}]" if genre_label is not None else "")
         try:
             matched, considered = fetch_deejay_html(
-                norm, wanted_formats, user_agent, max_items=deejay_max_items
+                norm, wanted_formats, user_agent, api=api, max_items=deejay_max_items,
+                discogs_lookup_max_items=deejay_discogs_max_items,
             )
             record("deejay.de (new arrivals)", matched, considered, 0, genre_label)
             LOG.info("[deejay] %d item(s) considered, %d matched", considered, len(matched))
@@ -2014,6 +2110,9 @@ def main() -> int:
     clone_audio_max_items = env_int("CLONE_AUDIO_MAX_ITEMS", CLONE_AUDIO_MAX_ITEMS)
     deejay_enabled = env_flag("DEEJAY_ENABLED", DEEJAY_ENABLED)
     deejay_max_items = env_int("DEEJAY_MAX_ITEMS", DEEJAY_MAX_ITEMS)
+    deejay_discogs_max_items = env_int(
+        "DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS", DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS
+    )
     lookback = env_int("LOOKBACK_HOURS", LOOKBACK_HOURS)
     if lookback <= 0:
         LOG.warning("LOOKBACK_HOURS must be positive - using %s", LOOKBACK_HOURS)
@@ -2054,6 +2153,7 @@ def main() -> int:
         clone_audio_max_items=clone_audio_max_items,
         deejay_enabled=deejay_enabled,
         deejay_max_items=deejay_max_items,
+        deejay_discogs_max_items=deejay_discogs_max_items,
     )
     elapsed = time.monotonic() - started
 
