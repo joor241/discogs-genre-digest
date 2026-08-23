@@ -396,13 +396,19 @@ Freshness also isn't identical across all four sources:
 |---|---|---|
 | Discogs marketplace | `posted` timestamp | seconds |
 | Clone.nl RSS | `pubDate` | whole days (every item observed was midnight) |
-| deejay.de scrape | none reliable | none — each run takes the current top of the page |
+| deejay.de scrape | none — tracked explicitly instead | per article id |
 
 deejay.de's own per-item date looks like a release date rather than "when
-added to the shop" (some items literally say "Release unknown"), so it isn't
-used for filtering — only shown as extra context in the digest. This means
-deejay.de items can repeat across more consecutive digests than the other
-three sources, which use `LOOKBACK_HOURS` to avoid that.
+added to the shop" (some items literally say "Release unknown"), so it can't
+be used for a `LOOKBACK_HOURS`-style cutoff the way the other three sources
+are. Instead, `docs/deejay_seen.json` remembers every article id already
+shown — committed by the workflow alongside the player pages, same
+git-as-state pattern as `docs/likes.json` — and each run skips anything
+already in it. So "new" here means "not shown before", not "posted
+recently": an id is only ever shown once, full stop, however long ago it
+first appeared. Ids are forgotten after `DEEJAY_SEEN_KEEP_DAYS` (default
+`90`) days, long enough that they'll have scrolled off deejay.de's own
+"News" listing by then regardless.
 
 **Turning either off** — set a repo Variable to `false`:
 
@@ -560,6 +566,38 @@ all** button as a fallback if you'd rather not open the page at all.
 > password live in encrypted GitHub Secrets and are never in the repository.
 > The pages carry `noindex, nofollow` so search engines skip them, which is not
 > access control, just tidiness.
+
+**The button under each item's price says where it actually goes.** It reads
+"Buy on Discogs" only for Discogs listings; clone.nl and deejay.de items say
+"View on Clone.nl" / "View on Deejay.de" instead, since that's genuinely where
+they link — the label is derived from the link's own URL, so it can never
+drift out of sync with where it actually points.
+
+#### Likes, synced across your devices
+
+Tap the heart on any record to save it — visible from a separate **Likes**
+page (linked at the top of the player page), grouped by store, on any device.
+
+This needed real syncing rather than a per-browser "favourites" list, since
+the point is opening the same likes on your phone and your laptop. There's no
+backend to hold that, so likes are stored the same way the player pages
+themselves are: as a file in this repo (`docs/likes.json`), read and written
+through GitHub's own API rather than a database you'd have to run.
+
+**Viewing likes needs nothing** — `likes.html` just fetches the public JSON
+file, so anyone can see what's liked, from any device, without setting
+anything up. **Saving or removing a like needs a token** — same one used by
+the [settings page](#the-settings-page--edit-everything-from-your-phone),
+plus one extra permission: set
+**Contents** to **Read and write** too when creating it (see
+[Turning the player page on](#turning-the-player-page-on) for the rest of
+that walkthrough). Tap a heart without a token connected and it opens the
+Likes page instead of silently doing nothing, so it's obvious what's needed.
+
+Each like carries its own snapshot of the record's title, price, thumbnail
+and store — not just a link — so the Likes page renders without needing to
+re-fetch anything, even after that record has scrolled out of every digest
+and archive page.
 
 #### Turning the player page on
 

@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import json
 import logging
 import os
 import re
@@ -31,7 +32,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
-from urllib.parse import quote, quote_plus
+from urllib.parse import quote, quote_plus, urlparse
 
 import requests
 
@@ -129,13 +130,22 @@ CLONE_AUDIO_MAX_ITEMS = 30
 # There is also no reliable "when was this added to the shop" signal: the
 # page's own per-item date looks like a release date, not an arrival date
 # (some items literally show "Release unknown"), so unlike every other
-# source here, this one has no time-based lookback filtering -- each run
-# just takes the current top of the page. Expect more repeats from this
-# source across consecutive digests than from the others.
+# source here, this one can't use a time-based lookback cutoff at all.
+# Instead, article ids are remembered explicitly: docs/deejay_seen.json
+# (committed by the workflow, same git-as-state pattern as docs/likes.json)
+# tracks every id already shown, and each run skips anything already in it
+# -- so "new" here means "not shown before", checked once and forgotten,
+# rather than derived from a timestamp. See fetch_deejay_html().
 DEEJAY_URL = "https://www.deejay.de/m_All/sm_News/lang_en"
 DEEJAY_KEY = "deejay"
 DEEJAY_ENABLED = True
 DEEJAY_MAX_ITEMS = 60  # how many of the page's items to consider each run
+
+# How many days to remember a deejay.de article id before pruning it from
+# docs/deejay_seen.json, bounding the file's growth. Long enough that the
+# id has certainly scrolled off the page's own "News" listing by then (it
+# only ever shows recent stock), so nothing is lost by forgetting it.
+DEEJAY_SEEN_KEEP_DAYS = 90
 
 # deejay.de items DO get real audio: each track's own MP3 lives at a
 # predictable, static URL sharded by the article id's own last two digits
@@ -660,6 +670,21 @@ def youtube_search_url(description: str) -> str:
     return "https://www.youtube.com/results?search_query=" + quote_plus(description)
 
 
+def buy_button_label(url: str) -> str:
+    """The label always matches where the button actually goes, rather than
+    hardcoding "Buy on Discogs" for every item regardless of source -- clone.nl
+    and deejay.de items link to their own site, not Discogs, and saying
+    otherwise there is just wrong. Derived from the URL itself rather than a
+    separate per-item "source" field, so it can never drift out of sync with
+    the actual link."""
+    host = (urlparse(url).netloc or "").removeprefix("www.")
+    if not host:
+        return "View listing"
+    if "discogs.com" in host:
+        return "Buy on Discogs"
+    return f"View on {host[0].upper()}{host[1:]}"
+
+
 def normalise_tag(text: str) -> str:
     """Lowercase and reduce anything non-alphanumeric to single spaces, so
     "Italo-Disco", "italo disco" and "Italo Disco" all compare equal."""
@@ -1047,10 +1072,24 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
                       max_items: int = DEEJAY_MAX_ITEMS,
                       discogs_lookup_max_items: int = DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS,
                       stock_check_max_items: int = DEEJAY_STOCK_CHECK_MAX_ITEMS,
-                      ) -> tuple[list[dict], int]:
-    """New arrivals scraped from deejay.de's "All / News" page. See the
-    DEEJAY_* comments near the top of the file for the real limitations
-    here -- no lookback filtering, and this breaks if the page changes."""
+                      seen: dict[str, str] | None = None,
+                      now: datetime | None = None,
+                      ) -> tuple[list[dict], int, dict[str, str]]:
+    """New arrivals scraped from deejay.de's "All / News" page.
+
+    Unlike every other source here, this page carries no per-item posted
+    timestamp at all -- there is nothing to compare against a lookback
+    cutoff. So "new" is tracked explicitly instead: `seen` is the
+    article-id -> first-seen-timestamp map from the previous run (persisted
+    to docs/deejay_seen.json and committed by the workflow, the same
+    git-as-state pattern already used for docs/likes.json). An article id
+    already in `seen` is skipped outright, before genre/format filtering,
+    matching how a Discogs listing ages out of the lookback window
+    regardless of whether it would otherwise match today's filter -- so
+    changing your genre filter later never resurfaces something already
+    shown. The third return value is the updated map to persist for next
+    time; the caller is responsible for actually writing it (this function
+    has no side effects on disk)."""
     html = http_get_text(url, user_agent)
     articles = DEEJAY_ARTICLE_RE.findall(html)
 
@@ -1061,10 +1100,20 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
             "needs updating, rather than the shop genuinely having nothing new."
         )
 
+    seen = dict(seen or {})
+    now = now or datetime.now(timezone.utc)
+    now_iso = now.isoformat()
+    updated_seen = dict(seen)
+
     matched: list[dict] = []
     considered = 0
+    already_seen = 0
 
-    for _article_id, block in articles[:max_items]:
+    for article_id, block in articles[:max_items]:
+        if article_id in seen:
+            already_seen += 1
+            continue
+        updated_seen[article_id] = now_iso
         considered += 1
 
         title_match = DEEJAY_TITLE_RE.search(block)
@@ -1158,7 +1207,10 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
             "vinyl_only": vinyl_only,
         })
 
-    return matched, considered
+    if already_seen:
+        LOG.info("[deejay.de] %d already shown in a prior digest, skipped", already_seen)
+
+    return matched, considered, updated_seen
 
 
 def format_price(listing: dict) -> str:
@@ -1251,6 +1303,8 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
                  deejay_max_items: int = DEEJAY_MAX_ITEMS,
                  deejay_discogs_max_items: int = DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS,
                  deejay_stock_max_items: int = DEEJAY_STOCK_CHECK_MAX_ITEMS,
+                 deejay_seen: dict[str, str] | None = None,
+                 now: datetime | None = None,
                  ) -> tuple[list[tuple[str, list[dict], str | None]], dict]:
     """Each section is (display_name, matched_items, genre_label).
 
@@ -1270,7 +1324,8 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
     default_norm = [n for n in (normalise_tag(g) for g in genres) if n]
     wanted_formats = [f.lower() for f in formats if f]
     sections: list[tuple[str, list[dict], str | None]] = []
-    stats = {"considered": 0, "matched": 0, "unchecked": 0, "failed_sellers": []}
+    stats = {"considered": 0, "matched": 0, "unchecked": 0, "failed_sellers": [],
+             "deejay_seen": dict(deejay_seen or {})}
 
     def genre_filter_for(key: str) -> tuple[list[str], str | None]:
         override = genres_by_store.get(key)
@@ -1330,11 +1385,13 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
         LOG.info("Checking deejay.de (new arrivals, scraped)%s...",
                  f" [genres: {genre_label}]" if genre_label is not None else "")
         try:
-            matched, considered = fetch_deejay_html(
+            matched, considered, updated_seen = fetch_deejay_html(
                 norm, wanted_formats, user_agent, api=api, max_items=deejay_max_items,
                 discogs_lookup_max_items=deejay_discogs_max_items,
                 stock_check_max_items=deejay_stock_max_items,
+                seen=deejay_seen, now=now,
             )
+            stats["deejay_seen"] = updated_seen
             record("deejay.de (new arrivals)", matched, considered, 0, genre_label)
             LOG.info("[deejay] %d item(s) considered, %d matched", considered, len(matched))
         except FeedError as exc:
@@ -1443,6 +1500,14 @@ h2 {
   display: inline-block; font-size: 12px; color: #6ea8ff;
   text-decoration: none; margin-left: 10px;
 }
+button.likebtn {
+  background: transparent; border: 0; cursor: pointer; font-size: 15px;
+  color: #6a6a72; padding: 0 0 0 8px; line-height: 1; vertical-align: middle;
+  font-family: inherit;
+}
+button.likebtn:hover { color: #e05a5a; }
+button.likebtn.liked { color: #e05a5a; }
+button.likebtn:disabled { opacity: .5; cursor: default; }
 .buy:hover { text-decoration: underline; }
 ul.tracks { list-style: none; margin: 0; padding: 0; }
 li.track { margin: 0 0 9px; }
@@ -1827,6 +1892,8 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
     def archive_href(stamp: str) -> str:
         return f"{base_url}/archive/{stamp}.html" if base_url else f"{stamp}.html"
 
+    likes_href = f"{base_url}/likes.html" if base_url else "likes.html"
+
     out = [
         '<!doctype html><html lang="en"><head><meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
@@ -1840,6 +1907,7 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         '<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;">'
         '<div id="yt-audio-host"></div></div>',
         '<div class="wrap">',
+        f'<div class="topnav"><a href="{e(likes_href)}">&#9825; Likes</a></div>',
         '<h1>New on Discogs</h1>',
         f'<p class="sub">{total} record(s) listed since '
         f'{e(cutoff.strftime("%a %d %b %Y, %H:%M"))} UTC &middot; {e(filter_text)}</p>',
@@ -1933,12 +2001,27 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                     'search YouTube</a></p>'
                 )
 
+            like_payload = json.dumps({
+                "description": item["description"],
+                "price": item["price"],
+                "url": item["url"],
+                "store": store,
+                "thumb": item.get("thumb", ""),
+                "formats": item.get("formats") or [],
+            }, ensure_ascii=False)
+            like_btn = (
+                '<button class="likebtn" type="button" aria-label="Like" '
+                f'aria-pressed="false" data-like-key="{e(item["url"])}" '
+                f'data-like-payload="{e(like_payload)}">&#9825;</button>'
+            )
+
             out.append(
                 '<div class="rec">' + thumb + '<div class="body">'
                 f'<div class="title"><a href="{e(item["url"])}">'
                 f'{e(item["description"])}</a></div>'
                 f'<div class="meta">{meta_html}'
-                f'<a class="buy" href="{e(item["url"])}">Buy on Discogs &rarr;</a></div>'
+                f'<a class="buy" href="{e(item["url"])}">{e(buy_button_label(item["url"]))} &rarr;</a>'
+                + like_btn + '</div>'
                 + fine_html +
                 f'<div class="tags">{e(item["tags"])}</div>'
                 + track_html + '</div></div>'
@@ -1960,7 +2043,16 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         footer.append(f'<div style="margin-top:10px;">Earlier: {links}</div>')
     footer.append('</footer>')
     out.append("".join(footer))
-    out.append(f'</div><script>{PLAYER_JS}</script></body></html>')
+    # Always included, not gated on base_url, because the like buttons
+    # above are always rendered -- gating this would leave those buttons
+    # present but silently inert (no handler wired up) whenever
+    # PAGES_BASE_URL is unset, e.g. during local testing.
+    assets_href = f"{base_url}/assets/likes.js" if base_url else "assets/likes.js"
+    likes_script = (
+        f'<script>window.DIGEST_BASE_URL={json.dumps(base_url)};</script>'
+        f'<script src="{e(assets_href)}"></script>'
+    )
+    out.append(f'</div><script>{PLAYER_JS}</script>{likes_script}</body></html>')
     return "\n".join(out)
 
 
@@ -1994,6 +2086,45 @@ def prune_archive(directory: str, keep_days: int, today: datetime) -> int:
             except OSError as exc:
                 LOG.warning("Could not remove old archive page %s: %s", name, exc)
     return removed
+
+
+def load_deejay_seen(path: str) -> dict[str, str]:
+    """article id -> first-seen ISO timestamp, from the previous run.
+
+    Missing or corrupt file both mean "nothing seen yet" rather than an
+    error -- the very first run, and any recovery after manually deleting
+    the file, should just work rather than crash.
+    """
+    if not path or not os.path.isfile(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except (OSError, ValueError) as exc:
+        LOG.warning("Could not read %s (%s) - treating as empty", path, exc)
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    return {str(k): str(v) for k, v in data.items()}
+
+
+def save_deejay_seen(path: str, seen: dict[str, str], keep_days: int, today: datetime) -> None:
+    """Write the seen-id map back, dropping entries older than keep_days so
+    the file doesn't grow forever. An entry with an unparseable timestamp is
+    kept rather than dropped -- corrupt data about *whether* something was
+    seen should not make it visible again by accident."""
+    if not path:
+        return
+    oldest = today - timedelta(days=keep_days)
+    pruned = {}
+    for article_id, ts in seen.items():
+        parsed = parse_posted(ts)
+        if parsed is None or parsed >= oldest:
+            pruned[article_id] = ts
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(pruned, handle, indent=2, sort_keys=True)
+        handle.write("\n")
 
 
 def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
@@ -2320,6 +2451,26 @@ def main() -> int:
         env_int("MAX_PAGES", MAX_PAGES),
     )
 
+    # Computed here rather than after build_digest, because it doubles as
+    # the "now" fed into the deejay.de seen-state below -- one timestamp for
+    # the whole run rather than a second, separately-drifted one.
+    generated = datetime.now(timezone.utc)
+    stamp = generated.strftime("%Y-%m-%d")
+
+    # deejay.de has no per-item posted date to filter on (see the DEEJAY_*
+    # comments near the top), so "new" is tracked explicitly instead: which
+    # article ids has a previous run already shown. Only meaningful when
+    # docs/ is actually being written -- a run with no --player-dir has
+    # nowhere to persist the updated state, so it isn't loaded or saved.
+    deejay_seen_path = (
+        os.path.join(os.path.dirname(args.player_dir.rstrip("/\\")) or ".", "deejay_seen.json")
+        if args.player_dir else ""
+    )
+    deejay_seen = load_deejay_seen(deejay_seen_path)
+    if deejay_seen_path:
+        LOG.info("deejay.de: %d previously-shown id(s) loaded from %s",
+                 len(deejay_seen), deejay_seen_path)
+
     started = time.monotonic()
     sections, stats = build_digest(
         api, sellers, cutoff, genres, formats, genres_by_store,
@@ -2330,6 +2481,8 @@ def main() -> int:
         deejay_max_items=deejay_max_items,
         deejay_discogs_max_items=deejay_discogs_max_items,
         deejay_stock_max_items=deejay_stock_max_items,
+        deejay_seen=deejay_seen,
+        now=generated,
     )
     elapsed = time.monotonic() - started
 
@@ -2344,11 +2497,6 @@ def main() -> int:
             "A store bulk-listed. Lower LOOKBACK_HOURS or raise MAX_RELEASE_LOOKUPS.",
             stats["unchecked"],
         )
-
-    # The player page and the link the email points at must agree on the
-    # filename, so both are derived from the same timestamp here.
-    generated = datetime.now(timezone.utc)
-    stamp = generated.strftime("%Y-%m-%d")
 
     player_url = ""
     base_url = env_str("PAGES_BASE_URL", "").rstrip("/")
@@ -2374,6 +2522,12 @@ def main() -> int:
                 ))
             LOG.info("Wrote player page to %s (%d earlier page(s) linked)",
                      page_path, len(earlier))
+
+            if deejay_seen_path:
+                save_deejay_seen(deejay_seen_path, stats["deejay_seen"],
+                                 DEEJAY_SEEN_KEEP_DAYS, generated)
+                LOG.info("deejay.de: %d id(s) now remembered in %s",
+                         len(stats["deejay_seen"]), deejay_seen_path)
         except OSError as exc:
             # A failed page must not cost you the email.
             LOG.error("Could not write the player page: %s", exc)

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Likes</title>
+<style>
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 24px 16px 80px;
+  background: #0e0e10; color: #e8e8ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.45;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+.topnav { margin: 0 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.topnav a {
+  color: #8a8a92; text-decoration: none; font-size: 13px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+  display: inline-block;
+}
+.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.sub { color: #8a8a92; font-size: 13px; margin: 0 0 24px; }
+h2 {
+  font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #8a8a92; margin: 34px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid #26262b;
+}
+.rec {
+  display: flex; gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid #1c1c21;
+}
+.rec img {
+  width: 60px; height: 60px; border-radius: 5px;
+  background: #26262b; flex: none; object-fit: cover;
+}
+.rec .body { min-width: 0; flex: 1; }
+.rec .title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+.rec .title a { color: #e8e8ea; text-decoration: none; }
+.rec .title a:hover { color: #6ea8ff; }
+.meta { color: #8a8a92; font-size: 12.5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 10px;
+  background: #202027; color: #9a9aa2;
+}
+a.buy { color: #6ea8ff; text-decoration: none; font-size: 12.5px; margin-left: auto; }
+a.buy:hover { text-decoration: underline; }
+button.unlike {
+  flex: none; background: transparent; border: 1px solid #3a2020; color: #e05a5a;
+  border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer;
+  font-family: inherit;
+}
+button.unlike:hover { background: #2a1414; }
+.none { color: #5f5f68; font-size: 13px; }
+.connect-hint {
+  margin-top: 16px; padding: 11px 13px; border-radius: 7px; font-size: 13px;
+  background: #16232e; border: 1px solid #234a66; color: #8fc4ee; display: none;
+}
+.connect-hint.show { display: block; }
+.connect-hint a { color: inherit; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav">
+    <a href="index.html">&larr; Back to digest</a>
+    <a href="settings.html">&#9881; Settings</a>
+  </div>
+  <h1>Likes</h1>
+  <p class="sub">Everything you've liked, grouped by store. Synced across your devices via this site's repo, not this browser.</p>
+  <div id="connectHint" class="connect-hint">
+    Not connected -- you can see likes here, but unliking needs a token.
+    <a href="settings.html">Connect on Settings</a> to manage them from this device too.
+  </div>
+  <div id="content"><p class="none">Loading&hellip;</p></div>
+</div>
+<script>window.DIGEST_BASE_URL = "";</script>
+<script src="assets/likes.js"></script>
+<script>
+(function () {
+  "use strict";
+  var content = document.getElementById("content");
+  var hint = document.getElementById("connectHint");
+
+  function e(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+
+  function render(likes) {
+    var entries = Object.keys(likes).map(function (url) {
+      return Object.assign({ url: url }, likes[url]);
+    });
+    if (!entries.length) {
+      content.innerHTML = '<p class="none">No likes yet. Tap the heart on a record in the digest to save it here.</p>';
+      return;
+    }
+    entries.sort(function (a, b) { return (b.liked_at || "").localeCompare(a.liked_at || ""); });
+
+    var byStore = {};
+    entries.forEach(function (it) {
+      var store = it.store || "Other";
+      (byStore[store] = byStore[store] || []).push(it);
+    });
+
+    var html = "";
+    Object.keys(byStore).sort().forEach(function (store) {
+      var items = byStore[store];
+      html += '<h2>' + e(store) + ' &middot; ' + items.length + '</h2>';
+      items.forEach(function (it) {
+        var thumb = it.thumb ? '<img src="' + e(it.thumb) + '" alt="" loading="lazy">' : '<img alt="">';
+        var badges = (it.formats || []).map(function (f) {
+          return '<span class="badge">' + e(f) + '</span>';
+        }).join("");
+        if (it.price) badges = '<span class="badge">' + e(it.price) + '</span>' + badges;
+        html +=
+          '<div class="rec">' + thumb + '<div class="body">' +
+          '<div class="title"><a href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">' +
+          e(it.description || it.url) + '</a></div>' +
+          '<div class="meta">' + badges +
+          '<a class="buy" href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">Open &rarr;</a>' +
+          '<button class="unlike" data-url="' + e(it.url) + '" type="button">Unlike</button>' +
+          '</div></div></div>';
+      });
+    });
+    content.innerHTML = html;
+  }
+
+  function load() {
+    DigestLikes.fetchLikes().then(render);
+  }
+
+  if (!DigestLikes.getToken()) hint.classList.add("show");
+
+  content.addEventListener("click", function (ev) {
+    var btn = ev.target.closest ? ev.target.closest("button.unlike") : null;
+    if (!btn) return;
+    if (!DigestLikes.getToken()) {
+      window.open("settings.html", "_blank", "noopener");
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "…";
+    DigestLikes.unlikeItem(btn.getAttribute("data-url")).then(load).catch(function (err) {
+      btn.disabled = false;
+      btn.textContent = "Unlike";
+      alert("Could not remove like: " + err.message);
+    });
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
