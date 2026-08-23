@@ -27,6 +27,7 @@ import re
 import smtplib
 import sys
 import time
+import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
@@ -79,6 +80,45 @@ FORMATS_INCLUDE = ["Vinyl"]
 #
 # Empty dict (the default) means every store uses the same global filter.
 GENRES_BY_STORE: dict[str, list[str]] = {}
+
+# Non-Discogs sources: fetched directly from a shop's own site rather than
+# via the Discogs API, so neither carries structured genre/style/format data
+# the way a Discogs release does. Genre matching for these runs against the
+# item's title + description TEXT instead (same whole-word engine, just fed
+# prose instead of a genres/styles array), and format is classified from
+# whatever format signal each source actually exposes -- see
+# classify_clone_format() / classify_deejay_format() for exactly what that
+# means for each one. Both respect GENRES_INCLUDE/GENRES_BY_STORE (using the
+# *_KEY below) and FORMATS_INCLUDE like every other source.
+
+# clone.nl's own new-arrivals RSS feed -- a different catalogue from their
+# Discogs marketplace listings (if "clone.nl" is also in SELLERS above), so
+# both can legitimately appear as separate sections without duplicating.
+# Verified live and real (not every shop exposes one -- deejay.de below does
+# not). pubDate is day-precision only (always midnight in every item
+# observed), coarser than Discogs' second-precision `posted` field.
+CLONE_RSS_URL = "https://clone.nl/rss/all"
+CLONE_RSS_KEY = "clone-rss"  # use this as a key in GENRES_BY_STORE to override just this source
+CLONE_RSS_ENABLED = True
+
+# deejay.de has no RSS/Atom feed (checked directly: no <link rel="alternate">
+# anywhere, and every guessed feed path returns their normal 200 HTML rather
+# than a real feed). This scrapes their "All / News" page's HTML instead,
+# which is NOT a publisher-provided contract the way RSS is -- it WILL break
+# silently if deejay.de redesigns that page. fetch_deejay_html() logs a loud
+# warning if it ever finds zero items, since that page realistically always
+# has some, so a scraper break is noticeable rather than just going quiet.
+#
+# There is also no reliable "when was this added to the shop" signal: the
+# page's own per-item date looks like a release date, not an arrival date
+# (some items literally show "Release unknown"), so unlike every other
+# source here, this one has no time-based lookback filtering -- each run
+# just takes the current top of the page. Expect more repeats from this
+# source across consecutive digests than from the others.
+DEEJAY_URL = "https://www.deejay.de/m_All/sm_News/lang_en"
+DEEJAY_KEY = "deejay"
+DEEJAY_ENABLED = True
+DEEJAY_MAX_ITEMS = 60  # how many of the page's items to consider each run
 
 # How far back to look, in hours.
 #
@@ -247,6 +287,28 @@ def env_genres_by_store(name: str, default: dict[str, list[str]]) -> dict[str, l
 
 class DiscogsError(RuntimeError):
     """A Discogs request failed after exhausting retries."""
+
+
+class FeedError(RuntimeError):
+    """A non-Discogs source (RSS feed or scraped page) failed."""
+
+
+def http_get_text(url: str, user_agent: str, timeout: int = HTTP_TIMEOUT) -> str:
+    """Plain GET with one retry. Used by the non-Discogs sources, which are a
+    single fetch each run and don't need the Discogs client's rate-limit and
+    multi-attempt-backoff machinery -- that's specific to paging through a
+    marketplace inventory under a 60/min budget, not relevant here."""
+    last_exc: Exception | None = None
+    for attempt in (1, 2):
+        try:
+            resp = requests.get(url, headers={"User-Agent": user_agent}, timeout=timeout)
+            resp.raise_for_status()
+            return resp.text
+        except requests.RequestException as exc:
+            last_exc = exc
+            if attempt == 1:
+                time.sleep(3)
+    raise FeedError(f"GET {url} failed: {last_exc}")
 
 
 class Discogs:
@@ -578,6 +640,239 @@ def matches_format(formats: list[str], wanted_lower: list[str]) -> bool:
     return any(want in have for want in wanted_lower)
 
 
+def matching_terms(text: str, wanted_norm: list[str]) -> list[str]:
+    """Which of the wanted genre terms actually matched inside free text.
+
+    Used only by the non-Discogs sources, to show *why* an item appeared in
+    place of real genre/style tags they don't have. Showing nothing there
+    would be less honest than Discogs items showing their actual tags.
+    """
+    if not wanted_norm:
+        return []
+    hay = f" {normalise_tag(text)} "
+    return [w for w in wanted_norm if f" {w} " in hay]
+
+
+BARE_AMP_RE = re.compile(r'&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-fA-F]+;)')
+
+CLONE_TITLE_RE = re.compile(r'^(?P<desc>.*?)\s*\((?P<format>[^)]+)\)\s*(?:-\s*(?P<catno>\S.*))?$')
+CLONE_IMG_RE = re.compile(r'<img[^>]+src="([^"]+)"')
+
+
+def classify_clone_format(format_text: str) -> list[str]:
+    """Best-effort classification from the format shown in clone.nl's title
+    text -- there is no structured format field in the feed. Unrecognised
+    text defaults to Vinyl: clone.nl badges itself a vinyl specialist and
+    every item sampled while building this was vinyl, so an unrecognised
+    token here is far more likely to be a formatting variant ("2x12inch",
+    "10inch") than a genuinely different medium.
+    """
+    t = format_text.lower()
+    if "cd" in t:
+        return ["CD"]
+    if any(w in t for w in ("cassette", "tape", "mc")):
+        return ["Cassette"]
+    if any(w in t for w in ("download", "digital", "file", "mp3", "flac")):
+        return ["File"]
+    return ["Vinyl"]
+
+
+def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: list[str],
+                    user_agent: str, url: str = CLONE_RSS_URL) -> tuple[list[dict], int]:
+    """New arrivals from clone.nl's own webshop RSS feed. See the CLONE_RSS_*
+    comments near the top of the file for what is and isn't reliable here."""
+    raw = http_get_text(url, user_agent)
+
+    # clone.nl's feed generator does not escape bare "&" in artist names
+    # (observed live: "Phat Kat & Jon Doe"), which is invalid XML. "&" is
+    # common in collab artist names in this genre, so this needs real
+    # handling, not a one-off workaround.
+    raw = BARE_AMP_RE.sub("&amp;", raw)
+
+    try:
+        root = ET.fromstring(raw)
+    except ET.ParseError as exc:
+        raise FeedError(f"clone.nl feed was not parseable XML even after sanitising: {exc}")
+
+    ns = {"content": "http://purl.org/rss/1.0/modules/content/"}
+    matched: list[dict] = []
+    considered = 0
+
+    for item in root.findall("./channel/item"):
+        title = (item.findtext("title") or "").strip()
+        if not title:
+            continue
+
+        posted = parse_posted((item.findtext("pubDate") or "").strip())
+        if posted is None:
+            continue
+        if posted < cutoff:
+            # Feed is newest-first (verified), so nothing after this can be
+            # newer -- same early-stop trick as the Discogs inventory pages.
+            break
+        considered += 1
+
+        link = (item.findtext("link") or "").strip()
+        description_html = item.findtext("description") or ""
+        blurb = item.findtext("content:encoded", namespaces=ns) or ""
+
+        title_match = CLONE_TITLE_RE.match(title)
+        desc_text = title_match.group("desc").strip() if title_match else title
+        format_text = title_match.group("format") if title_match else ""
+        catno = (title_match.group("catno") or "").strip() if title_match else ""
+
+        formats = classify_clone_format(format_text) if format_text else ["Vinyl"]
+        if not matches_format(formats, wanted_formats):
+            continue
+
+        haystack = f"{title} {blurb}"
+        if not matches_genre([haystack], wanted_norm):
+            continue
+        hit_terms = matching_terms(haystack, wanted_norm)
+
+        img_match = CLONE_IMG_RE.search(description_html)
+
+        matched.append({
+            "description": f"{desc_text} ({format_text})" if format_text else desc_text,
+            "price": "price on request",
+            "condition": "New",
+            "sleeve": "",
+            "url": link or url,
+            "tags": ", ".join(hit_terms) if hit_terms else "new arrival",
+            "thumb": img_match.group(1) if img_match else "",
+            "label": "",
+            "catno": catno,
+            "videos": [],
+            "formats": formats,
+        })
+
+    return matched, considered
+
+
+DEEJAY_ARTICLE_RE = re.compile(r'<article id="a(\d+)"[^>]*>(.*?)</article>', re.S)
+DEEJAY_ARTIST_RE = re.compile(r'<h2 class="artist[^>]*>.*?<a href="[^"]*">([^<]+)</a>', re.S)
+DEEJAY_TITLE_RE = re.compile(r'<h3 class="title[^>]*><a href="([^"]+)">([^<]+)</a>')
+DEEJAY_MEDIUM_RE = re.compile(r'<span class="medium[^"]*">([^<]+)</span>')
+DEEJAY_LABELCAT_RE = re.compile(
+    r'<span class="musiclabel[^>]*>\s*<strong>([^<]*)</strong>\s*(?:<br\s*/?>)?\s*'
+    r'(?:<a[^>]*>([^<]*)</a>)?', re.S
+)
+DEEJAY_DATE_RE = re.compile(r'<span class="date">([^<]+)</span>')
+DEEJAY_IMG_RE = re.compile(r'<img src="([^"]+)"')
+DEEJAY_PRICE_RE = re.compile(r'<span class="price">([\d.,]+)')
+DEEJAY_FORMAT_TOKEN_RE = re.compile(r'_([A-Za-z0-9]+)__\d+$')
+DEEJAY_TAG_STRIP_RE = re.compile(r"<[^>]+>")
+
+
+def classify_deejay_format(medium_text: str, url_path: str) -> list[str]:
+    """deejay.de's own "medium" badge is usually a real format (12inch, LP,
+    CD...), but shop-exclusive items show "excl" instead -- observed live,
+    not assumed. When the badge isn't a recognised format, fall back to the
+    format token embedded in the item's own URL slug (e.g.
+    ..._Vinyl__1239340), which was present even on the "excl"-badged items.
+    """
+    t = (medium_text or "").lower().strip()
+    if "inch" in t or t in ("lp", "box", "flexi", "picture disc"):
+        return ["Vinyl"]
+    if t == "cd" or ("cd" in t and "inch" not in t):
+        return ["CD"]
+    if t in ("mc", "cassette", "tape"):
+        return ["Cassette"]
+    if t in ("download", "digital", "file", "mp3", "flac", "wav"):
+        return ["File"]
+
+    token_match = DEEJAY_FORMAT_TOKEN_RE.search(url_path)
+    if token_match:
+        token = token_match.group(1).lower()
+        if "vinyl" in token:
+            return ["Vinyl"]
+        if token == "cd":
+            return ["CD"]
+    return [medium_text] if medium_text else ["Unknown"]
+
+
+def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_agent: str,
+                      url: str = DEEJAY_URL, max_items: int = DEEJAY_MAX_ITEMS
+                      ) -> tuple[list[dict], int]:
+    """New arrivals scraped from deejay.de's "All / News" page. See the
+    DEEJAY_* comments near the top of the file for the real limitations
+    here -- no lookback filtering, and this breaks if the page changes."""
+    html = http_get_text(url, user_agent)
+    articles = DEEJAY_ARTICLE_RE.findall(html)
+
+    if not articles:
+        LOG.warning(
+            "[deejay.de] scraper found 0 items on a page that always has "
+            "some -- deejay.de likely redesigned the page and this scraper "
+            "needs updating, rather than the shop genuinely having nothing new."
+        )
+
+    matched: list[dict] = []
+    considered = 0
+
+    for _article_id, block in articles[:max_items]:
+        considered += 1
+
+        title_match = DEEJAY_TITLE_RE.search(block)
+        if not title_match:
+            continue
+        url_path, raw_title = title_match.group(1), title_match.group(2).strip()
+
+        artist_match = DEEJAY_ARTIST_RE.search(block)
+        artist = artist_match.group(1).strip() if artist_match else ""
+        desc_text = f"{artist} - {raw_title}" if artist else raw_title
+
+        medium_match = DEEJAY_MEDIUM_RE.search(block)
+        medium_text = medium_match.group(1).strip() if medium_match else ""
+        formats = classify_deejay_format(medium_text, url_path)
+        if not matches_format(formats, wanted_formats):
+            continue
+
+        # No structured genre data here either -- match against artist,
+        # title, tracklist and blurb text instead, same as clone.nl.
+        text_block = DEEJAY_TAG_STRIP_RE.sub(" ", block)
+        haystack = f"{desc_text} {text_block}"
+        if not matches_genre([haystack], wanted_norm):
+            continue
+        hit_terms = matching_terms(haystack, wanted_norm)
+
+        labelcat_match = DEEJAY_LABELCAT_RE.search(block)
+        catno = (labelcat_match.group(1) or "").strip() if labelcat_match else ""
+        label = (labelcat_match.group(2) or "").strip() if labelcat_match else ""
+        date_match = DEEJAY_DATE_RE.search(block)
+        release_note = date_match.group(1).strip() if date_match else ""
+
+        price_match = DEEJAY_PRICE_RE.search(block)
+        price = "price on request"
+        if price_match:
+            try:
+                price = f'{float(price_match.group(1).replace(",", ".")):.2f} EUR'
+            except ValueError:
+                pass
+
+        img_match = DEEJAY_IMG_RE.search(block)
+
+        label_line = " - ".join(p for p in (label, catno) if p)
+        if release_note and release_note.lower() != "release unknown":
+            label_line = f"{label_line} - released {release_note}" if label_line else f"released {release_note}"
+
+        matched.append({
+            "description": f"{desc_text} ({medium_text})" if medium_text else desc_text,
+            "price": price,
+            "condition": "New",
+            "sleeve": "",
+            "url": ("https://www.deejay.de" + url_path) if url_path.startswith("/") else url_path,
+            "tags": ", ".join(hit_terms) if hit_terms else "new arrival",
+            "thumb": img_match.group(1) if img_match else "",
+            "label": label_line,
+            "catno": "",
+            "videos": [],
+            "formats": formats,
+        })
+
+    return matched, considered
+
+
 def format_price(listing: dict) -> str:
     price = listing.get("price") or {}
     value = price.get("value")
@@ -657,15 +952,25 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
 
 def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
                  genres: list[str], formats: list[str],
-                 genres_by_store: dict[str, list[str]] | None = None
+                 genres_by_store: dict[str, list[str]] | None = None,
+                 user_agent: str = USER_AGENT,
+                 clone_rss_enabled: bool = CLONE_RSS_ENABLED,
+                 deejay_enabled: bool = DEEJAY_ENABLED,
+                 deejay_max_items: int = DEEJAY_MAX_ITEMS,
                  ) -> tuple[list[tuple[str, list[dict], str | None]], dict]:
     """Each section is (display_name, matched_items, genre_label).
 
-    genre_label is None when the store used the global genre filter (the
-    common case, rendered with no extra note), or a string describing the
-    store's own override when genres_by_store applies to it -- so the digest
-    can show, right under that store's heading, that it was filtered
-    differently rather than leaving that silent.
+    genre_label is None when the source used the global genre filter (the
+    common case, rendered with no extra note), or a string describing its
+    own override when genres_by_store applies to it -- so the digest can
+    show, right under that heading, that it was filtered differently rather
+    than leaving that silent.
+
+    Discogs sellers, clone.nl's RSS feed and the deejay.de scrape all feed
+    into the same sections/stats here, because they all end up producing the
+    same item shape (see collect_seller / fetch_clone_rss / fetch_deejay_html)
+    -- which is what lets render_html/render_player_page/render_text stay
+    completely unaware that three different fetch mechanisms exist.
     """
     genres_by_store = genres_by_store or {}
     default_norm = [n for n in (normalise_tag(g) for g in genres) if n]
@@ -673,15 +978,24 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
     sections: list[tuple[str, list[dict], str | None]] = []
     stats = {"considered": 0, "matched": 0, "unchecked": 0, "failed_sellers": []}
 
-    for username, display_name in sellers.items():
-        override = genres_by_store.get(username)
+    def genre_filter_for(key: str) -> tuple[list[str], str | None]:
+        override = genres_by_store.get(key)
         if override is not None:
-            seller_norm = [n for n in (normalise_tag(g) for g in override) if n]
-            genre_label = ", ".join(override) if override else "everything (no genre filter)"
-        else:
-            seller_norm = default_norm
-            genre_label = None
+            norm = [n for n in (normalise_tag(g) for g in override) if n]
+            label = ", ".join(override) if override else "everything (no genre filter)"
+            return norm, label
+        return default_norm, None
 
+    def record(display_name: str, matched: list[dict], considered: int,
+              unchecked: int, genre_label: str | None) -> None:
+        stats["considered"] += considered
+        stats["matched"] += len(matched)
+        stats["unchecked"] += unchecked
+        if matched:
+            sections.append((display_name, matched, genre_label))
+
+    for username, display_name in sellers.items():
+        seller_norm, genre_label = genre_filter_for(username)
         LOG.info("Checking %s (%s)%s...", display_name, username,
                  f" [genres: {genre_label}]" if genre_label is not None else "")
         try:
@@ -697,12 +1011,40 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
             LOG.exception("[%s] unexpected error: %s", username, exc)
             stats["failed_sellers"].append(username)
             continue
+        record(display_name, matched, considered, unchecked, genre_label)
 
-        stats["considered"] += considered
-        stats["matched"] += len(matched)
-        stats["unchecked"] += unchecked
-        if matched:
-            sections.append((display_name, matched, genre_label))
+    if clone_rss_enabled:
+        norm, genre_label = genre_filter_for(CLONE_RSS_KEY)
+        LOG.info("Checking Clone.nl (new arrivals, RSS)%s...",
+                 f" [genres: {genre_label}]" if genre_label is not None else "")
+        try:
+            matched, considered = fetch_clone_rss(cutoff, norm, wanted_formats, user_agent)
+            record("Clone.nl (new arrivals)", matched, considered, 0, genre_label)
+            LOG.info("[clone-rss] %d new listing(s) in window, %d matched",
+                     considered, len(matched))
+        except FeedError as exc:
+            LOG.error("[clone-rss] FAILED: %s", exc)
+            stats["failed_sellers"].append("clone.nl RSS")
+        except Exception as exc:  # noqa: BLE001
+            LOG.exception("[clone-rss] unexpected error: %s", exc)
+            stats["failed_sellers"].append("clone.nl RSS")
+
+    if deejay_enabled:
+        norm, genre_label = genre_filter_for(DEEJAY_KEY)
+        LOG.info("Checking deejay.de (new arrivals, scraped)%s...",
+                 f" [genres: {genre_label}]" if genre_label is not None else "")
+        try:
+            matched, considered = fetch_deejay_html(
+                norm, wanted_formats, user_agent, max_items=deejay_max_items
+            )
+            record("deejay.de (new arrivals)", matched, considered, 0, genre_label)
+            LOG.info("[deejay] %d item(s) considered, %d matched", considered, len(matched))
+        except FeedError as exc:
+            LOG.error("[deejay] FAILED: %s", exc)
+            stats["failed_sellers"].append("deejay.de")
+        except Exception as exc:  # noqa: BLE001
+            LOG.exception("[deejay] unexpected error: %s", exc)
+            stats["failed_sellers"].append("deejay.de")
 
     return sections, stats
 
@@ -1506,6 +1848,9 @@ def main() -> int:
     genres = env_csv_list("GENRES_INCLUDE", GENRES_INCLUDE)
     formats = env_csv_list("FORMATS_INCLUDE", FORMATS_INCLUDE)
     genres_by_store = env_genres_by_store("GENRES_BY_STORE", GENRES_BY_STORE)
+    clone_rss_enabled = env_flag("CLONE_RSS_ENABLED", CLONE_RSS_ENABLED)
+    deejay_enabled = env_flag("DEEJAY_ENABLED", DEEJAY_ENABLED)
+    deejay_max_items = env_int("DEEJAY_MAX_ITEMS", DEEJAY_MAX_ITEMS)
     lookback = env_int("LOOKBACK_HOURS", LOOKBACK_HOURS)
     if lookback <= 0:
         LOG.warning("LOOKBACK_HOURS must be positive - using %s", LOOKBACK_HOURS)
@@ -1525,17 +1870,23 @@ def main() -> int:
     LOG.info("Caps: %d page(s)/seller (%d listings), %d release lookup(s)/run",
              env_int("MAX_PAGES", MAX_PAGES), env_int("MAX_PAGES", MAX_PAGES) * PER_PAGE,
              env_int("MAX_RELEASE_LOOKUPS", MAX_RELEASE_LOOKUPS))
+    LOG.info("Extra sources: clone.nl RSS %s, deejay.de scrape %s",
+             "on" if clone_rss_enabled else "off", "on" if deejay_enabled else "off")
 
+    user_agent = env_str("USER_AGENT", USER_AGENT)
     api = Discogs(
         os.environ["DISCOGS_TOKEN"].strip(),
-        env_str("USER_AGENT", USER_AGENT),
+        user_agent,
         env_int("MAX_RELEASE_LOOKUPS", MAX_RELEASE_LOOKUPS),
         env_int("MAX_VIDEOS_PER_RELEASE", MAX_VIDEOS_PER_RELEASE),
         env_int("MAX_PAGES", MAX_PAGES),
     )
 
     started = time.monotonic()
-    sections, stats = build_digest(api, sellers, cutoff, genres, formats, genres_by_store)
+    sections, stats = build_digest(
+        api, sellers, cutoff, genres, formats, genres_by_store, user_agent,
+        clone_rss_enabled, deejay_enabled, deejay_max_items,
+    )
     elapsed = time.monotonic() - started
 
     LOG.info(

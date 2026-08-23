@@ -343,6 +343,65 @@ RushHour=Rush Hour, clone.nl=Clone, SOMENAME=Their Shop Name
 Note the variable **replaces** the built-in list rather than adding to it, so
 include every store you want.
 
+### Non-Discogs sources: clone.nl RSS and deejay.de
+
+Two more sources run alongside the Discogs sellers, using the same genre and
+format filters, but fetched directly from each shop's own site rather than
+through the Discogs API:
+
+- **Clone.nl new arrivals** — their own RSS feed
+  (`clone.nl/rss/all`). This is a real, publisher-provided feed, separate from
+  whatever `clone.nl` shows under Sellers above (that's their Discogs
+  marketplace listings — a different, smaller catalogue). Both can appear as
+  separate sections without duplicating each other.
+- **deejay.de new arrivals** — scraped from their "All / News" page.
+  deejay.de has **no RSS/Atom feed** (checked directly against the live site)
+  and their Discogs seller account exists but has 0 items for sale, so
+  scraping their page's HTML was the only option that actually works. That
+  makes this source meaningfully more fragile than everything else here: it
+  depends on deejay.de's page markup rather than a format they've committed to
+  keeping stable, and **will** break if they redesign that page. If it does,
+  the log shows a specific warning ("scraper found 0 items on a page that
+  always has some") rather than failing silently, so it's noticeable. Turn it
+  off with the `DEEJAY_ENABLED` variable (below) if that happens and you don't
+  want to wait for a fix.
+
+Neither source has Discogs-style structured genre/style data, so genre
+filtering runs against each item's title and description **text** instead
+(the same whole-word matching, just fed prose instead of a tags array) —
+functionally the same filtering, just working from different raw material.
+Each item's `tags` line in the digest shows which genre term actually matched,
+rather than a real genre/style list, so it's clear the match came from text
+rather than Discogs metadata.
+
+Freshness also isn't identical across all four sources:
+
+| Source | Freshness signal | Precision |
+|---|---|---|
+| Discogs marketplace | `posted` timestamp | seconds |
+| Clone.nl RSS | `pubDate` | whole days (every item observed was midnight) |
+| deejay.de scrape | none reliable | none — each run takes the current top of the page |
+
+deejay.de's own per-item date looks like a release date rather than "when
+added to the shop" (some items literally say "Release unknown"), so it isn't
+used for filtering — only shown as extra context in the digest. This means
+deejay.de items can repeat across more consecutive digests than the other
+three sources, which use `LOOKBACK_HOURS` to avoid that.
+
+**Turning either off** — set a repo Variable to `false`:
+
+- `CLONE_RSS_ENABLED` = `false`
+- `DEEJAY_ENABLED` = `false`
+
+Both default to on. `DEEJAY_MAX_ITEMS` (default `60`) caps how many of the
+page's items are considered each run. Per-store genre overrides
+(`GENRES_BY_STORE`, see above) work for these too — use the keys `clone-rss`
+and `deejay`:
+
+```
+clone-rss: house; deejay: techno, breakbeat
+```
+
 ### Changing the time it runs
 
 Edit the `cron` line in `.github/workflows/daily-digest.yml`:

@@ -84,6 +84,13 @@ jobs:
           SELLERS: ${{ vars.SELLERS }}
           MAX_RELEASE_LOOKUPS: ${{ vars.MAX_RELEASE_LOOKUPS }}
           MAX_PAGES: ${{ vars.MAX_PAGES }}
+          # clone.nl's own new-arrivals RSS and a scrape of deejay.de's "News"
+          # page -- separate from any Discogs-marketplace listing for either
+          # shop. Set either to "false" to turn it off, e.g. if deejay.de's
+          # page layout changes and the scraper starts returning nothing.
+          CLONE_RSS_ENABLED: ${{ vars.CLONE_RSS_ENABLED }}
+          DEEJAY_ENABLED: ${{ vars.DEEJAY_ENABLED }}
+          DEEJAY_MAX_ITEMS: ${{ vars.DEEJAY_MAX_ITEMS }}
           USER_AGENT: DiscogsGenreDigest/1.0 +https://github.com/${{ github.repository }}
 
           # Where the published player pages end up. The script appends
