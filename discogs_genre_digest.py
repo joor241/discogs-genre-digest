@@ -141,6 +141,19 @@ DEEJAY_KEY = "deejay"
 DEEJAY_ENABLED = True
 DEEJAY_MAX_ITEMS = 60  # how many of the page's items to consider each run
 
+# Observed live, repeatedly: deejay.de is reachable in well under a second
+# from a plain residential connection, but GitHub Actions runs against the
+# exact same URL have failed with a connect timeout multiple times in a
+# row -- consistent with the runner's datacenter IP range being blocked or
+# rate-limited specifically, which more retries or a longer timeout cannot
+# fix (a deliberate block just keeps timing out regardless). Since this
+# isn't something you can act on day to day, a deejay.de failure no longer
+# fails the whole run's exit code when this is on -- it's still logged as
+# an ERROR and still shown in the digest as "Could not check: deejay.de",
+# just not treated as urgent. Set DEEJAY_SOFT_FAIL=false to go back to a
+# hard failure (red run) for this source too.
+DEEJAY_SOFT_FAIL = True
+
 # How many days to remember a deejay.de article id before pruning it from
 # docs/deejay_seen.json, bounding the file's growth. Long enough that the
 # id has certainly scrolled off the page's own "News" listing by then (it
@@ -2564,10 +2577,24 @@ def main() -> int:
             return 1
 
     # Non-zero exit if any store could not be checked, so the run shows red
-    # in GitHub Actions and you actually notice.
-    if stats["failed_sellers"]:
-        LOG.error("Failed sellers: %s", ", ".join(stats["failed_sellers"]))
+    # in GitHub Actions and you actually notice -- except deejay.de, which
+    # has repeatedly failed with a connect timeout from Actions specifically
+    # while reachable in under a second from elsewhere, then recovered on
+    # its own a run or two later with no action taken. That pattern -- a
+    # few failures, then fine again -- is what DEEJAY_SOFT_FAIL exists for:
+    # still an ERROR in the log and still shown in the digest as "Could not
+    # check", just not something to page you over every time it happens.
+    deejay_soft_fail = env_flag("DEEJAY_SOFT_FAIL", DEEJAY_SOFT_FAIL)
+    hard_failures = [
+        s for s in stats["failed_sellers"]
+        if not (deejay_soft_fail and s == "deejay.de")
+    ]
+    if hard_failures:
+        LOG.error("Failed sellers: %s", ", ".join(hard_failures))
         return 1
+    if stats["failed_sellers"]:
+        LOG.warning("Not failing the run for: %s (DEEJAY_SOFT_FAIL is on)",
+                   ", ".join(stats["failed_sellers"]))
     return 0
 
 
