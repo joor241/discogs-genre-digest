@@ -137,15 +137,23 @@ DEEJAY_KEY = "deejay"
 DEEJAY_ENABLED = True
 DEEJAY_MAX_ITEMS = 60  # how many of the page's items to consider each run
 
-# deejay.de items get no video data from deejay.de itself -- their own
-# tracklist player streams through a session-gated internal API rather than
-# a static URL, so it isn't reused here (see README). Instead, each matched
-# item is cross-referenced against Discogs' own release search, and its
-# community-submitted YouTube links are borrowed when a confident match is
-# found (never a guess -- see confident_discogs_match()). This costs one
-# extra Discogs API search per matched item (plus a release-detail fetch on
-# a hit, counted against MAX_RELEASE_LOOKUPS same as everything else), so
-# it's capped independently to bound worst case on a broad filter.
+# deejay.de items DO get real audio: each track's own MP3 lives at a
+# predictable, static URL sharded by the article id's own last two digits
+# (streamit/{tens}/{units}/{id}{letter}.mp3 -- same pattern as their cover
+# image URLs), confirmed directly fetchable over plain HTTP with no session
+# or cookie required. Their player JS routes playback through a
+# session-gated AJAX call, which looked like a hard wall at first, but a
+# real browser network capture showed that call is for play-count tracking,
+# not access control -- the file itself needs no ticket. See
+# extract_deejay_tracks() / deejay_stream_url().
+#
+# For the rarer item with no tracklist of its own (e.g. a single with
+# nothing listed), this falls back to cross-referencing Discogs' release
+# search and borrowing its community-submitted YouTube links when a
+# confident match is found (never a guess -- see confident_discogs_match()).
+# That costs one extra Discogs API search per fallback item (plus a
+# release-detail fetch on a hit, counted against MAX_RELEASE_LOOKUPS same as
+# everything else), so it's capped independently.
 DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS = 20
 
 # How far back to look, in hours.
@@ -905,6 +913,36 @@ DEEJAY_IMG_RE = re.compile(r'<img src="([^"]+)"')
 DEEJAY_PRICE_RE = re.compile(r'<span class="price">([\d.,]+)')
 DEEJAY_FORMAT_TOKEN_RE = re.compile(r'_([A-Za-z0-9]+)__\d+$')
 DEEJAY_TAG_STRIP_RE = re.compile(r"<[^>]+>")
+DEEJAY_TRACK_RE = re.compile(
+    r'<a class="track[^"]*"[^>]*id="playTrack_(\d+)_([a-z])"[^>]*>\s*<b>([^<]*)</b>:\s*([^<]*)</a>'
+)
+
+
+def deejay_stream_url(article_id: str, letter: str) -> str:
+    """The direct MP3 URL for one track, sharded by the article id's own
+    last two digits -- the same pattern deejay.de uses for its cover image
+    URLs (images/l/{tens}/{units}/{id}.jpg). Confirmed live: this file is
+    directly fetchable over plain HTTP, no session or cookie required,
+    despite their player JS routing playback through a session-gated AJAX
+    call -- that call turned out to be for play-count tracking, not access
+    control (verified with a real browser network capture)."""
+    padded = article_id.zfill(2)
+    return f"https://www.deejay.de/streamit/{padded[-2]}/{padded[-1]}/{article_id}{letter}.mp3"
+
+
+def extract_deejay_tracks(block: str, limit: int = MAX_VIDEOS_PER_RELEASE) -> list[dict]:
+    """Direct MP3 preview links for one deejay.de item, built entirely from
+    the page block already scraped for everything else -- no extra request
+    needed, unlike clone.nl's per-item tracklist fetch."""
+    tracks: list[dict] = []
+    for article_id, letter, position, title_text in DEEJAY_TRACK_RE.findall(block):
+        clean_title = html.unescape(title_text.strip())
+        title = f"{position}: {clean_title}" if clean_title else position
+        url = deejay_stream_url(article_id, letter)
+        tracks.append({"title": title, "src": url, "uri": url, "yt": None, "dur": 0})
+        if len(tracks) >= limit:
+            break
+    return tracks
 
 
 def classify_deejay_format(medium_text: str, url_path: str) -> list[str]:
@@ -1001,8 +1039,14 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
         if release_note and release_note.lower() != "release unknown":
             label_line = f"{label_line} - released {release_note}" if label_line else f"released {release_note}"
 
-        tracks: list[dict] = []
-        if api is not None and discogs_lookup_max_items > 0 and len(matched) < discogs_lookup_max_items:
+        # Native tracklist first -- free, since the data's already in the
+        # block we scraped, and it's deejay.de's own actual audio rather
+        # than a possibly-different mix borrowed from Discogs. The Discogs
+        # cross-reference only runs as a fallback for the rarer item that
+        # has no tracklist of its own (e.g. a single with no listed tracks).
+        tracks = extract_deejay_tracks(block)
+        if not tracks and api is not None and discogs_lookup_max_items > 0 \
+                and len(matched) < discogs_lookup_max_items:
             tracks = find_discogs_videos(api, artist, raw_title, catno)
 
         matched.append({

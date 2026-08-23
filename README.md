@@ -371,14 +371,15 @@ through the Discogs API:
   the log shows a specific warning ("scraper found 0 items on a page that
   always has some") rather than failing silently, so it's noticeable. Turn it
   off with the `DEEJAY_ENABLED` variable (below) if that happens and you don't
-  want to wait for a fix. Their own tracklist "Play" buttons stream through a
-  session-gated internal API (checked their player JS directly) rather than a
-  static, predictable URL, so those aren't used directly — instead, each
-  matched item is cross-referenced against Discogs' own release search, and
-  its community-submitted YouTube links are borrowed when a confident match
-  is found (see [Listening to the records](#listening-to-the-records)). Not
-  every item gets a match this way, and none get it when
-  `DISCOGS_TOKEN`/Discogs itself is unavailable — those just keep the
+  want to wait for a fix. Their tracklist DOES play inline, real audio, same
+  as clone.nl — each track's own MP3 lives at a predictable static URL
+  (confirmed with a real browser network capture, then verified live over
+  plain HTTP), so it's fetched directly rather than needing anything
+  special. For the rare item with no tracklist of its own, this falls back
+  to cross-referencing Discogs' release search and borrowing its
+  community-submitted YouTube links when a confident match is found (see
+  [Listening to the records](#listening-to-the-records)) — that fallback
+  path needs `DISCOGS_TOKEN`; items that hit neither just keep the
   existing "search YouTube" fallback link.
 
 Neither source has Discogs-style structured genre/style data, so genre
@@ -488,21 +489,28 @@ embed per click. This is also what makes seeking on an already-loaded track
 truly instant.
 
 **Not every track plays through YouTube.** Discogs releases only have
-community-submitted YouTube links to work with, but clone.nl's own item pages
-embed real MP3 preview clips directly — confirmed by checking a live page, not
-assumed — so those tracks play through a plain, native `<audio>` element
-instead: no video platform involved, no metadata-loading delay, instant
-seeking on first tap rather than only after the first play. Whichever backend
-a track uses is invisible from the outside — same bar, same tap-to-seek
-behaviour — except direct-MP3 tracks skip the "watch on YouTube" arrow, since
-there's no video to link to. Only one track plays at a time regardless of
-which backend it's using; starting a YouTube track stops a playing MP3 clip
-and vice versa. deejay.de items have no track data of their own, so they play
-through the YouTube backend too — but only when a matching Discogs release was
-found with confidence; otherwise it's the "search YouTube" fallback link, same
-as any item nobody has attached video links to. See
-[Non-Discogs sources](#non-discogs-sources-clonenl-rss-and-deejayde) for how
-that matching works.
+community-submitted YouTube links to work with, but both clone.nl and
+deejay.de's own item pages give up real, direct MP3 preview clips instead —
+confirmed live on both, not assumed — so those tracks play through a plain,
+native `<audio>` element: no video platform involved, no metadata-loading
+delay, instant seeking on first tap rather than only after the first play.
+deejay.de's case took real digging: their tracklist "Play" buttons route
+through a session-gated internal API in their own player JS, which looked
+like a hard wall, but a real browser network capture showed each track's MP3
+sits at a predictable, static URL underneath that needs no session at all —
+sharded by the item's own numeric id, the same pattern deejay.de already uses
+for its cover image URLs.
+
+Whichever backend a track uses is invisible from the outside — same bar, same
+tap-to-seek behaviour — except direct-MP3 tracks skip the "watch on YouTube"
+arrow, since there's no video to link to. Only one track plays at a time
+regardless of which backend it's using; starting a YouTube track stops a
+playing MP3 clip and vice versa. The rare deejay.de item with no tracklist of
+its own falls back to cross-referencing Discogs' release search and borrowing
+its YouTube links when a confident match is found; failing that, it's the
+"search YouTube" link, same as any item nobody has attached video links to.
+See [Non-Discogs sources](#non-discogs-sources-clonenl-rss-and-deejayde) for
+how both of those work.
 
 **Why a separate page, and not just play inside the email:** every mail client
 strips `<script>`, `<iframe>` and `<audio>` before rendering — Gmail included —
