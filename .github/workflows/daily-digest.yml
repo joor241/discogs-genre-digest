@@ -91,6 +91,12 @@ jobs:
           CLONE_RSS_ENABLED: ${{ vars.CLONE_RSS_ENABLED }}
           CLONE_AUDIO_MAX_ITEMS: ${{ vars.CLONE_AUDIO_MAX_ITEMS }}
           DEEJAY_ENABLED: ${{ vars.DEEJAY_ENABLED }}
+          # deejay.de failing from Actions specifically (observed repeatedly,
+          # while reachable fine from elsewhere -- looks like the runner's IP
+          # range being rate-limited) no longer fails the whole run. Still
+          # logged and still shown in the digest. Set to "false" to go back
+          # to a hard failure for this source too.
+          DEEJAY_SOFT_FAIL: ${{ vars.DEEJAY_SOFT_FAIL }}
           DEEJAY_MAX_ITEMS: ${{ vars.DEEJAY_MAX_ITEMS }}
           DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS: ${{ vars.DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS }}
           DEEJAY_STOCK_CHECK_MAX_ITEMS: ${{ vars.DEEJAY_STOCK_CHECK_MAX_ITEMS }}

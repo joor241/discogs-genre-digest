@@ -415,7 +415,19 @@ first appeared. Ids are forgotten after `DEEJAY_SEEN_KEEP_DAYS` (default
 - `CLONE_RSS_ENABLED` = `false`
 - `DEEJAY_ENABLED` = `false`
 
-Both default to on. `DEEJAY_MAX_ITEMS` (default `60`) caps how many of the
+Both default to on.
+
+**deejay.de failing doesn't fail the whole run.** Observed live, repeatedly:
+deejay.de answers in under a second from a plain connection, but the exact
+same request from GitHub Actions has failed with a connect timeout several
+times in a row, then started working again on its own a run or two later —
+consistent with the runner's datacenter IP range being rate-limited or
+blocked rather than deejay.de actually being down. Retrying more or waiting
+longer doesn't help a deliberate block, and it isn't something you can fix
+from here, so `DEEJAY_SOFT_FAIL` (default **on**) keeps this source's
+failures from flipping the run red every time it happens: still logged as an
+error, still shown in the digest as "Could not check: deejay.de", just not
+urgent. Set it to `false` to go back to a hard failure for deejay.de too. `DEEJAY_MAX_ITEMS` (default `60`) caps how many of the
 page's items are considered each run. `CLONE_AUDIO_MAX_ITEMS` (default `30`)
 caps how many clone.nl items get their tracklist fetched for inline playback
 each run — each one costs an extra request beyond the single feed fetch, so
