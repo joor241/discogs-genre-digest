@@ -445,6 +445,20 @@ deejay.de, where it's only available on the item's own page. Capped by
 `DEEJAY_STOCK_CHECK_MAX_ITEMS` (default `20`); set it to `0` to turn the
 check off for deejay.de specifically if you'd rather not pay that cost.
 
+#### "Vinyl Only" highlight
+
+A gold "★ Vinyl Only" badge marks releases that ship with nothing bundled --
+no download code, no CD. This only shows where there's real evidence, never
+a guess:
+
+- **Discogs sellers**: derived for free from data already fetched -- a
+  release tagged `["Vinyl"]` alone is vinyl-only; `["Vinyl", "File"]` ships
+  with a download code, so isn't.
+- **deejay.de**: their own "Vinyl Only" feature tag, read from the same
+  detail-page fetch already made for the stock check above -- free.
+- **clone.nl**: no badge. Checked live and found no equivalent marker on
+  their item pages, so this is left unflagged rather than guessed at.
+
 ### Changing the time it runs
 
 Edit the `cron` line in `.github/workflows/daily-digest.yml`:

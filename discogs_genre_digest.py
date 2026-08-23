@@ -965,6 +965,12 @@ DEEJAY_STOCKSTATUS_RE = re.compile(
     r'<div class="stockstatus"><span class="first">([^<]*)</span>'
     r'<span class="second">([^<]*)</span></div>'
 )
+# Also detail-page-only. Confirmed live: holds text like "Vinyl Only" or
+# "Vinyl Only, 180g" when present, but is frequently absent entirely (its
+# absence means nothing either way -- just that deejay.de didn't add that
+# particular marketing callout for this release, not that it ships with a
+# download code).
+DEEJAY_FEATURE_RE = re.compile(r'<span class="feature"><b>Features:</b>\s*([^<]*)</span>')
 
 
 def classify_deejay_stock(first_text: str, second_text: str) -> tuple[str, str]:
@@ -1119,12 +1125,17 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
         # Stock status only exists on the item's own detail page -- unlike
         # tracks, this is a genuinely new request, not free, hence its own cap.
         stock_status, stock_note = "", ""
+        vinyl_only = False
         if stock_check_max_items > 0 and len(matched) < stock_check_max_items:
             try:
                 detail_html = http_get_text(item_url, user_agent)
                 stock_match = DEEJAY_STOCKSTATUS_RE.search(detail_html)
                 if stock_match:
                     stock_status, stock_note = classify_deejay_stock(*stock_match.groups())
+                # Free: same page fetch as the stock check above.
+                feature_match = DEEJAY_FEATURE_RE.search(detail_html)
+                if feature_match:
+                    vinyl_only = "vinyl only" in feature_match.group(1).lower()
             except FeedError as exc:
                 # A stock-check failure must not lose the item itself.
                 LOG.warning("[deejay] could not check stock for %s: %s", item_url, exc)
@@ -1144,6 +1155,7 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
             "formats": formats,
             "stock_status": stock_status,
             "stock_note": stock_note,
+            "vinyl_only": vinyl_only,
         })
 
     return matched, considered
@@ -1211,6 +1223,9 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
             "catno": release.get("catalog_number") or "",
             "videos": info.get("videos") or [],
             "formats": info.get("formats") or [],
+            # Vinyl with nothing else bundled -- a release tagged ["Vinyl",
+            # "File"] ships with a download code, so is not vinyl-only.
+            "vinyl_only": (info.get("formats") or []) == ["Vinyl"],
         })
 
     if unchecked:
@@ -1421,6 +1436,7 @@ h2 {
 .badge.format { background: #14202b; color: #7fb3e8; }
 .badge.preorder { background: #2b2210; color: #e0af52; }
 .badge.outofstock { background: #2b1414; color: #e08a8a; }
+.badge.vinylonly { background: #2b2410; color: #e0c452; font-weight: 700; }
 .fineprint { color: #6f6f78; font-size: 11.5px; margin-top: 3px; }
 .tags { color: #5f5f68; font-size: 12px; margin-top: 3px; margin-bottom: 9px; }
 .buy {
@@ -1855,6 +1871,8 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
             )
             if item.get("formats"):
                 meta_html += f'<span class="badge format">{e(", ".join(item["formats"]))}</span>'
+            if item.get("vinyl_only"):
+                meta_html += '<span class="badge vinylonly">&#9733; Vinyl Only</span>'
             if item.get("stock_note"):
                 stock_class = "preorder" if item.get("stock_status") == "preorder" else "outofstock"
                 meta_html += f'<span class="badge {stock_class}">{e(item["stock_note"])}</span>'
@@ -2064,6 +2082,13 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                     meta += (
                         f'<span style="{badge}background:#eef4ff;color:#3a5f9e;">'
                         f'{e(", ".join(item["formats"]))}</span>'
+                    )
+                if item.get("vinyl_only"):
+                    # A distinct gold accent so it reads as a step up from
+                    # the neutral format badge, not just a repeat of "Vinyl".
+                    meta += (
+                        f'<span style="{badge}background:#fff4d6;color:#8a6d00;'
+                        f'font-weight:700;">&#9733; Vinyl Only</span>'
                     )
                 if item.get("stock_note"):
                     # Not-yet-available is the thing most worth flagging
