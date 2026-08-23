@@ -2163,7 +2163,8 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
             'padding:11px 18px;border-radius:6px;">'
             '&#127911; Open the player</a>'
             '<span style="color:#888;font-size:12px;display:block;margin-top:6px;">'
-            'Play every track from one page, without leaving for YouTube each time.'
+            'Play every track and save likes from one page &mdash; an e-mail '
+            'can\'t do either of those on its own.'
             '</span></p>'
         )
 
