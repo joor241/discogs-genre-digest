@@ -31,7 +31,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
-from urllib.parse import quote_plus
+from urllib.parse import quote, quote_plus
 
 import requests
 
@@ -104,6 +104,19 @@ GENRES_BY_STORE: dict[str, list[str]] = {}
 CLONE_RSS_URL = "https://clone.nl/rss/all"
 CLONE_RSS_KEY = "clone-rss"  # use this as a key in GENRES_BY_STORE to override just this source
 CLONE_RSS_ENABLED = True
+
+# clone.nl's own item pages embed direct MP3 preview clips per track (not
+# YouTube), e.g. clone.nl/platen/mp3/84483/1 Release It.mp3 -- confirmed live
+# by fetching a real item page, not assumed. That means real inline playback
+# for this source, same as Discogs releases get via YouTube, just backed by
+# a plain <audio> element instead of a hidden YouTube player.
+#
+# Getting it costs one extra HTTP request per MATCHED item (not per item in
+# the feed -- only for the ones that already passed genre/format filtering),
+# so this is capped independently of MAX_VIDEOS_PER_RELEASE to bound worst
+# case request volume on a broad-filter run. Items beyond the cap still
+# appear in the digest, just without playable tracks.
+CLONE_AUDIO_MAX_ITEMS = 30
 
 # deejay.de has no RSS/Atom feed (checked directly: no <link rel="alternate">
 # anywhere, and every guessed feed path returns their normal 200 HTML rather
@@ -661,6 +674,30 @@ BARE_AMP_RE = re.compile(r'&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-fA-F]+;)')
 
 CLONE_TITLE_RE = re.compile(r'^(?P<desc>.*?)\s*\((?P<format>[^)]+)\)\s*(?:-\s*(?P<catno>\S.*))?$')
 CLONE_IMG_RE = re.compile(r'<img[^>]+src="([^"]+)"')
+CLONE_TRACK_TAG_RE = re.compile(r'<a class="preview"[^>]*>', re.I)
+HREF_ATTR_RE = re.compile(r'href="([^"]+)"')
+TITLE_ATTR_RE = re.compile(r'title="([^"]*)"')
+
+
+def extract_clone_tracks(item_page_html: str, limit: int = CLONE_AUDIO_MAX_ITEMS) -> list[dict]:
+    """Direct MP3 preview links from a clone.nl item page's tracklist.
+
+    Confirmed live: `<a class="preview" itemprop="audio" href="...mp3" ...>`
+    per track. The href isn't percent-encoded (spaces appear literally in the
+    URL), so it's encoded here before use.
+    """
+    tracks: list[dict] = []
+    for tag in CLONE_TRACK_TAG_RE.findall(item_page_html):
+        href_match = HREF_ATTR_RE.search(tag)
+        if not href_match:
+            continue
+        title_match = TITLE_ATTR_RE.search(tag)
+        title = html.unescape(title_match.group(1)) if title_match else "Listen"
+        src = quote(html.unescape(href_match.group(1)), safe=":/")
+        tracks.append({"title": title, "src": src, "uri": src, "yt": None, "dur": 0})
+        if len(tracks) >= limit:
+            break
+    return tracks
 
 
 def classify_clone_format(format_text: str) -> list[str]:
@@ -682,7 +719,8 @@ def classify_clone_format(format_text: str) -> list[str]:
 
 
 def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: list[str],
-                    user_agent: str, url: str = CLONE_RSS_URL) -> tuple[list[dict], int]:
+                    user_agent: str, url: str = CLONE_RSS_URL,
+                    audio_max_items: int = CLONE_AUDIO_MAX_ITEMS) -> tuple[list[dict], int]:
     """New arrivals from clone.nl's own webshop RSS feed. See the CLONE_RSS_*
     comments near the top of the file for what is and isn't reliable here."""
     raw = http_get_text(url, user_agent)
@@ -736,17 +774,30 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
 
         img_match = CLONE_IMG_RE.search(description_html)
 
+        tracks: list[dict] = []
+        item_url = link or url
+        if link and audio_max_items > 0 and len(matched) < audio_max_items:
+            try:
+                item_html = http_get_text(link, user_agent)
+                tracks = extract_clone_tracks(item_html)
+            except FeedError as exc:
+                # One item's page failing to load must not lose the item
+                # itself -- it just shows up without playable tracks.
+                LOG.warning("[clone-rss] could not fetch tracklist for %s: %s", link, exc)
+            time.sleep(0.5)  # be a reasonable citizen -- this is an extra
+                             # per-item request beyond the single feed fetch
+
         matched.append({
             "description": f"{desc_text} ({format_text})" if format_text else desc_text,
             "price": "price on request",
             "condition": "New",
             "sleeve": "",
-            "url": link or url,
+            "url": item_url,
             "tags": ", ".join(hit_terms) if hit_terms else "new arrival",
             "thumb": img_match.group(1) if img_match else "",
             "label": "",
             "catno": catno,
-            "videos": [],
+            "videos": tracks,
             "formats": formats,
         })
 
@@ -959,6 +1010,7 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
                  genres_by_store: dict[str, list[str]] | None = None,
                  user_agent: str = USER_AGENT,
                  clone_rss_enabled: bool = CLONE_RSS_ENABLED,
+                 clone_audio_max_items: int = CLONE_AUDIO_MAX_ITEMS,
                  deejay_enabled: bool = DEEJAY_ENABLED,
                  deejay_max_items: int = DEEJAY_MAX_ITEMS,
                  ) -> tuple[list[tuple[str, list[dict], str | None]], dict]:
@@ -1022,7 +1074,9 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
         LOG.info("Checking Clone.nl (new arrivals, RSS)%s...",
                  f" [genres: {genre_label}]" if genre_label is not None else "")
         try:
-            matched, considered = fetch_clone_rss(cutoff, norm, wanted_formats, user_agent)
+            matched, considered = fetch_clone_rss(
+                cutoff, norm, wanted_formats, user_agent, audio_max_items=clone_audio_max_items
+            )
             record("Clone.nl (new arrivals)", matched, considered, 0, genre_label)
             LOG.info("[clone-rss] %d new listing(s) in window, %d matched",
                      considered, len(matched))
@@ -1206,22 +1260,30 @@ footer a { color: #6ea8ff; }
 }
 """
 
-# One shared, hidden YouTube player is the actual audio engine; every bar is
-# just a click target that tells it what to load and where to seek. This is
-# the only way to get a Spotify-style scrubber out of YouTube, since a real
-# waveform isn't available -- YouTube doesn't expose audio data to embedders,
-# cross-origin, so the bar is an even fill rather than a true waveform.
+# Two playback backends share one page: a hidden YouTube player for Discogs
+# releases (no direct audio file exists for those, only community-submitted
+# YouTube links), and a plain <audio> element for sources that expose real
+# MP3 preview clips directly (clone.nl). Every bar just says which backend it
+# needs via data-yt or data-src; playFrom() below is the only place that
+# needs to know both exist, so only one plays at a time regardless of which
+# backend it came from.
 #
-# The player is created once, on page load, rather than on first click.
-# Creating it lazily would mean the very first tap has to build the iframe
-# from scratch before it can play, which is slow AND risks losing the
-# "user gesture" browsers require before they'll allow audio to start,
-# especially on mobile Safari. Pre-built, a tap only has to call
-# loadVideoById/seekTo, which happens synchronously inside the click handler.
+# The <audio> element needs none of the YouTube player's setup ceremony --
+# no async script load, no playsinline/autoplay-policy workaround, no
+# "player ready" gate -- native <audio> just works. The YouTube player is
+# still created once on page load rather than on first click, for the same
+# reason as before: building the iframe from scratch on first tap is slow
+# and risks losing the "user gesture" mobile browsers require before they'll
+# allow audio to start.
 PLAYER_JS = """
 (function () {
-  var player = null, ytReady = false, pendingInit = null;
-  var activeBar = null, activeVideoId = null, pendingSeekFraction = null;
+  var ytPlayer = null, ytReady = false, ytPendingInit = null;
+  var audioEl = new Audio();
+  audioEl.preload = 'none';
+
+  var activeEngine = null;  // 'yt' | 'audio' | null
+  var activeBar = null, activeVideoId = null, activeSrc = null;
+  var pendingSeekFraction = null;
   var pollTimer = null;
 
   function fmt(t) {
@@ -1266,17 +1328,19 @@ PLAYER_JS = """
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
   }
 
-  function poll() {
-    if (!player || !activeBar) return;
+  // ---- YouTube backend (Discogs releases) ----
+
+  function pollYt() {
+    if (!ytPlayer || !activeBar) return;
     var dur = 0, cur = 0, state = -1;
     try {
-      dur = player.getDuration() || 0;
-      cur = player.getCurrentTime() || 0;
-      state = player.getPlayerState();
+      dur = ytPlayer.getDuration() || 0;
+      cur = ytPlayer.getCurrentTime() || 0;
+      state = ytPlayer.getPlayerState();
     } catch (err) { return; }
     if (pendingSeekFraction !== null && dur > 0) {
       var target = pendingSeekFraction; pendingSeekFraction = null;
-      player.seekTo(target * dur, true);
+      ytPlayer.seekTo(target * dur, true);
       cur = target * dur;
     }
     var effectiveDur = dur || knownDuration(activeBar);
@@ -1285,25 +1349,25 @@ PLAYER_JS = """
           state === 1 ? 'playing' : (state === 3 ? 'loading' : 'paused'));
   }
 
-  function ensurePlayer(cb) {
-    if (player) { cb(); return; }
-    if (!ytReady) { pendingInit = cb; return; }
+  function ensureYt(cb) {
+    if (ytPlayer) { cb(); return; }
+    if (!ytReady) { ytPendingInit = cb; return; }
     var host = document.getElementById('yt-audio-host');
     if (!host) return;
-    player = new YT.Player(host, {
+    ytPlayer = new YT.Player(host, {
       height: '113', width: '200',
       playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1 },
       events: {
         onReady: function () { cb(); },
         onStateChange: function (ev) {
-          if (ev.data === YT.PlayerState.ENDED && activeBar) {
-            var d = player.getDuration() || knownDuration(activeBar);
+          if (ev.data === YT.PlayerState.ENDED && activeEngine === 'yt' && activeBar) {
+            var d = ytPlayer.getDuration() || knownDuration(activeBar);
             paint(activeBar, 1, fmt(d), fmt(d), 'paused');
             stopPolling();
           }
         },
         onError: function () {
-          if (activeBar) {
+          if (activeEngine === 'yt' && activeBar) {
             var r = row(activeBar);
             if (r) r.classList.add('errored');
           }
@@ -1314,47 +1378,119 @@ PLAYER_JS = """
 
   window.onYouTubeIframeAPIReady = function () {
     ytReady = true;
-    if (pendingInit) { var cb = pendingInit; pendingInit = null; cb(); }
+    if (ytPendingInit) { var cb = ytPendingInit; ytPendingInit = null; cb(); }
   };
 
-  function playFrom(bar, fraction) {
+  function playYtFrom(bar, fraction) {
     var videoId = bar.getAttribute('data-yt');
-    if (!videoId) return;
-    ensurePlayer(function () {
+    ensureYt(function () {
       if (activeBar && activeBar !== bar) resetBar(activeBar);
-      if (activeVideoId !== videoId) {
-        activeVideoId = videoId;
-        activeBar = bar;
+      if (activeEngine !== 'yt' || activeVideoId !== videoId) {
+        activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
         var known = knownDuration(bar);
         pendingSeekFraction = fraction > 0.01 ? fraction : null;
-        player.loadVideoById(videoId);
+        ytPlayer.loadVideoById(videoId);
         // Best-effort immediate jump using Discogs' own track length, so a
         // click deep into a bar does not sit at 0:00 waiting for YouTube's
         // own metadata to arrive. The poll loop re-seeks once the real
         // duration is confirmed, in case this fires before load is ready.
         if (known > 0 && pendingSeekFraction !== null) {
-          try { player.seekTo(pendingSeekFraction * known, true); } catch (err) {}
+          try { ytPlayer.seekTo(pendingSeekFraction * known, true); } catch (err) {}
         }
       } else {
         activeBar = bar;
-        var dur = player.getDuration() || knownDuration(bar);
-        if (dur > 0) player.seekTo(fraction * dur, true);
-        player.playVideo();
+        var dur = ytPlayer.getDuration() || knownDuration(bar);
+        if (dur > 0) ytPlayer.seekTo(fraction * dur, true);
+        ytPlayer.playVideo();
       }
       stopPolling();
-      pollTimer = setInterval(poll, 250);
-      paint(bar, fraction, fmt(fraction * (player.getDuration() || knownDuration(bar))),
+      pollTimer = setInterval(pollYt, 250);
+      paint(bar, fraction, fmt(fraction * (ytPlayer.getDuration() || knownDuration(bar))),
             durLabel(bar), 'loading');
     });
   }
 
-  function togglePlayPause(bar) {
-    var videoId = bar.getAttribute('data-yt');
-    if (activeVideoId === videoId && player) {
-      var state = player.getPlayerState();
-      if (state === 1) { player.pauseVideo(); } else { player.playVideo(); }
+  // ---- direct-audio backend (clone.nl, or any source with real MP3s) ----
+
+  function pollAudio() {
+    if (!activeBar) return;
+    var dur = audioEl.duration || 0;
+    var cur = audioEl.currentTime || 0;
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    var state = !audioEl.paused && !audioEl.ended ? 'playing'
+               : (audioEl.readyState < 2 ? 'loading' : 'paused');
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar), state);
+  }
+
+  audioEl.addEventListener('ended', function () {
+    if (activeEngine === 'audio' && activeBar) {
+      var d = audioEl.duration || knownDuration(activeBar);
+      paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+      stopPolling();
+    }
+  });
+  audioEl.addEventListener('error', function () {
+    if (activeEngine === 'audio' && activeBar) {
+      var r = row(activeBar);
+      if (r) r.classList.add('errored');
+    }
+  });
+
+  function safePlay() {
+    var p = audioEl.play();
+    if (p && p.catch) p.catch(function () {});  // ignore benign AbortError on rapid re-clicks
+  }
+
+  function playAudioFrom(bar, fraction) {
+    var src = bar.getAttribute('data-src');
+    if (activeBar && activeBar !== bar) resetBar(activeBar);
+    if (activeEngine !== 'audio' || activeSrc !== src) {
+      activeEngine = 'audio'; activeSrc = src; activeVideoId = null; activeBar = bar;
+      audioEl.src = src;
+      if (fraction > 0.01) {
+        var onMeta = function () {
+          audioEl.currentTime = fraction * (audioEl.duration || 0);
+          audioEl.removeEventListener('loadedmetadata', onMeta);
+        };
+        audioEl.addEventListener('loadedmetadata', onMeta);
+      }
+      safePlay();
     } else {
-      playFrom(bar, 0);
+      activeBar = bar;
+      if (audioEl.duration) audioEl.currentTime = fraction * audioEl.duration;
+      safePlay();
+    }
+    stopPolling();
+    pollTimer = setInterval(pollAudio, 200);
+    paint(bar, fraction, fmt(fraction * (audioEl.duration || knownDuration(bar))),
+          durLabel(bar), 'loading');
+  }
+
+  // ---- unified dispatch: only one backend plays at a time ----
+
+  function playFrom(bar, fraction) {
+    var isAudio = !!bar.getAttribute('data-src');
+    if (isAudio) {
+      if (activeEngine === 'yt' && ytPlayer) { try { ytPlayer.pauseVideo(); } catch (err) {} }
+      playAudioFrom(bar, fraction);
+    } else {
+      if (activeEngine === 'audio') { audioEl.pause(); }
+      playYtFrom(bar, fraction);
+    }
+  }
+
+  function togglePlayPause(bar) {
+    var isAudio = !!bar.getAttribute('data-src');
+    var isActiveTrack = isAudio
+      ? (activeEngine === 'audio' && activeSrc === bar.getAttribute('data-src'))
+      : (activeEngine === 'yt' && activeVideoId === bar.getAttribute('data-yt'));
+    if (!isActiveTrack) { playFrom(bar, 0); return; }
+    if (isAudio) {
+      if (audioEl.paused) { safePlay(); } else { audioEl.pause(); }
+    } else if (ytPlayer) {
+      var state = ytPlayer.getPlayerState();
+      if (state === 1) { ytPlayer.pauseVideo(); } else { ytPlayer.playVideo(); }
     }
   }
 
@@ -1389,10 +1525,15 @@ PLAYER_JS = """
       togglePlayPause(el);
     } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') {
       ev.preventDefault();
-      if (!player || activeBar !== el) return;
-      var dur = player.getDuration() || knownDuration(el);
-      var cur = player.getCurrentTime() || 0;
-      player.seekTo(Math.min(dur, Math.max(0, cur + (ev.key === 'ArrowRight' ? 5 : -5))), true);
+      if (activeBar !== el) return;
+      var delta = ev.key === 'ArrowRight' ? 5 : -5;
+      if (activeEngine === 'audio') {
+        audioEl.currentTime = Math.min(audioEl.duration || 1e9, Math.max(0, audioEl.currentTime + delta));
+      } else if (activeEngine === 'yt' && ytPlayer) {
+        var dur = ytPlayer.getDuration() || knownDuration(el);
+        var cur = ytPlayer.getCurrentTime() || 0;
+        ytPlayer.seekTo(Math.min(dur, Math.max(0, cur + delta)), true);
+      }
     }
   });
 
@@ -1495,24 +1636,41 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
 
             tracks = []
             for video in (item.get("videos") or []):
-                if not video.get("yt"):
+                # Two kinds of playable track share this markup: Discogs
+                # releases carry a YouTube id (video["yt"]); clone.nl items
+                # carry a direct MP3 URL (video["src"]) instead. Exactly one
+                # of the two is set, and it decides which data-* attribute
+                # the row gets -- PLAYER_JS picks the backend from that.
+                yt_id = video.get("yt")
+                audio_src = video.get("src")
+                if not yt_id and not audio_src:
                     continue
                 title = video["title"]
                 if len(title) > 70:
                     title = title[:69].rstrip() + "…"
                 dur = video.get("dur") or 0
-                watch_url = f"https://www.youtube.com/watch?v={video['yt']}"
+
+                if yt_id:
+                    engine_attr = f'data-yt="{e(yt_id)}"'
+                    watch_url = f"https://www.youtube.com/watch?v={yt_id}"
+                    watch_link = (
+                        f'<a class="ytlink" href="{e(watch_url)}" target="_blank" '
+                        f'rel="noopener noreferrer" title="Watch on YouTube" '
+                        f'aria-label="Watch {e(title)} on YouTube">&#8599;</a>'
+                    )
+                else:
+                    engine_attr = f'data-src="{e(audio_src)}"'
+                    watch_link = ""
+
                 tracks.append(
                     '<li class="track"><div class="trow">'
                     f'<button class="ppbtn" aria-label="Play {e(title)}">&#9654;</button>'
                     '<div class="bar" tabindex="0" role="slider" aria-valuemin="0" '
                     f'aria-valuemax="100" aria-valuenow="0" aria-label="{e(video["title"])}" '
-                    f'data-yt="{e(video["yt"])}" data-dur="{dur}">'
+                    f'{engine_attr} data-dur="{dur}">'
                     '<div class="track"><div class="fill"></div></div></div>'
                     f'<span class="time">0:00 / {fmt_mmss(dur) if dur else "--:--"}</span>'
-                    f'<a class="ytlink" href="{e(watch_url)}" target="_blank" '
-                    f'rel="noopener noreferrer" title="Watch on YouTube" '
-                    f'aria-label="Watch {e(title)} on YouTube">&#8599;</a>'
+                    + watch_link +
                     '</div>'
                     f'<div class="tname">{e(title)}</div></li>'
                 )
@@ -1853,6 +2011,7 @@ def main() -> int:
     formats = env_csv_list("FORMATS_INCLUDE", FORMATS_INCLUDE)
     genres_by_store = env_genres_by_store("GENRES_BY_STORE", GENRES_BY_STORE)
     clone_rss_enabled = env_flag("CLONE_RSS_ENABLED", CLONE_RSS_ENABLED)
+    clone_audio_max_items = env_int("CLONE_AUDIO_MAX_ITEMS", CLONE_AUDIO_MAX_ITEMS)
     deejay_enabled = env_flag("DEEJAY_ENABLED", DEEJAY_ENABLED)
     deejay_max_items = env_int("DEEJAY_MAX_ITEMS", DEEJAY_MAX_ITEMS)
     lookback = env_int("LOOKBACK_HOURS", LOOKBACK_HOURS)
@@ -1874,8 +2033,9 @@ def main() -> int:
     LOG.info("Caps: %d page(s)/seller (%d listings), %d release lookup(s)/run",
              env_int("MAX_PAGES", MAX_PAGES), env_int("MAX_PAGES", MAX_PAGES) * PER_PAGE,
              env_int("MAX_RELEASE_LOOKUPS", MAX_RELEASE_LOOKUPS))
-    LOG.info("Extra sources: clone.nl RSS %s, deejay.de scrape %s",
-             "on" if clone_rss_enabled else "off", "on" if deejay_enabled else "off")
+    LOG.info("Extra sources: clone.nl RSS %s (audio for up to %d item(s)), deejay.de scrape %s",
+             "on" if clone_rss_enabled else "off", clone_audio_max_items,
+             "on" if deejay_enabled else "off")
 
     user_agent = env_str("USER_AGENT", USER_AGENT)
     api = Discogs(
@@ -1888,8 +2048,12 @@ def main() -> int:
 
     started = time.monotonic()
     sections, stats = build_digest(
-        api, sellers, cutoff, genres, formats, genres_by_store, user_agent,
-        clone_rss_enabled, deejay_enabled, deejay_max_items,
+        api, sellers, cutoff, genres, formats, genres_by_store,
+        user_agent=user_agent,
+        clone_rss_enabled=clone_rss_enabled,
+        clone_audio_max_items=clone_audio_max_items,
+        deejay_enabled=deejay_enabled,
+        deejay_max_items=deejay_max_items,
     )
     elapsed = time.monotonic() - started
 

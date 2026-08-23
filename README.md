@@ -371,7 +371,11 @@ through the Discogs API:
   the log shows a specific warning ("scraper found 0 items on a page that
   always has some") rather than failing silently, so it's noticeable. Turn it
   off with the `DEEJAY_ENABLED` variable (below) if that happens and you don't
-  want to wait for a fix.
+  want to wait for a fix. Their tracklist "Play" buttons stream through a
+  session-gated internal API (checked their player JS directly) rather than a
+  static, predictable URL, so inline playback for this source wasn't pursued —
+  it would mean depending on a second undocumented, changeable mechanism on
+  top of the page-scraping already in play here.
 
 Neither source has Discogs-style structured genre/style data, so genre
 filtering runs against each item's title and description **text** instead
@@ -401,7 +405,11 @@ three sources, which use `LOOKBACK_HOURS` to avoid that.
 - `DEEJAY_ENABLED` = `false`
 
 Both default to on. `DEEJAY_MAX_ITEMS` (default `60`) caps how many of the
-page's items are considered each run. Per-store genre overrides
+page's items are considered each run. `CLONE_AUDIO_MAX_ITEMS` (default `30`)
+caps how many clone.nl items get their tracklist fetched for inline playback
+each run — each one costs an extra request beyond the single feed fetch, so
+this bounds the worst case on a very broad filter. Items beyond the cap still
+appear in the digest, just without playable tracks. Per-store genre overrides
 (`GENRES_BY_STORE`, see above) work for these too — use the keys `clone-rss`
 and `deejay`:
 
@@ -472,6 +480,19 @@ see) is created once when the page loads and reused for every track — clicking
 a bar just tells it what to load and where to seek, rather than building a new
 embed per click. This is also what makes seeking on an already-loaded track
 truly instant.
+
+**Not every track plays through YouTube.** Discogs releases only have
+community-submitted YouTube links to work with, but clone.nl's own item pages
+embed real MP3 preview clips directly — confirmed by checking a live page, not
+assumed — so those tracks play through a plain, native `<audio>` element
+instead: no video platform involved, no metadata-loading delay, instant
+seeking on first tap rather than only after the first play. Whichever backend
+a track uses is invisible from the outside — same bar, same tap-to-seek
+behaviour — except direct-MP3 tracks skip the "watch on YouTube" arrow, since
+there's no video to link to. Only one track plays at a time regardless of
+which backend it's using; starting a YouTube track stops a playing MP3 clip
+and vice versa. deejay.de tracks don't have inline playback at all — see
+[Non-Discogs sources](#non-discogs-sources-clonenl-rss-and-deejayde) for why.
 
 **Why a separate page, and not just play inside the email:** every mail client
 strips `<script>`, `<iframe>` and `<audio>` before rendering — Gmail included —
