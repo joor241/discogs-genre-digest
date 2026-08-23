@@ -142,8 +142,17 @@ jobs:
             echo "Site unchanged."
           else
             git commit -m "Publish player page for ${today}"
-            # Rebase in case a manual run pushed while this one was working.
-            git pull --rebase --autostash origin main
+            # A manual push can land on the same dated docs/ files while this
+            # run is working -- observed live (run #17): rebase tried a
+            # line-level merge of two different machine-generated HTML
+            # renders of the same file and hit an unresolvable conflict,
+            # failing the whole step even though the email had already sent
+            # fine. There is no meaningful "combine both" for a page that is
+            # pure regenerated output with no hand-edited content -- whichever
+            # run is publishing right now should just win outright. -X ours
+            # encodes that directly instead of hoping the race doesn't recur.
+            git fetch origin main
+            git merge -X ours --no-edit origin/main
             git push origin HEAD:main
           fi
 
