@@ -156,6 +156,15 @@ DEEJAY_MAX_ITEMS = 60  # how many of the page's items to consider each run
 # everything else), so it's capped independently.
 DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS = 20
 
+# clone.nl and deejay.de's "new arrivals" feeds mix items that are actually
+# in stock with pre-orders and sold-out listings still shown for a while --
+# confirmed live: 9 of 10 sampled clone.nl items were "preorder", not
+# available now. Both sites only expose this on the item's own detail page,
+# not the list/feed view, so checking it costs one extra request per item --
+# free for clone.nl (same page already fetched for audio) but a genuinely
+# new fetch for deejay.de, hence its own cap. 0 disables the deejay.de check.
+DEEJAY_STOCK_CHECK_MAX_ITEMS = 20
+
 # How far back to look, in hours.
 #
 # The digest is stateless: it asks "was this listed in the last N hours?"
@@ -770,6 +779,9 @@ BARE_AMP_RE = re.compile(r'&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-fA-F]+;)')
 
 CLONE_TITLE_RE = re.compile(r'^(?P<desc>.*?)\s*\((?P<format>[^)]+)\)\s*(?:-\s*(?P<catno>\S.*))?$')
 CLONE_IMG_RE = re.compile(r'<img[^>]+src="([^"]+)"')
+CLONE_STATUS_RE = re.compile(
+    r'<td class="col-xs-2 status">\s*<span class="hidden-xs">\s*([^<]*?)\s*</span>'
+)
 CLONE_TRACK_TAG_RE = re.compile(r'<a class="preview"[^>]*>', re.I)
 HREF_ATTR_RE = re.compile(r'href="([^"]+)"')
 TITLE_ATTR_RE = re.compile(r'title="([^"]*)"')
@@ -812,6 +824,27 @@ def classify_clone_format(format_text: str) -> list[str]:
     if any(w in t for w in ("download", "digital", "file", "mp3", "flac")):
         return ["File"]
     return ["Vinyl"]
+
+
+def classify_clone_stock(status_text: str) -> tuple[str, str]:
+    """(status_code, human note) from clone.nl's item-detail status cell.
+
+    Confirmed live across 10 sampled items: the cell holds "preorder" or
+    "out of stock" when either applies. No "in stock" text was ever observed
+    -- clone.nl appears to only render this cell for the exceptional states,
+    leaving it empty/absent for a normal, immediately-available item. An
+    empty match is therefore treated as in stock, not as unknown.
+    """
+    t = status_text.strip().lower()
+    if not t:
+        return "in_stock", ""
+    if "preorder" in t or "pre-order" in t or "pre order" in t:
+        return "preorder", "Pre-order"
+    if "out of stock" in t:
+        return "out_of_stock", "Out of stock"
+    if "backorder" in t or "back order" in t:
+        return "preorder", "Back order"
+    return "", ""  # unrecognised text -- say nothing rather than guess
 
 
 def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: list[str],
@@ -871,11 +904,17 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
         img_match = CLONE_IMG_RE.search(description_html)
 
         tracks: list[dict] = []
+        stock_status, stock_note = "", ""
         item_url = link or url
         if link and audio_max_items > 0 and len(matched) < audio_max_items:
             try:
                 item_html = http_get_text(link, user_agent)
                 tracks = extract_clone_tracks(item_html)
+                # Free: same page already fetched above for tracks, so
+                # stock status costs nothing extra here.
+                status_match = CLONE_STATUS_RE.search(item_html)
+                if status_match:
+                    stock_status, stock_note = classify_clone_stock(status_match.group(1))
             except FeedError as exc:
                 # One item's page failing to load must not lose the item
                 # itself -- it just shows up without playable tracks.
@@ -895,6 +934,8 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
             "catno": catno,
             "videos": tracks,
             "formats": formats,
+            "stock_status": stock_status,
+            "stock_note": stock_note,
         })
 
     return matched, considered
@@ -916,6 +957,29 @@ DEEJAY_TAG_STRIP_RE = re.compile(r"<[^>]+>")
 DEEJAY_TRACK_RE = re.compile(
     r'<a class="track[^"]*"[^>]*id="playTrack_(\d+)_([a-z])"[^>]*>\s*<b>([^<]*)</b>:\s*([^<]*)</a>'
 )
+# Only present on the item's own detail page, not the list page this module
+# otherwise scrapes -- confirmed live across a real presale item ("ships from
+# {date}"), a real pre-order item ("pre-order now {date}"), and several
+# "In Stock" items with no date in the second span.
+DEEJAY_STOCKSTATUS_RE = re.compile(
+    r'<div class="stockstatus"><span class="first">([^<]*)</span>'
+    r'<span class="second">([^<]*)</span></div>'
+)
+
+
+def classify_deejay_stock(first_text: str, second_text: str) -> tuple[str, str]:
+    """(status_code, human note) from deejay.de's item-detail stockstatus."""
+    first = first_text.strip().lower()
+    date = second_text.strip()
+    if "pre-order" in first or "preorder" in first:
+        return "preorder", f"Pre-order — expected {date}" if date else "Pre-order"
+    if "ships from" in first:
+        return "preorder", f"Ships from {date}" if date else "Ships soon"
+    if "in stock" in first:
+        return "in_stock", ""
+    if "out of stock" in first:
+        return "out_of_stock", "Out of stock"
+    return "", ""  # unrecognised text -- say nothing rather than guess
 
 
 def deejay_stream_url(article_id: str, letter: str) -> str:
@@ -976,6 +1040,7 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
                       api: "Discogs | None" = None, url: str = DEEJAY_URL,
                       max_items: int = DEEJAY_MAX_ITEMS,
                       discogs_lookup_max_items: int = DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS,
+                      stock_check_max_items: int = DEEJAY_STOCK_CHECK_MAX_ITEMS,
                       ) -> tuple[list[dict], int]:
     """New arrivals scraped from deejay.de's "All / News" page. See the
     DEEJAY_* comments near the top of the file for the real limitations
@@ -1049,18 +1114,36 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
                 and len(matched) < discogs_lookup_max_items:
             tracks = find_discogs_videos(api, artist, raw_title, catno)
 
+        item_url = ("https://www.deejay.de" + url_path) if url_path.startswith("/") else url_path
+
+        # Stock status only exists on the item's own detail page -- unlike
+        # tracks, this is a genuinely new request, not free, hence its own cap.
+        stock_status, stock_note = "", ""
+        if stock_check_max_items > 0 and len(matched) < stock_check_max_items:
+            try:
+                detail_html = http_get_text(item_url, user_agent)
+                stock_match = DEEJAY_STOCKSTATUS_RE.search(detail_html)
+                if stock_match:
+                    stock_status, stock_note = classify_deejay_stock(*stock_match.groups())
+            except FeedError as exc:
+                # A stock-check failure must not lose the item itself.
+                LOG.warning("[deejay] could not check stock for %s: %s", item_url, exc)
+            time.sleep(0.5)  # extra per-item request beyond the single page fetch
+
         matched.append({
             "description": f"{desc_text} ({medium_text})" if medium_text else desc_text,
             "price": price,
             "condition": "New",
             "sleeve": "",
-            "url": ("https://www.deejay.de" + url_path) if url_path.startswith("/") else url_path,
+            "url": item_url,
             "tags": ", ".join(hit_terms) if hit_terms else "new arrival",
             "thumb": img_match.group(1) if img_match else "",
             "label": label_line,
             "catno": "",
             "videos": tracks,
             "formats": formats,
+            "stock_status": stock_status,
+            "stock_note": stock_note,
         })
 
     return matched, considered
@@ -1152,6 +1235,7 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
                  deejay_enabled: bool = DEEJAY_ENABLED,
                  deejay_max_items: int = DEEJAY_MAX_ITEMS,
                  deejay_discogs_max_items: int = DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS,
+                 deejay_stock_max_items: int = DEEJAY_STOCK_CHECK_MAX_ITEMS,
                  ) -> tuple[list[tuple[str, list[dict], str | None]], dict]:
     """Each section is (display_name, matched_items, genre_label).
 
@@ -1234,6 +1318,7 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
             matched, considered = fetch_deejay_html(
                 norm, wanted_formats, user_agent, api=api, max_items=deejay_max_items,
                 discogs_lookup_max_items=deejay_discogs_max_items,
+                stock_check_max_items=deejay_stock_max_items,
             )
             record("deejay.de (new arrivals)", matched, considered, 0, genre_label)
             LOG.info("[deejay] %d item(s) considered, %d matched", considered, len(matched))
@@ -1334,6 +1419,8 @@ h2 {
   background: #202027; color: #9a9aa2;
 }
 .badge.format { background: #14202b; color: #7fb3e8; }
+.badge.preorder { background: #2b2210; color: #e0af52; }
+.badge.outofstock { background: #2b1414; color: #e08a8a; }
 .fineprint { color: #6f6f78; font-size: 11.5px; margin-top: 3px; }
 .tags { color: #5f5f68; font-size: 12px; margin-top: 3px; margin-bottom: 9px; }
 .buy {
@@ -1768,6 +1855,9 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
             )
             if item.get("formats"):
                 meta_html += f'<span class="badge format">{e(", ".join(item["formats"]))}</span>'
+            if item.get("stock_note"):
+                stock_class = "preorder" if item.get("stock_status") == "preorder" else "outofstock"
+                meta_html += f'<span class="badge {stock_class}">{e(item["stock_note"])}</span>'
 
             fine_html = ""
             if item.get("label") or item.get("catno"):
@@ -1975,6 +2065,19 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                         f'<span style="{badge}background:#eef4ff;color:#3a5f9e;">'
                         f'{e(", ".join(item["formats"]))}</span>'
                     )
+                if item.get("stock_note"):
+                    # Not-yet-available is the thing most worth flagging
+                    # clearly -- amber for "coming soon", muted red for
+                    # genuinely sold out, both visually distinct from the
+                    # neutral condition/format badges above.
+                    stock_bg, stock_fg = (
+                        ("#fdf0d5", "#8a5a00") if item.get("stock_status") == "preorder"
+                        else ("#fde8e8", "#a33")
+                    )
+                    meta += (
+                        f'<span style="{badge}background:{stock_bg};color:{stock_fg};">'
+                        f'{e(item["stock_note"])}</span>'
+                    )
 
                 catno = ""
                 if item["label"] or item["catno"]:
@@ -2157,6 +2260,9 @@ def main() -> int:
     deejay_discogs_max_items = env_int(
         "DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS", DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS
     )
+    deejay_stock_max_items = env_int(
+        "DEEJAY_STOCK_CHECK_MAX_ITEMS", DEEJAY_STOCK_CHECK_MAX_ITEMS
+    )
     lookback = env_int("LOOKBACK_HOURS", LOOKBACK_HOURS)
     if lookback <= 0:
         LOG.warning("LOOKBACK_HOURS must be positive - using %s", LOOKBACK_HOURS)
@@ -2198,6 +2304,7 @@ def main() -> int:
         deejay_enabled=deejay_enabled,
         deejay_max_items=deejay_max_items,
         deejay_discogs_max_items=deejay_discogs_max_items,
+        deejay_stock_max_items=deejay_stock_max_items,
     )
     elapsed = time.monotonic() - started
 

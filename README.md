@@ -424,6 +424,27 @@ and `deejay`:
 clone-rss: house; deejay: techno, breakbeat
 ```
 
+#### Stock status (pre-order vs. actually available)
+
+clone.nl and deejay.de's "new arrivals" feeds mix items that are genuinely in
+stock with pre-orders and sold-out listings that just haven't been removed
+yet — checked live: 9 of 10 sampled clone.nl items, and every sampled
+deejay.de item, were "preorder" or "out of stock", not immediately buyable.
+Discogs marketplace listings never have this problem (a seller's own listing
+is always real, owned inventory), so this only applies to those two sources.
+
+When a matched item isn't immediately available, both the emailed digest and
+the player page show a badge next to it — amber "Pre-order" (with an expected
+date when the site gives one) or muted red "Out of stock". An item with
+neither badge is available now. Nothing is filtered out based on this; it's
+shown so you know before clicking through, not hidden.
+
+This is free for clone.nl (the same item page already fetched for inline
+audio also carries the stock status) but costs one extra request per item for
+deejay.de, where it's only available on the item's own page. Capped by
+`DEEJAY_STOCK_CHECK_MAX_ITEMS` (default `20`); set it to `0` to turn the
+check off for deejay.de specifically if you'd rather not pay that cost.
+
 ### Changing the time it runs
 
 Edit the `cron` line in `.github/workflows/daily-digest.yml`:
