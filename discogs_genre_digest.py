@@ -42,11 +42,15 @@ import requests
 # Discogs seller username -> display name used in the email.
 # The key must be the store's Discogs SELLER USERNAME, not their website.
 # Find it in the URL of their shop page: discogs.com/seller/<username>/profile
-# Verified against the live API on 2026-08-18.
+# Verified against the live API on 2026-08-18. decks.de added 2026-08-23:
+# 39,915 items for sale, updating in real time -- like Rush Hour, expect it
+# to occasionally bulk-list and push the run into the MAX_RELEASE_LOOKUPS /
+# MAX_PAGES safety caps rather than checking every listing.
 SELLERS = {
     "RushHour": "Rush Hour",             # rushhour.nl
     "clone.nl": "Clone",                 # clone.nl
     "offbeat__records": "Offbeat Records",  # note: two underscores
+    "decks.de": "Decks",                 # decks.de -- huge, very active seller
 }
 
 # Genres/styles to keep, matched whole-word and case-insensitively against the

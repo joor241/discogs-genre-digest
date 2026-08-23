@@ -13,8 +13,15 @@ Currently tracking:
 | Rush Hour | rushhour.nl | `RushHour` |
 | Clone | clone.nl | `clone.nl` |
 | Offbeat Records | — | `offbeat__records` (two underscores) |
+| Decks | decks.de | `decks.de` — huge, very active (~40,000 items) |
 
-All three were verified against the live Discogs API on 2026-08-18.
+All four were verified against the live Discogs API (Rush Hour/Clone/Offbeat on
+2026-08-18, Decks on 2026-08-23).
+
+Two more stores are checked directly on their own sites rather than through
+Discogs — Clone.nl's own new-arrivals RSS feed, and a scrape of deejay.de's
+"News" page (deejay.de has no feed and their Discogs account is empty). See
+[Non-Discogs sources](#non-discogs-sources-clonenl-rss-and-deejayde) below.
 
 > **Note on Redlight Records:** their old domain no longer hosts a record shop.
 > The Discogs account `Red_Light_Records` exists but had **0 items for sale**
