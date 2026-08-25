@@ -1160,13 +1160,20 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
     shown. The third return value is the updated map to persist for next
     time; the caller is responsible for actually writing it (this function
     has no side effects on disk)."""
-    # The one fetch this whole source lives or dies on -- worth spending
-    # real time retrying, unlike the per-item detail fetches below. This is
-    # specifically the fetch that has failed from GitHub Actions with a
-    # connect timeout and then succeeded again on a later run with nothing
-    # changed -- more attempts, spaced further apart, give a real block or
-    # rate limit more chances to have cleared within the same run.
-    html = http_get_text(url, user_agent, attempts=5, backoff=(5, 15, 30, 60))
+    # Deliberately NOT the generous multi-minute retry used for clone.nl's
+    # feed fetch. Tried that here first -- observed live: all 5 attempts
+    # failed identically over 4.5 minutes straight, every one hitting the
+    # same 30s connect timeout with no variation at all. That rules out a
+    # short-lived, self-clearing block (at least one attempt should then
+    # have landed in a gap) and points instead at something that holds for
+    # a GitHub Actions run's entire duration -- runners draw an IP from a
+    # pool, and it does not change mid-run, so if deejay.de (or something in
+    # front of it) has that particular IP blocked, every attempt this run
+    # makes fails the same way regardless of how many times or how long
+    # apart. Retrying harder here does not raise the odds of success, it
+    # just delays the graceful DEEJAY_SOFT_FAIL fallback and the email
+    # behind it for no benefit -- so this stays fast and cheap instead.
+    html = http_get_text(url, user_agent)
     articles = DEEJAY_ARTICLE_RE.findall(html)
 
     if not articles:
