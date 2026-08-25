@@ -410,6 +410,16 @@ first appeared. Ids are forgotten after `DEEJAY_SEEN_KEEP_DAYS` (default
 `90`) days, long enough that they'll have scrolled off deejay.de's own
 "News" listing by then regardless.
 
+**Discogs sellers and clone.nl's RSS feed get the same "shown once" treatment,
+for a different reason.** They do have a real per-item date, so `LOOKBACK_HOURS`
+alone bounds what gets checked each run — but a listing posted, say, 20 hours
+ago is *inside* both today's 48-hour window and tomorrow's, so it would
+otherwise show up twice purely because the windows overlap. `docs/discogs_seen.json`
+and `docs/clone_seen.json` close that gap the same way `deejay_seen.json`
+does: once a listing has appeared in a digest, it never appears again, no
+matter how the lookback window keeps sliding over it. Same `DEEJAY_SEEN_KEEP_DAYS`
+retention applies to all three files.
+
 **Turning either off** — set a repo Variable to `false`:
 
 - `CLONE_RSS_ENABLED` = `false`
@@ -781,7 +791,8 @@ To test the email path too, also set `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` and
 | Email never arrives | Check spam. Then check `MAIL_TO` for typos — SMTP accepts the message and drops it silently if the address doesn't exist. |
 | Digest is empty every day | Filter may be too narrow, or the shops genuinely listed nothing overnight. Run with `genres` set to `all` once to confirm the pipeline works. |
 | Scheduled run never fires | GitHub disables scheduled workflows in repos with no activity for 60 days — push a commit or click Run workflow to re-enable. |
-| Same record on several days running | Expected with the default 72h window. Set `LOOKBACK_HOURS` to `26` for one-appearance-only. See [Why there's no database](#why-theres-no-database). |
+| Same record on several days running | Shouldn't happen any more — `discogs_seen.json`/`clone_seen.json`/`deejay_seen.json` mean every item is shown exactly once, regardless of lookback overlap. If it does, check the workflow log for "Could not write the player page" (a failed publish means that run's seen-file update never got committed, so the next run doesn't know it already showed that item). |
+| Tapping the heart on a record does nothing, or reverts with no explanation | Almost always a token that predates the Likes feature and so lacks the `Contents` permission it needs — the failure now shows a clear alert saying exactly this. On Settings, forget the token and generate a new one with `Contents: Read and write` enabled (see [Likes, synced across your devices](#likes-synced-across-your-devices)). |
 
 ---
 

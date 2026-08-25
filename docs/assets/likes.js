@@ -137,7 +137,22 @@ window.DigestLikes = (function () {
 
       action.catch(function (err) {
         paintHeart(btn, wasLiked); // revert
-        btn.title = "Could not save: " + err.message;
+        var msg = err.message || String(err);
+        btn.title = "Could not save: " + msg;
+        // A silent tooltip is easy to miss entirely -- the heart just seems
+        // to snap back with no visible explanation, which reads as "liking
+        // doesn't work" rather than "here is specifically why it failed".
+        // A 403 here almost always means the connected token predates the
+        // Contents permission this feature needs (any token made before
+        // likes existed), not a fresh problem each time -- worth saying
+        // outright rather than making every user re-diagnose the same thing.
+        var friendly = /HTTP 403/.test(msg) || /Resource not accessible/i.test(msg)
+          ? "Could not save your like: this token doesn't have permission to write likes.\n\n" +
+            "If you connected before the Likes feature existed, your token predates the " +
+            "\"Contents\" permission it needs. Go to Settings, forget the token, and generate " +
+            "a new one with Contents: Read and write enabled."
+          : "Could not save your like: " + msg;
+        alert(friendly);
       }).then(function () {
         btn.disabled = false;
       });

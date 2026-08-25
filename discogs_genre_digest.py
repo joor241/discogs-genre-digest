@@ -887,9 +887,24 @@ def classify_clone_stock(status_text: str) -> tuple[str, str]:
 
 def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: list[str],
                     user_agent: str, url: str = CLONE_RSS_URL,
-                    audio_max_items: int = CLONE_AUDIO_MAX_ITEMS) -> tuple[list[dict], int]:
+                    audio_max_items: int = CLONE_AUDIO_MAX_ITEMS,
+                    seen: dict[str, str] | None = None,
+                    now: datetime | None = None,
+                    ) -> tuple[list[dict], int, dict[str, str]]:
     """New arrivals from clone.nl's own webshop RSS feed. See the CLONE_RSS_*
-    comments near the top of the file for what is and isn't reliable here."""
+    comments near the top of the file for what is and isn't reliable here.
+
+    `seen` (item link -> first-seen-timestamp, from docs/clone_seen.json)
+    stops the same item reappearing purely because it's still inside the
+    lookback window on a later run -- same reasoning and pattern as
+    collect_seller's discogs_seen and fetch_deejay_html's deejay_seen.
+    """
+    seen = dict(seen or {})
+    now = now or datetime.now(timezone.utc)
+    now_iso = now.isoformat()
+    updated_seen = dict(seen)
+    already_seen = 0
+
     raw = http_get_text(url, user_agent)
 
     # clone.nl's feed generator does not escape bare "&" in artist names
@@ -919,9 +934,15 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
             # Feed is newest-first (verified), so nothing after this can be
             # newer -- same early-stop trick as the Discogs inventory pages.
             break
-        considered += 1
 
         link = (item.findtext("link") or "").strip()
+        seen_key = link or title
+        if seen_key in seen:
+            already_seen += 1
+            continue
+        updated_seen[seen_key] = now_iso
+        considered += 1
+
         description_html = item.findtext("description") or ""
         blurb = item.findtext("content:encoded", namespaces=ns) or ""
 
@@ -976,7 +997,9 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
             "stock_note": stock_note,
         })
 
-    return matched, considered
+    if already_seen:
+        LOG.info("[clone-rss] %d already shown in a prior digest, skipped", already_seen)
+    return matched, considered, updated_seen
 
 
 DEEJAY_ARTICLE_RE = re.compile(r'<article id="a(\d+)"[^>]*>(.*?)</article>', re.S)
@@ -1239,15 +1262,37 @@ def format_price(listing: dict) -> str:
 
 
 def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datetime,
-                   wanted_norm: list[str], wanted_formats: list[str]
-                   ) -> tuple[list[dict], int, int]:
+                   wanted_norm: list[str], wanted_formats: list[str],
+                   seen: dict[str, str] | None = None,
+                   now: datetime | None = None,
+                   ) -> tuple[list[dict], int, int, dict[str, str]]:
     """Return (matching items, listings past the date cutoff, listings left
-    unchecked because the release-lookup budget ran out)."""
+    unchecked because the release-lookup budget ran out, updated seen-map).
+
+    The lookback window alone means the same listing can land in two
+    consecutive digests just because the windows overlap -- `seen` (the
+    Discogs listing-id -> first-seen-timestamp map from
+    docs/discogs_seen.json, same git-as-state pattern as deejay.de's) makes
+    "already shown" explicit and permanent instead, so nothing repeats
+    purely because less than LOOKBACK_HOURS has passed since it last did.
+    """
+    seen = dict(seen or {})
+    now = now or datetime.now(timezone.utc)
+    now_iso = now.isoformat()
+    updated_seen = dict(seen)
+
     matched: list[dict] = []
     considered = 0
     unchecked = 0
+    already_seen = 0
 
     for listing in fetch_recent_listings(api, username, cutoff):
+        listing_id = str(listing.get("id") or "")
+        if listing_id and listing_id in seen:
+            already_seen += 1
+            continue
+        if listing_id:
+            updated_seen[listing_id] = now_iso
         considered += 1
         release = listing.get("release") or {}
         release_id = release.get("id")
@@ -1293,6 +1338,8 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
             "vinyl_only": (info.get("formats") or []) == ["Vinyl"],
         })
 
+    if already_seen:
+        LOG.info("[%s] %d already shown in a prior digest, skipped", username, already_seen)
     if unchecked:
         LOG.warning(
             "[%s] %s: %d new listing(s) in window, %d matched, "
@@ -1303,7 +1350,7 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
     else:
         LOG.info("[%s] %s: %d new listing(s) in window, %d matched the genre filter",
                  username, display_name, considered, len(matched))
-    return matched, considered, unchecked
+    return matched, considered, unchecked, updated_seen
 
 
 def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
@@ -1317,6 +1364,8 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
                  deejay_discogs_max_items: int = DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS,
                  deejay_stock_max_items: int = DEEJAY_STOCK_CHECK_MAX_ITEMS,
                  deejay_seen: dict[str, str] | None = None,
+                 discogs_seen: dict[str, str] | None = None,
+                 clone_seen: dict[str, str] | None = None,
                  now: datetime | None = None,
                  ) -> tuple[list[tuple[str, list[dict], str | None]], dict]:
     """Each section is (display_name, matched_items, genre_label).
@@ -1338,7 +1387,9 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
     wanted_formats = [f.lower() for f in formats if f]
     sections: list[tuple[str, list[dict], str | None]] = []
     stats = {"considered": 0, "matched": 0, "unchecked": 0, "failed_sellers": [],
-             "deejay_seen": dict(deejay_seen or {})}
+             "deejay_seen": dict(deejay_seen or {}),
+             "discogs_seen": dict(discogs_seen or {}),
+             "clone_seen": dict(clone_seen or {})}
 
     def genre_filter_for(key: str) -> tuple[list[str], str | None]:
         override = genres_by_store.get(key)
@@ -1361,9 +1412,11 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
         LOG.info("Checking %s (%s)%s...", display_name, username,
                  f" [genres: {genre_label}]" if genre_label is not None else "")
         try:
-            matched, considered, unchecked = collect_seller(
-                api, username, display_name, cutoff, seller_norm, wanted_formats
+            matched, considered, unchecked, updated_discogs_seen = collect_seller(
+                api, username, display_name, cutoff, seller_norm, wanted_formats,
+                seen=stats["discogs_seen"], now=now,
             )
+            stats["discogs_seen"] = updated_discogs_seen
         except DiscogsError as exc:
             # A dead store must not take the whole digest down.
             LOG.error("[%s] FAILED: %s", username, exc)
@@ -1380,9 +1433,11 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
         LOG.info("Checking Clone.nl (new arrivals, RSS)%s...",
                  f" [genres: {genre_label}]" if genre_label is not None else "")
         try:
-            matched, considered = fetch_clone_rss(
-                cutoff, norm, wanted_formats, user_agent, audio_max_items=clone_audio_max_items
+            matched, considered, updated_clone_seen = fetch_clone_rss(
+                cutoff, norm, wanted_formats, user_agent, audio_max_items=clone_audio_max_items,
+                seen=stats["clone_seen"], now=now,
             )
+            stats["clone_seen"] = updated_clone_seen
             record("Clone.nl (new arrivals)", matched, considered, 0, genre_label)
             LOG.info("[clone-rss] %d new listing(s) in window, %d matched",
                      considered, len(matched))
@@ -1937,7 +1992,11 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         )
         out.append(f'<h2>{e(store)} &middot; {len(items)}{note}</h2>')
         for item in items:
-            thumb = (f'<img src="{e(item["thumb"])}" alt="" loading="lazy">'
+            # Eager, not lazy: these are small (60px) thumbnails, and lazy
+            # loading meant anything below the fold only started fetching
+            # once scrolled near -- felt like images loading "on click"
+            # rather than as soon as the page opens.
+            thumb = (f'<img src="{e(item["thumb"])}" alt="">'
                      if item.get("thumb") else '<img alt="">')
 
             # Same reasoning as the email: price gets weight, condition/format
@@ -2471,19 +2530,28 @@ def main() -> int:
     generated = datetime.now(timezone.utc)
     stamp = generated.strftime("%Y-%m-%d")
 
-    # deejay.de has no per-item posted date to filter on (see the DEEJAY_*
-    # comments near the top), so "new" is tracked explicitly instead: which
-    # article ids has a previous run already shown. Only meaningful when
-    # docs/ is actually being written -- a run with no --player-dir has
-    # nowhere to persist the updated state, so it isn't loaded or saved.
-    deejay_seen_path = (
-        os.path.join(os.path.dirname(args.player_dir.rstrip("/\\")) or ".", "deejay_seen.json")
-        if args.player_dir else ""
-    )
+    # Explicit "already shown" tracking, one file per source, all using the
+    # same git-as-state pattern: deejay.de needs this because it has no
+    # per-item posted date to filter on at all (see the DEEJAY_* comments
+    # near the top); Discogs sellers and clone.nl's RSS feed DO have a
+    # lookback window, but that alone lets the same item land in two
+    # consecutive digests purely because the windows overlap -- these two
+    # seen-files close that gap for them too. Only meaningful when docs/ is
+    # actually being written -- a run with no --player-dir has nowhere to
+    # persist the updated state, so nothing here is loaded or saved.
+    docs_dir = os.path.dirname(args.player_dir.rstrip("/\\")) or "." if args.player_dir else ""
+    deejay_seen_path = os.path.join(docs_dir, "deejay_seen.json") if docs_dir else ""
+    discogs_seen_path = os.path.join(docs_dir, "discogs_seen.json") if docs_dir else ""
+    clone_seen_path = os.path.join(docs_dir, "clone_seen.json") if docs_dir else ""
+
     deejay_seen = load_deejay_seen(deejay_seen_path)
-    if deejay_seen_path:
-        LOG.info("deejay.de: %d previously-shown id(s) loaded from %s",
-                 len(deejay_seen), deejay_seen_path)
+    discogs_seen = load_deejay_seen(discogs_seen_path)
+    clone_seen = load_deejay_seen(clone_seen_path)
+    if docs_dir:
+        LOG.info(
+            "Already-shown ids loaded: %d deejay.de, %d Discogs, %d clone.nl RSS",
+            len(deejay_seen), len(discogs_seen), len(clone_seen),
+        )
 
     started = time.monotonic()
     sections, stats = build_digest(
@@ -2496,6 +2564,8 @@ def main() -> int:
         deejay_discogs_max_items=deejay_discogs_max_items,
         deejay_stock_max_items=deejay_stock_max_items,
         deejay_seen=deejay_seen,
+        discogs_seen=discogs_seen,
+        clone_seen=clone_seen,
         now=generated,
     )
     elapsed = time.monotonic() - started
@@ -2540,8 +2610,17 @@ def main() -> int:
             if deejay_seen_path:
                 save_deejay_seen(deejay_seen_path, stats["deejay_seen"],
                                  DEEJAY_SEEN_KEEP_DAYS, generated)
-                LOG.info("deejay.de: %d id(s) now remembered in %s",
-                         len(stats["deejay_seen"]), deejay_seen_path)
+            if discogs_seen_path:
+                save_deejay_seen(discogs_seen_path, stats["discogs_seen"],
+                                 DEEJAY_SEEN_KEEP_DAYS, generated)
+            if clone_seen_path:
+                save_deejay_seen(clone_seen_path, stats["clone_seen"],
+                                 DEEJAY_SEEN_KEEP_DAYS, generated)
+            if docs_dir:
+                LOG.info(
+                    "Already-shown ids now remembered: %d deejay.de, %d Discogs, %d clone.nl RSS",
+                    len(stats["deejay_seen"]), len(stats["discogs_seen"]), len(stats["clone_seen"]),
+                )
         except OSError as exc:
             # A failed page must not cost you the email.
             LOG.error("Could not write the player page: %s", exc)
