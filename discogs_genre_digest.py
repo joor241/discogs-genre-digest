@@ -361,22 +361,54 @@ class FeedError(RuntimeError):
     """A non-Discogs source (RSS feed or scraped page) failed."""
 
 
-def http_get_text(url: str, user_agent: str, timeout: int = HTTP_TIMEOUT) -> str:
-    """Plain GET with one retry. Used by the non-Discogs sources, which are a
-    single fetch each run and don't need the Discogs client's rate-limit and
-    multi-attempt-backoff machinery -- that's specific to paging through a
-    marketplace inventory under a 60/min budget, not relevant here."""
+# Fuller, more browser-like headers than User-Agent alone. Doesn't change
+# anything observed from a residential IP (deejay.de and clone.nl both
+# answer in well under a second either way, no rate-limit or CDN headers
+# either way) -- kept anyway since it's a real, free reduction in how
+# obviously automated a request looks, and costs nothing.
+def http_headers(user_agent: str) -> dict[str, str]:
+    return {
+        "User-Agent": user_agent,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+
+
+def http_get_text(url: str, user_agent: str, timeout: int = HTTP_TIMEOUT,
+                  attempts: int = 3, backoff: tuple[float, ...] = (3, 10)) -> str:
+    """Plain GET with retries and growing backoff. Used by the non-Discogs
+    sources, which don't need the Discogs client's rate-limit and paging
+    machinery -- that's specific to a 60/min marketplace budget.
+
+    Observed live and repeatedly: deejay.de has failed with a CONNECT
+    timeout from GitHub Actions specifically -- the TCP handshake itself
+    never completes -- while answering the identical request in under a
+    second from elsewhere, and the SAME workflow has then succeeded again a
+    run or two later with nothing changed. That pattern (fails, then
+    recovers on its own) is exactly what backoff-and-retry is for: a longer
+    timeout on one attempt would not help a connection that is not merely
+    slow, but retrying again after a real pause can, if what's blocking it
+    is a transient or rate-limit condition that clears on its own. The
+    default here is deliberately modest (per-item detail fetches use it too,
+    and should fail fast rather than slow down a run with many items) --
+    callers making the one big per-run feed fetch pass more attempts and
+    longer backoff explicitly, since that single call is worth spending
+    more time on.
+    """
     last_exc: Exception | None = None
-    for attempt in (1, 2):
+    for attempt in range(1, attempts + 1):
         try:
-            resp = requests.get(url, headers={"User-Agent": user_agent}, timeout=timeout)
+            resp = requests.get(url, headers=http_headers(user_agent), timeout=timeout)
             resp.raise_for_status()
             return resp.text
         except requests.RequestException as exc:
             last_exc = exc
-            if attempt == 1:
-                time.sleep(3)
-    raise FeedError(f"GET {url} failed: {last_exc}")
+            if attempt < attempts:
+                wait = backoff[min(attempt - 1, len(backoff) - 1)]
+                LOG.warning("GET %s failed (attempt %d/%d): %s - retrying in %ss",
+                           url, attempt, attempts, exc, wait)
+                time.sleep(wait)
+    raise FeedError(f"GET {url} failed after {attempts} attempt(s): {last_exc}")
 
 
 class Discogs:
@@ -905,7 +937,9 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
     updated_seen = dict(seen)
     already_seen = 0
 
-    raw = http_get_text(url, user_agent)
+    # The one fetch this whole source lives or dies on -- worth spending
+    # real time retrying, unlike the per-item detail fetches below.
+    raw = http_get_text(url, user_agent, attempts=5, backoff=(5, 15, 30, 60))
 
     # clone.nl's feed generator does not escape bare "&" in artist names
     # (observed live: "Phat Kat & Jon Doe"), which is invalid XML. "&" is
@@ -1126,7 +1160,13 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
     shown. The third return value is the updated map to persist for next
     time; the caller is responsible for actually writing it (this function
     has no side effects on disk)."""
-    html = http_get_text(url, user_agent)
+    # The one fetch this whole source lives or dies on -- worth spending
+    # real time retrying, unlike the per-item detail fetches below. This is
+    # specifically the fetch that has failed from GitHub Actions with a
+    # connect timeout and then succeeded again on a later run with nothing
+    # changed -- more attempts, spaced further apart, give a real block or
+    # rate limit more chances to have cleared within the same run.
+    html = http_get_text(url, user_agent, attempts=5, backoff=(5, 15, 30, 60))
     articles = DEEJAY_ARTICLE_RE.findall(html)
 
     if not articles:
