@@ -1569,6 +1569,43 @@ def listen_html(item: dict, e) -> str:
     return "".join(out)
 
 
+# Inline SVG icons rather than Unicode glyphs. A dingbat like U+25B6 or
+# U+23F8 renders differently on every platform -- different weights, some
+# systems substitute a colour emoji font, and vertical alignment drifts --
+# so the transport controls looked inconsistent between phone and laptop.
+# A path is identical everywhere and inherits currentColor, so hover and
+# disabled states just work.
+#
+# Deliberately NOT used in the email: Gmail and Outlook strip inline SVG,
+# so listen_html() keeps its text entities, which do survive there.
+ICON_PLAY = ('<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" '
+             'focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>')
+ICON_PAUSE = ('<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" '
+              'focusable="false"><path fill="currentColor" '
+              'd="M6 5h3.5v14H6zM14.5 5H18v14h-3.5z"/></svg>')
+ICON_PREV = ('<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" '
+             'focusable="false"><path fill="currentColor" '
+             'd="M6 6h2.5v12H6zm3.5 6L18 6v12z"/></svg>')
+ICON_NEXT = ('<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" '
+             'focusable="false"><path fill="currentColor" '
+             'd="M15.5 6H18v12h-2.5zM6 6l8.5 6L6 18z"/></svg>')
+ICON_SETTINGS = (
+    '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" '
+    'focusable="false"><path fill="currentColor" d="M19.14 12.94a7.1 7.1 0 000-1.88'
+    'l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7 7 0 00-1.62-.94'
+    'l-.36-2.54a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94'
+    'l-2.39-.96a.5.5 0 00-.6.22L2.71 8.84a.5.5 0 00.12.64l2.03 1.58a7.1 7.1 0 000 1.88'
+    'l-2.03 1.58a.5.5 0 00-.12.64l1.92 3.32c.13.22.39.3.6.22l2.39-.96c.5.38 1.03.7 1.62.94'
+    'l.36 2.54c.04.24.25.42.5.42h3.84c.25 0 .46-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94'
+    'l2.39.96c.22.08.47 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64zM12 15.6A3.6 3.6 0 1112 8.4'
+    'a3.6 3.6 0 010 7.2z"/></svg>'
+)
+ICON_HEART = ('<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" '
+              'focusable="false"><path fill="none" stroke="currentColor" '
+              'stroke-width="2" d="M12 20.3l-1.45-1.32C5.4 14.24 2 11.16 2 7.4 2 4.42 '
+              '4.42 2 7.4 2c1.68 0 3.3.78 4.6 2.09C13.3 2.78 14.92 2 16.6 2 19.58 2 22 '
+              '4.42 22 7.4c0 3.76-3.4 6.84-8.55 11.58z"/></svg>')
+
 PLAYER_CSS = """
 :root { color-scheme: dark; }
 * { box-sizing: border-box; }
@@ -1640,6 +1677,11 @@ button.ppbtn {
 button.ppbtn:hover { background: #e01212; }
 button.ppbtn:active { transform: scale(0.94); }
 button.ppbtn.loading { background: #4a4a52; }
+/* display:block kills the inline-baseline gap that would otherwise push
+   the icon a pixel off-centre inside the round button. The play path is
+   already drawn slightly right of the viewBox centre, which is what makes
+   a triangle look optically centred in a circle. */
+button.ppbtn svg { display: block; }
 /* .bar is the seek target: a tall, easy-to-tap hitbox around a thin visual
    line, so it works on a phone without needing a precise touch. */
 .bar {
@@ -1687,11 +1729,20 @@ a.ytlink:hover { color: #e8e8ea; background: #202027; }
   border-radius: 7px; font-family: inherit;
 }
 #nowbar button:hover { background: #26262b; color: #fff; }
+#nowbar button svg { display: block; }
 #nowbar .nowtitle {
   font-size: 12.5px; color: #9a9aa2; margin: 0 4px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 @media (max-width: 520px) { #nowbar .nowtitle { max-width: 44vw; } }
+.topnav { margin: 0 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.topnav a {
+  color: #8a8a92; text-decoration: none; font-size: 13px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
+.topnav a svg { display: block; }
 .none { color: #5f5f68; font-size: 13px; }
 footer {
   margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
@@ -1723,6 +1774,13 @@ footer a { color: #6ea8ff; }
 # allow audio to start.
 PLAYER_JS = """
 (function () {
+  // Substituted at render time from the ICON_* constants, so the markup
+  // and the JS that swaps it can never drift out of sync.
+  var ICON_PLAY = '__ICON_PLAY__';
+  var ICON_PAUSE = '__ICON_PAUSE__';
+  var ICON_PREV = '__ICON_PREV__';
+  var ICON_NEXT = '__ICON_NEXT__';
+
   var ytPlayer = null, ytReady = false, ytPendingInit = null;
   var audioEl = new Audio();
   audioEl.preload = 'none';
@@ -1752,7 +1810,12 @@ PLAYER_JS = """
     var btn = r.querySelector('.ppbtn');
     if (btn) {
       btn.classList.toggle('loading', state === 'loading');
-      btn.textContent = state === 'playing' ? '\\u23F8' : '\\u25B6';
+      btn.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    // Keep the floating transport's own play/pause in step with the row's.
+    var nbToggle = document.querySelector('#nowbar [data-toggle]');
+    if (nbToggle) {
+      nbToggle.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
     }
   }
 
@@ -1950,6 +2013,35 @@ PLAYER_JS = """
 
   // ---- floating transport ----
 
+  // The generated digest pages ship this markup in their HTML; likes.html
+  // does not, and building it here rather than hand-copying it there keeps
+  // the transport defined in exactly one place. Both call sites end up with
+  // the same controls, and adding a third page costs nothing.
+  function ensureChrome() {
+    if (!document.body) return;
+    if (!document.getElementById('yt-audio-host')) {
+      var host = document.createElement('div');
+      host.style.cssText =
+        'position:fixed;left:-9999px;top:0;width:200px;height:113px;';
+      host.innerHTML = '<div id="yt-audio-host"></div>';
+      document.body.appendChild(host);
+    }
+    if (!document.getElementById('nowbar')) {
+      var nb = document.createElement('div');
+      nb.id = 'nowbar';
+      nb.innerHTML =
+        '<button type="button" data-step="-1" title="Previous track (p)" ' +
+        'aria-label="Previous track">' + ICON_PREV + '</button>' +
+        '<button type="button" data-toggle="1" title="Play / pause (space)" ' +
+        'aria-label="Play or pause">' + ICON_PAUSE + '</button>' +
+        '<button type="button" data-step="1" title="Next track (n)" ' +
+        'aria-label="Next track">' + ICON_NEXT + '</button>' +
+        '<span class="nowtitle"></span>';
+      document.body.appendChild(nb);
+    }
+  }
+
+  ensureChrome();
   var nowbar = document.getElementById('nowbar');
   var nowtitle = nowbar ? nowbar.querySelector('.nowtitle') : null;
 
@@ -2069,11 +2161,80 @@ PLAYER_JS = """
     }
   });
 
+  // Exported so likes.html can build identical track rows from the data
+  // stored in likes.json. One definition of the markup, several pages --
+  // a second hand-written copy over there would drift the moment either
+  // the structure or the icons change. The click/keyboard handlers above
+  // are delegated on document, so rows added later still work.
+  window.DigestPlayer = {
+    trackRowHtml: function (t) {
+      var esc = function (s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      };
+      var title = String(t.title || 'Listen');
+      var shown = title.length > 70 ? title.slice(0, 69).replace(/\\s+$/, '') + '\\u2026' : title;
+      var dur = parseInt(t.dur, 10) || 0;
+      var ytAttr = t.yt ? ' data-yt="' + esc(t.yt) + '"' : '';
+      var srcAttr = t.src ? ' data-src="' + esc(t.src) + '"' : '';
+      var link = t.yt
+        ? '<a class="ytlink" href="https://www.youtube.com/watch?v=' + esc(t.yt) +
+          '" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" ' +
+          'aria-label="Watch on YouTube">\\u2197</a>'
+        : '';
+      return '<li class="track"><div class="trow">' +
+        '<button class="ppbtn" aria-label="Play ' + esc(shown) + '">' + ICON_PLAY + '</button>' +
+        '<div class="bar" tabindex="0" role="slider" aria-valuemin="0" ' +
+        'aria-valuemax="100" aria-valuenow="0" aria-label="' + esc(title) + '"' +
+        ytAttr + srcAttr + ' data-dur="' + dur + '">' +
+        '<div class="track"><div class="fill"></div></div></div>' +
+        '<span class="time">0:00 / ' + (dur ? fmt(dur) : '--:--') + '</span>' +
+        link + '</div><div class="tname">' + esc(shown) + '</div></li>';
+    }
+  };
+
   var tag = document.createElement('script');
   tag.src = 'https://www.youtube.com/iframe_api';
   document.head.appendChild(tag);
 })();
 """
+
+
+def write_player_assets(docs_dir: str) -> None:
+    """Write the player CSS/JS as shared assets under docs/assets/.
+
+    The generated digest pages keep their own inlined copy: they are
+    self-contained archive documents, and inlining sidesteps any
+    relative-path difference between /archive/ and the site root.
+    likes.html is a hand-written static file that no run regenerates, so
+    it loads these instead -- which keeps one source of truth for the
+    player rather than a second copy that drifts the moment either side
+    changes.
+    """
+    if not docs_dir:
+        return
+    assets = os.path.join(docs_dir, "assets")
+    os.makedirs(assets, exist_ok=True)
+    with open(os.path.join(assets, "player.css"), "w", encoding="utf-8") as handle:
+        handle.write(PLAYER_CSS)
+    with open(os.path.join(assets, "player.js"), "w", encoding="utf-8") as handle:
+        handle.write(player_js())
+
+
+def player_js() -> str:
+    """PLAYER_JS with the icon placeholders filled in.
+
+    The icons live in one place (the ICON_* constants) and are used from
+    two: the initial HTML, and the JS that swaps play for pause. Keeping
+    them as placeholders substituted here means those two can't drift --
+    an f-string is not an option because PLAYER_JS is full of JS braces.
+    """
+    return (PLAYER_JS
+            .replace("__ICON_PLAY__", ICON_PLAY)
+            .replace("__ICON_PAUSE__", ICON_PAUSE)
+            .replace("__ICON_PREV__", ICON_PREV)
+            .replace("__ICON_NEXT__", ICON_NEXT))
 
 
 def archive_links(directory: str, current_stamp: str) -> list[str]:
@@ -2117,6 +2278,7 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         return f"{base_url}/archive/{stamp}.html" if base_url else f"{stamp}.html"
 
     likes_href = f"{base_url}/likes.html" if base_url else "likes.html"
+    settings_href = f"{base_url}/settings.html" if base_url else "settings.html"
 
     out = [
         '<!doctype html><html lang="en"><head><meta charset="utf-8">',
@@ -2131,15 +2293,17 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         '<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;">'
         '<div id="yt-audio-host"></div></div>',
         '<div id="nowbar">'
-        '<button type="button" data-step="-1" title="Previous track (p)" '
-        'aria-label="Previous track">&#9198;</button>'
-        '<button type="button" data-toggle="1" title="Play / pause (space)" '
-        'aria-label="Play or pause">&#9208;</button>'
-        '<button type="button" data-step="1" title="Next track (n)" '
-        'aria-label="Next track">&#9197;</button>'
+        f'<button type="button" data-step="-1" title="Previous track (p)" '
+        f'aria-label="Previous track">{ICON_PREV}</button>'
+        f'<button type="button" data-toggle="1" title="Play / pause (space)" '
+        f'aria-label="Play or pause">{ICON_PAUSE}</button>'
+        f'<button type="button" data-step="1" title="Next track (n)" '
+        f'aria-label="Next track">{ICON_NEXT}</button>'
         '<span class="nowtitle"></span></div>',
         '<div class="wrap">',
-        f'<div class="topnav"><a href="{e(likes_href)}">&#9825; Likes</a></div>',
+        f'<div class="topnav">'
+        f'<a href="{e(likes_href)}">{ICON_HEART} Likes</a>'
+        f'<a href="{e(settings_href)}">{ICON_SETTINGS} Settings</a></div>',
         '<h1>New on Discogs</h1>',
         f'<p class="sub">{total} record(s) listed since '
         f'{e(cutoff.strftime("%a %d %b %Y, %H:%M"))} UTC &middot; {e(filter_text)}</p>',
@@ -2216,7 +2380,7 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
 
                 tracks.append(
                     '<li class="track"><div class="trow">'
-                    f'<button class="ppbtn" aria-label="Play {e(title)}">&#9654;</button>'
+                    f'<button class="ppbtn" aria-label="Play {e(title)}">{ICON_PLAY}</button>'
                     '<div class="bar" tabindex="0" role="slider" aria-valuemin="0" '
                     f'aria-valuemax="100" aria-valuenow="0" aria-label="{e(video["title"])}" '
                     f'{engine_attr} data-dur="{dur}">'
@@ -2244,6 +2408,15 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                 "store": store,
                 "thumb": item.get("thumb", ""),
                 "formats": item.get("formats") or [],
+                # Enough to rebuild playable bars on the likes page. Trimmed
+                # to the four fields the player actually reads -- the full
+                # video dicts would bloat both this attribute and likes.json
+                # for no gain, since "uri" is derivable from yt/src.
+                "videos": [
+                    {"title": v.get("title", ""), "yt": v.get("yt"),
+                     "src": v.get("src"), "dur": v.get("dur") or 0}
+                    for v in (item.get("videos") or [])
+                ],
             }, ensure_ascii=False)
             like_btn = (
                 '<button class="likebtn" type="button" aria-label="Like" '
@@ -2288,7 +2461,7 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         f'<script>window.DIGEST_BASE_URL={json.dumps(base_url)};</script>'
         f'<script src="{e(assets_href)}"></script>'
     )
-    out.append(f'</div><script>{PLAYER_JS}</script>{likes_script}</body></html>')
+    out.append(f'</div><script>{player_js()}</script>{likes_script}</body></html>')
     return "\n".join(out)
 
 
@@ -2818,6 +2991,9 @@ def main() -> int:
     if args.player_dir:
         try:
             os.makedirs(args.player_dir, exist_ok=True)
+            # Refreshed every run so likes.html can never end up loading a
+            # player older than the one the digest pages ship with.
+            write_player_assets(docs_dir)
 
             # Prune first, so the "earlier digests" nav only lists pages that
             # still exist after this run.

@@ -616,10 +616,21 @@ plus one extra permission: set
 that walkthrough). Tap a heart without a token connected and it opens the
 Likes page instead of silently doing nothing, so it's obvious what's needed.
 
-Each like carries its own snapshot of the record's title, price, thumbnail
-and store — not just a link — so the Likes page renders without needing to
-re-fetch anything, even after that record has scrolled out of every digest
-and archive page.
+Each like carries its own snapshot of the record's title, price, thumbnail,
+store **and its playable tracks** — not just a link — so the Likes page
+renders and plays without needing to re-fetch anything, even after that
+record has scrolled out of every digest and archive page.
+
+Tracks play on the Likes page exactly as they do in the digest: same bars,
+same keyboard shortcuts, same floating transport. That is not a second
+implementation — `docs/assets/player.{css,js}` is written fresh by every
+run from the same source the digest pages inline, and `likes.html` loads
+it. The player installs its own transport if a page doesn't ship one, so
+adding it to another page needs nothing but those two tags.
+
+Likes saved before this existed have no tracks stored, so they show without
+a tracklist rather than breaking the row; re-liking the record from a digest
+fills it in.
 
 #### Turning the player page on
 

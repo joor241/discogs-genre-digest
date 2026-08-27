@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Likes</title>
+<!-- Loaded BEFORE this page's own <style> on purpose: the player sheet
+     also defines body/.wrap/.rec/h1/h2, and this page's rules should win
+     on those. What it uniquely provides -- .bar, .ppbtn, .trow, .tracks,
+     #nowbar -- has no counterpart here, so it applies cleanly. -->
+<link rel="stylesheet" href="assets/player.css">
 <style>
 :root { color-scheme: dark; }
 * { box-sizing: border-box; }
@@ -80,6 +85,11 @@ button.unlike:hover { background: #2a1414; }
 </div>
 <script>window.DIGEST_BASE_URL = "";</script>
 <script src="assets/likes.js"></script>
+<!-- Same player the digest pages use, written fresh by every run. It
+     installs its own transport if the page lacks one, so nothing else is
+     needed here, and its click/key handlers are delegated on document --
+     which is why rows rendered later, after the likes fetch, still work. -->
+<script src="assets/player.js"></script>
 <script>
 (function () {
   "use strict";
@@ -118,6 +128,19 @@ button.unlike:hover { background: #2a1414; }
           return '<span class="badge">' + e(f) + '</span>';
         }).join("");
         if (it.price) badges = '<span class="badge">' + e(it.price) + '</span>' + badges;
+
+        // Playable bars, built by the shared player so they behave exactly
+        // as they do in the digest. Likes saved before this shipped have no
+        // videos stored, so they simply render without a tracklist rather
+        // than breaking the row -- they'll gain one if re-liked later.
+        var tracks = "";
+        var vids = (it.videos || []).filter(function (v) { return v && (v.yt || v.src); });
+        if (vids.length && window.DigestPlayer) {
+          tracks = '<ul class="tracks">' +
+            vids.map(function (v) { return window.DigestPlayer.trackRowHtml(v); }).join("") +
+            '</ul>';
+        }
+
         html +=
           '<div class="rec">' + thumb + '<div class="body">' +
           '<div class="title"><a href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">' +
@@ -125,7 +148,7 @@ button.unlike:hover { background: #2a1414; }
           '<div class="meta">' + badges +
           '<a class="buy" href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">Open &rarr;</a>' +
           '<button class="unlike" data-url="' + e(it.url) + '" type="button">Unlike</button>' +
-          '</div></div></div>';
+          '</div>' + tracks + '</div></div>';
       });
     });
     content.innerHTML = html;
