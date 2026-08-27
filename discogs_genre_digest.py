@@ -1669,6 +1669,29 @@ a.ytlink {
 a.ytlink:hover { color: #e8e8ea; background: #202027; }
 .trow.errored .bar { opacity: .45; cursor: not-allowed; pointer-events: none; }
 .trow.errored .time { color: #9a5a5a; }
+/* Floating transport, only visible once something is playing. Gives the
+   skip controls a permanent home no matter how far down the page you've
+   scrolled, so you can move through tracks without hunting for the row. */
+#nowbar {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px;
+  z-index: 50; display: none; align-items: center; gap: 6px;
+  background: rgba(24,24,29,.96); border: 1px solid #2c2c33;
+  border-radius: 999px; padding: 7px 12px;
+  box-shadow: 0 6px 22px rgba(0,0,0,.5);
+  max-width: calc(100% - 24px);
+}
+#nowbar.show { display: flex; }
+#nowbar button {
+  flex: none; background: transparent; border: 0; color: #d4d4d8;
+  cursor: pointer; font-size: 14px; line-height: 1; padding: 6px 7px;
+  border-radius: 7px; font-family: inherit;
+}
+#nowbar button:hover { background: #26262b; color: #fff; }
+#nowbar .nowtitle {
+  font-size: 12.5px; color: #9a9aa2; margin: 0 4px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+@media (max-width: 520px) { #nowbar .nowtitle { max-width: 44vw; } }
 .none { color: #5f5f68; font-size: 13px; }
 footer {
   margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
@@ -1787,6 +1810,7 @@ PLAYER_JS = """
             var d = ytPlayer.getDuration() || knownDuration(activeBar);
             paint(activeBar, 1, fmt(d), fmt(d), 'paused');
             stopPolling();
+            step(1);  // roll on to the next track, top to bottom
           }
         },
         onError: function () {
@@ -1851,6 +1875,7 @@ PLAYER_JS = """
       var d = audioEl.duration || knownDuration(activeBar);
       paint(activeBar, 1, fmt(d), fmt(d), 'paused');
       stopPolling();
+      step(1);  // roll on to the next track, top to bottom
     }
   });
   audioEl.addEventListener('error', function () {
@@ -1890,6 +1915,68 @@ PLAYER_JS = """
           durLabel(bar), 'loading');
   }
 
+  // ---- track navigation: walk the page top to bottom ----
+
+  // Rebuilt on each call rather than cached: cheap at this page size, and
+  // it stays correct if a row gets marked .errored mid-session (a dead
+  // YouTube video or a 404 preview), which should then be skipped over
+  // rather than stopping playback dead when auto-advancing.
+  function playableBars() {
+    var out = [];
+    var all = document.querySelectorAll('.bar');
+    for (var i = 0; i < all.length; i++) {
+      var r = row(all[i]);
+      if (!r || !r.classList.contains('errored')) out.push(all[i]);
+    }
+    return out;
+  }
+
+  function step(delta) {
+    var bars = playableBars();
+    if (!bars.length) return;
+    var idx = -1;
+    for (var i = 0; i < bars.length; i++) {
+      if (bars[i] === activeBar) { idx = i; break; }
+    }
+    var next = idx === -1 ? (delta > 0 ? 0 : bars.length - 1) : idx + delta;
+    if (next < 0 || next >= bars.length) return;  // stop at the ends, don't wrap
+    var target = bars[next];
+    playFrom(target, 0);
+    if (target.scrollIntoView) {
+      target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+    try { target.focus({ preventScroll: true }); } catch (err) { target.focus(); }
+  }
+
+  // ---- floating transport ----
+
+  var nowbar = document.getElementById('nowbar');
+  var nowtitle = nowbar ? nowbar.querySelector('.nowtitle') : null;
+
+  function updateNowBar(bar) {
+    if (!nowbar) return;
+    if (!bar) { nowbar.classList.remove('show'); return; }
+    nowbar.classList.add('show');
+    if (nowtitle) {
+      var li = bar.closest ? bar.closest('li.track') : null;
+      var name = li ? li.querySelector('.tname') : null;
+      nowtitle.textContent = name ? name.textContent : (bar.getAttribute('aria-label') || '');
+    }
+  }
+
+  if (nowbar) {
+    nowbar.addEventListener('click', function (ev) {
+      var btn = ev.target.closest ? ev.target.closest('button') : null;
+      if (!btn) return;
+      ev.preventDefault();
+      if (btn.getAttribute('data-toggle')) {
+        if (activeBar) togglePlayPause(activeBar);
+      } else {
+        step(parseInt(btn.getAttribute('data-step'), 10) || 1);
+      }
+    });
+  }
+
   // ---- unified dispatch: only one backend plays at a time ----
 
   function playFrom(bar, fraction) {
@@ -1901,6 +1988,7 @@ PLAYER_JS = """
       if (activeEngine === 'audio') { audioEl.pause(); }
       playYtFrom(bar, fraction);
     }
+    updateNowBar(bar);
   }
 
   function togglePlayPause(bar) {
@@ -1941,11 +2029,32 @@ PLAYER_JS = """
   });
 
   document.addEventListener('keydown', function (ev) {
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    var t = ev.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+
+    // Next / previous work from anywhere on the page, so you can skip
+    // through without first clicking a row to focus it. Deliberately NOT
+    // bound to bare Up/Down arrows at this level -- those still need to
+    // scroll the page normally.
+    var k = ev.key.toLowerCase();
+    if (k === 'n' || k === 'j' || ev.key === 'MediaTrackNext') {
+      ev.preventDefault(); step(1); return;
+    }
+    if (k === 'p' || k === 'k' || ev.key === 'MediaTrackPrevious') {
+      ev.preventDefault(); step(-1); return;
+    }
+
     var el = document.activeElement;
     if (!el || !el.classList || !el.classList.contains('bar')) return;
     if (ev.key === ' ' || ev.key === 'Enter') {
       ev.preventDefault();
       togglePlayPause(el);
+    } else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+      // Only once a bar has focus, where arrow keys clearly belong to the
+      // player rather than to scrolling the page.
+      ev.preventDefault();
+      step(ev.key === 'ArrowDown' ? 1 : -1);
     } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') {
       ev.preventDefault();
       if (activeBar !== el) return;
@@ -2021,6 +2130,14 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         # mobile browsers' autoplay heuristics.
         '<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;">'
         '<div id="yt-audio-host"></div></div>',
+        '<div id="nowbar">'
+        '<button type="button" data-step="-1" title="Previous track (p)" '
+        'aria-label="Previous track">&#9198;</button>'
+        '<button type="button" data-toggle="1" title="Play / pause (space)" '
+        'aria-label="Play or pause">&#9208;</button>'
+        '<button type="button" data-step="1" title="Next track (n)" '
+        'aria-label="Next track">&#9197;</button>'
+        '<span class="nowtitle"></span></div>',
         '<div class="wrap">',
         f'<div class="topnav"><a href="{e(likes_href)}">&#9825; Likes</a></div>',
         '<h1>New on Discogs</h1>',
@@ -2724,12 +2841,24 @@ def main() -> int:
 
             earlier = archive_links(args.player_dir, stamp)
             page_path = os.path.join(args.player_dir, f"{stamp}.html")
-            with open(page_path, "w", encoding="utf-8") as handle:
-                handle.write(render_player_page(
-                    today_combined, cutoff, genres, stats, generated, earlier, base_url
-                ))
-            LOG.info("Wrote player page to %s (%d earlier page(s) linked)",
-                     page_path, len(earlier))
+
+            # Belt-and-braces on top of the accumulator above: never replace
+            # an existing page with an empty one. The accumulator alone can't
+            # cover the case where its file is missing or was reset -- e.g.
+            # the first run after this shipped, where a good page was already
+            # published earlier today but there was no record of it yet.
+            # Publishing "nothing" over something is never the better outcome.
+            page_exists = os.path.isfile(page_path) and os.path.getsize(page_path) > 0
+            if not today_combined and page_exists:
+                LOG.info("Nothing to show this run, but %s already has a page - keeping it",
+                         stamp)
+            else:
+                with open(page_path, "w", encoding="utf-8") as handle:
+                    handle.write(render_player_page(
+                        today_combined, cutoff, genres, stats, generated, earlier, base_url
+                    ))
+                LOG.info("Wrote player page to %s (%d earlier page(s) linked)",
+                         page_path, len(earlier))
 
             if deejay_seen_path:
                 save_deejay_seen(deejay_seen_path, stats["deejay_seen"],
