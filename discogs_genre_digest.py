@@ -2246,6 +2246,65 @@ def save_deejay_seen(path: str, seen: dict[str, str], keep_days: int, today: dat
         handle.write("\n")
 
 
+Section = tuple[str, list[dict], "str | None"]
+
+
+def load_today_sections(path: str, today_stamp: str) -> list[Section]:
+    """Sections already published for today, so a second same-day run adds
+    to the page rather than replacing it.
+
+    Observed live: a manual run and a very-late-firing scheduled run landed
+    18 minutes apart on the same day. The scheduled one found 0 NEW listings
+    -- correctly, since the seen-tracking had already marked everything the
+    manual run found as shown -- but it still overwrote the published page
+    with an empty one, silently erasing what the manual run had just put up.
+    Returns [] if the file is missing, unreadable, or from a previous day
+    (today's page should start fresh then, not carry over stale content).
+    """
+    if not path or not os.path.isfile(path):
+        return []
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except (OSError, ValueError):
+        return []
+    if data.get("date") != today_stamp:
+        return []
+    return [(s["store"], s["items"], s.get("genre_label")) for s in data.get("sections", [])]
+
+
+def save_today_sections(path: str, today_stamp: str, sections: list[Section]) -> None:
+    if not path:
+        return
+    data = {
+        "date": today_stamp,
+        "sections": [
+            {"store": store, "items": items, "genre_label": label}
+            for store, items, label in sections
+        ],
+    }
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(data, handle, ensure_ascii=False)
+
+
+def merge_sections(existing: list[Section], new: list[Section]) -> list[Section]:
+    """Combine today's already-published sections with this run's matches,
+    grouped by store, existing items first. No de-dup needed here -- the
+    seen-id tracking upstream already guarantees an item can't be matched
+    twice across runs the same day, so existing and new never overlap."""
+    by_store: dict[str, list[dict]] = {}
+    labels: dict[str, str | None] = {}
+    order: list[str] = []
+    for store, items, label in existing + new:
+        if store not in by_store:
+            order.append(store)
+            by_store[store] = []
+        by_store[store].extend(items)
+        labels[store] = label
+    return [(store, by_store[store], labels[store]) for store in order]
+
+
 def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                 player_url: str = "") -> str:
     e = html.escape
@@ -2590,6 +2649,11 @@ def main() -> int:
     deejay_seen_path = os.path.join(docs_dir, "deejay_seen.json") if docs_dir else ""
     discogs_seen_path = os.path.join(docs_dir, "discogs_seen.json") if docs_dir else ""
     clone_seen_path = os.path.join(docs_dir, "clone_seen.json") if docs_dir else ""
+    # Separate from the seen-id files above: those dedup which items get
+    # matched, this accumulates what's actually been PUBLISHED today, so a
+    # second same-day run (a manual one, or a scheduled trigger that fired
+    # hours late) adds to today's page instead of replacing it.
+    today_sections_path = os.path.join(docs_dir, "today_sections.json") if docs_dir else ""
 
     deejay_seen = load_deejay_seen(deejay_seen_path)
     discogs_seen = load_deejay_seen(discogs_seen_path)
@@ -2645,11 +2709,24 @@ def main() -> int:
                 LOG.info("Pruned %d archived page(s) older than %d days",
                          removed, args.keep_days)
 
+            # The player page shows everything published TODAY, not just this
+            # run's own matches -- so a same-day rerun (manual, or a schedule
+            # that fired hours late) adds to the page instead of replacing
+            # it. The email below still reports only this run's own new
+            # matches; those are two legitimately different things, not the
+            # same data shown twice.
+            today_before = load_today_sections(today_sections_path, stamp)
+            today_combined = merge_sections(today_before, sections)
+            save_today_sections(today_sections_path, stamp, today_combined)
+            if today_before and len(today_combined) != len(sections):
+                LOG.info("Combined with %d section(s) already published today (%d total)",
+                         len(today_before), len(today_combined))
+
             earlier = archive_links(args.player_dir, stamp)
             page_path = os.path.join(args.player_dir, f"{stamp}.html")
             with open(page_path, "w", encoding="utf-8") as handle:
                 handle.write(render_player_page(
-                    sections, cutoff, genres, stats, generated, earlier, base_url
+                    today_combined, cutoff, genres, stats, generated, earlier, base_url
                 ))
             LOG.info("Wrote player page to %s (%d earlier page(s) linked)",
                      page_path, len(earlier))
