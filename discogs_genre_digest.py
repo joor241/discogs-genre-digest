@@ -937,6 +937,16 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
     updated_seen = dict(seen)
     already_seen = 0
 
+    # Audio-fetch outcome counters. These exist because "clone.nl has no
+    # audio any more" was, from the run log alone, indistinguishable
+    # between three very different causes: the per-item fetch never ran,
+    # it failed, or it succeeded and returned a page with no player. The
+    # first two are silent without this. See the summary log below.
+    audio_attempted = 0
+    audio_found = 0
+    audio_failed = 0
+    audio_empty_sizes: list[int] = []
+
     # The one fetch this whole source lives or dies on -- worth spending
     # real time retrying, unlike the per-item detail fetches below.
     raw = http_get_text(url, user_agent, attempts=5, backoff=(5, 15, 30, 60))
@@ -1000,9 +1010,18 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
         stock_status, stock_note = "", ""
         item_url = link or url
         if link and audio_max_items > 0 and len(matched) < audio_max_items:
+            audio_attempted += 1
             try:
                 item_html = http_get_text(link, user_agent)
                 tracks = extract_clone_tracks(item_html)
+                if tracks:
+                    audio_found += 1
+                else:
+                    # Fetched fine but nothing in it. Worth recording the
+                    # page size: these pages run ~39-105KB with previews, so
+                    # a much smaller body points at a block/interstitial
+                    # rather than a record that genuinely has no clips.
+                    audio_empty_sizes.append(len(item_html))
                 # Free: same page already fetched above for tracks, so
                 # stock status costs nothing extra here.
                 status_match = CLONE_STATUS_RE.search(item_html)
@@ -1011,6 +1030,7 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
             except FeedError as exc:
                 # One item's page failing to load must not lose the item
                 # itself -- it just shows up without playable tracks.
+                audio_failed += 1
                 LOG.warning("[clone-rss] could not fetch tracklist for %s: %s", link, exc)
             time.sleep(0.5)  # be a reasonable citizen -- this is an extra
                              # per-item request beyond the single feed fetch
@@ -1033,6 +1053,30 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
 
     if already_seen:
         LOG.info("[clone-rss] %d already shown in a prior digest, skipped", already_seen)
+
+    # Say plainly what happened to the audio, so "clone.nl has no audio"
+    # can be diagnosed from the log instead of by re-testing by hand.
+    if audio_max_items <= 0:
+        LOG.warning("[clone-rss] audio disabled (CLONE_AUDIO_MAX_ITEMS=%d) - "
+                    "no tracklists fetched", audio_max_items)
+    elif audio_attempted:
+        LOG.info("[clone-rss] tracklists: %d/%d item(s) got audio, %d fetch failure(s)",
+                 audio_found, audio_attempted, audio_failed)
+        if audio_empty_sizes and not audio_found:
+            # Every single fetch succeeded yet none had a player. That is
+            # not what "these records have no previews" looks like -- it is
+            # what being served a different page looks like.
+            avg = sum(audio_empty_sizes) // len(audio_empty_sizes)
+            LOG.warning(
+                "[clone-rss] every tracklist fetch returned a page with no player "
+                "(%d page(s), avg %d bytes). Pages with previews normally run "
+                "~39-105KB, so a much smaller body here suggests clone.nl served "
+                "this runner something different rather than these records "
+                "genuinely having no clips.", len(audio_empty_sizes), avg)
+    elif matched:
+        LOG.info("[clone-rss] no tracklist fetches attempted for %d matched item(s) "
+                 "- every item lacked a usable link", len(matched))
+
     return matched, considered, updated_seen
 
 
