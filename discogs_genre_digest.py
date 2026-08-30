@@ -222,6 +222,24 @@ API_BASE = "https://api.discogs.com"
 USER_AGENT = "DiscogsGenreDigest/1.0 +https://github.com/joris/discogs-genre-digest"
 
 HTTP_TIMEOUT = 30           # seconds per request
+
+# Per-item detail fetches (clone.nl tracklists, deejay.de stock pages) are
+# enrichment: nice to have, never worth stalling a run for. They get a
+# short timeout and a single retry, unlike the one big per-run feed fetch.
+#
+# This matters because of a real incident: a run that normally finishes in
+# 0-2 minutes ran 22+ minutes and still produced no clone.nl audio. With
+# the default 3 attempts at a 30s timeout, ~30 unreachable items is close
+# to an hour of pure waiting, for nothing -- the host simply wasn't
+# reachable from that runner.
+ITEM_FETCH_KW = {"timeout": 10, "attempts": 2, "backoff": (2,)}
+
+# ...and if that many item fetches fail back to back, stop trying for the
+# rest of the run. Consecutive failures mean the host is unreachable from
+# here, not that individual pages are flaky, so working through the
+# remaining items can only waste time. Bounds the worst case no matter how
+# many items matched.
+ITEM_FETCH_GIVE_UP_AFTER = 3
 MAX_ATTEMPTS = 4            # attempts per request before giving up
 MIN_REQUEST_INTERVAL = 1.1  # seconds between calls -> ~54/min, under the 60/min cap
 RATELIMIT_FLOOR = 5         # when this few requests remain in the window...
@@ -945,6 +963,7 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
     audio_attempted = 0
     audio_found = 0
     audio_failed = 0
+    audio_consecutive_failures = 0
     audio_empty_sizes: list[int] = []
 
     # The one fetch this whole source lives or dies on -- worth spending
@@ -1009,10 +1028,12 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
         tracks: list[dict] = []
         stock_status, stock_note = "", ""
         item_url = link or url
-        if link and audio_max_items > 0 and len(matched) < audio_max_items:
+        if (link and audio_max_items > 0 and len(matched) < audio_max_items
+                and audio_consecutive_failures < ITEM_FETCH_GIVE_UP_AFTER):
             audio_attempted += 1
             try:
-                item_html = http_get_text(link, user_agent)
+                item_html = http_get_text(link, user_agent, **ITEM_FETCH_KW)
+                audio_consecutive_failures = 0
                 tracks = extract_clone_tracks(item_html)
                 if tracks:
                     audio_found += 1
@@ -1031,7 +1052,14 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
                 # One item's page failing to load must not lose the item
                 # itself -- it just shows up without playable tracks.
                 audio_failed += 1
+                audio_consecutive_failures += 1
                 LOG.warning("[clone-rss] could not fetch tracklist for %s: %s", link, exc)
+                if audio_consecutive_failures >= ITEM_FETCH_GIVE_UP_AFTER:
+                    LOG.warning(
+                        "[clone-rss] %d tracklist fetches failed in a row - not trying "
+                        "the rest this run. The host is not reachable from this runner, "
+                        "and retrying every remaining item would only stretch the run.",
+                        audio_consecutive_failures)
             time.sleep(0.5)  # be a reasonable citizen -- this is an extra
                              # per-item request beyond the single feed fetch
 
@@ -1235,6 +1263,9 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
     matched: list[dict] = []
     considered = 0
     already_seen = 0
+    # Same circuit breaker as clone.nl's tracklist fetches -- see
+    # ITEM_FETCH_GIVE_UP_AFTER.
+    stock_consecutive_failures = 0
 
     for article_id, block in articles[:max_items]:
         if article_id in seen:
@@ -1302,9 +1333,11 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
         # tracks, this is a genuinely new request, not free, hence its own cap.
         stock_status, stock_note = "", ""
         vinyl_only = False
-        if stock_check_max_items > 0 and len(matched) < stock_check_max_items:
+        if (stock_check_max_items > 0 and len(matched) < stock_check_max_items
+                and stock_consecutive_failures < ITEM_FETCH_GIVE_UP_AFTER):
             try:
-                detail_html = http_get_text(item_url, user_agent)
+                detail_html = http_get_text(item_url, user_agent, **ITEM_FETCH_KW)
+                stock_consecutive_failures = 0
                 stock_match = DEEJAY_STOCKSTATUS_RE.search(detail_html)
                 if stock_match:
                     stock_status, stock_note = classify_deejay_stock(*stock_match.groups())
@@ -1314,7 +1347,13 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
                     vinyl_only = "vinyl only" in feature_match.group(1).lower()
             except FeedError as exc:
                 # A stock-check failure must not lose the item itself.
+                stock_consecutive_failures += 1
                 LOG.warning("[deejay] could not check stock for %s: %s", item_url, exc)
+                if stock_consecutive_failures >= ITEM_FETCH_GIVE_UP_AFTER:
+                    LOG.warning(
+                        "[deejay] %d stock checks failed in a row - skipping the rest "
+                        "this run rather than waiting on an unreachable host.",
+                        stock_consecutive_failures)
             time.sleep(0.5)  # extra per-item request beyond the single page fetch
 
         matched.append({
@@ -1654,7 +1693,9 @@ PLAYER_CSS = """
 :root { color-scheme: dark; }
 * { box-sizing: border-box; }
 body {
-  margin: 0; padding: 24px 16px 64px;
+  /* Bottom padding clears the fixed transport bar (~48px) so the last
+     record and the footer are never hidden behind it. */
+  margin: 0; padding: 24px 16px 96px;
   background: #0e0e10; color: #e8e8ea;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   font-size: 15px; line-height: 1.45;
@@ -1759,26 +1800,51 @@ a.ytlink:hover { color: #e8e8ea; background: #202027; }
    skip controls a permanent home no matter how far down the page you've
    scrolled, so you can move through tracks without hunting for the row. */
 #nowbar {
-  position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px;
-  z-index: 50; display: none; align-items: center; gap: 6px;
-  background: rgba(24,24,29,.96); border: 1px solid #2c2c33;
-  border-radius: 999px; padding: 7px 12px;
-  box-shadow: 0 6px 22px rgba(0,0,0,.5);
-  max-width: calc(100% - 24px);
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: none; background: rgba(18,18,22,.97);
+  border-top: 1px solid #2c2c33; box-shadow: 0 -4px 24px rgba(0,0,0,.5);
 }
-#nowbar.show { display: flex; }
+#nowbar.show { display: block; }
+/* Progress for the playing track, spanning the full page width along the
+   bar's top edge. Click anywhere on it to seek, same as a row's own bar. */
+#nowbar .nbseek {
+  display: block; width: 100%; height: 10px; margin-top: -3px;
+  cursor: pointer; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#nowbar .nbseek .nbtrack {
+  position: relative; width: 100%; height: 4px; margin-top: 3px;
+  background: #2c2c33; overflow: hidden;
+}
+#nowbar .nbseek .nbfill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #cc0000;
+}
+#nowbar .nbseek:hover .nbtrack { background: #3a3a44; }
+/* The controls must not move when the track name changes length, so the
+   button group is flex:none at the start, the title is the ONLY flexible
+   element (it ellipsises), and the time is flex:none at the end. */
+#nowbar .nbrow {
+  display: flex; align-items: center;
+  max-width: 760px; margin: 0 auto; padding: 5px 16px 9px;
+}
+#nowbar .nbctrls { flex: none; display: flex; align-items: center; gap: 2px; }
 #nowbar button {
-  flex: none; background: transparent; border: 0; color: #d4d4d8;
-  cursor: pointer; font-size: 14px; line-height: 1; padding: 6px 7px;
+  flex: none; width: 30px; height: 30px; padding: 0;
+  background: transparent; border: 0; color: #d4d4d8; cursor: pointer;
   border-radius: 7px; font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center;
 }
 #nowbar button:hover { background: #26262b; color: #fff; }
 #nowbar button svg { display: block; }
 #nowbar .nowtitle {
-  font-size: 12.5px; color: #9a9aa2; margin: 0 4px;
+  flex: 1 1 auto; min-width: 0; margin: 0 12px;
+  font-size: 12.5px; color: #9a9aa2;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-@media (max-width: 520px) { #nowbar .nowtitle { max-width: 44vw; } }
+#nowbar .nbtime {
+  flex: none; font-variant-numeric: tabular-nums;
+  font-size: 11.5px; color: #6f6f78;
+}
 .topnav { margin: 0 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
 .topnav a {
   color: #8a8a92; text-decoration: none; font-size: 13px;
@@ -1856,10 +1922,19 @@ PLAYER_JS = """
       btn.classList.toggle('loading', state === 'loading');
       btn.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
     }
-    // Keep the floating transport's own play/pause in step with the row's.
+    // Keep the bottom transport in step with the row: same play/pause icon,
+    // same progress, same clock.
     var nbToggle = document.querySelector('#nowbar [data-toggle]');
     if (nbToggle) {
       nbToggle.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    if (bar === activeBar) {
+      var nbFill = document.querySelector('#nowbar .nbfill');
+      if (nbFill) nbFill.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+      var nbSeek = document.querySelector('#nowbar .nbseek');
+      if (nbSeek) nbSeek.setAttribute('aria-valuenow', Math.round(fraction * 100));
+      var nbTime = document.querySelector('#nowbar .nbtime');
+      if (nbTime) nbTime.textContent = curLabel + ' / ' + durLabel;
     }
   }
 
@@ -2074,13 +2149,18 @@ PLAYER_JS = """
       var nb = document.createElement('div');
       nb.id = 'nowbar';
       nb.innerHTML =
+        '<div class="nbseek" role="slider" aria-valuemin="0" aria-valuemax="100" ' +
+        'aria-valuenow="0" aria-label="Seek in current track">' +
+        '<div class="nbtrack"><div class="nbfill"></div></div></div>' +
+        '<div class="nbrow"><div class="nbctrls">' +
         '<button type="button" data-step="-1" title="Previous track (p)" ' +
         'aria-label="Previous track">' + ICON_PREV + '</button>' +
         '<button type="button" data-toggle="1" title="Play / pause (space)" ' +
         'aria-label="Play or pause">' + ICON_PAUSE + '</button>' +
         '<button type="button" data-step="1" title="Next track (n)" ' +
         'aria-label="Next track">' + ICON_NEXT + '</button>' +
-        '<span class="nowtitle"></span>';
+        '</div><span class="nowtitle"></span>' +
+        '<span class="nbtime"></span></div>';
       document.body.appendChild(nb);
     }
   }
@@ -2103,12 +2183,21 @@ PLAYER_JS = """
   if (nowbar) {
     nowbar.addEventListener('click', function (ev) {
       var btn = ev.target.closest ? ev.target.closest('button') : null;
-      if (!btn) return;
-      ev.preventDefault();
-      if (btn.getAttribute('data-toggle')) {
-        if (activeBar) togglePlayPause(activeBar);
-      } else {
-        step(parseInt(btn.getAttribute('data-step'), 10) || 1);
+      if (btn) {
+        ev.preventDefault();
+        if (btn.getAttribute('data-toggle')) {
+          if (activeBar) togglePlayPause(activeBar);
+        } else {
+          step(parseInt(btn.getAttribute('data-step'), 10) || 1);
+        }
+        return;
+      }
+      // Seeking from the bottom bar acts on whatever is currently playing,
+      // so you can scrub without scrolling back to that record's row.
+      var seek = ev.target.closest ? ev.target.closest('.nbseek') : null;
+      if (seek && activeBar) {
+        ev.preventDefault();
+        playFrom(activeBar, fractionFromEvent(seek, ev));
       }
     });
   }
@@ -2336,14 +2425,9 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         # mobile browsers' autoplay heuristics.
         '<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;">'
         '<div id="yt-audio-host"></div></div>',
-        '<div id="nowbar">'
-        f'<button type="button" data-step="-1" title="Previous track (p)" '
-        f'aria-label="Previous track">{ICON_PREV}</button>'
-        f'<button type="button" data-toggle="1" title="Play / pause (space)" '
-        f'aria-label="Play or pause">{ICON_PAUSE}</button>'
-        f'<button type="button" data-step="1" title="Next track (n)" '
-        f'aria-label="Next track">{ICON_NEXT}</button>'
-        '<span class="nowtitle"></span></div>',
+        # The transport itself is built by the player's own ensureChrome(),
+        # so its markup lives in exactly one place and every page that loads
+        # the player gets an identical one.
         '<div class="wrap">',
         f'<div class="topnav">'
         f'<a href="{e(likes_href)}">{ICON_HEART} Likes</a>'
