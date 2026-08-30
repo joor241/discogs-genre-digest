@@ -38,10 +38,19 @@
       btn.classList.toggle('loading', state === 'loading');
       btn.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
     }
-    // Keep the floating transport's own play/pause in step with the row's.
+    // Keep the bottom transport in step with the row: same play/pause icon,
+    // same progress, same clock.
     var nbToggle = document.querySelector('#nowbar [data-toggle]');
     if (nbToggle) {
       nbToggle.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    if (bar === activeBar) {
+      var nbFill = document.querySelector('#nowbar .nbfill');
+      if (nbFill) nbFill.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+      var nbSeek = document.querySelector('#nowbar .nbseek');
+      if (nbSeek) nbSeek.setAttribute('aria-valuenow', Math.round(fraction * 100));
+      var nbTime = document.querySelector('#nowbar .nbtime');
+      if (nbTime) nbTime.textContent = curLabel + ' / ' + durLabel;
     }
   }
 
@@ -256,13 +265,18 @@
       var nb = document.createElement('div');
       nb.id = 'nowbar';
       nb.innerHTML =
+        '<div class="nbseek" role="slider" aria-valuemin="0" aria-valuemax="100" ' +
+        'aria-valuenow="0" aria-label="Seek in current track">' +
+        '<div class="nbtrack"><div class="nbfill"></div></div></div>' +
+        '<div class="nbrow"><div class="nbctrls">' +
         '<button type="button" data-step="-1" title="Previous track (p)" ' +
         'aria-label="Previous track">' + ICON_PREV + '</button>' +
         '<button type="button" data-toggle="1" title="Play / pause (space)" ' +
         'aria-label="Play or pause">' + ICON_PAUSE + '</button>' +
         '<button type="button" data-step="1" title="Next track (n)" ' +
         'aria-label="Next track">' + ICON_NEXT + '</button>' +
-        '<span class="nowtitle"></span>';
+        '</div><span class="nowtitle"></span>' +
+        '<span class="nbtime"></span></div>';
       document.body.appendChild(nb);
     }
   }
@@ -285,12 +299,21 @@
   if (nowbar) {
     nowbar.addEventListener('click', function (ev) {
       var btn = ev.target.closest ? ev.target.closest('button') : null;
-      if (!btn) return;
-      ev.preventDefault();
-      if (btn.getAttribute('data-toggle')) {
-        if (activeBar) togglePlayPause(activeBar);
-      } else {
-        step(parseInt(btn.getAttribute('data-step'), 10) || 1);
+      if (btn) {
+        ev.preventDefault();
+        if (btn.getAttribute('data-toggle')) {
+          if (activeBar) togglePlayPause(activeBar);
+        } else {
+          step(parseInt(btn.getAttribute('data-step'), 10) || 1);
+        }
+        return;
+      }
+      // Seeking from the bottom bar acts on whatever is currently playing,
+      // so you can scrub without scrolling back to that record's row.
+      var seek = ev.target.closest ? ev.target.closest('.nbseek') : null;
+      if (seek && activeBar) {
+        ev.preventDefault();
+        playFrom(activeBar, fractionFromEvent(seek, ev));
       }
     });
   }
