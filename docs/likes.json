@@ -20,5 +20,36 @@
       "Vinyl"
     ],
     "liked_at": "2026-08-27T18:39:35.568Z"
+  },
+  "https://www.deejay.de/DANCE_PROTOCOL_Heads_Off_LV13_Vinyl__1258576": {
+    "description": "DANCE PROTOCOL - Heads Off (12inch)",
+    "price": "12.56 EUR",
+    "url": "https://www.deejay.de/DANCE_PROTOCOL_Heads_Off_LV13_Vinyl__1258576",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/7/6/1258576.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Heads Off",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/6/1258576a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Zero Gravity",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/6/1258576b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: New Job (P45 Edit)",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/6/1258576c.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-08-31T11:25:39.276Z"
   }
 }
