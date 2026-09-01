@@ -76,5 +76,30 @@
       }
     ],
     "liked_at": "2026-09-01T12:52:57.225Z"
+  },
+  "https://www.deejay.de/Yansima_Catchplay_EP_KLMR001_Vinyl__1251418": {
+    "description": "Yansima - Catchplay EP (12inch)",
+    "price": "13.66 EUR",
+    "url": "https://www.deejay.de/Yansima_Catchplay_EP_KLMR001_Vinyl__1251418",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/1/8/1251418.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Basskickball",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/1251418a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Once Dansa",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/1251418c.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-01T12:55:03.289Z"
   }
 }
