@@ -51,5 +51,30 @@
       }
     ],
     "liked_at": "2026-08-31T11:25:39.276Z"
+  },
+  "https://www.deejay.de/BISOU_MORE_JOBERMI_GAMM207_Vinyl__1250791": {
+    "description": "BISOU - MORE JOBERMI (12inch)",
+    "price": "16.39 EUR",
+    "url": "https://www.deejay.de/BISOU_MORE_JOBERMI_GAMM207_Vinyl__1250791",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/9/1/1250791.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Do it to disco",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/9/1/1250791a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Not that Simple",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/9/1/1250791b.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-01T12:52:57.225Z"
   }
 }
