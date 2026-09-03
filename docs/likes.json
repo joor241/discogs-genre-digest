@@ -101,5 +101,42 @@
       }
     ],
     "liked_at": "2026-09-01T12:55:03.289Z"
+  },
+  "https://www.deejay.de/Submod_x_Shuray_Walle_Pellegrin_EP_ETHERNAL006_Vinyl__1033349": {
+    "description": "Submod - Pellegrin EP (12inch)",
+    "price": "12.19 EUR",
+    "url": "https://www.deejay.de/Submod_x_Shuray_Walle_Pellegrin_EP_ETHERNAL006_Vinyl__1033349",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/4/9/1033349.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Pellegrin",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/4/9/1033349a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Pellegrin (Traumer Remix)",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/4/9/1033349b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Suwashu",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/4/9/1033349c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Zermatt",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/4/9/1033349d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-03T12:45:25.132Z"
   }
 }
