@@ -199,6 +199,18 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     </div>
 
     <div class="card">
+      <h2>Other stores (not on Discogs)</h2>
+      <p class="hint">
+        These three are fetched from each shop's own site instead of through Discogs,
+        so they have no username to check &mdash; just on/off, and the same optional
+        per-store genre override. Yoyaku filters on the shop's real style tags, so
+        narrow terms behave precisely there; clone.nl and deejay.de match against the
+        item's title and description text instead.
+      </p>
+      <table id="extraTable"><tbody></tbody></table>
+    </div>
+
+    <div class="card">
       <details>
         <summary>Advanced timing</summary>
         <div class="two" style="margin-top:10px;">
@@ -255,6 +267,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
   var formatChips = document.getElementById("formatChips");
   var FORMAT_OPTIONS = ["Vinyl", "CD", "Cassette", "File"];
   var sellerBody = document.querySelector("#sellerTable tbody");
+  var extraBody = document.querySelector("#extraTable tbody");
   var newSellerUser = document.getElementById("newSellerUser");
   var newSellerGenres = document.getElementById("newSellerGenres");
   var newSellerName = document.getElementById("newSellerName");
@@ -271,6 +284,18 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
   var genres = [];
   var formats = []; // subset of FORMAT_OPTIONS, lowercased
   var sellers = []; // [{username, display}]
+
+  // The non-Discogs sources. `key` is the GENRES_BY_STORE key the script
+  // uses for that source, and `flag` its own on/off repo Variable -- both
+  // must stay in step with the *_KEY / *_ENABLED constants in
+  // discogs_genre_digest.py.
+  var EXTRA_SOURCES = [
+    { key: "clone-rss", label: "Clone.nl (new arrivals feed)", flag: "CLONE_RSS_ENABLED" },
+    { key: "deejay", label: "deejay.de (new arrivals)", flag: "DEEJAY_ENABLED" },
+    { key: "yoyaku", label: "Yoyaku (new arrivals)", flag: "YOYAKU_ENABLED" }
+  ];
+  var extras = {}; // key -> {enabled, genres}
+  var otherOverrides = {}; // GENRES_BY_STORE entries this page has no row for
 
   function showMsg(el, kind, text) {
     el.className = "msg show " + kind;
@@ -451,6 +476,38 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     });
   }
 
+  // ---- non-Discogs sources ----
+  function renderExtras() {
+    extraBody.innerHTML = "";
+    EXTRA_SOURCES.forEach(function (src) {
+      var state = extras[src.key];
+      var tr = document.createElement("tr");
+
+      var tdOn = document.createElement("td");
+      tdOn.className = "rm";
+      var box = document.createElement("input");
+      box.type = "checkbox"; box.style.width = "auto";
+      box.checked = state.enabled;
+      box.addEventListener("change", function () { state.enabled = box.checked; });
+      tdOn.appendChild(box);
+
+      var tdName = document.createElement("td");
+      tdName.style.paddingLeft = "8px";
+      tdName.textContent = src.label;
+
+      var tdGenres = document.createElement("td");
+      tdGenres.style.paddingLeft = "8px";
+      var genresInput = document.createElement("input");
+      genresInput.type = "text"; genresInput.placeholder = "uses global filter";
+      genresInput.value = state.genres || "";
+      genresInput.addEventListener("input", function () { state.genres = genresInput.value.trim(); });
+      tdGenres.appendChild(genresInput);
+
+      tr.appendChild(tdOn); tr.appendChild(tdName); tr.appendChild(tdGenres);
+      extraBody.appendChild(tr);
+    });
+  }
+
   async function checkSeller(i, statusEl) {
     var username = sellers[i].username;
     if (!username) { statusEl.textContent = "no username"; statusEl.className = "status err"; return; }
@@ -518,9 +575,18 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     return out;
   }
   function serialiseGenresByStore() {
-    return sellers.filter(function (s) { return s.username && s.genres; })
-      .map(function (s) { return s.username + ": " + s.genres; })
-      .join("; ");
+    var parts = sellers.filter(function (s) { return s.username && s.genres; })
+      .map(function (s) { return s.username + ": " + s.genres; });
+    EXTRA_SOURCES.forEach(function (src) {
+      var state = extras[src.key];
+      if (state && state.genres) parts.push(src.key + ": " + state.genres);
+    });
+    // Anything already in the variable that this page doesn't have a row for
+    // is carried through untouched rather than silently dropped on save.
+    Object.keys(otherOverrides).forEach(function (k) {
+      parts.push(k + ": " + otherOverrides[k]);
+    });
+    return parts.join("; ");
   }
 
   async function loadCurrentValues() {
@@ -542,6 +608,27 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     sellers = sellersVal ? parseSellers(sellersVal) : [];
     var overrides = parseGenresByStore(genresByStoreVal);
     sellers.forEach(function (s) { s.genres = overrides[s.username] || ""; });
+
+    // Each source's on/off Variable is only ever *set* by this page, so an
+    // unset one means "still on the built-in default", which is on.
+    var flagVals = await Promise.all(EXTRA_SOURCES.map(function (src) {
+      return getVariable(src.flag);
+    }));
+    extras = {};
+    EXTRA_SOURCES.forEach(function (src, i) {
+      var raw = (flagVals[i] || "").trim().toLowerCase();
+      extras[src.key] = {
+        enabled: raw ? !/^(false|0|no|off)$/.test(raw) : true,
+        genres: overrides[src.key] || ""
+      };
+    });
+
+    otherOverrides = {};
+    Object.keys(overrides).forEach(function (k) {
+      var isSeller = sellers.some(function (s) { return s.username === k; });
+      var isExtra = EXTRA_SOURCES.some(function (src) { return src.key === k; });
+      if (!isSeller && !isExtra) otherOverrides[k] = overrides[k];
+    });
     lookbackInput.value = lookbackVal || DEFAULT_LOOKBACK;
     budgetInput.value = budgetVal || DEFAULT_BUDGET;
     pagesInput.value = maxPagesVal || DEFAULT_PAGES;
@@ -550,6 +637,7 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
     renderGenres();
     renderFormats();
     renderSellers();
+    renderExtras();
   }
 
   async function connect() {
@@ -595,6 +683,10 @@ ol.steps code { background: #0e0e10; padding: 1px 5px; border-radius: 4px; font-
       await setVariable("FORMATS_INCLUDE", formats.length ? formats.join(",") : "all");
       await setVariable("SELLERS", serialiseSellers());
       await setVariable("GENRES_BY_STORE", serialiseGenresByStore());
+      for (var ei = 0; ei < EXTRA_SOURCES.length; ei++) {
+        var src = EXTRA_SOURCES[ei];
+        await setVariable(src.flag, extras[src.key].enabled ? "true" : "false");
+      }
       await setVariable("LOOKBACK_HOURS", String(parseInt(lookbackInput.value, 10) || DEFAULT_LOOKBACK));
       await setVariable("MAX_RELEASE_LOOKUPS", String(parseInt(budgetInput.value, 10) || DEFAULT_BUDGET));
       await setVariable("MAX_PAGES", String(parseInt(pagesInput.value, 10) || DEFAULT_PAGES));

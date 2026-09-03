@@ -18,10 +18,13 @@ Currently tracking:
 All four were verified against the live Discogs API (Rush Hour/Clone/Offbeat on
 2026-08-18, Decks on 2026-08-23).
 
-Two more stores are checked directly on their own sites rather than through
-Discogs — Clone.nl's own new-arrivals RSS feed, and a scrape of deejay.de's
-"News" page (deejay.de has no feed and their Discogs account is empty). See
-[Non-Discogs sources](#non-discogs-sources-clonenl-rss-and-deejayde) below.
+Three more stores are checked directly on their own sites rather than through
+Discogs — Clone.nl's own new-arrivals RSS feed, a scrape of deejay.de's "News"
+page (deejay.de has no feed and their Discogs account is empty), and
+Yoyaku's public WordPress/WooCommerce REST API, which gives real genre tags
+and direct MP3 previews without any scraping at all. See
+[Non-Discogs sources](#non-discogs-sources-clonenl-rss-deejayde-and-yoyakuio)
+below.
 
 > **Note on Redlight Records:** their old domain no longer hosts a record shop.
 > The Discogs account `Red_Light_Records` exists but had **0 items for sale**
@@ -350,9 +353,9 @@ RushHour=Rush Hour, clone.nl=Clone, SOMENAME=Their Shop Name
 Note the variable **replaces** the built-in list rather than adding to it, so
 include every store you want.
 
-### Non-Discogs sources: clone.nl RSS and deejay.de
+### Non-Discogs sources: clone.nl RSS, deejay.de and yoyaku.io
 
-Two more sources run alongside the Discogs sellers, using the same genre and
+Three more sources run alongside the Discogs sellers, using the same genre and
 format filters, but fetched directly from each shop's own site rather than
 through the Discogs API:
 
@@ -381,22 +384,46 @@ through the Discogs API:
   [Listening to the records](#listening-to-the-records)) — that fallback
   path needs `DISCOGS_TOKEN`; items that hit neither just keep the
   existing "search YouTube" fallback link.
+- **Yoyaku (Paris) new arrivals** — their public WordPress/WooCommerce REST
+  API. This is the best-behaved source here and the only one that needs no
+  scraping at all: everything comes from documented JSON endpoints rather
+  than from regexes over markup that can be redesigned away. It also gives
+  three things the other two can't:
+  - **Real genre tags.** Yoyaku tags every release with its own *Styles*
+    ("House", "Deep House", "Electro", …), so this source filters on actual
+    metadata, exactly like Discogs does — not on whether a word happens to
+    appear in the blurb.
+  - **Server-side date filtering.** The lookback window costs one request no
+    matter how much they listed that day.
+  - **Direct MP3s.** Their player's own endpoint hands back per-track MP3
+    URLs on a CDN — plain GET, no session needed, and it supports byte
+    ranges, so the playbar can seek inside them.
 
-Neither source has Discogs-style structured genre/style data, so genre
-filtering runs against each item's title and description **text** instead
-(the same whole-word matching, just fed prose instead of a tags array) —
-functionally the same filtering, just working from different raw material.
-Each item's `tags` line in the digest shows which genre term actually matched,
-rather than a real genre/style list, so it's clear the match came from text
-rather than Discogs metadata.
+  One caveat: their API exposes no **format** field (7"/12"/LP appears only
+  in the item page's HTML, which this deliberately never fetches), so
+  everything from Yoyaku is reported as **Vinyl**. Merch is still excluded —
+  slipmats, needles, t-shirts and gift cards carry no Styles tag, and that's
+  what's used to tell a record from an accessory — but a rare CD-only
+  release would slip through a Vinyl-only filter. That's the cost of not
+  fetching an extra page per item just to read one word.
 
-Freshness also isn't identical across all four sources:
+clone.nl and deejay.de have no Discogs-style structured genre/style data, so
+for those two genre filtering runs against each item's title and description
+**text** instead (the same whole-word matching, just fed prose instead of a
+tags array) — functionally the same filtering, just working from different
+raw material. Their `tags` line in the digest shows which genre term actually
+matched, rather than a real genre/style list, so it's clear the match came
+from text rather than metadata. Yoyaku items show their real Styles instead,
+same as Discogs items show their real genres.
+
+Freshness also isn't identical across all sources:
 
 | Source | Freshness signal | Precision |
 |---|---|---|
 | Discogs marketplace | `posted` timestamp | seconds |
 | Clone.nl RSS | `pubDate` | whole days (every item observed was midnight) |
 | deejay.de scrape | none — tracked explicitly instead | per article id |
+| Yoyaku API | `date_gmt` | seconds |
 
 deejay.de's own per-item date looks like a release date rather than "when
 added to the shop" (some items literally say "Release unknown"), so it can't
@@ -410,22 +437,24 @@ first appeared. Ids are forgotten after `DEEJAY_SEEN_KEEP_DAYS` (default
 `90`) days, long enough that they'll have scrolled off deejay.de's own
 "News" listing by then regardless.
 
-**Discogs sellers and clone.nl's RSS feed get the same "shown once" treatment,
-for a different reason.** They do have a real per-item date, so `LOOKBACK_HOURS`
-alone bounds what gets checked each run — but a listing posted, say, 20 hours
-ago is *inside* both today's 48-hour window and tomorrow's, so it would
-otherwise show up twice purely because the windows overlap. `docs/discogs_seen.json`
-and `docs/clone_seen.json` close that gap the same way `deejay_seen.json`
-does: once a listing has appeared in a digest, it never appears again, no
-matter how the lookback window keeps sliding over it. Same `DEEJAY_SEEN_KEEP_DAYS`
-retention applies to all three files.
+**Discogs sellers, clone.nl's RSS feed and Yoyaku get the same "shown once"
+treatment, for a different reason.** They do have a real per-item date, so
+`LOOKBACK_HOURS` alone bounds what gets checked each run — but a listing
+posted, say, 20 hours ago is *inside* both today's 48-hour window and
+tomorrow's, so it would otherwise show up twice purely because the windows
+overlap. `docs/discogs_seen.json`, `docs/clone_seen.json` and
+`docs/yoyaku_seen.json` close that gap the same way `deejay_seen.json` does:
+once a listing has appeared in a digest, it never appears again, no matter
+how the lookback window keeps sliding over it. Same `DEEJAY_SEEN_KEEP_DAYS`
+retention applies to all four files.
 
-**Turning either off** — set a repo Variable to `false`:
+**Turning any of them off** — set a repo Variable to `false`:
 
 - `CLONE_RSS_ENABLED` = `false`
 - `DEEJAY_ENABLED` = `false`
+- `YOYAKU_ENABLED` = `false`
 
-Both default to on.
+All three default to on.
 
 **deejay.de failing doesn't fail the whole run.** Observed live, repeatedly:
 deejay.de answers in under a second from a plain connection, but the exact
@@ -444,13 +473,26 @@ each run — each one costs an extra request beyond the single feed fetch, so
 this bounds the worst case on a very broad filter. Items beyond the cap still
 appear in the digest, just without playable tracks. `DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS`
 (default `20`) does the same for how many deejay.de items get cross-referenced
-against Discogs per run. Per-store genre overrides
-(`GENRES_BY_STORE`, see above) work for these too — use the keys `clone-rss`
-and `deejay`:
+against Discogs per run.
+
+Yoyaku has the same two caps: `YOYAKU_MAX_ITEMS` (default `120`) bounds how
+many of the window's releases are considered if they bulk-list, and
+`YOYAKU_AUDIO_MAX_ITEMS` (default `30`) bounds how many get their MP3s
+fetched. Everything else about that source is a fixed number of requests
+regardless of window size.
+
+Per-store genre overrides (`GENRES_BY_STORE`, see above) work for these too —
+use the keys `clone-rss`, `deejay` and `yoyaku`:
 
 ```
-clone-rss: house; deejay: techno, breakbeat
+clone-rss: house; deejay: techno, breakbeat; yoyaku: deep house, minimal
 ```
+
+Yoyaku's key is worth using: because it filters on real Styles rather than
+blurb text, narrow terms behave precisely there. Their vocabulary is the
+list at [yoyaku.io/style/](https://yoyaku.io/style/) — House, Techno, Deep
+House, Minimal, Electro, Tech House, Breakbeat, Ambient, Acid, Dub Techno
+and so on.
 
 #### Stock status (pre-order vs. actually available)
 
@@ -473,6 +515,12 @@ deejay.de, where it's only available on the item's own page. Capped by
 `DEEJAY_STOCK_CHECK_MAX_ITEMS` (default `20`); set it to `0` to turn the
 check off for deejay.de specifically if you'd rather not pay that cost.
 
+Yoyaku costs nothing extra: WooCommerce reports stock in the same batched
+call that supplies prices, and "Forthcoming"/"Pre-Order" come from the
+product's own categories (a pre-order is technically "in stock" as far as
+WooCommerce is concerned, so the flag alone would wrongly call it available
+now — both signals are checked).
+
 #### "Vinyl Only" highlight
 
 A gold "★ Vinyl Only" badge marks releases that ship with nothing bundled --
@@ -486,6 +534,8 @@ a guess:
   detail-page fetch already made for the stock check above -- free.
 - **clone.nl**: no badge. Checked live and found no equivalent marker on
   their item pages, so this is left unflagged rather than guessed at.
+- **Yoyaku**: no badge either. Their API carries no format field at all, so
+  there's nothing that would count as evidence — same call as clone.nl.
 
 ### Changing the time it runs
 
@@ -552,11 +602,13 @@ embed per click. This is also what makes seeking on an already-loaded track
 truly instant.
 
 **Not every track plays through YouTube.** Discogs releases only have
-community-submitted YouTube links to work with, but both clone.nl and
-deejay.de's own item pages give up real, direct MP3 preview clips instead —
-confirmed live on both, not assumed — so those tracks play through a plain,
-native `<audio>` element: no video platform involved, no metadata-loading
-delay, instant seeking on first tap rather than only after the first play.
+community-submitted YouTube links to work with, but clone.nl, deejay.de and
+Yoyaku all give up real, direct MP3 preview clips instead — confirmed live on
+all three, not assumed — so those tracks play through a plain, native
+`<audio>` element: no video platform involved, no metadata-loading delay,
+instant seeking on first tap rather than only after the first play. Yoyaku is
+the easy one: their player plugin has a public endpoint that simply returns
+the MP3 URLs, so there's nothing to parse or guess.
 deejay.de's case took real digging: their tracklist "Play" buttons route
 through a session-gated internal API in their own player JS, which looked
 like a hard wall, but a real browser network capture showed each track's MP3
@@ -572,8 +624,8 @@ playing MP3 clip and vice versa. The rare deejay.de item with no tracklist of
 its own falls back to cross-referencing Discogs' release search and borrowing
 its YouTube links when a confident match is found; failing that, it's the
 "search YouTube" link, same as any item nobody has attached video links to.
-See [Non-Discogs sources](#non-discogs-sources-clonenl-rss-and-deejayde) for
-how both of those work.
+See [Non-Discogs sources](#non-discogs-sources-clonenl-rss-deejayde-and-yoyakuio)
+for how those work.
 
 **Why a separate page, and not just play inside the email:** every mail client
 strips `<script>`, `<iframe>` and `<audio>` before rendering — Gmail included —
@@ -590,9 +642,9 @@ all** button as a fallback if you'd rather not open the page at all.
 > access control, just tidiness.
 
 **The button under each item's price says where it actually goes.** It reads
-"Buy on Discogs" only for Discogs listings; clone.nl and deejay.de items say
-"View on Clone.nl" / "View on Deejay.de" instead, since that's genuinely where
-they link — the label is derived from the link's own URL, so it can never
+"Buy on Discogs" only for Discogs listings; clone.nl, deejay.de and Yoyaku
+items say "View on Clone.nl" / "View on Deejay.de" / "View on Yoyaku.io"
+instead, since that's genuinely where they link — the label is derived from the link's own URL, so it can never
 drift out of sync with where it actually points.
 
 #### Likes, synced across your devices

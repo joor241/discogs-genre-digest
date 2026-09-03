@@ -188,6 +188,41 @@ DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS = 20
 # new fetch for deejay.de, hence its own cap. 0 disables the deejay.de check.
 DEEJAY_STOCK_CHECK_MAX_ITEMS = 20
 
+# yoyaku.io (Paris) is the best-behaved source in this file, and the only one
+# that needs no scraping at all: it runs WordPress/WooCommerce with the REST
+# API left open, so everything comes from documented JSON endpoints rather
+# than from regexes over markup that can be redesigned away.
+#
+# Three things it gives that clone.nl and deejay.de cannot:
+#
+#   * A real genre taxonomy. /wp-json/wp/v2/product returns `musicstyle` term
+#     ids per release ("House", "Deep House", "Electro", ...), so this source
+#     filters on the shop's OWN genre tags, exactly like Discogs does -- not
+#     on whether a word happens to appear in the blurb, which is the
+#     best the other two allow.
+#   * Server-side date filtering. `?after=<timestamp>&orderby=date` means the
+#     lookback window costs one request regardless of how much they listed,
+#     instead of paging until the dates run out.
+#   * Direct MP3s. Their player plugin exposes /wp-json/fwap/v1/track/<id>,
+#     which returns real per-track MP3 URLs on a CDN -- verified live: plain
+#     GET, no nonce, no cookie, audio/mpeg with byte ranges, so the playbar
+#     can seek in it. One request per matched item, capped below.
+#
+# Verified live on 2026-09-03: 58 releases in a 48h window, 25 of them tagged
+# House, and the track endpoint returned playable MP3s for them.
+YOYAKU_API_BASE = "https://yoyaku.io/wp-json"
+YOYAKU_KEY = "yoyaku"  # use this as a key in GENRES_BY_STORE to override just this source
+YOYAKU_ENABLED = True
+
+# Safety cap on how many releases from the window are considered, in case
+# they bulk-list. Same intent as MAX_PAGES for Discogs sellers.
+YOYAKU_MAX_ITEMS = 120
+
+# One extra request per MATCHED item buys its tracklist and MP3s (see
+# YOYAKU_API_BASE above). Capped independently, same as clone.nl's: items
+# past the cap still appear, just without playable tracks. 0 disables audio.
+YOYAKU_AUDIO_MAX_ITEMS = 30
+
 # How far back to look, in hours.
 #
 # The digest is stateless: it asks "was this listed in the last N hours?"
@@ -1379,6 +1414,304 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
     return matched, considered, updated_seen
 
 
+def yoyaku_get_json(url: str, user_agent: str, **kw):
+    """GET a yoyaku.io REST endpoint and parse it.
+
+    Wrapping the parse in FeedError (rather than letting json raise) keeps
+    this source failing the same way as the other two: one bad response
+    takes out yoyaku.io's section and nothing else.
+    """
+    raw = http_get_text(url, user_agent, **kw)
+    try:
+        return json.loads(raw)
+    except ValueError as exc:
+        raise FeedError(f"yoyaku.io returned unparseable JSON from {url}: {exc}")
+
+
+def yoyaku_terms(rest_base: str, ids: set[int], user_agent: str,
+                 api_base: str = YOYAKU_API_BASE) -> dict[int, str]:
+    """Resolve WordPress term ids to their names, e.g. 37955 -> "House".
+
+    Products carry taxonomy ids, not names, so this is what turns
+    `musicstyle: [37914, 38017]` into something the genre filter and the
+    digest's tag line can actually use. Batched: one request per 100 ids
+    rather than one per id, because a 48h window routinely touches well
+    over a hundred distinct artists.
+    """
+    names: dict[int, str] = {}
+    ordered = sorted(i for i in ids if i)
+    for start in range(0, len(ordered), 100):
+        chunk = ordered[start:start + 100]
+        url = (f"{api_base}/wp/v2/{rest_base}"
+               f"?include={','.join(str(i) for i in chunk)}"
+               f"&per_page=100&_fields=id,name")
+        for term in yoyaku_get_json(url, user_agent, **ITEM_FETCH_KW) or []:
+            if isinstance(term, dict) and term.get("id"):
+                names[int(term["id"])] = html.unescape(str(term.get("name") or "")).strip()
+    return names
+
+
+def yoyaku_tracks(product_id: int, user_agent: str,
+                  api_base: str = YOYAKU_API_BASE,
+                  limit: int = MAX_VIDEOS_PER_RELEASE) -> tuple[list[dict], str]:
+    """(playable tracks, label name) for one yoyaku.io release.
+
+    Their player plugin's own endpoint, the same one the site's play buttons
+    call. Returns ready-made MP3 URLs, so unlike clone.nl and deejay.de
+    there is no markup to parse and nothing to guess at.
+    """
+    url = f"{api_base}/fwap/v1/track/{product_id}"
+    payload = yoyaku_get_json(url, user_agent, **ITEM_FETCH_KW)
+    if not isinstance(payload, dict) or not payload.get("success"):
+        return [], ""
+    tracks: list[dict] = []
+    for entry in payload.get("data") or []:
+        src = str(entry.get("mp3") or "").strip()
+        # `playable` is the plugin's own flag for "this track has no clip".
+        if not src or entry.get("playable") is False:
+            continue
+        title = html.unescape(str(entry.get("title") or "Listen")).strip()
+        tracks.append({"title": title, "src": src, "uri": src, "yt": None, "dur": 0})
+        if len(tracks) >= limit:
+            break
+    return tracks, html.unescape(str(payload.get("label") or "")).strip()
+
+
+def yoyaku_price(prices: dict) -> str:
+    """WooCommerce reports money in minor units plus the number of decimals
+    (1500 with minor_unit 2 = 15.00), so it has to be scaled, not printed."""
+    raw = prices.get("price")
+    if raw in (None, ""):
+        return "price on request"
+    try:
+        minor = int(prices.get("currency_minor_unit", 2))
+        value = int(raw) / (10 ** minor)
+    except (TypeError, ValueError):
+        return "price on request"
+    symbol = html.unescape(str(prices.get("currency_symbol") or "")).strip()
+    code = str(prices.get("currency_code") or "").strip()
+    return f"{symbol}{value:.2f}" if symbol else f"{value:.2f} {code}".strip()
+
+
+def yoyaku_stock(in_stock, category_names: list[str]) -> tuple[str, str]:
+    """(status_code, human note), same vocabulary as the other sources.
+
+    Two signals, checked in order of authority: WooCommerce's own stock flag
+    first, then yoyaku.io's product categories, which is where "Forthcoming"
+    and "Pre-Order" live -- a pre-order is technically in stock as far as
+    WooCommerce is concerned, so the flag alone would call it available now.
+    """
+    lowered = {c.lower() for c in category_names}
+    if in_stock is False or "out of stock" in lowered:
+        return "out_of_stock", "Out of stock"
+    if "forthcoming" in lowered:
+        return "preorder", "Forthcoming"
+    if "pre-order" in lowered or "pre order" in lowered:
+        return "preorder", "Pre-order"
+    return "in_stock", ""
+
+
+def fetch_yoyaku(cutoff: datetime, wanted_norm: list[str], wanted_formats: list[str],
+                 user_agent: str, api_base: str = YOYAKU_API_BASE,
+                 max_items: int = YOYAKU_MAX_ITEMS,
+                 audio_max_items: int = YOYAKU_AUDIO_MAX_ITEMS,
+                 seen: dict[str, str] | None = None,
+                 now: datetime | None = None,
+                 ) -> tuple[list[dict], int, dict[str, str]]:
+    """New arrivals from yoyaku.io's public WordPress/WooCommerce REST API.
+
+    Four requests plus one per matched item:
+      1. wp/v2/product      -- the window itself, with genre/artist term ids
+      2. wp/v2/musicstyle   -- + musicartist, musiclabel, product_cat, one
+         batched call each, only for the ids this window actually used
+      3. wc/store/v1/products -- price, image, sku and stock, matched items only
+      4. fwap/v1/track/<id> -- the MP3s, one per matched item, capped
+
+    `seen` (product id -> first-seen timestamp, docs/yoyaku_seen.json) stops
+    an item reappearing purely because two lookback windows overlap -- same
+    pattern as the other three sources.
+    """
+    seen = dict(seen or {})
+    now = now or datetime.now(timezone.utc)
+    now_iso = now.isoformat()
+    updated_seen = dict(seen)
+    already_seen = 0
+
+    # `after` filters on the site's own local time, and WordPress exposes no
+    # after_gmt, so the request deliberately asks for a wider window than
+    # wanted and the exact cutoff is applied below against each item's real
+    # date_gmt. Six hours covers any plausible site timezone either way.
+    coarse = (cutoff - timedelta(hours=6)).strftime("%Y-%m-%dT%H:%M:%S")
+    listing_url = (
+        f"{api_base}/wp/v2/product?after={coarse}&orderby=date&order=desc"
+        f"&per_page={min(max(max_items, 1), 100)}"
+        "&_fields=id,date_gmt,link,title,musicstyle,musicartist,musiclabel,product_cat"
+    )
+    products = yoyaku_get_json(listing_url, user_agent, attempts=4, backoff=(5, 15, 30))
+    if not isinstance(products, list):
+        raise FeedError("yoyaku.io product listing was not a JSON array")
+
+    # Resolve every term id this window touched in one batch per taxonomy,
+    # before filtering -- genre names are needed to decide what matches.
+    style_ids: set[int] = set()
+    artist_ids: set[int] = set()
+    label_ids: set[int] = set()
+    cat_ids: set[int] = set()
+    for product in products:
+        style_ids.update(product.get("musicstyle") or [])
+        artist_ids.update(product.get("musicartist") or [])
+        label_ids.update(product.get("musiclabel") or [])
+        cat_ids.update(product.get("product_cat") or [])
+    styles = yoyaku_terms("musicstyle", style_ids, user_agent, api_base)
+    artists = yoyaku_terms("musicartist", artist_ids, user_agent, api_base)
+    labels = yoyaku_terms("musiclabel", label_ids, user_agent, api_base)
+    categories = yoyaku_terms("product_cat", cat_ids, user_agent, api_base)
+
+    considered = 0
+    candidates: list[dict] = []
+    for product in products[:max_items]:
+        posted = parse_posted(str(product.get("date_gmt") or "") + "+00:00")
+        if posted is None or posted < cutoff:
+            continue
+
+        product_id = product.get("id")
+        if not product_id:
+            continue
+        seen_key = str(product_id)
+        if seen_key in seen:
+            already_seen += 1
+            continue
+
+        style_names = [styles[i] for i in (product.get("musicstyle") or []) if i in styles]
+        # No style at all means it isn't a record: yoyaku.io also sells
+        # slipmats, needles, t-shirts and gift cards, and only actual
+        # releases carry a Styles term. This is what keeps merch out,
+        # since there is no format field in the API to filter on.
+        if not style_names:
+            continue
+
+        updated_seen[seen_key] = now_iso
+        considered += 1
+
+        if not matches_genre(style_names, wanted_norm):
+            continue
+
+        # yoyaku.io is a vinyl distributor and the API exposes no format
+        # field at all -- "Format: 7 Inch" exists only in the item page's
+        # HTML, which this source deliberately never fetches. Everything
+        # that gets here is a record rather than merch (see the style check
+        # above), so it is reported as Vinyl. A rare CD-only release would
+        # therefore slip through a Vinyl-only filter; that is the honest
+        # cost of not scraping a page per item just to read one word.
+        formats = ["Vinyl"]
+        if not matches_format(formats, wanted_formats):
+            continue
+
+        artist_names = [artists[i] for i in (product.get("musicartist") or []) if i in artists]
+        label_names = [labels[i] for i in (product.get("musiclabel") or []) if i in labels]
+        cat_names = [categories[i] for i in (product.get("product_cat") or []) if i in categories]
+        title = html.unescape(str((product.get("title") or {}).get("rendered") or "")).strip()
+
+        candidates.append({
+            "id": int(product_id),
+            "title": title,
+            "artists": artist_names,
+            "labels": label_names,
+            "styles": style_names,
+            "categories": cat_names,
+            "url": str(product.get("link") or "https://yoyaku.io/"),
+        })
+
+    if already_seen:
+        LOG.info("[yoyaku] %d already shown in a prior digest, skipped", already_seen)
+    if not candidates:
+        return [], considered, updated_seen
+
+    # Price, artwork, SKU and stock for the matched items only -- one
+    # request for all of them, so this does not scale with the window.
+    details: dict[int, dict] = {}
+    ids = [c["id"] for c in candidates]
+    try:
+        for start in range(0, len(ids), 100):
+            chunk = ids[start:start + 100]
+            store_url = (f"{api_base}/wc/store/v1/products"
+                         f"?include={','.join(str(i) for i in chunk)}&per_page=100")
+            for entry in yoyaku_get_json(store_url, user_agent, **ITEM_FETCH_KW) or []:
+                if isinstance(entry, dict) and entry.get("id"):
+                    details[int(entry["id"])] = entry
+    except FeedError as exc:
+        # Prices are nice to have; losing them must not lose the records.
+        LOG.warning("[yoyaku] could not fetch prices/stock: %s", exc)
+
+    matched: list[dict] = []
+    audio_attempted = audio_found = audio_failed = 0
+    audio_consecutive_failures = 0
+
+    for cand in candidates:
+        detail = details.get(cand["id"], {})
+        images = detail.get("images") or []
+        thumb = str(images[0].get("thumbnail") or images[0].get("src") or "") if images else ""
+        catno = str(detail.get("sku") or "").strip()
+        stock_status, stock_note = yoyaku_stock(detail.get("is_in_stock"), cand["categories"])
+
+        tracks: list[dict] = []
+        label_from_player = ""
+        if (audio_max_items > 0 and len(matched) < audio_max_items
+                and audio_consecutive_failures < ITEM_FETCH_GIVE_UP_AFTER):
+            audio_attempted += 1
+            try:
+                tracks, label_from_player = yoyaku_tracks(cand["id"], user_agent, api_base)
+                audio_consecutive_failures = 0
+                if tracks:
+                    audio_found += 1
+            except FeedError as exc:
+                audio_failed += 1
+                audio_consecutive_failures += 1
+                LOG.warning("[yoyaku] could not fetch tracks for %s: %s", cand["url"], exc)
+                if audio_consecutive_failures >= ITEM_FETCH_GIVE_UP_AFTER:
+                    LOG.warning(
+                        "[yoyaku] %d track fetches failed in a row - not trying the "
+                        "rest this run. The host is not reachable from this runner, "
+                        "and retrying every remaining item would only stretch the run.",
+                        audio_consecutive_failures)
+            time.sleep(0.4)  # one extra request per item, on top of the batched ones
+
+        artist_line = ", ".join(cand["artists"])
+        description = f"{artist_line} - {cand['title']}" if artist_line else cand["title"]
+        label_line = ", ".join(cand["labels"]) or label_from_player
+
+        matched.append({
+            "description": description,
+            "price": yoyaku_price(detail.get("prices") or {}),
+            "condition": "New",
+            "sleeve": "",
+            "url": cand["url"],
+            # Unlike clone.nl and deejay.de, these are the shop's real genre
+            # tags rather than "which of my filter words appeared in the
+            # blurb", so all of them are worth showing.
+            "tags": ", ".join(cand["styles"]),
+            "thumb": thumb,
+            "label": label_line,
+            "catno": catno,
+            "videos": tracks,
+            "formats": ["Vinyl"],
+            "stock_status": stock_status,
+            "stock_note": stock_note,
+            # No badge. Yoyaku publishes no "vinyl only" marker, and their
+            # API has no format field at all, so there is nothing here that
+            # would count as evidence -- same call as clone.nl.
+            "vinyl_only": False,
+        })
+
+    if audio_max_items <= 0:
+        LOG.warning("[yoyaku] audio disabled (YOYAKU_AUDIO_MAX_ITEMS=%d)", audio_max_items)
+    elif audio_attempted:
+        LOG.info("[yoyaku] tracks: %d/%d item(s) got audio, %d fetch failure(s)",
+                 audio_found, audio_attempted, audio_failed)
+
+    return matched, considered, updated_seen
+
+
 def format_price(listing: dict) -> str:
     price = listing.get("price") or {}
     value = price.get("value")
@@ -1493,9 +1826,13 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
                  deejay_max_items: int = DEEJAY_MAX_ITEMS,
                  deejay_discogs_max_items: int = DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS,
                  deejay_stock_max_items: int = DEEJAY_STOCK_CHECK_MAX_ITEMS,
+                 yoyaku_enabled: bool = YOYAKU_ENABLED,
+                 yoyaku_max_items: int = YOYAKU_MAX_ITEMS,
+                 yoyaku_audio_max_items: int = YOYAKU_AUDIO_MAX_ITEMS,
                  deejay_seen: dict[str, str] | None = None,
                  discogs_seen: dict[str, str] | None = None,
                  clone_seen: dict[str, str] | None = None,
+                 yoyaku_seen: dict[str, str] | None = None,
                  now: datetime | None = None,
                  ) -> tuple[list[tuple[str, list[dict], str | None]], dict]:
     """Each section is (display_name, matched_items, genre_label).
@@ -1506,11 +1843,12 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
     show, right under that heading, that it was filtered differently rather
     than leaving that silent.
 
-    Discogs sellers, clone.nl's RSS feed and the deejay.de scrape all feed
-    into the same sections/stats here, because they all end up producing the
-    same item shape (see collect_seller / fetch_clone_rss / fetch_deejay_html)
-    -- which is what lets render_html/render_player_page/render_text stay
-    completely unaware that three different fetch mechanisms exist.
+    Discogs sellers, clone.nl's RSS feed, the deejay.de scrape and yoyaku.io's
+    REST API all feed into the same sections/stats here, because they all end
+    up producing the same item shape (see collect_seller / fetch_clone_rss /
+    fetch_deejay_html / fetch_yoyaku) -- which is what lets
+    render_html/render_player_page/render_text stay completely unaware that
+    four different fetch mechanisms exist.
     """
     genres_by_store = genres_by_store or {}
     default_norm = [n for n in (normalise_tag(g) for g in genres) if n]
@@ -1519,7 +1857,8 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
     stats = {"considered": 0, "matched": 0, "unchecked": 0, "failed_sellers": [],
              "deejay_seen": dict(deejay_seen or {}),
              "discogs_seen": dict(discogs_seen or {}),
-             "clone_seen": dict(clone_seen or {})}
+             "clone_seen": dict(clone_seen or {}),
+             "yoyaku_seen": dict(yoyaku_seen or {})}
 
     def genre_filter_for(key: str) -> tuple[list[str], str | None]:
         override = genres_by_store.get(key)
@@ -1598,6 +1937,28 @@ def build_digest(api: Discogs, sellers: dict[str, str], cutoff: datetime,
         except Exception as exc:  # noqa: BLE001
             LOG.exception("[deejay] unexpected error: %s", exc)
             stats["failed_sellers"].append("deejay.de")
+
+    if yoyaku_enabled:
+        norm, genre_label = genre_filter_for(YOYAKU_KEY)
+        LOG.info("Checking yoyaku.io (new arrivals, REST API)%s...",
+                 f" [genres: {genre_label}]" if genre_label is not None else "")
+        try:
+            matched, considered, updated_yoyaku_seen = fetch_yoyaku(
+                cutoff, norm, wanted_formats, user_agent,
+                max_items=yoyaku_max_items,
+                audio_max_items=yoyaku_audio_max_items,
+                seen=stats["yoyaku_seen"], now=now,
+            )
+            stats["yoyaku_seen"] = updated_yoyaku_seen
+            record("Yoyaku (new arrivals)", matched, considered, 0, genre_label)
+            LOG.info("[yoyaku] %d new listing(s) in window, %d matched",
+                     considered, len(matched))
+        except FeedError as exc:
+            LOG.error("[yoyaku] FAILED: %s", exc)
+            stats["failed_sellers"].append("yoyaku.io")
+        except Exception as exc:  # noqa: BLE001
+            LOG.exception("[yoyaku] unexpected error: %s", exc)
+            stats["failed_sellers"].append("yoyaku.io")
 
     return sections, stats
 
@@ -3016,6 +3377,9 @@ def main() -> int:
     deejay_stock_max_items = env_int(
         "DEEJAY_STOCK_CHECK_MAX_ITEMS", DEEJAY_STOCK_CHECK_MAX_ITEMS
     )
+    yoyaku_enabled = env_flag("YOYAKU_ENABLED", YOYAKU_ENABLED)
+    yoyaku_max_items = env_int("YOYAKU_MAX_ITEMS", YOYAKU_MAX_ITEMS)
+    yoyaku_audio_max_items = env_int("YOYAKU_AUDIO_MAX_ITEMS", YOYAKU_AUDIO_MAX_ITEMS)
     lookback = env_int("LOOKBACK_HOURS", LOOKBACK_HOURS)
     if lookback <= 0:
         LOG.warning("LOOKBACK_HOURS must be positive - using %s", LOOKBACK_HOURS)
@@ -3035,9 +3399,11 @@ def main() -> int:
     LOG.info("Caps: %d page(s)/seller (%d listings), %d release lookup(s)/run",
              env_int("MAX_PAGES", MAX_PAGES), env_int("MAX_PAGES", MAX_PAGES) * PER_PAGE,
              env_int("MAX_RELEASE_LOOKUPS", MAX_RELEASE_LOOKUPS))
-    LOG.info("Extra sources: clone.nl RSS %s (audio for up to %d item(s)), deejay.de scrape %s",
+    LOG.info("Extra sources: clone.nl RSS %s (audio for up to %d item(s)), "
+             "deejay.de scrape %s, yoyaku.io API %s (audio for up to %d item(s))",
              "on" if clone_rss_enabled else "off", clone_audio_max_items,
-             "on" if deejay_enabled else "off")
+             "on" if deejay_enabled else "off",
+             "on" if yoyaku_enabled else "off", yoyaku_audio_max_items)
 
     user_agent = env_str("USER_AGENT", USER_AGENT)
     api = Discogs(
@@ -3067,6 +3433,7 @@ def main() -> int:
     deejay_seen_path = os.path.join(docs_dir, "deejay_seen.json") if docs_dir else ""
     discogs_seen_path = os.path.join(docs_dir, "discogs_seen.json") if docs_dir else ""
     clone_seen_path = os.path.join(docs_dir, "clone_seen.json") if docs_dir else ""
+    yoyaku_seen_path = os.path.join(docs_dir, "yoyaku_seen.json") if docs_dir else ""
     # Separate from the seen-id files above: those dedup which items get
     # matched, this accumulates what's actually been PUBLISHED today, so a
     # second same-day run (a manual one, or a scheduled trigger that fired
@@ -3076,10 +3443,12 @@ def main() -> int:
     deejay_seen = load_deejay_seen(deejay_seen_path)
     discogs_seen = load_deejay_seen(discogs_seen_path)
     clone_seen = load_deejay_seen(clone_seen_path)
+    yoyaku_seen = load_deejay_seen(yoyaku_seen_path)
     if docs_dir:
         LOG.info(
-            "Already-shown ids loaded: %d deejay.de, %d Discogs, %d clone.nl RSS",
-            len(deejay_seen), len(discogs_seen), len(clone_seen),
+            "Already-shown ids loaded: %d deejay.de, %d Discogs, %d clone.nl RSS, "
+            "%d yoyaku.io",
+            len(deejay_seen), len(discogs_seen), len(clone_seen), len(yoyaku_seen),
         )
 
     started = time.monotonic()
@@ -3092,9 +3461,13 @@ def main() -> int:
         deejay_max_items=deejay_max_items,
         deejay_discogs_max_items=deejay_discogs_max_items,
         deejay_stock_max_items=deejay_stock_max_items,
+        yoyaku_enabled=yoyaku_enabled,
+        yoyaku_max_items=yoyaku_max_items,
+        yoyaku_audio_max_items=yoyaku_audio_max_items,
         deejay_seen=deejay_seen,
         discogs_seen=discogs_seen,
         clone_seen=clone_seen,
+        yoyaku_seen=yoyaku_seen,
         now=generated,
     )
     elapsed = time.monotonic() - started
@@ -3173,10 +3546,15 @@ def main() -> int:
             if clone_seen_path:
                 save_deejay_seen(clone_seen_path, stats["clone_seen"],
                                  DEEJAY_SEEN_KEEP_DAYS, generated)
+            if yoyaku_seen_path:
+                save_deejay_seen(yoyaku_seen_path, stats["yoyaku_seen"],
+                                 DEEJAY_SEEN_KEEP_DAYS, generated)
             if docs_dir:
                 LOG.info(
-                    "Already-shown ids now remembered: %d deejay.de, %d Discogs, %d clone.nl RSS",
-                    len(stats["deejay_seen"]), len(stats["discogs_seen"]), len(stats["clone_seen"]),
+                    "Already-shown ids now remembered: %d deejay.de, %d Discogs, "
+                    "%d clone.nl RSS, %d yoyaku.io",
+                    len(stats["deejay_seen"]), len(stats["discogs_seen"]),
+                    len(stats["clone_seen"]), len(stats["yoyaku_seen"]),
                 )
         except OSError as exc:
             # A failed page must not cost you the email.
