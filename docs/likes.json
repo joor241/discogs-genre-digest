@@ -175,5 +175,42 @@
       }
     ],
     "liked_at": "2026-09-05T11:06:37.602Z"
+  },
+  "https://yoyaku.io/release/baka-g-diva-morgabine-ht28/": {
+    "description": "Baka G - Diva Morgabine",
+    "price": "€17.50",
+    "url": "https://yoyaku.io/release/baka-g-diva-morgabine-ht28/",
+    "store": "Yoyaku (new arrivals)",
+    "thumb": "https://yoyaku.io/wp-content/uploads/2026/09/HT28_3-4-400x400.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1. Diva Morgabine",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/HT28_5.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2. The Unknown",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/HT28_6.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1. On A Ride",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/HT28_7.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2. Diva Morgabine (Marius Acke Remix)",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/HT28_8.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-05T11:10:52.070Z"
   }
 }
