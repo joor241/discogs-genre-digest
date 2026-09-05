@@ -138,5 +138,42 @@
       }
     ],
     "liked_at": "2026-09-03T12:45:25.132Z"
+  },
+  "https://www.deejay.de/Farsa_Roza_Terenzi_Promiscuous_Dubz_STEP19_Vinyl__1256539": {
+    "description": "Farsa - Promiscuous Dubz (12inch)",
+    "price": "14.50 EUR",
+    "url": "https://www.deejay.de/Farsa_Roza_Terenzi_Promiscuous_Dubz_STEP19_Vinyl__1256539",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/3/9/1256539.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Promiscuous Dubz",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/3/9/1256539a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Promiscuous Dubz (Roza Terenzi Remix)",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/3/9/1256539b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: The Sound On The Otherside",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/3/9/1256539c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Hammer of Witches",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/3/9/1256539d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-05T11:06:37.602Z"
   }
 }
