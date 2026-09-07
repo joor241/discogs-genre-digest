@@ -212,5 +212,54 @@
       }
     ],
     "liked_at": "2026-09-05T11:10:52.070Z"
+  },
+  "https://www.discogs.com/sell/item/4351006992": {
+    "description": "Juice (3) - Do It Right! (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4351006992",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/FYduJHHwwrssA75SvTlKcJGqZtvvH_BxKOPneYVmdb4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDYy/Ni0xNTE1MTQ2NTcz/LTUwNzQuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Juice - Do It Right (Jumpin' Mix)",
+        "yt": "iaeboNSFbfU",
+        "src": null,
+        "dur": 311
+      },
+      {
+        "title": "Juice - Do It Right",
+        "yt": "rsGDIPj7sNc",
+        "src": null,
+        "dur": 351
+      },
+      {
+        "title": "JUICE - DO IT RIGHT - BEST VERSION",
+        "yt": "3hdeRyVNa0k",
+        "src": null,
+        "dur": 351
+      },
+      {
+        "title": "Juice - Do It Right! (Serie A Mix)",
+        "yt": "95JvBx-HEe0",
+        "src": null,
+        "dur": 338
+      },
+      {
+        "title": "Juice - Do It Right (Direct Hit Version)",
+        "yt": "BSAqmvzwa5U",
+        "src": null,
+        "dur": 446
+      },
+      {
+        "title": "JUICE - DO IT RIGHT HQwav",
+        "yt": "Es0oDjgEcRE",
+        "src": null,
+        "dur": 354
+      }
+    ],
+    "liked_at": "2026-09-07T16:37:45.833Z"
   }
 }
