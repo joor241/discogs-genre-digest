@@ -409,5 +409,36 @@
       }
     ],
     "liked_at": "2026-09-12T19:11:41.445Z"
+  },
+  "https://www.discogs.com/sell/item/4359823233": {
+    "description": "Travis Nelson - The Devil's Disco (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4359823233",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/JpSqboO-2N7YT_CMkVMpIgDIflISGPd0AHYfbI3Jifk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkzNTg4/LTE2MTExOTIwNTMt/MTI1OC5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Travis Nelson - The Remix (A Tribute)",
+        "yt": "5hQ-hJ3z1Ms",
+        "src": null,
+        "dur": 372
+      },
+      {
+        "title": "TRAVIS NELSON - Now Scream",
+        "yt": "77IvBe5W3_I",
+        "src": null,
+        "dur": 461
+      },
+      {
+        "title": "Travis Nelson Hosts The Devil's Disco - Now Scream",
+        "yt": "NYWOA2Zbvr8",
+        "src": null,
+        "dur": 499
+      }
+    ],
+    "liked_at": "2026-09-12T19:12:43.915Z"
   }
 }
