@@ -440,5 +440,54 @@
       }
     ],
     "liked_at": "2026-09-12T19:12:43.915Z"
+  },
+  "https://www.discogs.com/sell/item/4359712623": {
+    "description": "Adventures Of Stevie V. - Dirty Cash (12\")",
+    "price": "10.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4359712623",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/hVW-ljzs9nLoUmENM4zAcLxVG1IlHTrFI3GZ6QqXY9k/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMyOTEx/LTEyNjEzOTUyMTcu/anBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Dirty Cash (Money Talks) (Dime & Dollar 12 Inch Mix)",
+        "yt": "vIa00Fx3Z8k",
+        "src": null,
+        "dur": 354
+      },
+      {
+        "title": "The Adventures of Stevie V  feat  Nazlyn  - Dirty Ca$h (Rollercoaster Extended Mix) (HQ)",
+        "yt": "4FD3fOfeTQQ",
+        "src": null,
+        "dur": 329
+      },
+      {
+        "title": "Adventures Of Stevie V - Dirty Cash  Dirty Rap",
+        "yt": "7hkRjq__3To",
+        "src": null,
+        "dur": 246
+      },
+      {
+        "title": "Adventures Of Stevie V - Dirty Cash (Todd Terry Radio Mix)",
+        "yt": "Odfn-BQUsnk",
+        "src": null,
+        "dur": 226
+      },
+      {
+        "title": "Dirty Cash (Money Talks) (Sold Out 12 Inch Mix)",
+        "yt": "Lw6SmgI3tJE",
+        "src": null,
+        "dur": 452
+      },
+      {
+        "title": "B1 - Adventures Of Stevie V. - Dirty Cash (Money Talks) (Red Zone Mix)",
+        "yt": "gx1d7v6OkRs",
+        "src": null,
+        "dur": 376
+      }
+    ],
+    "liked_at": "2026-09-12T19:16:07.777Z"
   }
 }
