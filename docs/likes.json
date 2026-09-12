@@ -323,5 +323,54 @@
       }
     ],
     "liked_at": "2026-09-12T19:09:45.019Z"
+  },
+  "https://www.discogs.com/sell/item/4359831555": {
+    "description": "Various - Warehouse Raves 3 (2xLP, Album, Comp)",
+    "price": "10.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4359831555",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/KZjMMwBmpvSHOxAw0bHNNBpIbO5G-EpzSufALKPT8q4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMTc0/My0xNjIwMDg1NjUw/LTM5MDYuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Frankie Knuckles: Gallifré ft. Mondee Oliver - Don't Walk Out On  Love  (Club) 1989",
+        "yt": "W2Hf9pFwXv8",
+        "src": null,
+        "dur": 445
+      },
+      {
+        "title": "Fallout – The Morning After (HQ) Sunrise Mix",
+        "yt": "Bv8tNcLXqQg",
+        "src": null,
+        "dur": 433
+      },
+      {
+        "title": "OFF - Electrica Salsa 1896",
+        "yt": "uzmE02qifwI",
+        "src": null,
+        "dur": 349
+      },
+      {
+        "title": "Fidelfatti featuring Ronnette-Just Wanna Touch Me (Hallelujah Mix)",
+        "yt": "qNyZ0A21vAk",
+        "src": null,
+        "dur": 393
+      },
+      {
+        "title": "F.P.I. Project - Rich In Paradise (Non Stop Rumours Mix) - Video Image From Rusty's UV Art Gallery",
+        "yt": "mpsefozGL9g",
+        "src": null,
+        "dur": 288
+      },
+      {
+        "title": "Mr  Monday - Keep On (Piano Groove) - 1989",
+        "yt": "mWscMVv2exc",
+        "src": null,
+        "dur": 413
+      }
+    ],
+    "liked_at": "2026-09-12T19:10:31.229Z"
   }
 }
