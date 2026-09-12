@@ -372,5 +372,42 @@
       }
     ],
     "liked_at": "2026-09-12T19:10:31.229Z"
+  },
+  "https://www.discogs.com/sell/item/4359829293": {
+    "description": "Awa Band - Tudo Lindo (12\")",
+    "price": "5.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4359829293",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/EN3aYdGJ6mJGpkiiRWWNqAOslSqRu8mP8vB0opT4sYU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxNDkz/LTEyNzIyOTU0NTUu/anBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Awa Band - Tudo Lindo (Full Intention Club Mix) [Full Length] 2001",
+        "yt": "_MKO_k-jtuM",
+        "src": null,
+        "dur": 448
+      },
+      {
+        "title": "Awa Band - Tudo Lindo (Full Intention Original Vibe)",
+        "yt": "RMEBq6wNwtY",
+        "src": null,
+        "dur": 496
+      },
+      {
+        "title": "Awa Band - Tudo Lindo (Full Intention Chant Dub)",
+        "yt": "i0Sq5wvu-6k",
+        "src": null,
+        "dur": 370
+      },
+      {
+        "title": "AWA Band \"Tudo Lindo\" (Andy Holders Latin Club Dub)",
+        "yt": "rUWrNRwMAf4",
+        "src": null,
+        "dur": 171
+      }
+    ],
+    "liked_at": "2026-09-12T19:11:41.445Z"
   }
 }
