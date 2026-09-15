@@ -489,5 +489,42 @@
       }
     ],
     "liked_at": "2026-09-15T13:54:00.929Z"
+  },
+  "https://www.deejay.de/Corrie_Re-Grooves_TREMREC003_Vinyl__1234216": {
+    "description": "Corrie - Re-Grooves (12inch)",
+    "price": "13.87 EUR",
+    "url": "https://www.deejay.de/Corrie_Re-Grooves_TREMREC003_Vinyl__1234216",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/1/6/1234216.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Groove Me Last",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/6/1234216a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Lazer",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/6/1234216b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Blast",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/6/1234216c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Stars",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/6/1234216d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-15T13:55:36.256Z"
   }
 }
