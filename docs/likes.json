@@ -415,5 +415,42 @@
       }
     ],
     "liked_at": "2026-09-12T19:16:07.777Z"
+  },
+  "https://www.deejay.de/Daniel_Broesecke_VAM13_VAM13_Vinyl__1216283": {
+    "description": "Daniel Broesecke - VAM13 (excl)",
+    "price": "12.56 EUR",
+    "url": "https://www.deejay.de/Daniel_Broesecke_VAM13_VAM13_Vinyl__1216283",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/8/3/1216283.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Dedication",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/3/1216283a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: For A Second",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/3/1216283b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Keep Movin",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/3/1216283c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Keep Movin (Ki.Mi. Remix)",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/3/1216283d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-15T13:53:37.422Z"
   }
 }
