@@ -452,5 +452,42 @@
       }
     ],
     "liked_at": "2026-09-15T13:53:37.422Z"
+  },
+  "https://www.deejay.de/Unknown_PVC_11_PVC011_Vinyl__1247755": {
+    "description": "Unknown - PVC 11 (excl)",
+    "price": "11.72 EUR",
+    "url": "https://www.deejay.de/Unknown_PVC_11_PVC011_Vinyl__1247755",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/5/5/1247755.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: GJ",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/5/1247755a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Lonely",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/5/1247755b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: What Is",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/5/1247755c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: That's The Wax",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/5/1247755d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-15T13:54:00.929Z"
   }
 }
