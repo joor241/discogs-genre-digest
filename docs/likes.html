@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Likes</title>
+<!-- Same warm-up the generated digest pages get: start the YouTube API
+     fetch during parse instead of leaving it to assets/player.js at the end
+     of the body. player.js detects an in-flight request and does not add a
+     second one. -->
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://s.ytimg.com">
+<link rel="preconnect" href="https://i.ytimg.com">
+<script src="https://www.youtube.com/iframe_api" async></script>
 <!-- Loaded BEFORE this page's own <style> on purpose: the player sheet
      also defines body/.wrap/.rec/h1/h2, and this page's rules should win
      on those. What it uniquely provides -- .bar, .ppbtn, .trow, .tracks,

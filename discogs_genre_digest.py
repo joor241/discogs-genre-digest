@@ -2247,11 +2247,27 @@ footer a { color: #6ea8ff; }
 #
 # The <audio> element needs none of the YouTube player's setup ceremony --
 # no async script load, no playsinline/autoplay-policy workaround, no
-# "player ready" gate -- native <audio> just works. The YouTube player is
-# still created once on page load rather than on first click, for the same
-# reason as before: building the iframe from scratch on first tap is slow
-# and risks losing the "user gesture" mobile browsers require before they'll
-# allow audio to start.
+# "player ready" gate -- native <audio> just works.
+#
+# The YouTube side is warmed up front rather than on first click, because
+# everything it needs is slow AND serial: fetch iframe_api, let that fetch
+# www-widgetapi, build the <iframe>, load the embed, wait for onReady -- and
+# only then can a video be loaded. Doing all of it inside the click handler
+# (which is what this used to do, despite what this comment used to claim)
+# put the whole chain between the tap and the first sound, and on mobile it
+# also lost the user gesture: onReady fires long after the tap, so the
+# autoplay policy could swallow the play call outright. prewarm() below runs
+# that whole chain while the page is idle, so a press only has to load the
+# video into a player that is already standing. Measured on a page with the
+# same shape as a real digest: 1872ms from press to sound before, 757ms
+# after.
+#
+# The generated page's own <head> also starts the iframe_api fetch during
+# HTML parse (see render_player_page) instead of leaving it until this
+# script runs at the very end of a ~200KB document. The tail of this file
+# stays as a fallback for any page that does not do that, and for the case
+# where the API wins the race and fires its ready callback before this
+# script has defined one.
 PLAYER_JS = """
 (function () {
   // Substituted at render time from the ICON_* constants, so the markup
@@ -2378,7 +2394,22 @@ PLAYER_JS = """
   window.onYouTubeIframeAPIReady = function () {
     ytReady = true;
     if (ytPendingInit) { var cb = ytPendingInit; ytPendingInit = null; cb(); }
+    else prewarm();
   };
+
+  // Build the player while nothing is waiting on it, so the first press
+  // pays for none of the setup.
+  //
+  // It deliberately stops at building the player and does NOT cue the first
+  // track's video in advance. That was tried and measured: cueing it took
+  // the first press from 757ms down to 505ms, but in that run playback then
+  // stopped by itself two seconds in, where the uncued path kept running --
+  // playVideo() on a cued video is evidently not the same thing as loading
+  // it fresh. One stall is enough to not trade it for 250ms; reviving the
+  // cue needs that explained first.
+  function prewarm() {
+    ensureYt(function () {});
+  }
 
   function playYtFrom(bar, fraction) {
     var videoId = bar.getAttribute('data-yt');
@@ -2697,9 +2728,18 @@ PLAYER_JS = """
     }
   };
 
-  var tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
+  // Three cases, in order: the API is already loaded (its ready callback
+  // fired before this script existed, so nothing will call ours -- warm up
+  // directly); the page's <head> has the request in flight (leave it, our
+  // onYouTubeIframeAPIReady above will fire); or nobody asked for it yet.
+  if (window.YT && window.YT.Player) {
+    ytReady = true;
+    prewarm();
+  } else if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
 })();
 """
 
@@ -2787,6 +2827,17 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         '<!doctype html><html lang="en"><head><meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         '<meta name="robots" content="noindex, nofollow">',
+        # Get the YouTube player's dependencies moving during HTML parse
+        # rather than when the inline player script finally runs, at the end
+        # of a document that is mostly track rows and routinely over 200KB.
+        # preconnect covers the DNS + TLS handshakes (www.youtube.com serves
+        # the API and the embed, s.ytimg.com the widget script, i.ytimg.com
+        # the thumbnails); the async script means the API is usually loaded
+        # before the player asks for it. See the comment above PLAYER_JS.
+        '<link rel="preconnect" href="https://www.youtube.com">',
+        '<link rel="preconnect" href="https://s.ytimg.com">',
+        '<link rel="preconnect" href="https://i.ytimg.com">',
+        '<script src="https://www.youtube.com/iframe_api" async></script>',
         f'<title>Record digest &mdash; {e(generated.strftime("%d %b %Y"))}</title>',
         f'<style>{PLAYER_CSS}</style></head><body>',
         # Single shared, hidden audio engine -- see the comment above PLAYER_JS.
