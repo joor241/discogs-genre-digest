@@ -47,11 +47,20 @@ import requests
 # 39,915 items for sale, updating in real time -- like Rush Hour, expect it
 # to occasionally bulk-list and push the run into the MAX_RELEASE_LOOKUPS /
 # MAX_PAGES safety caps rather than checking every listing.
+#
+# KillaCutz added 2026-09-19, verified live the same day: 20,505 items for
+# sale, 99.8% over 13,978 ratings, Amsterdam. Their own site (killacutz.com,
+# and killacutz.nl which redirects to it) is a plain WordPress page with no
+# webshop -- no WooCommerce REST API, no product feed, nothing to scrape --
+# so Discogs is the only place their stock is listed. The API resolves the
+# username case-insensitively (checked: "killacutz" and "KILLACUTZ" both
+# return this same account), so only the display name below is cosmetic.
 SELLERS = {
     "RushHour": "Rush Hour",             # rushhour.nl
     "clone.nl": "Clone",                 # clone.nl
     "offbeat__records": "Offbeat Records",  # note: two underscores
     "decks.de": "Decks",                 # decks.de -- huge, very active seller
+    "KillaCutz": "Killa Cutz",           # killacutz.com, second-hand, Amsterdam
 }
 
 # Genres/styles to keep, matched whole-word and case-insensitively against the
