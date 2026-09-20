@@ -124,7 +124,22 @@
   window.onYouTubeIframeAPIReady = function () {
     ytReady = true;
     if (ytPendingInit) { var cb = ytPendingInit; ytPendingInit = null; cb(); }
+    else prewarm();
   };
+
+  // Build the player while nothing is waiting on it, so the first press
+  // pays for none of the setup.
+  //
+  // It deliberately stops at building the player and does NOT cue the first
+  // track's video in advance. That was tried and measured: cueing it took
+  // the first press from 757ms down to 505ms, but in that run playback then
+  // stopped by itself two seconds in, where the uncued path kept running --
+  // playVideo() on a cued video is evidently not the same thing as loading
+  // it fresh. One stall is enough to not trade it for 250ms; reviving the
+  // cue needs that explained first.
+  function prewarm() {
+    ensureYt(function () {});
+  }
 
   function playYtFrom(bar, fraction) {
     var videoId = bar.getAttribute('data-yt');
@@ -443,7 +458,16 @@
     }
   };
 
-  var tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
+  // Three cases, in order: the API is already loaded (its ready callback
+  // fired before this script existed, so nothing will call ours -- warm up
+  // directly); the page's <head> has the request in flight (leave it, our
+  // onYouTubeIframeAPIReady above will fire); or nobody asked for it yet.
+  if (window.YT && window.YT.Player) {
+    ytReady = true;
+    prewarm();
+  } else if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
 })();
