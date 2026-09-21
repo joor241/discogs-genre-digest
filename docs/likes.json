@@ -563,5 +563,54 @@
       }
     ],
     "liked_at": "2026-09-15T13:56:47.102Z"
+  },
+  "https://yoyaku.io/release/paul-cut-circle-people-atwt021/": {
+    "description": "Paul Cut - Circle People",
+    "price": "€25.00",
+    "url": "https://yoyaku.io/release/paul-cut-circle-people-atwt021/",
+    "store": "Yoyaku (new arrivals)",
+    "thumb": "https://yoyaku.io/wp-content/uploads/2026/09/ATWT021-400x400.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1. Together",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/ATWT021_1.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2. Shady Nasty",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/ATWT021_2.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1. Some Of You",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/ATWT021_3.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2. On The Rocks",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/ATWT021_4.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C1. Life",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/ATWT021_5.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C2. She Comes Around",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/ATWT021_6.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-21T13:37:48.416Z"
   }
 }
