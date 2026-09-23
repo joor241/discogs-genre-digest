@@ -643,5 +643,48 @@
       }
     ],
     "liked_at": "2026-09-23T11:44:43.834Z"
+  },
+  "https://www.deejay.de/Vitus_Silhouette_02_SILHOUETTE02_Vinyl__1234507": {
+    "description": "Silhouette 02 - Silhouette 02 (12inch)",
+    "price": "14.50 EUR",
+    "url": "https://www.deejay.de/Vitus_Silhouette_02_SILHOUETTE02_Vinyl__1234507",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/0/7/1234507.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Got Your Head Nod",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/7/1234507a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: We Like It Raw",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/7/1234507b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A3: Mind State",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/7/1234507c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Take Me (To The Floor)",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/7/1234507d.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: House Is (Never) Boring",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/7/1234507e.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-23T11:45:22.742Z"
   }
 }
