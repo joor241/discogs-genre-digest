@@ -612,5 +612,36 @@
       }
     ],
     "liked_at": "2026-09-21T13:37:48.416Z"
+  },
+  "https://www.deejay.de/Kuyateh_One_Nation_PRVR001_Vinyl__1247284": {
+    "description": "Kuyateh - One Nation (excl)",
+    "price": "11.72 EUR",
+    "url": "https://www.deejay.de/Kuyateh_One_Nation_PRVR001_Vinyl__1247284",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/8/4/1247284.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: One Nation",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/4/1247284a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: One Nation ( Easy Is Right Edit )",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/4/1247284b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Deal",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/4/1247284c.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-23T11:44:43.834Z"
   }
 }
