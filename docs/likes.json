@@ -686,5 +686,42 @@
       }
     ],
     "liked_at": "2026-09-23T11:45:22.742Z"
+  },
+  "https://www.deejay.de/Mihai_Popoviciu_Messages_EP_PRKV010_Vinyl__1246255": {
+    "description": "Mihai Popoviciu - Messages EP (excl)",
+    "price": "12.56 EUR",
+    "url": "https://www.deejay.de/Mihai_Popoviciu_Messages_EP_PRKV010_Vinyl__1246255",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/5/5/1246255.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: You Know",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/5/1246255a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Messages",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/5/1246255b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Cyborg",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/5/1246255c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Delta Uniform Bravo",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/5/1246255d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-27T15:27:23.900Z"
   }
 }
