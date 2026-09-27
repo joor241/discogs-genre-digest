@@ -615,6 +615,7 @@ class Discogs:
             # Free: these are the same response we already fetch for genres.
             "videos": extract_videos(data.get("videos"), self.video_limit),
             "formats": [f.get("name") for f in (data.get("formats") or []) if f.get("name")],
+            "year": release_year(data.get("year")),
         }
         self._release_cache[release_id] = info
         return info
@@ -1721,6 +1722,21 @@ def fetch_yoyaku(cutoff: datetime, wanted_norm: list[str], wanted_formats: list[
     return matched, considered, updated_seen
 
 
+def release_year(value) -> str:
+    """Discogs' release year as text, or "" when unknown (Discogs sends 0)."""
+    try:
+        year = int(value or 0)
+    except (TypeError, ValueError):
+        return ""
+    return str(year) if year > 0 else ""
+
+
+def fineprint_text(item: dict) -> str:
+    """Label - catno - year, skipping whatever a source didn't provide."""
+    parts = [item.get("label"), item.get("catno"), item.get("year")]
+    return " - ".join(p for p in parts if p)
+
+
 def format_price(listing: dict) -> str:
     price = listing.get("price") or {}
     value = price.get("value")
@@ -1803,6 +1819,7 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
             "thumb": info["thumb"],
             "label": release.get("label") or "",
             "catno": release.get("catalog_number") or "",
+            "year": info.get("year") or release_year(release.get("year")),
             "videos": info.get("videos") or [],
             "formats": info.get("formats") or [],
             # Vinyl with nothing else bundled -- a release tagged ["Vinyl",
@@ -2895,9 +2912,8 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                 meta_html += f'<span class="badge {stock_class}">{e(item["stock_note"])}</span>'
 
             fine_html = ""
-            if item.get("label") or item.get("catno"):
-                parts = [p for p in (item.get("label"), item.get("catno")) if p]
-                fine_html = f'<div class="fineprint">{e(" - ".join(parts))}</div>'
+            if fineprint_text(item):
+                fine_html = f'<div class="fineprint">{e(fineprint_text(item))}</div>'
 
             tracks = []
             for video in (item.get("videos") or []):
@@ -3254,10 +3270,9 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                     )
 
                 catno = ""
-                if item["label"] or item["catno"]:
-                    parts = [p for p in (item["label"], item["catno"]) if p]
+                if fineprint_text(item):
                     catno = (f'<div style="color:#999;font-size:11.5px;margin-top:5px;">'
-                             f'{e(" - ".join(parts))}</div>')
+                             f'{e(fineprint_text(item))}</div>')
 
                 out.append(
                     '<table role="presentation" cellpadding="0" cellspacing="0" border="0" '
@@ -3321,7 +3336,8 @@ def render_text(sections, cutoff: datetime, genres: list[str], stats: dict,
         lines.append(header)
         lines.append("-" * len(header))
         for item in items:
-            lines.append(f"  {item['description']}")
+            year = f" ({item['year']})" if item.get("year") else ""
+            lines.append(f"  {item['description']}{year}")
             lines.append(f"    {item['price']} | {item['condition']} | {item['tags']}")
             lines.append(f"    {item['url']}")
             videos = item.get("videos") or []
