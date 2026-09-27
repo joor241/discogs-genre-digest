@@ -1737,6 +1737,57 @@ def fineprint_text(item: dict) -> str:
     return " - ".join(p for p in parts if p)
 
 
+# Discogs' grading scale, best first. Matched on the abbreviation in
+# parentheses ("Very Good Plus (VG+)") so the long name's wording doesn't
+# matter; anything unrecognised ("Generic", "No Cover", "?") ranks last.
+CONDITION_RANK = {"M": 0, "NM": 1, "M-": 1, "VG+": 2, "VG": 3, "G+": 4, "G": 5, "F": 6, "P": 7}
+CONDITION_ABBR_RE = re.compile(r'\(([^)]+)\)\s*$')
+
+
+def condition_rank(text: str | None) -> int:
+    text = (text or "").strip()
+    match = CONDITION_ABBR_RE.search(text)
+    abbr = (match.group(1) if match else text).split(" or ")[0].strip().upper()
+    return CONDITION_RANK.get(abbr, len(CONDITION_RANK))
+
+
+def keep_best_copies(items: list[dict]) -> list[dict]:
+    """One entry per Discogs release: when a store lists the same release
+    more than once, keep only the copy in the best vinyl (media) condition.
+    Ties go to the better sleeve, then the lower price. Items without a
+    release id (other sources) pass through untouched; order is preserved,
+    with the kept copy taking the place of the first one listed."""
+    best: dict[int, int] = {}  # release id -> index into out
+    out: list[dict] = []
+    for item in items:
+        rid = item.get("release_id")
+        if not rid:
+            out.append(item)
+            continue
+        if rid not in best:
+            best[rid] = len(out)
+            out.append(item)
+            continue
+        if copy_rank(item) < copy_rank(out[best[rid]]):
+            out[best[rid]] = item
+    return out
+
+
+def copy_rank(item: dict) -> tuple:
+    """Lower is better: media condition, then sleeve, then price."""
+    price = item.get("price_value")
+    return (condition_rank(item.get("condition")),
+            condition_rank(item.get("sleeve")),
+            price if price is not None else float("inf"))
+
+
+def price_value(listing: dict) -> float | None:
+    try:
+        return float((listing.get("price") or {}).get("value"))
+    except (TypeError, ValueError):
+        return None
+
+
 def format_price(listing: dict) -> str:
     price = listing.get("price") or {}
     value = price.get("value")
@@ -1812,6 +1863,8 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
         matched.append({
             "description": release.get("description") or release.get("title") or "Unknown release",
             "price": format_price(listing),
+            "price_value": price_value(listing),
+            "release_id": release_id,
             "condition": listing.get("condition") or "?",
             "sleeve": listing.get("sleeve_condition") or "",
             "url": listing.get("uri") or f"https://www.discogs.com/sell/item/{listing.get('id', '')}",
@@ -1826,6 +1879,12 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
             # "File"] ships with a download code, so is not vinyl-only.
             "vinyl_only": (info.get("formats") or []) == ["Vinyl"],
         })
+
+    deduped = keep_best_copies(matched)
+    if len(deduped) < len(matched):
+        LOG.info("[%s] %d duplicate copy/copies of the same release dropped "
+                 "(kept the best condition)", username, len(matched) - len(deduped))
+    matched = deduped
 
     if already_seen:
         LOG.info("[%s] %d already shown in a prior digest, skipped", username, already_seen)
@@ -3145,9 +3204,10 @@ def save_today_sections(path: str, today_stamp: str, sections: list[Section]) ->
 
 def merge_sections(existing: list[Section], new: list[Section]) -> list[Section]:
     """Combine today's already-published sections with this run's matches,
-    grouped by store, existing items first. No de-dup needed here -- the
-    seen-id tracking upstream already guarantees an item can't be matched
-    twice across runs the same day, so existing and new never overlap."""
+    grouped by store, existing items first. The seen-id tracking upstream
+    guarantees the same *listing* can't come back, but a second copy of the
+    same release listed between two same-day runs can -- keep_best_copies
+    folds those together here too."""
     by_store: dict[str, list[dict]] = {}
     labels: dict[str, str | None] = {}
     order: list[str] = []
@@ -3157,7 +3217,7 @@ def merge_sections(existing: list[Section], new: list[Section]) -> list[Section]
             by_store[store] = []
         by_store[store].extend(items)
         labels[store] = label
-    return [(store, by_store[store], labels[store]) for store in order]
+    return [(store, keep_best_copies(by_store[store]), labels[store]) for store in order]
 
 
 def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
