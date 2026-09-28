@@ -723,5 +723,30 @@
       }
     ],
     "liked_at": "2026-09-27T15:27:23.900Z"
+  },
+  "https://www.deejay.de/Inland_Knights_Hollow_Legs_DRM036R_Vinyl__729718": {
+    "description": "Inland Knights - Hollow Legs (12inch)",
+    "price": "14.08 EUR",
+    "url": "https://www.deejay.de/Inland_Knights_Hollow_Legs_DRM036R_Vinyl__729718",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/1/8/729718.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: already",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/729718a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: amber gambler",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/729718b.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-09-28T16:15:48.030Z"
   }
 }
