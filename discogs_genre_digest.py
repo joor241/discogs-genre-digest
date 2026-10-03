@@ -232,6 +232,27 @@ YOYAKU_MAX_ITEMS = 120
 # past the cap still appear, just without playable tracks. 0 disables audio.
 YOYAKU_AUDIO_MAX_ITEMS = 30
 
+# SoundCloud likes and Discogs sellers, published by the browser extension.
+#
+# The "Bandcamp collectie sorteren" Chrome extension matches every track you
+# like on SoundCloud to a release, and checks stock at record shops this
+# runner can't reach (clone.nl, Juno and Discogs' sell pages all refuse a
+# datacenter IP -- see "SoundCloud likes and Discogs sellers" in README.md).
+# It writes the result into docs/ through the GitHub API:
+#   docs/soundcloud_likes.json  -- every liked release + stock per shop
+#   docs/discogs_sellers.json   -- sellers in your country with 2+ of them
+# This script only READS those two files. What it saw last time lives in its
+# own docs/soundcloud_seen.json / docs/discogs_sellers_seen.json, so there is
+# never a second writer on the extension's files (the publish step's
+# "-X ours" merge would otherwise silently drop the extension's update).
+SOUNDCLOUD_ENABLED = True
+SOUNDCLOUD_MAX_ITEMS = 25      # releases listed in the "came in stock" block
+SOUNDCLOUD_SEEN_KEEP_DAYS = 30 # a shop row that vanishes is remembered this long
+SELLERS_ENABLED = True
+# Older than this and the sellers block says so instead of presenting the
+# list as today's: the extension only runs while your PC/Chrome is on.
+SELLERS_MAX_AGE_HOURS = 72
+
 # How far back to look, in hours.
 #
 # The digest is stateless: it asks "was this listed in the last N hours?"
@@ -252,7 +273,7 @@ YOYAKU_AUDIO_MAX_ITEMS = 30
 #         the same truncated batch for three days running.
 #
 # For fuller emails without repeats, run less often and keep the two in step,
-# e.g. cron "0 7 */3 * *" in the workflow with LOOKBACK_HOURS = 74.
+# e.g. cron "0 6 */3 * *" in the workflow with LOOKBACK_HOURS = 74.
 LOOKBACK_HOURS = 48
 
 # ---------------------------------------------------------------------------
@@ -3220,14 +3241,351 @@ def merge_sections(existing: list[Section], new: list[Section]) -> list[Section]
     return [(store, keep_best_copies(by_store[store]), labels[store]) for store in order]
 
 
+# ---------------------------------------------------------------------------
+# SoundCloud likes + Discogs sellers (files written by the browser extension)
+# ---------------------------------------------------------------------------
+
+# "Can I order it right now?" -- a pre-order counts: you can place it today.
+BUYABLE_STATES = {"in", "preorder"}
+
+
+def load_json_file(path: str, default):
+    """A JSON file from docs/, or `default` when it's missing or unreadable.
+    Never raises: a broken extension file must not cost you the email."""
+    if not path or not os.path.isfile(path):
+        return default
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            return json.load(handle)
+    except (OSError, ValueError) as exc:
+        LOG.warning("Could not read %s: %s", path, exc)
+        return default
+
+
+def save_json_file(path: str, data) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(data, handle, ensure_ascii=False, sort_keys=True)
+
+
+def parse_iso(value) -> datetime | None:
+    try:
+        stamp = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    return stamp if stamp.tzinfo else stamp.replace(tzinfo=timezone.utc)
+
+
+def soundcloud_stock_events(likes: dict, seen: dict, now: datetime,
+                            keep_days: int = SOUNDCLOUD_SEEN_KEEP_DAYS):
+    """What changed since the last run, per liked release.
+
+    `seen` maps "<release key>|<shop key>|<shop url>" to the state this script
+    saw last time. A release is reported when a shop row became orderable
+    ("in" or "preorder") having been something else -- sold out, upcoming --
+    or when it's orderable on a row seen for the first time (a new like, or
+    a shop the extension only just found it at).
+
+    Deliberately NOT reported:
+      * anything on the very first run: there is nothing to compare with
+        yet, so "came in stock" would really mean "is in stock" for all of
+        them. That run returns `first_run=True` and the email lists what's
+        orderable today once, as a baseline, instead;
+      * a row whose previous state was "unknown" (a failed read): no
+        information is not the same as "was sold out";
+      * a failed read now ("unknown") -- it also never overwrites what was
+        seen before, so tomorrow's real state is compared with real data.
+
+    Returns (events, new_seen, first_run, buyable_now). `events` has one entry
+    per release, with every shop that became orderable.
+    """
+    first_run = not seen
+    today = now.strftime("%Y-%m-%d")
+    known_releases = {key.split("|", 1)[0] for key in seen}
+    new_seen: dict[str, dict] = {}
+    events: dict[str, dict] = {}
+    buyable_now: list[dict] = []
+
+    for release in likes.get("releases") or []:
+        rkey = str(release.get("key") or "")
+        if not rkey:
+            continue
+        orderable_shops = []
+        for shop in release.get("shops") or []:
+            row = f"{rkey}|{shop.get('key')}|{shop.get('url')}"
+            state = str(shop.get("state") or "unknown")
+            prev = seen.get(row)
+            if state == "unknown":
+                if prev:
+                    new_seen[row] = prev
+                continue
+            new_seen[row] = {"state": state, "date": today}
+            if state not in BUYABLE_STATES:
+                continue
+            orderable_shops.append(shop)
+            if first_run:
+                continue
+            if prev is None:
+                kind = "new_like" if rkey not in known_releases else "new_shop"
+            elif prev.get("state") not in BUYABLE_STATES and prev.get("state") != "unknown":
+                kind = "restock"
+            else:
+                continue
+            event = events.setdefault(rkey, {"release": release, "shops": [], "kind": kind})
+            event["shops"].append({**shop, "prev": (prev or {}).get("state")})
+            # A real restock outranks "new" if one release has both.
+            if kind == "restock":
+                event["kind"] = "restock"
+        if orderable_shops:
+            buyable_now.append({"release": release, "shops": orderable_shops})
+
+    # Rows missing from this file (a release you unliked, or a half-written
+    # snapshot) are kept for a while: if they come back tomorrow they must
+    # not look brand new.
+    cutoff = (now - timedelta(days=keep_days)).strftime("%Y-%m-%d")
+    for row, value in seen.items():
+        if row not in new_seen and str((value or {}).get("date") or "") >= cutoff:
+            new_seen[row] = value
+
+    order = {"restock": 0, "new_like": 1, "new_shop": 2}
+    ordered = sorted(events.values(), key=lambda ev: (order[ev["kind"]],
+                     str(ev["release"].get("artist") or "").lower()))
+    return ordered, new_seen, first_run, buyable_now
+
+
+def sellers_summary(data: dict | None, seen: dict, now: datetime,
+                    max_age_hours: int = SELLERS_MAX_AGE_HOURS):
+    """The extension's sellers scan, ready to render, plus the updated memory
+    of which seller/record pairs were already in an earlier email (those get
+    no "new" badge). Returns (None, seen) when there is no data at all."""
+    if not data:
+        return None, seen
+    updated = parse_iso(data.get("updated"))
+    age_hours = (now - updated).total_seconds() / 3600 if updated else None
+    first = not seen
+    today = now.strftime("%Y-%m-%d")
+    new_seen: dict[str, str] = {}
+    sellers = []
+    for seller in data.get("sellers") or []:
+        items = []
+        for item in seller.get("items") or []:
+            pair = f"{seller.get('name')}|{item.get('url') or item.get('release')}"
+            items.append({**item, "is_new": not first and pair not in seen})
+            new_seen[pair] = today
+        sellers.append({**seller, "items": items,
+                        "is_new": not first and not any(
+                            key.split("|", 1)[0] == seller.get("name") for key in seen)})
+    info = {
+        "updated": updated,
+        "age_hours": age_hours,
+        "stale": age_hours is None or age_hours > max_age_hours,
+        "country": data.get("country") or "",
+        "min": data.get("min") or 2,
+        "checked": data.get("checked") or 0,
+        "total": data.get("total") or 0,
+        "failed": data.get("failed") or 0,
+        "aborted": data.get("aborted"),
+        "sellers_in_country": data.get("sellers_in_country") or 0,
+        "sellers": sellers,
+    }
+    return info, new_seen
+
+
+def euro(price, currency: str | None = None) -> str:
+    try:
+        value = float(price)
+    except (TypeError, ValueError):
+        return ""
+    symbol = {"EUR": "€", "GBP": "£", "USD": "$"}.get((currency or "EUR").upper(), (currency or "") + " ")
+    return f"{symbol}{value:.2f}".replace(".", ",") if symbol == "€" else f"{symbol}{value:.2f}"
+
+
+STATE_NL = {"in": "op voorraad", "preorder": "pre-order", "upcoming": "binnenkort",
+            "out": "uitverkocht", "backorder": "nabestelling", "unknown": "onbekend"}
+KIND_NL = {"restock": "op voorraad gekomen", "new_like": "nieuwe like, meteen leverbaar",
+           "new_shop": "nu ook hier te koop"}
+
+
+def render_extras_html(extras: dict | None, e) -> list[str]:
+    """The personal blocks at the top of the email: what came in stock from
+    your SoundCloud likes, and Discogs sellers with several of them. In
+    Dutch, like the extension they come from."""
+    out: list[str] = []
+    if not extras:
+        return out
+    box = ('margin:0 0 22px;padding:14px 16px;border-radius:8px;'
+           'background:#f4f8ff;border:1px solid #d6e4ff;')
+    small = 'color:#777;font-size:12px;'
+
+    sc = extras.get("soundcloud")
+    if sc and (sc["events"] or sc["first_run"]):
+        out.append(f'<div style="{box}">')
+        if sc["events"]:
+            shown = sc["events"][:SOUNDCLOUD_MAX_ITEMS]
+            out.append('<h2 style="font-size:16px;margin:0 0 10px;">&#127911; Uit je '
+                       f'SoundCloud-likes: op voorraad gekomen ({len(sc["events"])})</h2>')
+            for event in shown:
+                out.append(soundcloud_event_html(event["release"], event["shops"],
+                                                 KIND_NL[event["kind"]], e))
+            if len(sc["events"]) > len(shown):
+                out.append(f'<p style="{small}">En nog {len(sc["events"]) - len(shown)} '
+                           '&mdash; zie de release finder.</p>')
+        else:
+            out.append('<h2 style="font-size:16px;margin:0 0 6px;">&#127911; Je SoundCloud-likes '
+                       'worden vanaf nu gevolgd</h2>')
+            out.append(f'<p style="margin:0 0 10px;{small}">{sc["tracked"]} releases. Vanaf morgen '
+                       'staat hier alleen wat er <b>nieuw</b> op voorraad is gekomen. Dit is wat '
+                       'er vandaag al te bestellen is:</p>')
+            for entry in sc["buyable_now"][:SOUNDCLOUD_MAX_ITEMS]:
+                out.append(soundcloud_event_html(entry["release"], entry["shops"], "nu leverbaar", e))
+        out.append('</div>')
+
+    sellers = extras.get("sellers")
+    if sellers:
+        out.append(f'<div style="{box}background:#fbf8f2;border-color:#eadfc8;">')
+        out.append('<h2 style="font-size:16px;margin:0 0 6px;">&#128230; Discogs-verkopers in '
+                   f'{e(sellers["country"])} met {sellers["min"]}+ van je platen</h2>')
+        when = sellers["updated"].strftime("%d-%m %H:%M") + " UTC" if sellers["updated"] else "onbekend"
+        note = (f'{sellers["checked"]} van {sellers["total"]} platen bekeken op {e(when)} &middot; '
+                f'{sellers["sellers_in_country"]} verkoper(s) in {e(sellers["country"])}')
+        if sellers["failed"]:
+            note += f' &middot; {sellers["failed"]} niet gelukt'
+        if sellers["aborted"]:
+            note += f' &middot; {e(sellers["aborted"])}'
+        out.append(f'<p style="margin:0 0 10px;{small}">{note}</p>')
+        if sellers["stale"]:
+            out.append('<p style="margin:0 0 10px;color:#8a5a00;font-size:13px;">Let op: deze '
+                       'uitkomst is ouder dan een paar dagen &mdash; de check draait in Chrome en '
+                       'die stond waarschijnlijk uit.</p>')
+        if not sellers["sellers"]:
+            out.append(f'<p style="margin:0;font-size:14px;">Geen verkoper met '
+                       f'{sellers["min"]} of meer.</p>')
+        for seller in sellers["sellers"]:
+            rating = ""
+            if seller.get("rating") is not None:
+                rating = f' &middot; {seller["rating"]:g}%'
+                if seller.get("ratings"):
+                    rating += f' ({seller["ratings"]})'
+            badge = (' <span style="background:#e6f4ea;color:#1e7b34;font-size:11px;'
+                     'font-weight:700;padding:2px 7px;border-radius:9px;">nieuw</span>'
+                     if seller.get("is_new") else "")
+            out.append(f'<p style="margin:10px 0 4px;"><a href="{e(seller.get("url") or "")}" '
+                       f'style="color:#0b5fff;text-decoration:none;font-weight:700;">'
+                       f'{e(seller.get("name") or "")}</a> &middot; {len(seller["items"])} platen'
+                       f'<span style="{small}">{rating}</span>{badge}</p>')
+            rows = []
+            for item in seller["items"]:
+                price = euro(item.get("price"), item.get("currency"))
+                extra = f' &middot; {e(item["media"])}' if item.get("media") else ""
+                new = (' <b style="color:#1e7b34;font-size:11px;">nieuw</b>'
+                       if item.get("is_new") and not seller.get("is_new") else "")
+                rows.append(f'<li style="margin:0 0 3px;"><a href="{e(item.get("url") or "")}" '
+                            f'style="color:#111;text-decoration:none;">{e(item.get("artist") or "")} '
+                            f'&ndash; {e(item.get("title") or "")}</a> '
+                            f'<b>{e(price)}</b><span style="{small}">{extra}</span>{new}</li>')
+            out.append('<ul style="margin:0 0 6px 18px;padding:0;font-size:14px;">'
+                       + "".join(rows) + '</ul>')
+        out.append('</div>')
+    return out
+
+
+def soundcloud_event_html(release: dict, shops: list[dict], kind_text: str, e) -> str:
+    """One liked release: cover, artist - title, where to buy, and the
+    SoundCloud track you liked it for (so you can hear why)."""
+    title = f'{release.get("artist") or ""} - {release.get("title") or ""}'.strip(" -")
+    first_url = (shops[0].get("url") if shops else "") or release.get("discogs") or ""
+    thumb = ""
+    if release.get("cover"):
+        thumb = ('<td width="56" style="padding:0 12px 0 0;vertical-align:top;">'
+                 f'<a href="{e(first_url)}"><img src="{e(release["cover"])}" width="52" height="52" '
+                 'alt="" style="display:block;border-radius:4px;background:#eee;"></a></td>')
+    shop_bits = []
+    for shop in shops:
+        state = STATE_NL.get(str(shop.get("state")), str(shop.get("state")))
+        price = euro(shop.get("price"), shop.get("currency"))
+        was = STATE_NL.get(str(shop.get("prev")), "") if shop.get("prev") else ""
+        shop_bits.append(
+            f'<a href="{e(shop.get("url") or "")}" style="display:inline-block;background:#111;'
+            'color:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:4px 9px;'
+            f'border-radius:4px;margin:0 6px 4px 0;">{e(shop.get("name") or "winkel")}'
+            f'{(" &middot; " + e(price)) if price else ""}</a>'
+            f'<span style="color:#777;font-size:12px;margin-right:10px;">{e(state)}'
+            f'{(" (was " + e(was) + ")") if was else ""}</span>'
+        )
+    liked = release.get("liked") or []
+    liked_html = ""
+    if liked:
+        links = []
+        for track in liked[:3]:
+            label = e(track.get("title") or "track")
+            links.append(f'<a href="{e(track["url"])}" style="color:#ff5500;text-decoration:none;">'
+                         f'{label}</a>' if track.get("url") else label)
+        liked_html = (f'<div style="color:#777;font-size:12px;margin-top:2px;">Geliket: '
+                      + " &middot; ".join(links) + '</div>')
+    fine = " - ".join(str(p) for p in (release.get("label"), release.get("catno"),
+                                         release.get("year")) if p)
+    return (
+        '<table role="presentation" cellpadding="0" cellspacing="0" border="0" '
+        'style="width:100%;margin:0 0 12px;"><tr>' + thumb +
+        '<td style="vertical-align:top;">'
+        f'<div style="font-weight:600;">{e(title)} '
+        f'<span style="color:#1e7b34;font-size:12px;font-weight:600;">&middot; {e(kind_text)}</span></div>'
+        + (f'<div style="color:#999;font-size:11.5px;">{e(fine)}</div>' if fine else "")
+        + f'<div style="margin-top:5px;">{"".join(shop_bits)}</div>'
+        + liked_html +
+        '</td></tr></table>'
+    )
+
+
+def render_extras_text(extras: dict | None) -> list[str]:
+    lines: list[str] = []
+    if not extras:
+        return lines
+    sc = extras.get("soundcloud")
+    if sc and sc["events"]:
+        header = f"UIT JE SOUNDCLOUD-LIKES: OP VOORRAAD GEKOMEN ({len(sc['events'])})"
+        lines += [header, "-" * len(header)]
+        for event in sc["events"][:SOUNDCLOUD_MAX_ITEMS]:
+            release = event["release"]
+            lines.append(f"  {release.get('artist')} - {release.get('title')} ({KIND_NL[event['kind']]})")
+            for shop in event["shops"]:
+                price = euro(shop.get("price"), shop.get("currency"))
+                lines.append(f"    {shop.get('name')}{(' ' + price) if price else ''}: {shop.get('url')}")
+        lines.append("")
+    elif sc and sc["first_run"]:
+        lines += [f"Je SoundCloud-likes worden vanaf nu gevolgd ({sc['tracked']} releases).",
+                  f"Nu al leverbaar: {len(sc['buyable_now'])}.", ""]
+    sellers = extras.get("sellers")
+    if sellers:
+        header = f"DISCOGS-VERKOPERS IN {sellers['country'].upper()} MET {sellers['min']}+ VAN JE PLATEN"
+        lines += [header, "-" * len(header)]
+        if sellers["stale"]:
+            lines.append("  (let op: deze uitkomst is ouder dan een paar dagen)")
+        if not sellers["sellers"]:
+            lines.append(f"  Geen verkoper met {sellers['min']} of meer "
+                         f"({sellers['checked']} van {sellers['total']} platen bekeken).")
+        for seller in sellers["sellers"]:
+            lines.append(f"  {seller.get('name')} ({len(seller['items'])} platen): {seller.get('url')}")
+            for item in seller["items"]:
+                price = euro(item.get("price"), item.get("currency"))
+                lines.append(f"    {item.get('artist')} - {item.get('title')} {price}")
+        lines.append("")
+    return lines
+
+
 def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
-                player_url: str = "") -> str:
+                player_url: str = "", extras: dict | None = None) -> str:
     e = html.escape
     filter_text = ", ".join(genres) if genres else "everything (no filter)"
 
     out = [
         '<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;'
         'font-size:15px;line-height:1.45;color:#111;max-width:680px;margin:0 auto;">',
+    ]
+    # Personal first: a record you already liked that you can buy now is the
+    # most actionable thing in the whole email.
+    out += render_extras_html(extras, e)
+    out += [
         '<h1 style="font-size:20px;margin:0 0 4px;">New on Discogs</h1>',
         f'<p style="margin:0 0 20px;color:#666;font-size:13px;">'
         f'Listed since {e(cutoff.strftime("%a %d %b %Y, %H:%M"))} UTC &middot; '
@@ -3375,11 +3733,11 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
 
 
 def render_text(sections, cutoff: datetime, genres: list[str], stats: dict,
-                player_url: str = "") -> str:
+                player_url: str = "", extras: dict | None = None) -> str:
     """Plain-text alternative. Improves deliverability and keeps the mail
     readable in clients that block HTML."""
     filter_text = ", ".join(genres) if genres else "everything (no filter)"
-    lines = [
+    lines = render_extras_text(extras) + [
         "NEW ON DISCOGS",
         f'Listed since {cutoff.strftime("%a %d %b %Y, %H:%M")} UTC',
         f"Filter: {filter_text}",
@@ -3520,6 +3878,9 @@ def main() -> int:
     if lookback <= 0:
         LOG.warning("LOOKBACK_HOURS must be positive - using %s", LOOKBACK_HOURS)
         lookback = LOOKBACK_HOURS
+    soundcloud_enabled = env_flag("SOUNDCLOUD_ENABLED", SOUNDCLOUD_ENABLED)
+    sellers_enabled = env_flag("SELLERS_ENABLED", SELLERS_ENABLED)
+    sellers_max_age = env_int("SELLERS_MAX_AGE_HOURS", SELLERS_MAX_AGE_HOURS)
 
     if not sellers:
         raise SystemExit("No sellers configured - nothing to check.")
@@ -3702,8 +4063,46 @@ def main() -> int:
     elif args.player_dir:
         LOG.warning("PAGES_BASE_URL is not set - the email will have no player link")
 
-    html_body = render_html(sections, cutoff, genres, stats, player_url)
-    text_body = render_text(sections, cutoff, genres, stats, player_url)
+    # The browser extension's files (see SOUNDCLOUD_ENABLED near the top).
+    # Read from docs/, compared with this script's own memory of last time.
+    # That memory is only updated on a real send: a dry run must not swallow
+    # tomorrow's "came in stock" by marking it as already reported.
+    extras: dict = {}
+    sc_seen_path = os.path.join(docs_dir, "soundcloud_seen.json") if docs_dir else ""
+    sellers_seen_path = os.path.join(docs_dir, "discogs_sellers_seen.json") if docs_dir else ""
+    sc_new_seen = sellers_new_seen = None
+    if docs_dir and soundcloud_enabled:
+        likes = load_json_file(os.path.join(docs_dir, "soundcloud_likes.json"), None)
+        if likes and likes.get("releases"):
+            events, sc_new_seen, first_run, buyable_now = soundcloud_stock_events(
+                likes, load_json_file(sc_seen_path, {}), generated
+            )
+            extras["soundcloud"] = {
+                "events": events,
+                "first_run": first_run,
+                "buyable_now": buyable_now,
+                "tracked": len(likes["releases"]),
+            }
+            LOG.info("SoundCloud likes: %d release(s) tracked, %d came in stock%s",
+                     len(likes["releases"]), len(events),
+                     " (first run - baseline only)" if first_run else "")
+        else:
+            LOG.info("SoundCloud likes: no docs/soundcloud_likes.json from the extension yet")
+    if docs_dir and sellers_enabled:
+        data = load_json_file(os.path.join(docs_dir, "discogs_sellers.json"), None)
+        info, sellers_new_seen = sellers_summary(
+            data, load_json_file(sellers_seen_path, {}), generated, sellers_max_age
+        )
+        if info:
+            extras["sellers"] = info
+            LOG.info("Discogs sellers: %d with %d+ record(s), scan from %s%s",
+                     len(info["sellers"]), info["min"], info["updated"],
+                     " (stale)" if info["stale"] else "")
+        else:
+            LOG.info("Discogs sellers: no docs/discogs_sellers.json from the extension yet")
+
+    html_body = render_html(sections, cutoff, genres, stats, player_url, extras)
+    text_body = render_text(sections, cutoff, genres, stats, player_url, extras)
 
     if args.out:
         with open(args.out, "w", encoding="utf-8") as handle:
@@ -3715,6 +4114,10 @@ def main() -> int:
         if stats["matched"]
         else "Record digest - nothing new"
     )
+    sc_events = (extras.get("soundcloud") or {}).get("events") or []
+    if sc_events:
+        # The thing you'd open the mail for, so it goes in the subject too.
+        subject += f" - {len(sc_events)} SoundCloud-like(s) op voorraad"
     subject += f" - {datetime.now(timezone.utc).strftime('%d %b %Y')}"
 
     if dry_run:
@@ -3726,6 +4129,14 @@ def main() -> int:
         except (smtplib.SMTPException, OSError) as exc:
             LOG.error("Sending the email failed: %s", exc)
             return 1
+        # Only now that the mail is out: remember what was reported.
+        try:
+            if sc_new_seen is not None:
+                save_json_file(sc_seen_path, sc_new_seen)
+            if sellers_new_seen is not None and extras.get("sellers"):
+                save_json_file(sellers_seen_path, sellers_new_seen)
+        except OSError as exc:
+            LOG.error("Could not save the SoundCloud/sellers memory: %s", exc)
 
     # Non-zero exit if any store could not be checked, so the run shows red
     # in GitHub Actions and you actually notice -- except deejay.de, which

@@ -537,15 +537,45 @@ a guess:
 - **Yoyaku**: no badge either. Their API carries no format field at all, so
   there's nothing that would count as evidence — same call as clone.nl.
 
+### SoundCloud likes and Discogs sellers (from the browser extension)
+
+Two blocks at the top of the email come from the companion Chrome extension
+("Bandcamp collectie sorteren", not in this repo), because this runner
+physically can't fetch what they need: clone.nl, Juno and Discogs' sell pages
+refuse a datacenter IP, while the same requests from your own Chrome work.
+So the work is split by who can reach what, and the two meet in `docs/`:
+
+| File | Written by | What's in it |
+|---|---|---|
+| `docs/soundcloud_likes.json` | the extension, after every SoundCloud scan / Clone check | every release you liked on SoundCloud, with stock per record shop |
+| `docs/discogs_sellers.json` | the extension, after its daily sellers scan | Discogs sellers in your country with 2+ of those records |
+| `docs/soundcloud_seen.json` | this script, after each sent email | what was in stock last time, to spot what *came* in stock |
+| `docs/discogs_sellers_seen.json` | this script, after each sent email | which seller/record pairs were already mailed (for the "nieuw" badge) |
+
+Never two writers on one file: the publish step's `-X ours` merge would
+otherwise silently drop the extension's update.
+
+- **"Op voorraad gekomen"** lists a liked release when a shop went from sold
+  out / upcoming to in stock or pre-order, or when a new like is orderable
+  straight away. The very first run only records a baseline (and lists
+  what's orderable today, once). A failed stock read is never treated as
+  "sold out".
+- **Sellers** shows the latest scan with its date; older than
+  `SELLERS_MAX_AGE_HOURS` (default 72) it says so, because the extension
+  only runs while your PC is on.
+- Turn either off with the repo variables `SOUNDCLOUD_ENABLED=false` /
+  `SELLERS_ENABLED=false`. Without the extension's files both blocks simply
+  don't appear.
+
 ### Changing the time it runs
 
 Edit the `cron` line in `.github/workflows/daily-digest.yml`:
 
 ```yaml
-- cron: "0 7 * * *"
+- cron: "0 6 * * *"
 ```
 
-That's 07:00 **UTC** = 09:00 Amsterdam in summer, 08:00 in winter. GitHub cron
+That's 06:00 **UTC** = 08:00 Amsterdam in summer, 07:00 in winter. GitHub cron
 is always UTC and does not follow daylight saving, so the local time shifts by
 an hour twice a year. [crontab.guru](https://crontab.guru) is handy for editing
 the expression.
@@ -766,7 +796,7 @@ records, it re-shows the same ones for longer. If the repeats bother you, the
 clean fix is to run less often and keep the window matched to it:
 
 ```yaml
-- cron: "0 7 */3 * *"   # every 3 days, pairs with LOOKBACK_HOURS = 74
+- cron: "0 6 */3 * *"   # every 3 days, pairs with LOOKBACK_HOURS = 74
 ```
 
 That gives fuller emails with no repeats at all.

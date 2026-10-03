@@ -2,15 +2,16 @@ name: Daily Discogs digest
 
 on:
   schedule:
-    # 07:00 UTC every day = 09:00 Amsterdam in summer, 08:00 in winter.
+    # 06:00 UTC every day = 08:00 Amsterdam in summer, 07:00 in winter.
+    # (Was 07:00 UTC until 2026-10-03; moved an hour earlier on request.)
     # Cron on GitHub Actions is ALWAYS UTC and ignores repo timezone settings.
     # Scheduled runs can be delayed by a few minutes when GitHub is busy --
     # the lookback window absorbs that.
     #
     # Keep this in step with LOOKBACK_HOURS in the script: daily + 48h means a
     # record can show up in two digests running. For fuller emails with no
-    # repeats, use "0 7 */3 * *" with LOOKBACK_HOURS = 74.
-    - cron: "0 7 * * *"
+    # repeats, use "0 6 */3 * *" with LOOKBACK_HOURS = 74.
+    - cron: "0 6 * * *"
   workflow_dispatch:
     # These make the digest adjustable from the GitHub web UI: click
     # Actions > Daily Discogs digest > Run workflow and fill in the form.
@@ -100,6 +101,13 @@ jobs:
           DEEJAY_MAX_ITEMS: ${{ vars.DEEJAY_MAX_ITEMS }}
           DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS: ${{ vars.DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS }}
           DEEJAY_STOCK_CHECK_MAX_ITEMS: ${{ vars.DEEJAY_STOCK_CHECK_MAX_ITEMS }}
+          # The browser extension's files in docs/ (soundcloud_likes.json,
+          # discogs_sellers.json): "came in stock" from your SoundCloud likes,
+          # and Discogs sellers with several of your records. Set either to
+          # "false" to leave that block out of the email.
+          SOUNDCLOUD_ENABLED: ${{ vars.SOUNDCLOUD_ENABLED }}
+          SELLERS_ENABLED: ${{ vars.SELLERS_ENABLED }}
+          SELLERS_MAX_AGE_HOURS: ${{ vars.SELLERS_MAX_AGE_HOURS }}
           USER_AGENT: DiscogsGenreDigest/1.0 +https://github.com/${{ github.repository }}
 
           # Where the published player pages end up. The script appends
