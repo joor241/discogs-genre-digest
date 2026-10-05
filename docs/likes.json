@@ -797,5 +797,42 @@
       }
     ],
     "liked_at": "2026-09-30T13:12:12.738Z"
+  },
+  "https://clone.nl/item85137.html": {
+    "description": "Cromby - Jackin Shit (12inch)",
+    "price": "price on request",
+    "url": "https://clone.nl/item85137.html",
+    "store": "Clone.nl (new arrivals)",
+    "thumb": "https://clone.nl/platen/artwork/large/plaatimage84213.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Cromby - Jackin Shit - 1 Jackin Shit",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/85137/1%20Jackin%20Shit.mp3",
+        "dur": 0
+      },
+      {
+        "title": "Cromby - Jackin Shit - 2 Sense Control",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/85137/2%20Sense%20Control.mp3",
+        "dur": 0
+      },
+      {
+        "title": "Cromby - Jackin Shit - 3 Con Gas",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/85137/3%20Con%20Gas.mp3",
+        "dur": 0
+      },
+      {
+        "title": "Cromby - Jackin Shit - 4 Cheeky Bump",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/85137/4%20Cheeky%20Bump.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-05T15:01:22.414Z"
   }
 }
