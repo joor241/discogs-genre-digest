@@ -115,6 +115,20 @@ CLONE_RSS_URL = "https://clone.nl/rss/all"
 CLONE_RSS_KEY = "clone-rss"  # use this as a key in GENRES_BY_STORE to override just this source
 CLONE_RSS_ENABLED = True
 
+# Same idea as DEEJAY_SOFT_FAIL below, for the same kind of reason. Observed
+# live, five scheduled runs in a row (2026-10-06 to 2026-10-10): clone.nl's
+# Cloudflare answered the feed request from GitHub Actions with 403 Forbidden
+# on every attempt, while the identical request from a residential connection
+# returned 200. A block on the runner's IP range is not something this script
+# can retry its way past, and the cost of treating it as a hard failure was
+# out of proportion: the email still went out, but the non-zero exit skipped
+# the publish step, so the player link in each of those emails was dead and
+# the already-shown ids were never committed. With this on, a clone.nl RSS
+# failure is still logged as an ERROR and still shown in the digest as "Could
+# not check: clone.nl RSS", but the run stays green and publishes.
+# Set CLONE_RSS_SOFT_FAIL=false to go back to a hard failure (red run).
+CLONE_RSS_SOFT_FAIL = True
+
 # clone.nl's own item pages embed direct MP3 preview clips per track (not
 # YouTube), e.g. clone.nl/platen/mp3/84483/1 Release It.mp3 -- confirmed live
 # by fetching a real item page, not assumed. That means real inline playback
@@ -486,6 +500,13 @@ def http_get_text(url: str, user_agent: str, timeout: int = HTTP_TIMEOUT,
             return resp.text
         except requests.RequestException as exc:
             last_exc = exc
+            # A 4xx is the server's answer, not a hiccup: a 403 from a block
+            # or a 404 for a page that isn't there stays that way however
+            # long we wait (seen live: clone.nl's 403 cost 110s of backoff
+            # per run for nothing). 408 and 429 are the two worth retrying.
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+            if status is not None and 400 <= status < 500 and status not in (408, 429):
+                raise FeedError(f"GET {url} failed: {exc}")
             if attempt < attempts:
                 wait = backoff[min(attempt - 1, len(backoff) - 1)]
                 LOG.warning("GET %s failed (attempt %d/%d): %s - retrying in %ss",
@@ -4146,16 +4167,21 @@ def main() -> int:
     # few failures, then fine again -- is what DEEJAY_SOFT_FAIL exists for:
     # still an ERROR in the log and still shown in the digest as "Could not
     # check", just not something to page you over every time it happens.
-    deejay_soft_fail = env_flag("DEEJAY_SOFT_FAIL", DEEJAY_SOFT_FAIL)
-    hard_failures = [
-        s for s in stats["failed_sellers"]
-        if not (deejay_soft_fail and s == "deejay.de")
-    ]
+    #
+    # clone.nl's RSS feed gets the same treatment via CLONE_RSS_SOFT_FAIL:
+    # its Cloudflare has answered Actions with 403 for days on end, and a red
+    # run there also skips the publish step (dead player link, lost seen-ids).
+    soft = set()
+    if env_flag("DEEJAY_SOFT_FAIL", DEEJAY_SOFT_FAIL):
+        soft.add("deejay.de")
+    if env_flag("CLONE_RSS_SOFT_FAIL", CLONE_RSS_SOFT_FAIL):
+        soft.add("clone.nl RSS")
+    hard_failures = [s for s in stats["failed_sellers"] if s not in soft]
     if hard_failures:
         LOG.error("Failed sellers: %s", ", ".join(hard_failures))
         return 1
     if stats["failed_sellers"]:
-        LOG.warning("Not failing the run for: %s (DEEJAY_SOFT_FAIL is on)",
+        LOG.warning("Not failing the run for: %s (soft-fail is on for these sources)",
                    ", ".join(stats["failed_sellers"]))
     return 0
 

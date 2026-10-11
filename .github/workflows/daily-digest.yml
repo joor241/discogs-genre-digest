@@ -90,6 +90,11 @@ jobs:
           # shop. Set either to "false" to turn it off, e.g. if deejay.de's
           # page layout changes and the scraper starts returning nothing.
           CLONE_RSS_ENABLED: ${{ vars.CLONE_RSS_ENABLED }}
+          # clone.nl's Cloudflare has answered Actions with 403 for days on
+          # end (fine from a home connection). On by default, so that no
+          # longer turns the run red and skips the publish step below. Set
+          # to "false" to go back to a hard failure for this source.
+          CLONE_RSS_SOFT_FAIL: ${{ vars.CLONE_RSS_SOFT_FAIL }}
           CLONE_AUDIO_MAX_ITEMS: ${{ vars.CLONE_AUDIO_MAX_ITEMS }}
           DEEJAY_ENABLED: ${{ vars.DEEJAY_ENABLED }}
           # deejay.de failing from Actions specifically (observed repeatedly,

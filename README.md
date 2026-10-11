@@ -466,7 +466,20 @@ longer doesn't help a deliberate block, and it isn't something you can fix
 from here, so `DEEJAY_SOFT_FAIL` (default **on**) keeps this source's
 failures from flipping the run red every time it happens: still logged as an
 error, still shown in the digest as "Could not check: deejay.de", just not
-urgent. Set it to `false` to go back to a hard failure for deejay.de too. `DEEJAY_MAX_ITEMS` (default `60`) caps how many of the
+urgent. Set it to `false` to go back to a hard failure for deejay.de too.
+
+**Neither does clone.nl's RSS feed.** From 2026-10-06 to 2026-10-10 clone.nl's
+Cloudflare answered every feed request from GitHub Actions with 403 Forbidden,
+while the same request from a home connection returned 200. Each of those runs
+still sent its email, but the non-zero exit skipped the publish step, so the
+player link in the email was dead and the already-shown ids were never
+committed. `CLONE_RSS_SOFT_FAIL` (default **on**) treats this the same way as
+deejay.de: logged as an error, shown as "Could not check: clone.nl RSS", run
+stays green and publishes. A 4xx answer is also no longer retried (except 408
+and 429), since waiting does not lift a block. Set it to `false` for a hard
+failure again.
+
+`DEEJAY_MAX_ITEMS` (default `60`) caps how many of the
 page's items are considered each run. `CLONE_AUDIO_MAX_ITEMS` (default `30`)
 caps how many clone.nl items get their tracklist fetched for inline playback
 each run — each one costs an extra request beyond the single feed fetch, so
