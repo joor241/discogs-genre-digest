@@ -1,0 +1,693 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://s.ytimg.com">
+<link rel="preconnect" href="https://i.ytimg.com">
+<script src="https://www.youtube.com/iframe_api" async></script>
+<title>Record digest &mdash; 11 Oct 2026</title>
+<style>
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  /* Bottom padding clears the fixed transport bar (~48px) so the last
+     record and the footer are never hidden behind it. */
+  margin: 0; padding: 24px 16px 96px;
+  background: #0e0e10; color: #e8e8ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.45;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.sub { color: #8a8a92; font-size: 13px; margin: 0 0 28px; }
+h2 {
+  font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #8a8a92; margin: 34px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid #26262b;
+}
+.rec {
+  display: flex; gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid #1c1c21;
+}
+.rec img {
+  width: 68px; height: 68px; border-radius: 5px;
+  background: #26262b; flex: none; object-fit: cover;
+}
+.rec .body { min-width: 0; flex: 1; }
+.rec .title { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.rec .title a { color: #e8e8ea; text-decoration: none; }
+.rec .title a:hover { color: #6ea8ff; }
+.meta { color: #8a8a92; font-size: 12.5px; margin-bottom: 2px; }
+.price { font-weight: 700; font-size: 15px; color: #e8e8ea; margin-right: 7px; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 10px; margin: 0 5px 4px 0;
+  background: #202027; color: #9a9aa2;
+}
+.badge.format { background: #14202b; color: #7fb3e8; }
+.badge.preorder { background: #2b2210; color: #e0af52; }
+.badge.outofstock { background: #2b1414; color: #e08a8a; }
+.badge.vinylonly { background: #2b2410; color: #e0c452; font-weight: 700; }
+.fineprint { color: #6f6f78; font-size: 11.5px; margin-top: 3px; }
+.tags { color: #5f5f68; font-size: 12px; margin-top: 3px; margin-bottom: 9px; }
+.buy {
+  display: inline-block; font-size: 12px; color: #6ea8ff;
+  text-decoration: none; margin-left: 10px;
+}
+button.likebtn {
+  background: transparent; border: 0; cursor: pointer; font-size: 15px;
+  color: #6a6a72; padding: 0 0 0 8px; line-height: 1; vertical-align: middle;
+  font-family: inherit;
+}
+button.likebtn:hover { color: #e05a5a; }
+button.likebtn.liked { color: #e05a5a; }
+button.likebtn:disabled { opacity: .5; cursor: default; }
+.buy:hover { text-decoration: underline; }
+ul.tracks { list-style: none; margin: 0; padding: 0; }
+li.track { margin: 0 0 9px; }
+li.track .tname {
+  font-size: 12.5px; color: #9a9aa2; margin: 0 0 3px 37px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.trow { display: flex; align-items: center; gap: 8px; }
+button.ppbtn {
+  flex: none; width: 28px; height: 28px; border-radius: 50%;
+  background: #cc0000; color: #fff; border: 0; cursor: pointer;
+  font-size: 11px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; transition: background .12s, transform .08s;
+}
+button.ppbtn:hover { background: #e01212; }
+button.ppbtn:active { transform: scale(0.94); }
+button.ppbtn.loading { background: #4a4a52; }
+/* display:block kills the inline-baseline gap that would otherwise push
+   the icon a pixel off-centre inside the round button. The play path is
+   already drawn slightly right of the viewBox centre, which is what makes
+   a triangle look optically centred in a circle. */
+button.ppbtn svg { display: block; }
+/* .bar is the seek target: a tall, easy-to-tap hitbox around a thin visual
+   line, so it works on a phone without needing a precise touch. */
+.bar {
+  flex: 1 1 auto; min-width: 0; height: 28px; display: flex; align-items: center;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.bar .track {
+  position: relative; width: 100%; height: 6px; border-radius: 3px;
+  background: #26262b; overflow: hidden;
+}
+.bar .fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+  background: #cc0000; border-radius: 3px;
+}
+.bar:hover .track { background: #303038; }
+.bar:focus-visible { outline: 2px solid #6ea8ff; outline-offset: 3px; border-radius: 4px; }
+.trow.playing .bar .fill { background: #ff3b3b; }
+.time {
+  flex: none; font-variant-numeric: tabular-nums; font-size: 11px;
+  color: #6f6f78; width: 84px; text-align: right;
+}
+a.ytlink {
+  flex: none; color: #6a6a72; text-decoration: none; font-size: 14px;
+  width: 26px; height: 26px; display: inline-flex; align-items: center;
+  justify-content: center; border-radius: 5px;
+}
+a.ytlink:hover { color: #e8e8ea; background: #202027; }
+.trow.errored .bar { opacity: .45; cursor: not-allowed; pointer-events: none; }
+.trow.errored .time { color: #9a5a5a; }
+/* Floating transport, only visible once something is playing. Gives the
+   skip controls a permanent home no matter how far down the page you've
+   scrolled, so you can move through tracks without hunting for the row. */
+#nowbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: none; background: rgba(18,18,22,.97);
+  border-top: 1px solid #2c2c33; box-shadow: 0 -4px 24px rgba(0,0,0,.5);
+}
+#nowbar.show { display: block; }
+/* Progress for the playing track, spanning the full page width along the
+   bar's top edge. Click anywhere on it to seek, same as a row's own bar. */
+#nowbar .nbseek {
+  display: block; width: 100%; height: 10px; margin-top: -3px;
+  cursor: pointer; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#nowbar .nbseek .nbtrack {
+  position: relative; width: 100%; height: 4px; margin-top: 3px;
+  background: #2c2c33; overflow: hidden;
+}
+#nowbar .nbseek .nbfill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #cc0000;
+}
+#nowbar .nbseek:hover .nbtrack { background: #3a3a44; }
+/* The controls must not move when the track name changes length, so the
+   button group is flex:none at the start, the title is the ONLY flexible
+   element (it ellipsises), and the time is flex:none at the end. */
+#nowbar .nbrow {
+  display: flex; align-items: center;
+  max-width: 760px; margin: 0 auto; padding: 5px 16px 9px;
+}
+#nowbar .nbctrls { flex: none; display: flex; align-items: center; gap: 2px; }
+#nowbar button {
+  flex: none; width: 30px; height: 30px; padding: 0;
+  background: transparent; border: 0; color: #d4d4d8; cursor: pointer;
+  border-radius: 7px; font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+#nowbar button:hover { background: #26262b; color: #fff; }
+#nowbar button svg { display: block; }
+#nowbar .nowtitle {
+  flex: 1 1 auto; min-width: 0; margin: 0 12px;
+  font-size: 12.5px; color: #9a9aa2;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#nowbar .nbtime {
+  flex: none; font-variant-numeric: tabular-nums;
+  font-size: 11.5px; color: #6f6f78;
+}
+.topnav { margin: 0 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.topnav a {
+  color: #8a8a92; text-decoration: none; font-size: 13px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
+.topnav a svg { display: block; }
+.none { color: #5f5f68; font-size: 13px; }
+footer {
+  margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
+  color: #5f5f68; font-size: 12px;
+}
+footer a { color: #6ea8ff; }
+@media (max-width: 520px) {
+  .rec img { width: 52px; height: 52px; }
+  .time { width: 66px; font-size: 10.5px; }
+  button.ppbtn { width: 32px; height: 32px; }
+  .bar { height: 32px; }
+}
+</style></head><body>
+<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;"><div id="yt-audio-host"></div></div>
+<div class="wrap">
+<div class="topnav"><a href="https://joor241.github.io/discogs-genre-digest/likes.html"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 20.3l-1.45-1.32C5.4 14.24 2 11.16 2 7.4 2 4.42 4.42 2 7.4 2c1.68 0 3.3.78 4.6 2.09C13.3 2.78 14.92 2 16.6 2 19.58 2 22 4.42 22 7.4c0 3.76-3.4 6.84-8.55 11.58z"/></svg> Likes</a><a href="https://joor241.github.io/discogs-genre-digest/settings.html"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M19.14 12.94a7.1 7.1 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7 7 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.71 8.84a.5.5 0 00.12.64l2.03 1.58a7.1 7.1 0 000 1.88l-2.03 1.58a.5.5 0 00-.12.64l1.92 3.32c.13.22.39.3.6.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.25.42.5.42h3.84c.25 0 .46-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"/></svg> Settings</a></div>
+<h1>New on Discogs</h1>
+<p class="sub">26 record(s) listed since Sat 10 Oct 2026, 10:34 UTC &middot; house</p>
+<h2>deejay.de (new arrivals) &middot; 21</h2>
+<div class="rec"><img src="https://www.deejay.de/images/l/9/9/1237699.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Maz_%26_JP_Castro_All_For_You_SMR42_Vinyl__1237699">Maz - All For You (excl)</a></div><div class="meta"><span class="price">13.40 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><span class="badge preorder">Ships from 12.10.2026</span><a class="buy" href="https://www.deejay.de/Maz_%26_JP_Castro_All_For_You_SMR42_Vinyl__1237699">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Maz_%26_JP_Castro_All_For_You_SMR42_Vinyl__1237699" data-like-payload="{&quot;description&quot;: &quot;Maz - All For You (excl)&quot;, &quot;price&quot;: &quot;13.40 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Maz_%26_JP_Castro_All_For_You_SMR42_Vinyl__1237699&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/9/9/1237699.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Extended&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/9/1237699a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Kasango Remix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/9/1237699b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Volen Sentir Remix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/9/1237699c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Monkey Safari Remix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/9/1237699d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Shanti Mansion - SMR42 - released 12.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Extended"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Extended" data-src="https://www.deejay.de/streamit/9/9/1237699a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Extended</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Kasango Remix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Kasango Remix" data-src="https://www.deejay.de/streamit/9/9/1237699b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Kasango Remix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Volen Sentir Remix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Volen Sentir Remix" data-src="https://www.deejay.de/streamit/9/9/1237699c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Volen Sentir Remix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Monkey Safari Remix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Monkey Safari Remix" data-src="https://www.deejay.de/streamit/9/9/1237699d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Monkey Safari Remix</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/1/1/1189111.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Unknown_PVC08_PVC08_Vinyl__1189111">Unknown - PVC08 (excl)</a></div><div class="meta"><span class="price">11.72 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.deejay.de/Unknown_PVC08_PVC08_Vinyl__1189111">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Unknown_PVC08_PVC08_Vinyl__1189111" data-like-payload="{&quot;description&quot;: &quot;Unknown - PVC08 (excl)&quot;, &quot;price&quot;: &quot;11.72 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Unknown_PVC08_PVC08_Vinyl__1189111&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/1/1/1189111.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Here We Go&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/1/1189111a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Lit.Luv&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/1/1189111b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Roll On&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/1/1189111c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Breathe&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/1/1189111d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">PVC Records - PVC08 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Here We Go"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Here We Go" data-src="https://www.deejay.de/streamit/1/1/1189111a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Here We Go</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Lit.Luv"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Lit.Luv" data-src="https://www.deejay.de/streamit/1/1/1189111b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Lit.Luv</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Roll On"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Roll On" data-src="https://www.deejay.de/streamit/1/1/1189111c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Roll On</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Breathe"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Breathe" data-src="https://www.deejay.de/streamit/1/1/1189111d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Breathe</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/3/7/1252537.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Hyacin_Aurum_007_AURUM007_Vinyl__1252537">Hyacin - Aurum 007 (excl)</a></div><div class="meta"><span class="price">12.56 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.deejay.de/Hyacin_Aurum_007_AURUM007_Vinyl__1252537">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Hyacin_Aurum_007_AURUM007_Vinyl__1252537" data-like-payload="{&quot;description&quot;: &quot;Hyacin - Aurum 007 (excl)&quot;, &quot;price&quot;: &quot;12.56 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Hyacin_Aurum_007_AURUM007_Vinyl__1252537&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/3/7/1252537.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Got The Thang&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/7/1252537a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: AKR&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/7/1252537b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: taxmen&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/7/1252537c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: AKR Triptil Remix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/7/1252537d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Aurum - AURUM007 - released 08.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Got The Thang"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Got The Thang" data-src="https://www.deejay.de/streamit/3/7/1252537a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Got The Thang</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: AKR"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: AKR" data-src="https://www.deejay.de/streamit/3/7/1252537b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: AKR</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: taxmen"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: taxmen" data-src="https://www.deejay.de/streamit/3/7/1252537c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: taxmen</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: AKR Triptil Remix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: AKR Triptil Remix" data-src="https://www.deejay.de/streamit/3/7/1252537d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: AKR Triptil Remix</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/4/9/898349.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/The_Hitmen_Like_I_Love_You_DROP_0782-6-SP_Vinyl__898349">The Hitmen - Like I Love You (excl)</a></div><div class="meta"><span class="price">13.40 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge preorder">Pre-order</span><a class="buy" href="https://www.deejay.de/The_Hitmen_Like_I_Love_You_DROP_0782-6-SP_Vinyl__898349">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/The_Hitmen_Like_I_Love_You_DROP_0782-6-SP_Vinyl__898349" data-like-payload="{&quot;description&quot;: &quot;The Hitmen - Like I Love You (excl)&quot;, &quot;price&quot;: &quot;13.40 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/The_Hitmen_Like_I_Love_You_DROP_0782-6-SP_Vinyl__898349&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/4/9/898349.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Vocal Club Mix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/4/9/898349a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Instrumental Mix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/4/9/898349b.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Dropout Records - DROP_0782-6-SP</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Vocal Club Mix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Vocal Club Mix" data-src="https://www.deejay.de/streamit/4/9/898349a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Vocal Club Mix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Instrumental Mix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Instrumental Mix" data-src="https://www.deejay.de/streamit/4/9/898349b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Instrumental Mix</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/4/4/1240744.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Frits_Wentink_Redline_EP_ROYAL064_Vinyl__1240744">Frits Wentink - Redline EP (12inch)</a></div><div class="meta"><span class="price">14.50 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Frits_Wentink_Redline_EP_ROYAL064_Vinyl__1240744">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Frits_Wentink_Redline_EP_ROYAL064_Vinyl__1240744" data-like-payload="{&quot;description&quot;: &quot;Frits Wentink - Redline EP (12inch)&quot;, &quot;price&quot;: &quot;14.50 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Frits_Wentink_Redline_EP_ROYAL064_Vinyl__1240744&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/4/4/1240744.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Heat Shield&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/4/4/1240744a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Mind State&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/4/4/1240744b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Slip Stream&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/4/4/1240744c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Burned&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/4/4/1240744d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Clone Royal Oak - ROYAL064 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Heat Shield"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Heat Shield" data-src="https://www.deejay.de/streamit/4/4/1240744a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Heat Shield</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Mind State"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Mind State" data-src="https://www.deejay.de/streamit/4/4/1240744b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Mind State</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Slip Stream"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Slip Stream" data-src="https://www.deejay.de/streamit/4/4/1240744c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Slip Stream</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Burned"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Burned" data-src="https://www.deejay.de/streamit/4/4/1240744d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Burned</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/3/6/1230136.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Marcos_Coya_Moon_Trippin_EP_UX-B001_Vinyl__1230136">Marcos Coya - Moon Trippin EP (excl)</a></div><div class="meta"><span class="price">12.56 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.deejay.de/Marcos_Coya_Moon_Trippin_EP_UX-B001_Vinyl__1230136">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Marcos_Coya_Moon_Trippin_EP_UX-B001_Vinyl__1230136" data-like-payload="{&quot;description&quot;: &quot;Marcos Coya - Moon Trippin EP (excl)&quot;, &quot;price&quot;: &quot;12.56 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Marcos_Coya_Moon_Trippin_EP_UX-B001_Vinyl__1230136&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/3/6/1230136.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Moon Trippin&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/6/1230136a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Delirium&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/6/1230136b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Rage Dog&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/6/1230136c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: D N A&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/6/1230136d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">UnExposed Records - UX-B001 - released 07.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Moon Trippin"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Moon Trippin" data-src="https://www.deejay.de/streamit/3/6/1230136a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Moon Trippin</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Delirium"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Delirium" data-src="https://www.deejay.de/streamit/3/6/1230136b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Delirium</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Rage Dog"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Rage Dog" data-src="https://www.deejay.de/streamit/3/6/1230136c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Rage Dog</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: D N A"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: D N A" data-src="https://www.deejay.de/streamit/3/6/1230136d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: D N A</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/5/4/1256854.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Shuffle_Progression_Fears_EP_DSOFT007_Vinyl__1256854">Shuffle Progression - &#x27;Fears&#x27; EP (12inch)</a></div><div class="meta"><span class="price">14.50 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Shuffle_Progression_Fears_EP_DSOFT007_Vinyl__1256854">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Shuffle_Progression_Fears_EP_DSOFT007_Vinyl__1256854" data-like-payload="{&quot;description&quot;: &quot;Shuffle Progression - &#x27;Fears&#x27; EP (12inch)&quot;, &quot;price&quot;: &quot;14.50 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Shuffle_Progression_Fears_EP_DSOFT007_Vinyl__1256854&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/5/4/1256854.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Ecstasy Mix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/5/4/1256854a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Ecstasy Dub&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/5/4/1256854b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Tribal Rework Mix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/5/4/1256854c.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Dream Software - DSOFT007 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Ecstasy Mix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Ecstasy Mix" data-src="https://www.deejay.de/streamit/5/4/1256854a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Ecstasy Mix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Ecstasy Dub"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Ecstasy Dub" data-src="https://www.deejay.de/streamit/5/4/1256854b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Ecstasy Dub</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Tribal Rework Mix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Tribal Rework Mix" data-src="https://www.deejay.de/streamit/5/4/1256854c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Tribal Rework Mix</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/9/1/1265291.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Blaze_Wishing_You_Were_Here_How_Deep_is_Your_Love_GR-12143_Vinyl__1265291">Blaze - Wishing You Were Here / How Deep is Your Love (12inch)</a></div><div class="meta"><span class="price">15.08 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Blaze_Wishing_You_Were_Here_How_Deep_is_Your_Love_GR-12143_Vinyl__1265291">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Blaze_Wishing_You_Were_Here_How_Deep_is_Your_Love_GR-12143_Vinyl__1265291" data-like-payload="{&quot;description&quot;: &quot;Blaze - Wishing You Were Here / How Deep is Your Love (12inch)&quot;, &quot;price&quot;: &quot;15.08 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Blaze_Wishing_You_Were_Here_How_Deep_is_Your_Love_GR-12143_Vinyl__1265291&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/9/1/1265291.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Wishing You Were Here (Joey Negro Extended Mix)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/1/1265291a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: How Deep Is Your Love (Shelter Vocal Mix)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/1/1265291b.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Groovin Recordings - GR-12143 - released 08.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Wishing You Were Here (Joey Negro Extended Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Wishing You Were Here (Joey Negro Extended Mix)" data-src="https://www.deejay.de/streamit/9/1/1265291a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Wishing You Were Here (Joey Negro Extended Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: How Deep Is Your Love (Shelter Vocal Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: How Deep Is Your Love (Shelter Vocal Mix)" data-src="https://www.deejay.de/streamit/9/1/1265291b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: How Deep Is Your Love (Shelter Vocal Mix)</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/1/1/1257811.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Christian_Smith_LAmour_Toujours_TR123V_Vinyl__1257811">Christian Smith - L&#x27;Amour Toujours (12inch)</a></div><div class="meta"><span class="price">14.08 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Christian_Smith_LAmour_Toujours_TR123V_Vinyl__1257811">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Christian_Smith_LAmour_Toujours_TR123V_Vinyl__1257811" data-like-payload="{&quot;description&quot;: &quot;Christian Smith - L&#x27;Amour Toujours (12inch)&quot;, &quot;price&quot;: &quot;14.08 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Christian_Smith_LAmour_Toujours_TR123V_Vinyl__1257811&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/1/1/1257811.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Original Mix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/1/1257811a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Hernan Cattaneo &amp; Kevin Di Serna Remix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/1/1257811b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Kamilo Sanclemente Remix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/1/1257811c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Gai Barone Remix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/1/1257811d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Tronic - TR123V - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Original Mix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Original Mix" data-src="https://www.deejay.de/streamit/1/1/1257811a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Original Mix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Hernan Cattaneo &amp; Kevin Di Serna Remix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Hernan Cattaneo &amp; Kevin Di Serna Remix" data-src="https://www.deejay.de/streamit/1/1/1257811b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Hernan Cattaneo &amp; Kevin Di Serna Remix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Kamilo Sanclemente Remix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Kamilo Sanclemente Remix" data-src="https://www.deejay.de/streamit/1/1/1257811c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Kamilo Sanclemente Remix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Gai Barone Remix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Gai Barone Remix" data-src="https://www.deejay.de/streamit/1/1/1257811d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Gai Barone Remix</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/0/9/1230409.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Unknown_PVC09_PVC09_Vinyl__1230409">Unknown - PVC09 (excl)</a></div><div class="meta"><span class="price">14.24 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.deejay.de/Unknown_PVC09_PVC09_Vinyl__1230409">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Unknown_PVC09_PVC09_Vinyl__1230409" data-like-payload="{&quot;description&quot;: &quot;Unknown - PVC09 (excl)&quot;, &quot;price&quot;: &quot;14.24 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Unknown_PVC09_PVC09_Vinyl__1230409&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/0/9/1230409.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: KINR&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/0/9/1230409a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Ruffneck&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/0/9/1230409b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Sun Goes Back&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/0/9/1230409c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Get Me Down&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/0/9/1230409d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">PVC Records - PVC09 - released 06.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: KINR"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: KINR" data-src="https://www.deejay.de/streamit/0/9/1230409a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: KINR</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Ruffneck"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Ruffneck" data-src="https://www.deejay.de/streamit/0/9/1230409b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Ruffneck</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Sun Goes Back"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Sun Goes Back" data-src="https://www.deejay.de/streamit/0/9/1230409c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Sun Goes Back</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Get Me Down"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Get Me Down" data-src="https://www.deejay.de/streamit/0/9/1230409d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Get Me Down</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/1/0/1016810.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Augustus_Williams_Increaser_EP_M049_Vinyl__1016810">Augustus Williams - Increaser EP (12inch)</a></div><div class="meta"><span class="price">13.40 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Augustus_Williams_Increaser_EP_M049_Vinyl__1016810">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Augustus_Williams_Increaser_EP_M049_Vinyl__1016810" data-like-payload="{&quot;description&quot;: &quot;Augustus Williams - Increaser EP (12inch)&quot;, &quot;price&quot;: &quot;13.40 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Augustus_Williams_Increaser_EP_M049_Vinyl__1016810&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/1/0/1016810.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: The Hook Up&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/0/1016810a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Dark T&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/0/1016810b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Pushback&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/0/1016810c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Submission&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/0/1016810d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Metroplex - M049 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: The Hook Up"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: The Hook Up" data-src="https://www.deejay.de/streamit/1/0/1016810a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: The Hook Up</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Dark T"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Dark T" data-src="https://www.deejay.de/streamit/1/0/1016810b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Dark T</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Pushback"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Pushback" data-src="https://www.deejay.de/streamit/1/0/1016810c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Pushback</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Submission"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Submission" data-src="https://www.deejay.de/streamit/1/0/1016810d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Submission</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/7/6/607176.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Autonomy_Drug_Kissed_Angels_SUS004_Vinyl__607176">Autonomy - Drug Kissed Angels (12inch)</a></div><div class="meta"><span class="price">34.87 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Autonomy_Drug_Kissed_Angels_SUS004_Vinyl__607176">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Autonomy_Drug_Kissed_Angels_SUS004_Vinyl__607176" data-like-payload="{&quot;description&quot;: &quot;Autonomy - Drug Kissed Angels (12inch)&quot;, &quot;price&quot;: &quot;34.87 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Autonomy_Drug_Kissed_Angels_SUS004_Vinyl__607176&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/7/6/607176.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Drug Kissed Angels&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/6/607176a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Candyfloss&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/6/607176b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Absolute Spirit&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/6/607176c.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Suspect Packages - SUS004 - released 30.08.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Drug Kissed Angels"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Drug Kissed Angels" data-src="https://www.deejay.de/streamit/7/6/607176a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Drug Kissed Angels</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Candyfloss"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Candyfloss" data-src="https://www.deejay.de/streamit/7/6/607176b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Candyfloss</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Absolute Spirit"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Absolute Spirit" data-src="https://www.deejay.de/streamit/7/6/607176c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Absolute Spirit</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/2/3/1262023.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/BRS_Time_to_Shuff_EP_SITU109_Vinyl__1262023">BRS - Time to Shuff EP (12inch)</a></div><div class="meta"><span class="price">13.87 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/BRS_Time_to_Shuff_EP_SITU109_Vinyl__1262023">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/BRS_Time_to_Shuff_EP_SITU109_Vinyl__1262023" data-like-payload="{&quot;description&quot;: &quot;BRS - Time to Shuff EP (12inch)&quot;, &quot;price&quot;: &quot;13.87 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/BRS_Time_to_Shuff_EP_SITU109_Vinyl__1262023&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/2/3/1262023.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Shuff (60&#x27;s Jazz Mix)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/3/1262023a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Outer Space (feat. 6LDA)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/3/1262023b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Dave On Guitar&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/3/1262023c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Come Get I (feat. 6LDA)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/3/1262023d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">SITUATIONISM - SITU109 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Shuff (60&#x27;s Jazz Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Shuff (60&#x27;s Jazz Mix)" data-src="https://www.deejay.de/streamit/2/3/1262023a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Shuff (60&#x27;s Jazz Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Outer Space (feat. 6LDA)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Outer Space (feat. 6LDA)" data-src="https://www.deejay.de/streamit/2/3/1262023b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Outer Space (feat. 6LDA)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Dave On Guitar"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Dave On Guitar" data-src="https://www.deejay.de/streamit/2/3/1262023c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Dave On Guitar</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Come Get I (feat. 6LDA)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Come Get I (feat. 6LDA)" data-src="https://www.deejay.de/streamit/2/3/1262023d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Come Get I (feat. 6LDA)</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/7/5/1250875.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Harold_Heath_Arethas_Reign_BYTIME016_Vinyl__1250875">Harold Heath - Aretha&#x27;s Reign (12inch)</a></div><div class="meta"><span class="price">12.82 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge outofstock">Out of stock</span><a class="buy" href="https://www.deejay.de/Harold_Heath_Arethas_Reign_BYTIME016_Vinyl__1250875">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Harold_Heath_Arethas_Reign_BYTIME016_Vinyl__1250875" data-like-payload="{&quot;description&quot;: &quot;Harold Heath - Aretha&#x27;s Reign (12inch)&quot;, &quot;price&quot;: &quot;12.82 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Harold_Heath_Arethas_Reign_BYTIME016_Vinyl__1250875&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/7/5/1250875.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Aretha&#x27;s Reign&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/5/1250875a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Snake Eyes&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/5/1250875b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Somebody&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/5/1250875c.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Curated By Time - BYTIME016 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Aretha&#x27;s Reign"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Aretha&#x27;s Reign" data-src="https://www.deejay.de/streamit/7/5/1250875a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Aretha&#x27;s Reign</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Snake Eyes"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Snake Eyes" data-src="https://www.deejay.de/streamit/7/5/1250875b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Snake Eyes</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Somebody"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Somebody" data-src="https://www.deejay.de/streamit/7/5/1250875c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Somebody</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/8/6/1261186.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Jan_Kincl_Lights_Out_CYCLE-06_Vinyl__1261186">Jan Kincl - Lights Out (12inch)</a></div><div class="meta"><span class="price">13.40 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge outofstock">Out of stock</span><a class="buy" href="https://www.deejay.de/Jan_Kincl_Lights_Out_CYCLE-06_Vinyl__1261186">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Jan_Kincl_Lights_Out_CYCLE-06_Vinyl__1261186" data-like-payload="{&quot;description&quot;: &quot;Jan Kincl - Lights Out (12inch)&quot;, &quot;price&quot;: &quot;13.40 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Jan_Kincl_Lights_Out_CYCLE-06_Vinyl__1261186&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/8/6/1261186.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Main Mix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/8/6/1261186a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Trinidadian Deep Remix 1&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/8/6/1261186b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Trinidadian Deep Remix 2&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/8/6/1261186c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Alternative Mix&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/8/6/1261186d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Cycle Records - CYCLE-06 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Main Mix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Main Mix" data-src="https://www.deejay.de/streamit/8/6/1261186a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Main Mix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Trinidadian Deep Remix 1"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Trinidadian Deep Remix 1" data-src="https://www.deejay.de/streamit/8/6/1261186b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Trinidadian Deep Remix 1</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Trinidadian Deep Remix 2"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Trinidadian Deep Remix 2" data-src="https://www.deejay.de/streamit/8/6/1261186c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Trinidadian Deep Remix 2</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Alternative Mix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Alternative Mix" data-src="https://www.deejay.de/streamit/8/6/1261186d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Alternative Mix</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/0/1/1254901.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Recut_PICTURE_ABOUT_YOU_RECUTMUSIC007_Vinyl__1254901">Recut - PICTURE ABOUT YOU (12inch)</a></div><div class="meta"><span class="price">13.40 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Recut_PICTURE_ABOUT_YOU_RECUTMUSIC007_Vinyl__1254901">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Recut_PICTURE_ABOUT_YOU_RECUTMUSIC007_Vinyl__1254901" data-like-payload="{&quot;description&quot;: &quot;Recut - PICTURE ABOUT YOU (12inch)&quot;, &quot;price&quot;: &quot;13.40 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Recut_PICTURE_ABOUT_YOU_RECUTMUSIC007_Vinyl__1254901&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/0/1/1254901.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Picture about you&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/0/1/1254901a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Hey jack&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/0/1/1254901b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Subwave&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/0/1/1254901c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Neon Flux&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/0/1/1254901d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">RECUT MUSIC - RECUTMUSIC007 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Picture about you"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Picture about you" data-src="https://www.deejay.de/streamit/0/1/1254901a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Picture about you</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Hey jack"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Hey jack" data-src="https://www.deejay.de/streamit/0/1/1254901b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Hey jack</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Subwave"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Subwave" data-src="https://www.deejay.de/streamit/0/1/1254901c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Subwave</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Neon Flux"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Neon Flux" data-src="https://www.deejay.de/streamit/0/1/1254901d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Neon Flux</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/7/7/1257277.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Sean_%26_Boehm_The_Missing_Link_EP_PARTOUT004_Vinyl__1257277">Sean - The Missing Link EP (excl)</a></div><div class="meta"><span class="price">12.56 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><span class="badge preorder">Pre-order</span><a class="buy" href="https://www.deejay.de/Sean_%26_Boehm_The_Missing_Link_EP_PARTOUT004_Vinyl__1257277">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Sean_%26_Boehm_The_Missing_Link_EP_PARTOUT004_Vinyl__1257277" data-like-payload="{&quot;description&quot;: &quot;Sean - The Missing Link EP (excl)&quot;, &quot;price&quot;: &quot;12.56 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Sean_%26_Boehm_The_Missing_Link_EP_PARTOUT004_Vinyl__1257277&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/7/7/1257277.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: The Missing Link&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/7/1257277a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Collusion&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/7/1257277b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Time&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/7/1257277c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Fifth-N Groove&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/7/7/1257277d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Partout - PARTOUT0.04</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: The Missing Link"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: The Missing Link" data-src="https://www.deejay.de/streamit/7/7/1257277a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: The Missing Link</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Collusion"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Collusion" data-src="https://www.deejay.de/streamit/7/7/1257277b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Collusion</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Time"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Time" data-src="https://www.deejay.de/streamit/7/7/1257277c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Time</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Fifth-N Groove"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Fifth-N Groove" data-src="https://www.deejay.de/streamit/7/7/1257277d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Fifth-N Groove</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/2/5/1258825.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Steve_Bug_%26_Stefan_Braatz_Circles_EP_NG170_Vinyl__1258825">Steve Bug - Circles EP (12inch)</a></div><div class="meta"><span class="price">14.08 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Steve_Bug_%26_Stefan_Braatz_Circles_EP_NG170_Vinyl__1258825">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Steve_Bug_%26_Stefan_Braatz_Circles_EP_NG170_Vinyl__1258825" data-like-payload="{&quot;description&quot;: &quot;Steve Bug - Circles EP (12inch)&quot;, &quot;price&quot;: &quot;14.08 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Steve_Bug_%26_Stefan_Braatz_Circles_EP_NG170_Vinyl__1258825&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/2/5/1258825.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Steve Bug &amp; Stefan Braatz featuring Virgo Four ‘Circles’&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/5/1258825a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Steve Bug &amp; Stefan Braatz featuring Virgo Four ‘Circles’ (Beat Mix)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/5/1258825b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Steve Bug &amp; Stefan Braatz ‘Nu Acid’&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/5/1258825c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Steve Bug &amp; Stefan Braatz ‘Thiz Mood’&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/5/1258825d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Nu Groove - NG170 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Steve Bug &amp; Stefan Braatz featuring Virgo Four ‘Circles’"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Steve Bug &amp; Stefan Braatz featuring Virgo Four ‘Circles’" data-src="https://www.deejay.de/streamit/2/5/1258825a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Steve Bug &amp; Stefan Braatz featuring Virgo Four ‘Circles’</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Steve Bug &amp; Stefan Braatz featuring Virgo Four ‘Circles’ (Beat Mi…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Steve Bug &amp; Stefan Braatz featuring Virgo Four ‘Circles’ (Beat Mix)" data-src="https://www.deejay.de/streamit/2/5/1258825b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Steve Bug &amp; Stefan Braatz featuring Virgo Four ‘Circles’ (Beat Mi…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Steve Bug &amp; Stefan Braatz ‘Nu Acid’"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Steve Bug &amp; Stefan Braatz ‘Nu Acid’" data-src="https://www.deejay.de/streamit/2/5/1258825c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Steve Bug &amp; Stefan Braatz ‘Nu Acid’</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Steve Bug &amp; Stefan Braatz ‘Thiz Mood’"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Steve Bug &amp; Stefan Braatz ‘Thiz Mood’" data-src="https://www.deejay.de/streamit/2/5/1258825d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Steve Bug &amp; Stefan Braatz ‘Thiz Mood’</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/9/0/1265090.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/The_89th_Passenger_Hidden_Soul_EP_AF069_Vinyl__1265090">The 89th Passenger - Hidden Soul EP (12inch)</a></div><div class="meta"><span class="price">16.39 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/The_89th_Passenger_Hidden_Soul_EP_AF069_Vinyl__1265090">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/The_89th_Passenger_Hidden_Soul_EP_AF069_Vinyl__1265090" data-like-payload="{&quot;description&quot;: &quot;The 89th Passenger - Hidden Soul EP (12inch)&quot;, &quot;price&quot;: &quot;16.39 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/The_89th_Passenger_Hidden_Soul_EP_AF069_Vinyl__1265090&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/9/0/1265090.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Paper Wings&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/0/1265090a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Hidden Soul&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/0/1265090b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: What It Takes To Fly&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/0/1265090c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Eren&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/0/1265090d.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B3: Analog Serenade&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/9/0/1265090e.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Analogical Force - AF069 - released 09.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Paper Wings"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Paper Wings" data-src="https://www.deejay.de/streamit/9/0/1265090a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Paper Wings</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Hidden Soul"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Hidden Soul" data-src="https://www.deejay.de/streamit/9/0/1265090b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Hidden Soul</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: What It Takes To Fly"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: What It Takes To Fly" data-src="https://www.deejay.de/streamit/9/0/1265090c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: What It Takes To Fly</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Eren"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Eren" data-src="https://www.deejay.de/streamit/9/0/1265090d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Eren</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B3: Analog Serenade"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B3: Analog Serenade" data-src="https://www.deejay.de/streamit/9/0/1265090e.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B3: Analog Serenade</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/8/5/1258585.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Wilba_Party_Tools_30_PT301_Vinyl__1258585">Wilba - Party Tools 3.0 (12inch)</a></div><div class="meta"><span class="price">12.82 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Wilba_Party_Tools_30_PT301_Vinyl__1258585">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Wilba_Party_Tools_30_PT301_Vinyl__1258585" data-like-payload="{&quot;description&quot;: &quot;Wilba - Party Tools 3.0 (12inch)&quot;, &quot;price&quot;: &quot;12.82 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Wilba_Party_Tools_30_PT301_Vinyl__1258585&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/8/5/1258585.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Blast Blast&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/8/5/1258585a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Crazy Ro&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/8/5/1258585b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Strobelights&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/8/5/1258585c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Deeper on Paper&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/8/5/1258585d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Fraise Records - PT301 - released 07.10.2026</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Blast Blast"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Blast Blast" data-src="https://www.deejay.de/streamit/8/5/1258585a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Blast Blast</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Crazy Ro"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Crazy Ro" data-src="https://www.deejay.de/streamit/8/5/1258585b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Crazy Ro</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Strobelights"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Strobelights" data-src="https://www.deejay.de/streamit/8/5/1258585c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Strobelights</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Deeper on Paper"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Deeper on Paper" data-src="https://www.deejay.de/streamit/8/5/1258585d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Deeper on Paper</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/2/9/1254829.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Big_Hair_DJ_Quiz_Rob_Pearson_Crowdpleaser_DWC002_DWC002_Vinyl__1254829">Big Hair - DWC002 (excl)</a></div><div class="meta"><span class="price">12.56 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Big_Hair_DJ_Quiz_Rob_Pearson_Crowdpleaser_DWC002_DWC002_Vinyl__1254829">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Big_Hair_DJ_Quiz_Rob_Pearson_Crowdpleaser_DWC002_DWC002_Vinyl__1254829" data-like-payload="{&quot;description&quot;: &quot;Big Hair - DWC002 (excl)&quot;, &quot;price&quot;: &quot;12.56 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Big_Hair_DJ_Quiz_Rob_Pearson_Crowdpleaser_DWC002_DWC002_Vinyl__1254829&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/2/9/1254829.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Big Hair - Dougie At The Ockie&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/9/1254829a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: DJ Quiz - Little Awesome&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/9/1254829b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Rob Pearson - Y&#x27;All Ready Roller&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/9/1254829c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Crowdpleaser - The Return Of The Crack&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/2/9/1254829d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">discotech - DWC002</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Big Hair - Dougie At The Ockie"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Big Hair - Dougie At The Ockie" data-src="https://www.deejay.de/streamit/2/9/1254829a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Big Hair - Dougie At The Ockie</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: DJ Quiz - Little Awesome"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: DJ Quiz - Little Awesome" data-src="https://www.deejay.de/streamit/2/9/1254829b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: DJ Quiz - Little Awesome</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Rob Pearson - Y&#x27;All Ready Roller"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Rob Pearson - Y&#x27;All Ready Roller" data-src="https://www.deejay.de/streamit/2/9/1254829c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Rob Pearson - Y&#x27;All Ready Roller</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Crowdpleaser - The Return Of The Crack"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Crowdpleaser - The Return Of The Crack" data-src="https://www.deejay.de/streamit/2/9/1254829d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Crowdpleaser - The Return Of The Crack</div></li></ul></div></div>
+<h2>Yoyaku (new arrivals) &middot; 5</h2>
+<div class="rec"><img src="https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL009-400x400.jpg" alt=""><div class="body"><div class="title"><a href="https://yoyaku.io/release/dj-sommer-house-music-forever-ep-rawsoul009/">DJ Sommer - House Music Forever Ep</a></div><div class="meta"><span class="price">€18.40</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge preorder">Forthcoming</span><a class="buy" href="https://yoyaku.io/release/dj-sommer-house-music-forever-ep-rawsoul009/">View on Yoyaku.io &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://yoyaku.io/release/dj-sommer-house-music-forever-ep-rawsoul009/" data-like-payload="{&quot;description&quot;: &quot;DJ Sommer - House Music Forever Ep&quot;, &quot;price&quot;: &quot;€18.40&quot;, &quot;url&quot;: &quot;https://yoyaku.io/release/dj-sommer-house-music-forever-ep-rawsoul009/&quot;, &quot;store&quot;: &quot;Yoyaku (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL009-400x400.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Make Me Groove&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL009_1.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Loose Style&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL009_2.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Groove On&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL009_3.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Calling You&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL009_4.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Raw Soul - RAWSOUL009</div><div class="tags">Deep House, House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Make Me Groove"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Make Me Groove" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL009_1.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Make Me Groove</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Loose Style"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loose Style" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL009_2.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Loose Style</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Groove On"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Groove On" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL009_3.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Groove On</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Calling You"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Calling You" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL009_4.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Calling You</div></li></ul></div></div>
+<div class="rec"><img src="https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL008-400x400.jpg" alt=""><div class="body"><div class="title"><a href="https://yoyaku.io/release/se62-moon-light-dance-rawsoul008/">SE62 - Moon Light Dance</a></div><div class="meta"><span class="price">€17.50</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge preorder">Forthcoming</span><a class="buy" href="https://yoyaku.io/release/se62-moon-light-dance-rawsoul008/">View on Yoyaku.io &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://yoyaku.io/release/se62-moon-light-dance-rawsoul008/" data-like-payload="{&quot;description&quot;: &quot;SE62 - Moon Light Dance&quot;, &quot;price&quot;: &quot;€17.50&quot;, &quot;url&quot;: &quot;https://yoyaku.io/release/se62-moon-light-dance-rawsoul008/&quot;, &quot;store&quot;: &quot;Yoyaku (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL008-400x400.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Fantasy&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL008_1.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;The Moon Will Smile All Night&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL008_2.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Planet Vibe&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL008_4.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Raw Soul - RAWSOUL008</div><div class="tags">House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Fantasy"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Fantasy" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL008_1.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Fantasy</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play The Moon Will Smile All Night"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="The Moon Will Smile All Night" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL008_2.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">The Moon Will Smile All Night</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Planet Vibe"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Planet Vibe" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL008_4.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Planet Vibe</div></li></ul></div></div>
+<div class="rec"><img src="https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL005-400x400.jpg" alt=""><div class="body"><div class="title"><a href="https://yoyaku.io/release/colkin-gare-de-lest-ep-rawsoul005/">Colkin - Gare De L’Est EP</a></div><div class="meta"><span class="price">€14.00</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge preorder">Forthcoming</span><a class="buy" href="https://yoyaku.io/release/colkin-gare-de-lest-ep-rawsoul005/">View on Yoyaku.io &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://yoyaku.io/release/colkin-gare-de-lest-ep-rawsoul005/" data-like-payload="{&quot;description&quot;: &quot;Colkin - Gare De L’Est EP&quot;, &quot;price&quot;: &quot;€14.00&quot;, &quot;url&quot;: &quot;https://yoyaku.io/release/colkin-gare-de-lest-ep-rawsoul005/&quot;, &quot;store&quot;: &quot;Yoyaku (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL005-400x400.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1. Enjoy Yourself&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL005_1.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2. Move 2Nite&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL005_2.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1. Enjoy Yourself (Melchior Sultana Remix)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL005_3.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Raw Soul - RAWSOUL005</div><div class="tags">Deep House, House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1. Enjoy Yourself"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1. Enjoy Yourself" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL005_1.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1. Enjoy Yourself</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2. Move 2Nite"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2. Move 2Nite" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL005_2.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2. Move 2Nite</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1. Enjoy Yourself (Melchior Sultana Remix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1. Enjoy Yourself (Melchior Sultana Remix)" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL005_3.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1. Enjoy Yourself (Melchior Sultana Remix)</div></li></ul></div></div>
+<div class="rec"><img src="https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL003-400x400.jpg" alt=""><div class="body"><div class="title"><a href="https://yoyaku.io/release/washerman-svizzera-analogica-rawsoul003/">Washerman - Svizzera Analogica</a></div><div class="meta"><span class="price">€14.00</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge preorder">Forthcoming</span><a class="buy" href="https://yoyaku.io/release/washerman-svizzera-analogica-rawsoul003/">View on Yoyaku.io &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://yoyaku.io/release/washerman-svizzera-analogica-rawsoul003/" data-like-payload="{&quot;description&quot;: &quot;Washerman - Svizzera Analogica&quot;, &quot;price&quot;: &quot;€14.00&quot;, &quot;url&quot;: &quot;https://yoyaku.io/release/washerman-svizzera-analogica-rawsoul003/&quot;, &quot;store&quot;: &quot;Yoyaku (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL003-400x400.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Life&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL003_3.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Raw Soul - RAWSOUL003</div><div class="tags">Deep House, House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Life"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Life" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL003_3.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Life</div></li></ul></div></div>
+<div class="rec"><img src="https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL006.jpg" alt=""><div class="body"><div class="title"><a href="https://yoyaku.io/release/peter-lc-deep-in-the-scene-ep-rawsoul006/">Peter LC - Deep In The Scene EP</a></div><div class="meta"><span class="price">€14.00</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge preorder">Forthcoming</span><a class="buy" href="https://yoyaku.io/release/peter-lc-deep-in-the-scene-ep-rawsoul006/">View on Yoyaku.io &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://yoyaku.io/release/peter-lc-deep-in-the-scene-ep-rawsoul006/" data-like-payload="{&quot;description&quot;: &quot;Peter LC - Deep In The Scene EP&quot;, &quot;price&quot;: &quot;€14.00&quot;, &quot;url&quot;: &quot;https://yoyaku.io/release/peter-lc-deep-in-the-scene-ep-rawsoul006/&quot;, &quot;store&quot;: &quot;Yoyaku (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://yoyaku.io/wp-content/uploads/2026/10/RAWSOUL006.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Milano by Night&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL006_1.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Driving to Sacramento&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL006_2.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Golden Age&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL006_3.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Raw Soul - RAWSOUL006</div><div class="tags">Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Milano by Night"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Milano by Night" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL006_1.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Milano by Night</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Driving to Sacramento"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Driving to Sacramento" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL006_2.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Driving to Sacramento</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Golden Age"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Golden Age" data-src="https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/RAWSOUL006_3.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Golden Age</div></li></ul></div></div>
+<footer>Generated 11 Oct 2026 12:34 UTC. Tap a bar to play from that point; only one track plays at a time. The arrow opens the original video on YouTube.<div style="margin-top:10px;">Earlier: <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-05.html">2026-10-05</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-04.html">2026-10-04</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-03.html">2026-10-03</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-02.html">2026-10-02</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-01.html">2026-10-01</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-30.html">2026-09-30</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-29.html">2026-09-29</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-28.html">2026-09-28</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-27.html">2026-09-27</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-26.html">2026-09-26</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-25.html">2026-09-25</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-24.html">2026-09-24</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-23.html">2026-09-23</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-09-22.html">2026-09-22</a></div></footer>
+</div><script>
+(function () {
+  // Substituted at render time from the ICON_* constants, so the markup
+  // and the JS that swaps it can never drift out of sync.
+  var ICON_PLAY = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
+  var ICON_PAUSE = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 5h3.5v14H6zM14.5 5H18v14h-3.5z"/></svg>';
+  var ICON_PREV = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 6h2.5v12H6zm3.5 6L18 6v12z"/></svg>';
+  var ICON_NEXT = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M15.5 6H18v12h-2.5zM6 6l8.5 6L6 18z"/></svg>';
+
+  var ytPlayer = null, ytReady = false, ytPendingInit = null;
+  var audioEl = new Audio();
+  audioEl.preload = 'none';
+
+  var activeEngine = null;  // 'yt' | 'audio' | null
+  var activeBar = null, activeVideoId = null, activeSrc = null;
+  var pendingSeekFraction = null;
+  var pollTimer = null;
+
+  function fmt(t) {
+    if (!isFinite(t) || t < 0) t = 0;
+    var m = Math.floor(t / 60), s = Math.floor(t % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function row(bar) { return bar.closest('.trow'); }
+
+  function paint(bar, fraction, curLabel, durLabel, state) {
+    var fillEl = bar.querySelector('.fill');
+    if (fillEl) fillEl.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+    bar.setAttribute('aria-valuenow', Math.round(fraction * 100));
+    var r = row(bar);
+    if (!r) return;
+    r.classList.toggle('playing', state === 'playing');
+    var t = r.querySelector('.time');
+    if (t) t.textContent = curLabel + ' / ' + durLabel;
+    var btn = r.querySelector('.ppbtn');
+    if (btn) {
+      btn.classList.toggle('loading', state === 'loading');
+      btn.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    // Keep the bottom transport in step with the row: same play/pause icon,
+    // same progress, same clock.
+    var nbToggle = document.querySelector('#nowbar [data-toggle]');
+    if (nbToggle) {
+      nbToggle.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    if (bar === activeBar) {
+      var nbFill = document.querySelector('#nowbar .nbfill');
+      if (nbFill) nbFill.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+      var nbSeek = document.querySelector('#nowbar .nbseek');
+      if (nbSeek) nbSeek.setAttribute('aria-valuenow', Math.round(fraction * 100));
+      var nbTime = document.querySelector('#nowbar .nbtime');
+      if (nbTime) nbTime.textContent = curLabel + ' / ' + durLabel;
+    }
+  }
+
+  function knownDuration(bar) {
+    return parseInt(bar.getAttribute('data-dur'), 10) || 0;
+  }
+
+  function durLabel(bar) {
+    var known = knownDuration(bar);
+    return known ? fmt(known) : '--:--';
+  }
+
+  function resetBar(bar) {
+    if (!bar) return;
+    paint(bar, 0, '0:00', durLabel(bar), 'idle');
+  }
+
+  function stopPolling() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  // ---- YouTube backend (Discogs releases) ----
+
+  function pollYt() {
+    if (!ytPlayer || !activeBar) return;
+    var dur = 0, cur = 0, state = -1;
+    try {
+      dur = ytPlayer.getDuration() || 0;
+      cur = ytPlayer.getCurrentTime() || 0;
+      state = ytPlayer.getPlayerState();
+    } catch (err) { return; }
+    if (pendingSeekFraction !== null && dur > 0) {
+      var target = pendingSeekFraction; pendingSeekFraction = null;
+      ytPlayer.seekTo(target * dur, true);
+      cur = target * dur;
+    }
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar),
+          state === 1 ? 'playing' : (state === 3 ? 'loading' : 'paused'));
+  }
+
+  function ensureYt(cb) {
+    if (ytPlayer) { cb(); return; }
+    if (!ytReady) { ytPendingInit = cb; return; }
+    var host = document.getElementById('yt-audio-host');
+    if (!host) return;
+    ytPlayer = new YT.Player(host, {
+      height: '113', width: '200',
+      playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1 },
+      events: {
+        onReady: function () { cb(); },
+        onStateChange: function (ev) {
+          if (ev.data === YT.PlayerState.ENDED && activeEngine === 'yt' && activeBar) {
+            var d = ytPlayer.getDuration() || knownDuration(activeBar);
+            paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+            stopPolling();
+            step(1);  // roll on to the next track, top to bottom
+          }
+        },
+        onError: function () {
+          if (activeEngine === 'yt' && activeBar) {
+            var r = row(activeBar);
+            if (r) r.classList.add('errored');
+          }
+        }
+      }
+    });
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytReady = true;
+    if (ytPendingInit) { var cb = ytPendingInit; ytPendingInit = null; cb(); }
+    else prewarm();
+  };
+
+  // Build the player while nothing is waiting on it, so the first press
+  // pays for none of the setup.
+  //
+  // It deliberately stops at building the player and does NOT cue the first
+  // track's video in advance. That was tried and measured: cueing it took
+  // the first press from 757ms down to 505ms, but in that run playback then
+  // stopped by itself two seconds in, where the uncued path kept running --
+  // playVideo() on a cued video is evidently not the same thing as loading
+  // it fresh. One stall is enough to not trade it for 250ms; reviving the
+  // cue needs that explained first.
+  function prewarm() {
+    ensureYt(function () {});
+  }
+
+  function playYtFrom(bar, fraction) {
+    var videoId = bar.getAttribute('data-yt');
+    ensureYt(function () {
+      if (activeBar && activeBar !== bar) resetBar(activeBar);
+      if (activeEngine !== 'yt' || activeVideoId !== videoId) {
+        activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
+        var known = knownDuration(bar);
+        pendingSeekFraction = fraction > 0.01 ? fraction : null;
+        ytPlayer.loadVideoById(videoId);
+        // Best-effort immediate jump using Discogs' own track length, so a
+        // click deep into a bar does not sit at 0:00 waiting for YouTube's
+        // own metadata to arrive. The poll loop re-seeks once the real
+        // duration is confirmed, in case this fires before load is ready.
+        if (known > 0 && pendingSeekFraction !== null) {
+          try { ytPlayer.seekTo(pendingSeekFraction * known, true); } catch (err) {}
+        }
+      } else {
+        activeBar = bar;
+        var dur = ytPlayer.getDuration() || knownDuration(bar);
+        if (dur > 0) ytPlayer.seekTo(fraction * dur, true);
+        ytPlayer.playVideo();
+      }
+      stopPolling();
+      pollTimer = setInterval(pollYt, 250);
+      paint(bar, fraction, fmt(fraction * (ytPlayer.getDuration() || knownDuration(bar))),
+            durLabel(bar), 'loading');
+    });
+  }
+
+  // ---- direct-audio backend (clone.nl, or any source with real MP3s) ----
+
+  function pollAudio() {
+    if (!activeBar) return;
+    var dur = audioEl.duration || 0;
+    var cur = audioEl.currentTime || 0;
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    var state = !audioEl.paused && !audioEl.ended ? 'playing'
+               : (audioEl.readyState < 2 ? 'loading' : 'paused');
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar), state);
+  }
+
+  audioEl.addEventListener('ended', function () {
+    if (activeEngine === 'audio' && activeBar) {
+      var d = audioEl.duration || knownDuration(activeBar);
+      paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+      stopPolling();
+      step(1);  // roll on to the next track, top to bottom
+    }
+  });
+  audioEl.addEventListener('error', function () {
+    if (activeEngine === 'audio' && activeBar) {
+      var r = row(activeBar);
+      if (r) r.classList.add('errored');
+    }
+  });
+
+  function safePlay() {
+    var p = audioEl.play();
+    if (p && p.catch) p.catch(function () {});  // ignore benign AbortError on rapid re-clicks
+  }
+
+  function playAudioFrom(bar, fraction) {
+    var src = bar.getAttribute('data-src');
+    if (activeBar && activeBar !== bar) resetBar(activeBar);
+    if (activeEngine !== 'audio' || activeSrc !== src) {
+      activeEngine = 'audio'; activeSrc = src; activeVideoId = null; activeBar = bar;
+      audioEl.src = src;
+      if (fraction > 0.01) {
+        var onMeta = function () {
+          audioEl.currentTime = fraction * (audioEl.duration || 0);
+          audioEl.removeEventListener('loadedmetadata', onMeta);
+        };
+        audioEl.addEventListener('loadedmetadata', onMeta);
+      }
+      safePlay();
+    } else {
+      activeBar = bar;
+      if (audioEl.duration) audioEl.currentTime = fraction * audioEl.duration;
+      safePlay();
+    }
+    stopPolling();
+    pollTimer = setInterval(pollAudio, 200);
+    paint(bar, fraction, fmt(fraction * (audioEl.duration || knownDuration(bar))),
+          durLabel(bar), 'loading');
+  }
+
+  // ---- track navigation: walk the page top to bottom ----
+
+  // Rebuilt on each call rather than cached: cheap at this page size, and
+  // it stays correct if a row gets marked .errored mid-session (a dead
+  // YouTube video or a 404 preview), which should then be skipped over
+  // rather than stopping playback dead when auto-advancing.
+  function playableBars() {
+    var out = [];
+    var all = document.querySelectorAll('.bar');
+    for (var i = 0; i < all.length; i++) {
+      var r = row(all[i]);
+      if (!r || !r.classList.contains('errored')) out.push(all[i]);
+    }
+    return out;
+  }
+
+  function step(delta) {
+    var bars = playableBars();
+    if (!bars.length) return;
+    var idx = -1;
+    for (var i = 0; i < bars.length; i++) {
+      if (bars[i] === activeBar) { idx = i; break; }
+    }
+    var next = idx === -1 ? (delta > 0 ? 0 : bars.length - 1) : idx + delta;
+    if (next < 0 || next >= bars.length) return;  // stop at the ends, don't wrap
+    var target = bars[next];
+    playFrom(target, 0);
+    if (target.scrollIntoView) {
+      target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+    try { target.focus({ preventScroll: true }); } catch (err) { target.focus(); }
+  }
+
+  // ---- floating transport ----
+
+  // The generated digest pages ship this markup in their HTML; likes.html
+  // does not, and building it here rather than hand-copying it there keeps
+  // the transport defined in exactly one place. Both call sites end up with
+  // the same controls, and adding a third page costs nothing.
+  function ensureChrome() {
+    if (!document.body) return;
+    if (!document.getElementById('yt-audio-host')) {
+      var host = document.createElement('div');
+      host.style.cssText =
+        'position:fixed;left:-9999px;top:0;width:200px;height:113px;';
+      host.innerHTML = '<div id="yt-audio-host"></div>';
+      document.body.appendChild(host);
+    }
+    if (!document.getElementById('nowbar')) {
+      var nb = document.createElement('div');
+      nb.id = 'nowbar';
+      nb.innerHTML =
+        '<div class="nbseek" role="slider" aria-valuemin="0" aria-valuemax="100" ' +
+        'aria-valuenow="0" aria-label="Seek in current track">' +
+        '<div class="nbtrack"><div class="nbfill"></div></div></div>' +
+        '<div class="nbrow"><div class="nbctrls">' +
+        '<button type="button" data-step="-1" title="Previous track (p)" ' +
+        'aria-label="Previous track">' + ICON_PREV + '</button>' +
+        '<button type="button" data-toggle="1" title="Play / pause (space)" ' +
+        'aria-label="Play or pause">' + ICON_PAUSE + '</button>' +
+        '<button type="button" data-step="1" title="Next track (n)" ' +
+        'aria-label="Next track">' + ICON_NEXT + '</button>' +
+        '</div><span class="nowtitle"></span>' +
+        '<span class="nbtime"></span></div>';
+      document.body.appendChild(nb);
+    }
+  }
+
+  ensureChrome();
+  var nowbar = document.getElementById('nowbar');
+  var nowtitle = nowbar ? nowbar.querySelector('.nowtitle') : null;
+
+  function updateNowBar(bar) {
+    if (!nowbar) return;
+    if (!bar) { nowbar.classList.remove('show'); return; }
+    nowbar.classList.add('show');
+    if (nowtitle) {
+      var li = bar.closest ? bar.closest('li.track') : null;
+      var name = li ? li.querySelector('.tname') : null;
+      nowtitle.textContent = name ? name.textContent : (bar.getAttribute('aria-label') || '');
+    }
+  }
+
+  if (nowbar) {
+    nowbar.addEventListener('click', function (ev) {
+      var btn = ev.target.closest ? ev.target.closest('button') : null;
+      if (btn) {
+        ev.preventDefault();
+        if (btn.getAttribute('data-toggle')) {
+          if (activeBar) togglePlayPause(activeBar);
+        } else {
+          step(parseInt(btn.getAttribute('data-step'), 10) || 1);
+        }
+        return;
+      }
+      // Seeking from the bottom bar acts on whatever is currently playing,
+      // so you can scrub without scrolling back to that record's row.
+      var seek = ev.target.closest ? ev.target.closest('.nbseek') : null;
+      if (seek && activeBar) {
+        ev.preventDefault();
+        playFrom(activeBar, fractionFromEvent(seek, ev));
+      }
+    });
+  }
+
+  // ---- unified dispatch: only one backend plays at a time ----
+
+  function playFrom(bar, fraction) {
+    var isAudio = !!bar.getAttribute('data-src');
+    if (isAudio) {
+      if (activeEngine === 'yt' && ytPlayer) { try { ytPlayer.pauseVideo(); } catch (err) {} }
+      playAudioFrom(bar, fraction);
+    } else {
+      if (activeEngine === 'audio') { audioEl.pause(); }
+      playYtFrom(bar, fraction);
+    }
+    updateNowBar(bar);
+  }
+
+  function togglePlayPause(bar) {
+    var isAudio = !!bar.getAttribute('data-src');
+    var isActiveTrack = isAudio
+      ? (activeEngine === 'audio' && activeSrc === bar.getAttribute('data-src'))
+      : (activeEngine === 'yt' && activeVideoId === bar.getAttribute('data-yt'));
+    if (!isActiveTrack) { playFrom(bar, 0); return; }
+    if (isAudio) {
+      if (audioEl.paused) { safePlay(); } else { audioEl.pause(); }
+    } else if (ytPlayer) {
+      var state = ytPlayer.getPlayerState();
+      if (state === 1) { ytPlayer.pauseVideo(); } else { ytPlayer.playVideo(); }
+    }
+  }
+
+  function fractionFromEvent(bar, ev) {
+    var rect = bar.getBoundingClientRect();
+    var x = (ev.clientX !== undefined && ev.clientX !== 0) ? ev.clientX
+          : (ev.changedTouches && ev.changedTouches[0] ? ev.changedTouches[0].clientX : rect.left);
+    return Math.min(1, Math.max(0, (x - rect.left) / rect.width));
+  }
+
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest ? ev.target.closest('button.ppbtn') : null;
+    if (btn) {
+      ev.preventDefault();
+      var pbar = row(btn).querySelector('.bar');
+      if (pbar) togglePlayPause(pbar);
+      return;
+    }
+    if (ev.target.closest && ev.target.closest('a.ytlink')) return; // let it navigate
+    var bar = ev.target.closest ? ev.target.closest('.bar') : null;
+    if (bar) {
+      ev.preventDefault();
+      playFrom(bar, fractionFromEvent(bar, ev));
+    }
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    var t = ev.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+
+    // Next / previous work from anywhere on the page, so you can skip
+    // through without first clicking a row to focus it. Deliberately NOT
+    // bound to bare Up/Down arrows at this level -- those still need to
+    // scroll the page normally.
+    var k = ev.key.toLowerCase();
+    if (k === 'n' || k === 'j' || ev.key === 'MediaTrackNext') {
+      ev.preventDefault(); step(1); return;
+    }
+    if (k === 'p' || k === 'k' || ev.key === 'MediaTrackPrevious') {
+      ev.preventDefault(); step(-1); return;
+    }
+
+    var el = document.activeElement;
+    if (!el || !el.classList || !el.classList.contains('bar')) return;
+    if (ev.key === ' ' || ev.key === 'Enter') {
+      ev.preventDefault();
+      togglePlayPause(el);
+    } else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+      // Only once a bar has focus, where arrow keys clearly belong to the
+      // player rather than to scrolling the page.
+      ev.preventDefault();
+      step(ev.key === 'ArrowDown' ? 1 : -1);
+    } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') {
+      ev.preventDefault();
+      if (activeBar !== el) return;
+      var delta = ev.key === 'ArrowRight' ? 5 : -5;
+      if (activeEngine === 'audio') {
+        audioEl.currentTime = Math.min(audioEl.duration || 1e9, Math.max(0, audioEl.currentTime + delta));
+      } else if (activeEngine === 'yt' && ytPlayer) {
+        var dur = ytPlayer.getDuration() || knownDuration(el);
+        var cur = ytPlayer.getCurrentTime() || 0;
+        ytPlayer.seekTo(Math.min(dur, Math.max(0, cur + delta)), true);
+      }
+    }
+  });
+
+  // Exported so likes.html can build identical track rows from the data
+  // stored in likes.json. One definition of the markup, several pages --
+  // a second hand-written copy over there would drift the moment either
+  // the structure or the icons change. The click/keyboard handlers above
+  // are delegated on document, so rows added later still work.
+  window.DigestPlayer = {
+    trackRowHtml: function (t) {
+      var esc = function (s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      };
+      var title = String(t.title || 'Listen');
+      var shown = title.length > 70 ? title.slice(0, 69).replace(/\s+$/, '') + '\u2026' : title;
+      var dur = parseInt(t.dur, 10) || 0;
+      var ytAttr = t.yt ? ' data-yt="' + esc(t.yt) + '"' : '';
+      var srcAttr = t.src ? ' data-src="' + esc(t.src) + '"' : '';
+      var link = t.yt
+        ? '<a class="ytlink" href="https://www.youtube.com/watch?v=' + esc(t.yt) +
+          '" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" ' +
+          'aria-label="Watch on YouTube">\u2197</a>'
+        : '';
+      return '<li class="track"><div class="trow">' +
+        '<button class="ppbtn" aria-label="Play ' + esc(shown) + '">' + ICON_PLAY + '</button>' +
+        '<div class="bar" tabindex="0" role="slider" aria-valuemin="0" ' +
+        'aria-valuemax="100" aria-valuenow="0" aria-label="' + esc(title) + '"' +
+        ytAttr + srcAttr + ' data-dur="' + dur + '">' +
+        '<div class="track"><div class="fill"></div></div></div>' +
+        '<span class="time">0:00 / ' + (dur ? fmt(dur) : '--:--') + '</span>' +
+        link + '</div><div class="tname">' + esc(shown) + '</div></li>';
+    }
+  };
+
+  // Three cases, in order: the API is already loaded (its ready callback
+  // fired before this script existed, so nothing will call ours -- warm up
+  // directly); the page's <head> has the request in flight (leave it, our
+  // onYouTubeIframeAPIReady above will fire); or nobody asked for it yet.
+  if (window.YT && window.YT.Player) {
+    ytReady = true;
+    prewarm();
+  } else if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
+})();
+</script><script>window.DIGEST_BASE_URL="https://joor241.github.io/discogs-genre-digest";</script><script src="https://joor241.github.io/discogs-genre-digest/assets/likes.js"></script></body></html>
