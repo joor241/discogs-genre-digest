@@ -834,5 +834,30 @@
       }
     ],
     "liked_at": "2026-10-05T15:01:22.414Z"
+  },
+  "https://www.discogs.com/sell/item/4414921776": {
+    "description": "Moi (10) - 12 (12\")",
+    "price": "9.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4414921776",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/XjXO0vng_G6ZOgLEYYnNMCpwaGVc-2qWO0fIAbdjZrE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyMjg0/ODk4LTE2NDU2OTc1/MzAtMjM5My5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "MOi 12 A",
+        "yt": "YF68Msv_E-E",
+        "src": null,
+        "dur": 451
+      },
+      {
+        "title": "MOi 12 B",
+        "yt": "C8aEcnTxdZ8",
+        "src": null,
+        "dur": 421
+      }
+    ],
+    "liked_at": "2026-10-17T11:17:04.884Z"
   }
 }
