@@ -1208,9 +1208,16 @@ DEEJAY_IMG_RE = re.compile(r'<img src="([^"]+)"')
 DEEJAY_PRICE_RE = re.compile(r'<span class="price">([\d.,]+)')
 DEEJAY_FORMAT_TOKEN_RE = re.compile(r'_([A-Za-z0-9]+)__\d+$')
 DEEJAY_TAG_STRIP_RE = re.compile(r"<[^>]+>")
+# Captures the anchor's whole inner HTML rather than its exact layout:
+# observed live, deejay.de changed it around 2026-10-12 from
+# `<b>A1</b>: Title` to `<b class="track-pos">A1</b><span class="track-sep">: </span>
+# <span class="track-title">Title</span>`, which silently zeroed every
+# item's tracks. Position and title are pulled out of the inner HTML by
+# extract_deejay_tracks(), which handles both layouts.
 DEEJAY_TRACK_RE = re.compile(
-    r'<a class="track[^"]*"[^>]*id="playTrack_(\d+)_([a-z])"[^>]*>\s*<b>([^<]*)</b>:\s*([^<]*)</a>'
+    r'<a class="track[^"]*"[^>]*id="playTrack_(\d+)_([a-z])"[^>]*>(.*?)</a>', re.S
 )
+DEEJAY_TRACK_POS_RE = re.compile(r'<b[^>]*>([^<]*)</b>')
 # Only present on the item's own detail page, not the list page this module
 # otherwise scrapes -- confirmed live across a real presale item ("ships from
 # {date}"), a real pre-order item ("pre-order now {date}"), and several
@@ -1259,9 +1266,15 @@ def extract_deejay_tracks(block: str, limit: int = MAX_VIDEOS_PER_RELEASE) -> li
     the page block already scraped for everything else -- no extra request
     needed, unlike clone.nl's per-item tracklist fetch."""
     tracks: list[dict] = []
-    for article_id, letter, position, title_text in DEEJAY_TRACK_RE.findall(block):
-        clean_title = html.unescape(title_text.strip())
-        title = f"{position}: {clean_title}" if clean_title else position
+    for article_id, letter, inner in DEEJAY_TRACK_RE.findall(block):
+        pos_match = DEEJAY_TRACK_POS_RE.search(inner)
+        position = pos_match.group(1).strip() if pos_match else ""
+        title_html = inner[pos_match.end():] if pos_match else inner
+        title_text = DEEJAY_TAG_STRIP_RE.sub("", title_html).strip().lstrip(":").strip()
+        clean_title = html.unescape(" ".join(title_text.split()))
+        if not position and not clean_title:
+            continue
+        title = ": ".join(p for p in (position, clean_title) if p)
         url = deejay_stream_url(article_id, letter)
         tracks.append({"title": title, "src": url, "uri": url, "yt": None, "dur": 0})
         if len(tracks) >= limit:
@@ -1340,6 +1353,13 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
             "[deejay.de] scraper found 0 items on a page that always has "
             "some -- deejay.de likely redesigned the page and this scraper "
             "needs updating, rather than the shop genuinely having nothing new."
+        )
+    elif not any(extract_deejay_tracks(block, limit=1) for _, block in articles[:max_items]):
+        LOG.warning(
+            "[deejay.de] found %d items but not one track preview among them -- "
+            "deejay.de likely changed its track markup and DEEJAY_TRACK_RE "
+            "needs updating; items will fall back to Discogs videos or none.",
+            len(articles),
         )
 
     seen = dict(seen or {})
@@ -2355,7 +2375,7 @@ footer a { color: #6ea8ff; }
 }
 """
 
-# Two playback backends share one page: a hidden YouTube player for Discogs
+# Two playback backends share one page: hidden YouTube players for Discogs
 # releases (no direct audio file exists for those, only community-submitted
 # YouTube links), and a plain <audio> element for sources that expose real
 # MP3 preview clips directly (clone.nl). Every bar just says which backend it
@@ -2380,6 +2400,12 @@ footer a { color: #6ea8ff; }
 # same shape as a real digest: 1872ms from press to sound before, 757ms
 # after.
 #
+# That 757ms is YouTube's own start-up for a video it has not seen yet, and
+# no setting on a single player moves it. What does is a second player: it
+# stays muted and loads the track most likely to be pressed next, and the
+# press then swaps the two. See "fetching ahead" in PLAYER_JS for what was
+# measured and for the one call (cueVideoById) that looks right and is not.
+#
 # The generated page's own <head> also starts the iframe_api fetch during
 # HTML parse (see render_player_page) instead of leaving it until this
 # script runs at the very end of a ~200KB document. The tail of this file
@@ -2395,7 +2421,22 @@ PLAYER_JS = """
   var ICON_PREV = '__ICON_PREV__';
   var ICON_NEXT = '__ICON_NEXT__';
 
-  var ytPlayer = null, ytReady = false, ytPendingInit = null;
+  // Two hidden YouTube players, not one: ytPlayer is the one you hear,
+  // ytSpare sits muted behind it and fetches ahead. See "fetching ahead".
+  var ytPlayer = null, ytSpare = null;
+  var ytApiReady = false;   // iframe_api has loaded
+  var ytUp = false;         // ytPlayer has fired onReady
+  var ytSpareUp = false;    // so has ytSpare
+  var ytQueued = null;      // a press that arrived before ytUp
+  var spareBar = null, spareVideoId = null, spareStart = 0, spareAt = 0;
+  var spareHeld = false;    // its fetch got as far as playing, and was paused there
+  var swapPending = false, swapTimer = null, nearEndDone = false;
+  var hoverTimer = null, hoverBar = null, hoverAt = 0, hoverEnterAt = 0, hoverFetchAt = 0;
+  // Fetching ahead costs a second request per track. Off for anyone who
+  // asked their browser to save data, and ?ahead=0 turns it off by hand --
+  // the player then behaves exactly like the single-player one it replaced.
+  var FETCH_AHEAD = !/[?&]ahead=0/.test(location.search) &&
+    !(navigator.connection && navigator.connection.saveData);
   var audioEl = new Audio();
   audioEl.preload = 'none';
 
@@ -2475,58 +2516,217 @@ PLAYER_JS = """
       ytPlayer.seekTo(target * dur, true);
       cur = target * dur;
     }
+    // Hovering another row borrows the spare, so by the end of a track it
+    // may no longer hold the one auto-advance is about to ask for.
+    if (!nearEndDone && state === 1 && dur > 0 && dur - cur < 20) {
+      nearEndDone = true;
+      preloadNext();
+    }
     var effectiveDur = dur || knownDuration(activeBar);
     var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
     paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar),
           state === 1 ? 'playing' : (state === 3 ? 'loading' : 'paused'));
   }
 
-  function ensureYt(cb) {
-    if (ytPlayer) { cb(); return; }
-    if (!ytReady) { ytPendingInit = cb; return; }
-    var host = document.getElementById('yt-audio-host');
-    if (!host) return;
-    ytPlayer = new YT.Player(host, {
+  function buildYt(host, onReady) {
+    return new YT.Player(host, {
       height: '113', width: '200',
       playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1 },
       events: {
-        onReady: function () { cb(); },
-        onStateChange: function (ev) {
-          if (ev.data === YT.PlayerState.ENDED && activeEngine === 'yt' && activeBar) {
-            var d = ytPlayer.getDuration() || knownDuration(activeBar);
-            paint(activeBar, 1, fmt(d), fmt(d), 'paused');
-            stopPolling();
-            step(1);  // roll on to the next track, top to bottom
-          }
-        },
-        onError: function () {
-          if (activeEngine === 'yt' && activeBar) {
-            var r = row(activeBar);
-            if (r) r.classList.add('errored');
-          }
-        }
+        onReady: onReady, onStateChange: onYtState, onError: onYtError,
+        onAutoplayBlocked: onYtBlocked
       }
     });
   }
 
+  // A tab opened in the background is not allowed to start anything, muted
+  // or not, so the spare's fetch never happens there. Forget it, or the
+  // first press would sit waiting on it; visibilitychange asks again.
+  function onYtBlocked(ev) {
+    if (ev.target !== ytPlayer) { spareBar = null; spareVideoId = null; }
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) preloadNext();
+  });
+
+  // Which video a player says it has, or '' when it does not say.
+  function ytVideoId(player) {
+    try { return player.getVideoData().video_id || ''; } catch (err) { return ''; }
+  }
+
+  function onYtState(ev) {
+    if (ev.target !== ytPlayer) {
+      // The spare is there to fetch, never to be heard: hold it the moment
+      // it actually starts. Not earlier -- pausing a load that is still on
+      // its way throws the head start away (measured: paused 150ms in, the
+      // press then waited as long as a cold one).
+      if (ev.data === 1) {
+        // Unless this is the previous track's last word, arriving after
+        // the player was handed something new to fetch.
+        if (!ytVideoId(ev.target) || ytVideoId(ev.target) === spareVideoId) spareHeld = true;
+        try { ev.target.pauseVideo(); } catch (err) {}
+      }
+      return;
+    }
+    if (activeEngine !== 'yt' || !activeBar) return;
+    if (ev.data === 1 || ev.data === 3) swapPending = false;
+    if (ev.data === 1) {
+      preloadNext();
+    } else if (ev.data === YT.PlayerState.ENDED) {
+      var d = ytPlayer.getDuration() || knownDuration(activeBar);
+      paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+      stopPolling();
+      step(1);  // roll on to the next track, top to bottom
+    }
+  }
+
+  function onYtError(ev) {
+    if (ev.target !== ytPlayer) {
+      // Found out while fetching ahead that this one cannot play here
+      // (removed, or its owner switched embedding off). Grey the row out
+      // now rather than on the press, and line up the one after it, so
+      // auto-advance steps past a dead video instead of stopping on it.
+      // Unless it is about a fetch that has since been replaced: that must
+      // not grey out the row that replaced it.
+      var dead = ev.data === 100 || ev.data === 101 || ev.data === 150;
+      var failedId = ytVideoId(ev.target);
+      if (failedId && failedId !== spareVideoId) return;
+      var r = spareBar ? row(spareBar) : null;
+      spareBar = null; spareVideoId = null;
+      if (dead && r) { r.classList.add('errored'); preloadNext(); }
+      return;
+    }
+    if (activeEngine === 'yt' && activeBar) {
+      var ar = row(activeBar);
+      if (ar) ar.classList.add('errored');
+    }
+  }
+
+  function ensureYt(cb) {
+    if (ytUp) { if (cb) cb(); return; }
+    if (cb) ytQueued = cb;  // the latest press wins
+    if (ytPlayer || !ytApiReady) return;
+    var host = document.getElementById('yt-audio-host');
+    if (!host) return;
+    ytPlayer = buildYt(host, function () {
+      ytUp = true;
+      var queued = ytQueued; ytQueued = null;
+      if (queued) queued();
+      buildSpare();
+    });
+  }
+
+  function buildSpare() {
+    if (ytSpare || !FETCH_AHEAD) return;
+    // Off-screen rather than display:none, same as the first one: see
+    // render_player_page.
+    var wrap = document.createElement('div');
+    wrap.style.cssText =
+      'position:fixed;left:-9999px;top:130px;width:200px;height:113px;';
+    wrap.innerHTML = '<div></div>';
+    document.body.appendChild(wrap);
+    ytSpare = buildYt(wrap.firstChild, function () {
+      ytSpareUp = true;
+      preloadNext();
+    });
+  }
+
   window.onYouTubeIframeAPIReady = function () {
-    ytReady = true;
-    if (ytPendingInit) { var cb = ytPendingInit; ytPendingInit = null; cb(); }
-    else prewarm();
+    ytApiReady = true;
+    prewarm();
   };
 
-  // Build the player while nothing is waiting on it, so the first press
-  // pays for none of the setup.
-  //
-  // It deliberately stops at building the player and does NOT cue the first
-  // track's video in advance. That was tried and measured: cueing it took
-  // the first press from 757ms down to 505ms, but in that run playback then
-  // stopped by itself two seconds in, where the uncued path kept running --
-  // playVideo() on a cued video is evidently not the same thing as loading
-  // it fresh. One stall is enough to not trade it for 250ms; reviving the
-  // cue needs that explained first.
+  // Build the players while nothing is waiting on them, so the first press
+  // pays for none of the setup. A press that lands before they are up is
+  // queued in ensureYt and runs the moment the first one is.
   function prewarm() {
-    ensureYt(function () {});
+    ensureYt(null);
+  }
+
+  // ---- fetching ahead ----
+  //
+  // What makes a press slow is not the audio, it is everything YouTube does
+  // before the audio: loadVideoById() on a standing player still took
+  // 520-1060ms to first sound across five presses on a real digest page.
+  // The same video already sitting in a second player starts in 190-390ms.
+  // So the spare always holds the track most likely to be asked for next:
+  // the one after what is playing (the first on the page before anything
+  // is), or the row the mouse is aiming at, from the point on its bar the
+  // pointer is over. A press on that track swaps the two players.
+  //
+  // cueVideoById() looks like the call for this and is not: it fetches the
+  // thumbnail and nothing else, and playVideo() after it measured no faster
+  // than loading cold (726-1150ms). It has to be a real, muted
+  // loadVideoById(), held by onYtState as soon as it starts.
+
+  // Seconds into the track for a point along the bar, from the length
+  // Discogs gave us. 0 when that is unknown; the poll loop seeks then.
+  function startAt(bar, fraction) {
+    var known = knownDuration(bar);
+    return fraction > 0.01 && known > 0 ? Math.floor(fraction * known) : 0;
+  }
+
+  function ytLoadArg(videoId, start) {
+    return start > 0 ? { videoId: videoId, startSeconds: start } : videoId;
+  }
+
+  // Two points on a bar that are the same point to anyone listening: a
+  // few seconds apart, or a handful of pixels. What the spare fetched from
+  // one is played for a press on the other rather than fetched again.
+  function closeEnough(bar, a, b) {
+    return Math.abs(a - b) <= Math.max(3, knownDuration(bar) * 0.015);
+  }
+
+  // lastMoment: the press is already on its way (the button is down), so
+  // there is no time left to fetch the same track again from another point.
+  function preload(bar, fraction, lastMoment) {
+    if (!ytSpareUp || !bar) return;
+    var videoId = bar.getAttribute('data-yt');
+    if (!videoId) return;  // direct MP3s start fast enough as they are
+    if (activeEngine === 'yt' && videoId === activeVideoId) return;
+    var start = startAt(bar, fraction);
+    if (videoId === spareVideoId) {
+      if (closeEnough(bar, start, spareStart)) return;
+      // Seeking a player that has the video beat fetching it over
+      // (530-860ms against 680ms and up), so the swap will seek instead.
+      if (lastMoment && spareHeld) return;
+    }
+    spareBar = bar; spareVideoId = videoId; spareStart = start; spareHeld = false;
+    spareAt = Date.now();
+    try {
+      ytSpare.mute();
+      ytSpare.loadVideoById(ytLoadArg(videoId, start));
+    } catch (err) { spareBar = null; spareVideoId = null; }
+  }
+
+  function preloadNext() {
+    if (!ytSpareUp) return;
+    // The pointer has only just settled on the track the spare is holding:
+    // that one is the better guess for the next press.
+    if (hoverBar && hoverBar === spareBar && Date.now() - hoverAt < 4000) return;
+    var bars = playableBars();
+    var idx = activeBar ? bars.indexOf(activeBar) : -1;
+    if (activeBar && idx === -1) return;
+    preload(bars[idx + 1], 0);
+  }
+
+  // The swap asks a player that has only ever been muted and paused to
+  // play out loud. If a browser will not have that, fall back to loading
+  // the track the ordinary way rather than leave the press hanging.
+  function watchSwap(videoId, start) {
+    swapPending = true;
+    clearTimeout(swapTimer);
+    swapTimer = setTimeout(function () {
+      if (!swapPending || activeEngine !== 'yt' || activeVideoId !== videoId) return;
+      swapPending = false;
+      var state = -1;
+      try { state = ytPlayer.getPlayerState(); } catch (err) {}
+      // Buffering is slow, not stuck: it was swapped in mid-fetch on a poor
+      // connection, and starting that fetch over would only make it slower.
+      if (state === 1 || state === 3) return;
+      try { ytPlayer.loadVideoById(ytLoadArg(videoId, start)); } catch (err) {}
+    }, 1500);
   }
 
   function playYtFrom(bar, fraction) {
@@ -2534,16 +2734,48 @@ PLAYER_JS = """
     ensureYt(function () {
       if (activeBar && activeBar !== bar) resetBar(activeBar);
       if (activeEngine !== 'yt' || activeVideoId !== videoId) {
+        var start = startAt(bar, fraction);
+        // startSeconds puts the first request at the right place. Loading
+        // from 0:00 and seeking afterwards, as this used to, fetches the
+        // opening of the track only to throw it away.
+        pendingSeekFraction = fraction > 0.01 && start === 0 ? fraction : null;
+        swapPending = false; nearEndDone = false;
+        var swap = ytSpareUp && spareVideoId === videoId;
+        if (swap && !spareHeld && Date.now() - spareAt > 1000) {
+          // Asked for over a second ago and not even buffering: that fetch
+          // is not coming (blocked, most likely). Quicker to load it here.
+          var spareState = -1;
+          try { spareState = ytSpare.getPlayerState(); } catch (err) {}
+          if (spareState !== 3) { swap = false; spareBar = null; spareVideoId = null; }
+        }
         activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
-        var known = knownDuration(bar);
-        pendingSeekFraction = fraction > 0.01 ? fraction : null;
-        ytPlayer.loadVideoById(videoId);
-        // Best-effort immediate jump using Discogs' own track length, so a
-        // click deep into a bar does not sit at 0:00 waiting for YouTube's
-        // own metadata to arrive. The poll loop re-seeks once the real
-        // duration is confirmed, in case this fires before load is ready.
-        if (known > 0 && pendingSeekFraction !== null) {
-          try { ytPlayer.seekTo(pendingSeekFraction * known, true); } catch (err) {}
+        if (swap) {
+          // Muted on its way out: if it was itself still loading, it must
+          // not be heard for the instant before onYtState holds it.
+          try { ytPlayer.pauseVideo(); ytPlayer.mute(); } catch (err) {}
+          var was = ytPlayer; ytPlayer = ytSpare; ytSpare = was;
+          spareBar = null; spareVideoId = null;
+          ytPlayer.unMute();
+          var seek = !closeEnough(bar, start, spareStart);
+          if (seek) ytPlayer.seekTo(start, true);
+          watchSwap(videoId, start);
+          if (spareHeld) {
+            ytPlayer.playVideo();
+            // The player that just went quiet is free at once. Not waiting
+            // for this track to sound first is what keeps a run of quick
+            // "next" presses from outrunning the fetch every time.
+            if (!seek) preloadNext();
+          }
+          // Otherwise it is still fetching, and it is now the player you
+          // hear, so it starts by itself when it gets there. Both things
+          // done above for a held one make that later, not sooner:
+          // playVideo() into a load in progress, and a second player
+          // beginning its own load beside it (the two share a thread),
+          // each measured several hundred ms slower than leaving it be.
+          // A seek is a fetch too, hence no preloadNext() beside one;
+          // onYtState does it once this track is playing.
+        } else {
+          ytPlayer.loadVideoById(ytLoadArg(videoId, start));
         }
       } else {
         activeBar = bar;
@@ -2584,6 +2816,11 @@ PLAYER_JS = """
       var r = row(activeBar);
       if (r) r.classList.add('errored');
     }
+  });
+
+  // An MP3 row can be followed by a YouTube one; line that up as well.
+  audioEl.addEventListener('playing', function () {
+    if (activeEngine === 'audio') preloadNext();
   });
 
   function safePlay() {
@@ -2741,6 +2978,7 @@ PLAYER_JS = """
       ? (activeEngine === 'audio' && activeSrc === bar.getAttribute('data-src'))
       : (activeEngine === 'yt' && activeVideoId === bar.getAttribute('data-yt'));
     if (!isActiveTrack) { playFrom(bar, 0); return; }
+    swapPending = false;  // a pause this soon after a swap is the listener's, not a failure
     if (isAudio) {
       if (audioEl.paused) { safePlay(); } else { audioEl.pause(); }
     } else if (ytPlayer) {
@@ -2770,6 +3008,62 @@ PLAYER_JS = """
       ev.preventDefault();
       playFrom(bar, fractionFromEvent(bar, ev));
     }
+  });
+
+  // Start fetching before the press lands. A mouse comes to rest on a
+  // control a few hundred ms before its button goes down, and the button
+  // is down for another ~100ms before the click. Neither moment plays
+  // anything -- that still takes the click.
+  //
+  // Mouse only. A finger gives no hover, and its pointerdown is also how
+  // every scroll starts: fetching on that would spend mobile data on rows
+  // that were only being flicked past.
+
+  // The bar a play button or a bar belongs to; null anywhere else.
+  function barUnder(target) {
+    var el = target && target.closest ? target.closest('button.ppbtn, .bar') : null;
+    var r = el ? row(el) : null;
+    return r ? r.querySelector('.bar') : null;
+  }
+
+  function preloadAt(bar, target, x, lastMoment) {
+    var onBar = target.closest('.bar');
+    preload(bar, onBar ? fractionFromEvent(bar, { clientX: x }) : 0, lastMoment);
+  }
+
+  document.addEventListener('pointerdown', function (ev) {
+    if (ev.pointerType !== 'mouse' || ev.button) return;
+    var bar = barUnder(ev.target);
+    if (!bar) return;
+    clearTimeout(hoverTimer);
+    preloadAt(bar, ev.target, ev.clientX, true);
+  });
+
+  document.addEventListener('pointermove', function (ev) {
+    if (ev.pointerType !== 'mouse') return;
+    clearTimeout(hoverTimer);
+    var bar = barUnder(ev.target), target = ev.target, x = ev.clientX, now = Date.now();
+    if (bar !== hoverBar) { hoverBar = bar; hoverEnterAt = now; }
+    hoverAt = now;
+    if (!bar) {
+      // Off the controls again: hand the spare back to whatever plays
+      // next, in case a row the pointer paused on borrowed it.
+      hoverTimer = setTimeout(preloadNext, 1500);
+      return;
+    }
+    // A row the spare does not have yet: fetch once the pointer has been
+    // on its control for 100ms, still moving or not. That is long enough
+    // to tell aiming at it from passing over it, and every ms waited
+    // beyond that comes straight off the head start. Never within half a
+    // second of the last one, though, so a slow sweep down the list cannot
+    // turn into a burst of requests. A row it does have, from a different
+    // point on the bar: only once the pointer has stopped there.
+    var wait = spareBar === bar ? 150
+      : Math.max(100 - (now - hoverEnterAt), 500 - (now - hoverFetchAt), 0);
+    hoverTimer = setTimeout(function () {
+      if (spareBar !== bar) hoverFetchAt = Date.now();
+      preloadAt(bar, target, x, false);
+    }, wait);
   });
 
   document.addEventListener('keydown', function (ev) {
@@ -2851,7 +3145,7 @@ PLAYER_JS = """
   // directly); the page's <head> has the request in flight (leave it, our
   // onYouTubeIframeAPIReady above will fire); or nobody asked for it yet.
   if (window.YT && window.YT.Player) {
-    ytReady = true;
+    ytApiReady = true;
     prewarm();
   } else if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
     var tag = document.createElement('script');

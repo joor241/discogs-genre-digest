@@ -638,11 +638,19 @@ There's no real waveform drawn on the bar — YouTube doesn't expose audio data
 to embedded players, so a true waveform isn't something this can build. It's
 an even progress fill, same idea as any basic scrubber.
 
-Under the hood, one hidden YouTube player (invisible, not a video frame you
-see) is created once when the page loads and reused for every track — clicking
-a bar just tells it what to load and where to seek, rather than building a new
+Under the hood, two hidden YouTube players (invisible, not video frames you
+see) are created once when the page loads and reused for every track — clicking
+a bar just tells one what to load and where to seek, rather than building a new
 embed per click. This is also what makes seeking on an already-loaded track
 truly instant.
+
+The second player is what keeps the wait short on a track you *haven't* touched
+yet. It stays muted and fetches ahead: the track after the one playing (so
+**next** and auto-advance don't start from nothing), or the row your mouse has
+come to rest on. Pressing that track swaps the two players instead of loading
+it cold. It costs one extra request per track, so it switches itself off when
+the browser asks to save data, and adding `?ahead=0` to the page address turns
+it off by hand.
 
 **Not every track plays through YouTube.** Discogs releases only have
 community-submitted YouTube links to work with, but clone.nl, deejay.de and
