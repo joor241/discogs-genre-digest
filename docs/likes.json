@@ -1062,5 +1062,54 @@
       }
     ],
     "liked_at": "2026-10-19T14:18:25.710Z"
+  },
+  "https://www.discogs.com/sell/item/4207692717": {
+    "description": "Sound Of One - As I Am (12\", Single)",
+    "price": "6.99 EUR",
+    "url": "https://www.discogs.com/sell/item/4207692717",
+    "store": "Demonfuzz Records",
+    "thumb": "https://i.discogs.com/uX393MKkHzyDi2upksv6mLcUKgsp_qTGBH7CrCAO_8Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Njk2/MC0xNTI3MjM3NTIz/LTU5MzAuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Sound Of One - As I Am (Todd Edwards Mix)",
+        "yt": "dCFtegS5qgE",
+        "src": null,
+        "dur": 302
+      },
+      {
+        "title": "Sound Of One - As I Am (Roger's Uplifting Dub)",
+        "yt": "y2-BvfS49DQ",
+        "src": null,
+        "dur": 334
+      },
+      {
+        "title": "Sound Of One - As i am ''Nice & Stoned Classic Mix'' (1993)",
+        "yt": "0EA6PlqgYdQ",
+        "src": null,
+        "dur": 405
+      },
+      {
+        "title": "Sound Of One - As I Am (Junior Style Dub)",
+        "yt": "opLuTORzt6o",
+        "src": null,
+        "dur": 361
+      },
+      {
+        "title": "Sound Of One -- As I Am (Todd Edwards N.Y Dub)",
+        "yt": "6w6JFNt_l5s",
+        "src": null,
+        "dur": 291
+      },
+      {
+        "title": "Sound of One - As I Am (Todd Edwards Mix)",
+        "yt": "q0x1b2qy4Z0",
+        "src": null,
+        "dur": 376
+      }
+    ],
+    "liked_at": "2026-10-19T14:26:06.053Z"
   }
 }
