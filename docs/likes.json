@@ -878,5 +878,54 @@
       }
     ],
     "liked_at": "2026-10-17T11:17:17.349Z"
+  },
+  "https://www.discogs.com/sell/item/4418763402": {
+    "description": "Clivillés & Cole - A Deeper Love (A Deeper Feeling Mix) (12\", Single)",
+    "price": "12.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4418763402",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/ZzZBLgZh50EKChIG5vXrT0GmYzSqpYVcLgIBMfm__yg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMDg4/MS0xMzg5MjEyNjg4/LTI0MTguanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Clivillés & Cole feat. Deborah Cooper - Pride (In The Name Of Love)[MLK 12'' RmX]",
+        "yt": "F84lcIiOy_Q",
+        "src": null,
+        "dur": 499
+      },
+      {
+        "title": "Clivilles & Cole - Pride In the Name of Love (Techno remake club remix)",
+        "yt": "7kHCOwakEIM",
+        "src": null,
+        "dur": 479
+      },
+      {
+        "title": "Clivillés & Cole - Pride (A Deeper Love) (Continuous Play-Underground Club MixLet's Go Chanting Mix)",
+        "yt": "CCizan7abqg",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "Clivilles & Cole - A Deeper Love (Official Music Video) | Unedited Full Version",
+        "yt": "9WqI9OWZ7Qs",
+        "src": null,
+        "dur": 278
+      },
+      {
+        "title": "Clivilles and Cole - Deeper Love  - TOTP 12 03 1992",
+        "yt": "XfBBt5G_nlU",
+        "src": null,
+        "dur": 181
+      },
+      {
+        "title": "Clivillés & Cole - A Deeper Love (A Deeper Feeling Mix)",
+        "yt": "rU6u_cwHhgQ",
+        "src": null,
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-19T13:58:33.749Z"
   }
 }
