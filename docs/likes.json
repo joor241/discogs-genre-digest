@@ -976,5 +976,42 @@
       }
     ],
     "liked_at": "2026-10-19T14:09:13.756Z"
+  },
+  "https://www.discogs.com/sell/item/4417564011": {
+    "description": "Eddie S. - The Eddie S. EP (12\", EP)",
+    "price": "13.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4417564011",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/0dzSH18W74W1Voi7udHTBBODtK5ps-y9ZZd0iIFnuiw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyNDM1/Ny0xMTk2NTI5NDk3/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "eddie s - gotta dance",
+        "yt": "swZ1fqWzC8Q",
+        "src": null,
+        "dur": 374
+      },
+      {
+        "title": "Eddie S. - The Spell Freeze records 1992",
+        "yt": "7HswKM3Hftw",
+        "src": null,
+        "dur": 335
+      },
+      {
+        "title": "eddie s - give ya love",
+        "yt": "QouU1tKKm34",
+        "src": null,
+        "dur": 445
+      },
+      {
+        "title": "eddie s - youve got me down",
+        "yt": "DtSMA4cEweM",
+        "src": null,
+        "dur": 326
+      }
+    ],
+    "liked_at": "2026-10-19T14:09:41.028Z"
   }
 }
