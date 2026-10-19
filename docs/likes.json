@@ -927,5 +927,54 @@
       }
     ],
     "liked_at": "2026-10-19T13:58:33.749Z"
+  },
+  "https://www.discogs.com/sell/item/4417570806": {
+    "description": "Cassius - 1999 (2xLP, Album)",
+    "price": "42.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4417570806",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/oPf9koNGl2EMsVG1jBS0TysIWDMudqrAqEiyR2K-ssQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTczMjYx/LTE1MjI4NDY3Njct/OTA0MS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Cassius - Cassius 1999 (Official Music Video HD)",
+        "yt": "QXSlkjPbpkA",
+        "src": null,
+        "dur": 205
+      },
+      {
+        "title": "Cassius - Feeling For You (Official Video)",
+        "yt": "RrU2DThhsZI",
+        "src": null,
+        "dur": 216
+      },
+      {
+        "title": "Cassius - La Mouche (Official Video)",
+        "yt": "lcaDMNUhY0c",
+        "src": null,
+        "dur": 202
+      },
+      {
+        "title": "Cassius - Foxxy (DJ Tool Remix) [Official Audio]",
+        "yt": "1TNURx29WcM",
+        "src": null,
+        "dur": 443
+      },
+      {
+        "title": "Cassius - Club 73 (Official Audio)",
+        "yt": "7xDXyUplr0U",
+        "src": null,
+        "dur": 238
+      },
+      {
+        "title": "Cassius - La Mouche (DJ Falcon Metal Mix) [Official Audio]",
+        "yt": "TVC4OUgFmUM",
+        "src": null,
+        "dur": 539
+      }
+    ],
+    "liked_at": "2026-10-19T14:09:13.756Z"
   }
 }
