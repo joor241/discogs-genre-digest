@@ -1013,5 +1013,54 @@
       }
     ],
     "liked_at": "2026-10-19T14:09:41.028Z"
+  },
+  "https://www.discogs.com/sell/item/4418756910": {
+    "description": "Cece Peniston* - Somebody Else's Guy (Tuff Jam / Eric Kupper Mixes) (12\", Single)",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4418756910",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/diuFgVnaU2Uj31Ed755RorKDpf1HKcUfg78xSAQkIxo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyNzAw/LTE3MjEwMDMxNDMt/NDczMy5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "CeCe Peniston \"Somebody Else's Guy\" Tuff Jam Classic Garage Vocal 1998",
+        "yt": "J0-OG-fkYUk",
+        "src": null,
+        "dur": 445
+      },
+      {
+        "title": "Cece Peniston - Somebody Else's Guy (TuffJam Ladies Choice Dub)",
+        "yt": "Ww2fMxaiJZg",
+        "src": null,
+        "dur": 357
+      },
+      {
+        "title": "Somebody Else's Guy",
+        "yt": "gd9zOKOliGM",
+        "src": null,
+        "dur": 341
+      },
+      {
+        "title": "CeCe Peniston - Somebody Else's Guy (Eric Kupper Uplifting Club Mix)",
+        "yt": "TM0FV2fpldI",
+        "src": null,
+        "dur": 351
+      },
+      {
+        "title": "CeCe Peniston - Somebody Else's Guy (Live) [HD Widescreen Music Video]",
+        "yt": "uUjNqemzAtE",
+        "src": null,
+        "dur": 262
+      },
+      {
+        "title": "CeCe Peniston - Somebody Else's Guy - LIVE on stage with GET FUNKED - Under The Bridge - 2015",
+        "yt": "gl36q5DpjIY",
+        "src": null,
+        "dur": 314
+      }
+    ],
+    "liked_at": "2026-10-19T14:18:25.710Z"
   }
 }
