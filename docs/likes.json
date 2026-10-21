@@ -1203,5 +1203,36 @@
       }
     ],
     "liked_at": "2026-10-21T12:40:20.912Z"
+  },
+  "https://www.discogs.com/sell/item/4420741413": {
+    "description": "Ooze - Slipstream (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4420741413",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/veXTNL2sd61AtjF1S8ffs_NptQW4-g_bNSnlbU0JYyU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2NTk0/LTEzNDkxOTEwMTQt/MzMyNS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Ooze - Slipstream",
+        "yt": "CISH3-YrtV8",
+        "src": null,
+        "dur": 290
+      },
+      {
+        "title": "Ooze - Easy Living",
+        "yt": "OObfJoeAO4E",
+        "src": null,
+        "dur": 338
+      },
+      {
+        "title": "Ooze - Think About You",
+        "yt": "NXXzwuN95jg",
+        "src": null,
+        "dur": 354
+      }
+    ],
+    "liked_at": "2026-10-21T12:40:43.525Z"
   }
 }
