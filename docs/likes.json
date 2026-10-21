@@ -1160,5 +1160,48 @@
       }
     ],
     "liked_at": "2026-10-21T12:39:19.119Z"
+  },
+  "https://www.discogs.com/sell/item/4420743486": {
+    "description": "Reality Check - Fantasy (12\", RE, RM)",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4420743486",
+    "store": "Offbeat Records",
+    "thumb": "",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Fantasy (Whipped And Turned Mix)",
+        "yt": "_pY0kaFTqFo",
+        "src": null,
+        "dur": 433
+      },
+      {
+        "title": "Fantasy (Minimized Mix)",
+        "yt": "Yo0s3r1-u0c",
+        "src": null,
+        "dur": 418
+      },
+      {
+        "title": "Fantasy (Deeper Groove)",
+        "yt": "yMDPrMMOWCc",
+        "src": null,
+        "dur": 351
+      },
+      {
+        "title": "Reality Check 'Fantasy' (Whipped And Turned Mix - DJ T. Edit)",
+        "yt": "Q6OPJzxlvhU",
+        "src": null,
+        "dur": 381
+      },
+      {
+        "title": "Fantasy (Whipped And Turned Mix) (DJ T. Edit)",
+        "yt": "mgNtnRsf32k",
+        "src": null,
+        "dur": 381
+      }
+    ],
+    "liked_at": "2026-10-21T12:40:20.912Z"
   }
 }
