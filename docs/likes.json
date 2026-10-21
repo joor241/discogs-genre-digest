@@ -1234,5 +1234,36 @@
       }
     ],
     "liked_at": "2026-10-21T12:40:43.525Z"
+  },
+  "https://www.discogs.com/sell/item/4420727265": {
+    "description": "K-Hand* - Project 6 EP (12\", EP, W/Lbl)",
+    "price": "12.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4420727265",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/DNdJrgb3yzugcmeF_OT7qLCr1EOYJWhQCU-VZ0UUWnU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NzM3/MTkxLTE3MzMwNzgz/ODgtNDMyNy5wbmc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "K-HAND - Boiler Room Teaser",
+        "yt": "2NVayKlY11c",
+        "src": null,
+        "dur": 478
+      },
+      {
+        "title": "K-HAND - You Stepped Right Into My Life (K-HAND Edit)",
+        "yt": "PEaZNJWDuGM",
+        "src": null,
+        "dur": 414
+      },
+      {
+        "title": "K.HAND - Live",
+        "yt": "jEPqEWv1R4A",
+        "src": null,
+        "dur": 281
+      }
+    ],
+    "liked_at": "2026-10-21T12:59:35.358Z"
   }
 }
