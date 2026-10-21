@@ -1111,5 +1111,54 @@
       }
     ],
     "liked_at": "2026-10-19T14:26:06.053Z"
+  },
+  "https://www.discogs.com/sell/item/4420746288": {
+    "description": "Cassius - Feeling For You (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4420746288",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/v0iQIDnWeRrr5gRGkYuyhIGn-JUHkahNLNhDpbLLiEY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwNjgz/LTE1NTc3ODc3NTIt/MjAxNy5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Cassius - Feeling For You (Les Rythmes Digitales - Dreamix) HQ",
+        "yt": "J9M7zIB4v-0",
+        "src": null,
+        "dur": 457
+      },
+      {
+        "title": "Cassius - Feeling For You (Cambridge Circus Mix by DJ Mehdi)",
+        "yt": "DS3j26-NYKg",
+        "src": null,
+        "dur": 397
+      },
+      {
+        "title": "Cassius - Feeling for you",
+        "yt": "DOTXZKLrPzw",
+        "src": null,
+        "dur": 315
+      },
+      {
+        "title": "Cassius Cassius 99 (Remix / Long Version) 1999 House",
+        "yt": "wMTt13lbBQE",
+        "src": null,
+        "dur": 544
+      },
+      {
+        "title": "Cassius - Feeling For You (Dj Tool Short Mix)",
+        "yt": "jdmf66pczVE",
+        "src": null,
+        "dur": 352
+      },
+      {
+        "title": "Cassius – Feeling For You (DJ Tool Short Mix)",
+        "yt": "IP01KZOX3-U",
+        "src": null,
+        "dur": 350
+      }
+    ],
+    "liked_at": "2026-10-21T12:39:19.119Z"
   }
 }
