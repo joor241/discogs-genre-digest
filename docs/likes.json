@@ -1265,5 +1265,36 @@
       }
     ],
     "liked_at": "2026-10-21T12:59:35.358Z"
+  },
+  "https://www.discogs.com/sell/item/4424161209": {
+    "description": "Natural - Switch (12\")",
+    "price": "12.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4424161209",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/AMlrJVKk0EbRVl51buMhcllMIMLNpsEibXBmBAAkda4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM0MDgx/LTE0NzkwNDQ4OTYt/OTE5MC5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Natural - Switch (Folsom Mix)",
+        "yt": "EBVEbLGrt2c",
+        "src": null,
+        "dur": 515
+      },
+      {
+        "title": "Natural - Switch (Natural High Mix) [Rey-D Records 1994]",
+        "yt": "2EJrzZk-Hjg",
+        "src": null,
+        "dur": 584
+      },
+      {
+        "title": "Underground Solution - Switch (U.S 95 Version)",
+        "yt": "STogLRSpd5U",
+        "src": null,
+        "dur": 416
+      }
+    ],
+    "liked_at": "2026-10-22T11:38:44.899Z"
   }
 }
