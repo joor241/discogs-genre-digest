@@ -1345,5 +1345,54 @@
       }
     ],
     "liked_at": "2026-10-22T11:40:37.929Z"
+  },
+  "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_1_2x12_REPEAT05_Vinyl__999173": {
+    "description": "Jay Tripwire - My Life With The Machines Vol 1 (2x12\") (excl)",
+    "price": "24.33 EUR",
+    "url": "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_1_2x12_REPEAT05_Vinyl__999173",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/7/3/999173.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Acid Soul",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/3/999173a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Jah Love",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/3/999173b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Acid Babies",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/3/999173c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C1: Rawtronik 909",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/3/999173d.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C2: Visual Spectrum",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/3/999173e.mp3",
+        "dur": 0
+      },
+      {
+        "title": "D1: Dubdub1111",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/3/999173f.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-23T17:27:21.090Z"
   }
 }
