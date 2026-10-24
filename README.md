@@ -656,6 +656,25 @@ it cold. It costs one extra request per track, so it switches itself off when
 the browser asks to save data, and adding `?ahead=0` to the page address turns
 it off by hand.
 
+**On the digest page, everything is preloaded.** Rather than one track ahead,
+every YouTube video on the page gets a hidden, muted player of its own that
+starts it and pauses right there, and every MP3 gets its own `<audio>` that
+downloads it -- top to bottom, three at a time, so a press anywhere on the
+page plays from what is already loaded. A counter next to Likes/Settings
+shows how far it has got (`Preloading 42% · 30/71`), with a thin line along
+the top of the window while it runs. Measured on the 24 Oct page (69 videos,
+11 MP3s): everything loaded in about 55 seconds, after which a press played
+in ~0.5s for a YouTube track and ~0.2s for an MP3, anywhere on the page. A
+dead video found along the way is greyed out straight away, so auto-advance
+skips it.
+
+This is deliberately heavy: each YouTube player is a whole embedded page, so
+a day with hundreds of clips costs a lot of memory and data, especially on a
+phone. The same `?ahead=0` / data-saver switch turns it off. It waits while
+the tab is in the background (a hidden tab may not start video), and a
+press always gets the connection to itself for two seconds before anything
+new starts loading. The Likes page keeps the one-ahead behaviour.
+
 **Not every track plays through YouTube.** Discogs releases only have
 community-submitted YouTube links to work with, but clone.nl, deejay.de and
 Yoyaku all give up real, direct MP3 preview clips instead — confirmed live on

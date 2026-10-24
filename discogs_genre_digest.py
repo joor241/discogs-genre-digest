@@ -2457,6 +2457,25 @@ a.ytlink:hover { color: #e8e8ea; background: #202027; }
 }
 .topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
 .topnav a svg { display: block; }
+/* How much of the page is preloaded: the pill fills up as it goes. */
+.preload {
+  position: relative; overflow: hidden; display: inline-flex; align-items: center;
+  color: #b4b4bb; font-size: 13px; font-variant-numeric: tabular-nums;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+}
+.preload[hidden] { display: none; }
+.preload .pfill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+  background: rgba(204, 0, 0, .22); transition: width .3s;
+}
+.preload .plabel { position: relative; }
+.preload.done { color: #8a8a92; }
+.preload.done .pfill { background: rgba(110, 168, 255, .12); }
+#preloadline {
+  position: fixed; left: 0; top: 0; z-index: 60; height: 2px; width: 0;
+  background: #cc0000; transition: width .3s; pointer-events: none;
+}
+#preloadline[hidden] { display: none; }
 .none { color: #5f5f68; font-size: 13px; }
 footer {
   margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
@@ -2533,8 +2552,17 @@ PLAYER_JS = """
   // the player then behaves exactly like the single-player one it replaced.
   var FETCH_AHEAD = !/[?&]ahead=0/.test(location.search) &&
     !(navigator.connection && navigator.connection.saveData);
-  var audioEl = new Audio();
-  audioEl.preload = 'none';
+  // Preloading everything (see "preloading everything") is for the digest
+  // page, which ships the element that shows its progress. likes.html does
+  // not, and keeps fetching one track ahead.
+  var preloadEl = document.getElementById('preload');
+  var PRELOAD_ALL = FETCH_AHEAD && !!preloadEl;
+  var ytMain = null;        // the player cold loads go into; see playYtFrom
+  // audioBase plays any MP3 that was not preloaded; audioEl is whichever
+  // <audio> is the one you hear, audioBase or a preloaded one.
+  var audioBase = new Audio();
+  audioBase.preload = 'none';
+  var audioEl = audioBase;
 
   var activeEngine = null;  // 'yt' | 'audio' | null
   var activeBar = null, activeVideoId = null, activeSrc = null;
@@ -2639,11 +2667,16 @@ PLAYER_JS = """
   // or not, so the spare's fetch never happens there. Forget it, or the
   // first press would sit waiting on it; visibilitychange asks again.
   function onYtBlocked(ev) {
-    if (ev.target !== ytPlayer) { spareBar = null; spareVideoId = null; }
+    if (ev.target === ytPlayer) return;
+    if (ev.target.__pool) { poolBlocked(ev.target.__pool); return; }
+    spareBar = null; spareVideoId = null;
   }
 
   document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) preloadNext();
+    if (document.hidden) return;
+    preloadNext();
+    requeueBlocked();
+    pumpPreload();
   });
 
   // Which video a player says it has, or '' when it does not say.
@@ -2652,7 +2685,16 @@ PLAYER_JS = """
   }
 
   function onYtState(ev) {
+    // A preloaded player that got as far as playing has its video; it
+    // counts as loaded whether it is held below or is already the one
+    // you hear (pressed while still on its way).
+    var entry = ev.target.__pool;
+    if (entry && ev.data === 1) { entry.held = true; poolSettle(entry, 'loaded'); }
     if (ev.target !== ytPlayer) {
+      if (entry) {
+        if (ev.data === 1) { try { ev.target.pauseVideo(); } catch (err) {} }
+        return;
+      }
       // The spare is there to fetch, never to be heard: hold it the moment
       // it actually starts. Not earlier -- pausing a load that is still on
       // its way throws the head start away (measured: paused 150ms in, the
@@ -2678,6 +2720,16 @@ PLAYER_JS = """
   }
 
   function onYtError(ev) {
+    if (ev.target !== ytPlayer && ev.target.__pool) {
+      // Same as the spare below: a dead video found while preloading greys
+      // its rows out now, so a press or auto-advance never stops on it.
+      var pooled = ev.target.__pool;
+      if (ev.data === 100 || ev.data === 101 || ev.data === 150) {
+        markErrored('data-yt', pooled.key);
+      }
+      poolSettle(pooled, 'failed');
+      return;
+    }
     if (ev.target !== ytPlayer) {
       // Found out while fetching ahead that this one cannot play here
       // (removed, or its owner switched embedding off). Grey the row out
@@ -2705,16 +2757,21 @@ PLAYER_JS = """
     if (ytPlayer || !ytApiReady) return;
     var host = document.getElementById('yt-audio-host');
     if (!host) return;
-    ytPlayer = buildYt(host, function () {
+    ytPlayer = ytMain = buildYt(host, function () {
       ytUp = true;
       var queued = ytQueued; ytQueued = null;
       if (queued) queued();
       buildSpare();
+      // Only now: the player a press needs first is standing, so building
+      // the rest cannot hold that up.
+      ytPoolStarted = true;
+      pumpPreload();
     });
   }
 
   function buildSpare() {
-    if (ytSpare || !FETCH_AHEAD) return;
+    // With every video preloaded there is nothing left for a spare to do.
+    if (ytSpare || !FETCH_AHEAD || PRELOAD_ALL) return;
     // Off-screen rather than display:none, same as the first one: see
     // render_player_page.
     var wrap = document.createElement('div');
@@ -2836,7 +2893,8 @@ PLAYER_JS = """
         // opening of the track only to throw it away.
         pendingSeekFraction = fraction > 0.01 && start === 0 ? fraction : null;
         swapPending = false; nearEndDone = false;
-        var swap = ytSpareUp && spareVideoId === videoId;
+        var pooled = poolPlayerFor(videoId);
+        var swap = !pooled && ytSpareUp && spareVideoId === videoId;
         if (swap && !spareHeld && Date.now() - spareAt > 1000) {
           // Asked for over a second ago and not even buffering: that fetch
           // is not coming (blocked, most likely). Quicker to load it here.
@@ -2845,7 +2903,9 @@ PLAYER_JS = """
           if (spareState !== 3) { swap = false; spareBar = null; spareVideoId = null; }
         }
         activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
-        if (swap) {
+        if (pooled) {
+          playPooled(pooled, bar, fraction);
+        } else if (swap) {
           // Muted on its way out: if it was itself still loading, it must
           // not be heard for the instant before onYtState holds it.
           try { ytPlayer.pauseVideo(); ytPlayer.mute(); } catch (err) {}
@@ -2871,6 +2931,14 @@ PLAYER_JS = """
           // A seek is a fetch too, hence no preloadNext() beside one;
           // onYtState does it once this track is playing.
         } else {
+          // Not preloaded yet. Never into a preloaded player that happens
+          // to be the one you hear: that would throw away the video it
+          // holds. Back to the main player instead.
+          if (PRELOAD_ALL && ytMain && ytPlayer !== ytMain) {
+            silence(ytPlayer);
+            ytPlayer = ytMain;
+            try { ytPlayer.unMute(); } catch (err) {}
+          }
           ytPlayer.loadVideoById(ytLoadArg(videoId, start));
         }
       } else {
@@ -2886,6 +2954,40 @@ PLAYER_JS = """
     });
   }
 
+  function silence(player) {
+    if (!player) return;
+    try { player.pauseVideo(); player.mute(); } catch (err) {}
+  }
+
+  // Make a preloaded player the one you hear. It keeps its video when it
+  // goes quiet again, so coming back to a track is as quick as the first
+  // time.
+  function playPooled(entry, bar, fraction) {
+    if (ytPlayer !== entry.player) {
+      silence(ytPlayer);
+      ytPlayer = entry.player;
+    }
+    try { ytPlayer.unMute(); } catch (err) {}
+    if (!entry.held) {
+      // Still on its way. It is now the one you hear, so it starts by
+      // itself when it gets there, and the poll loop seeks once it knows
+      // the length -- same as a swap onto a spare that is still fetching.
+      pendingSeekFraction = fraction > 0.01 ? fraction : null;
+      watchSwap(entry.key, 0);
+      return;
+    }
+    pendingSeekFraction = null;
+    var dur = 0, cur = 0;
+    try { dur = ytPlayer.getDuration() || 0; cur = ytPlayer.getCurrentTime() || 0; } catch (err) {}
+    dur = dur || knownDuration(bar);
+    var target = fraction > 0.01 && dur > 0 ? fraction * dur : 0;
+    // Held a split second after 0:00 when it was preloaded, or wherever it
+    // was left when last heard: only seek when that is noticeably off.
+    if (Math.abs(cur - target) > 2) ytPlayer.seekTo(target, true);
+    ytPlayer.playVideo();
+    watchSwap(entry.key, Math.floor(target));
+  }
+
   // ---- direct-audio backend (clone.nl, or any source with real MP3s) ----
 
   function pollAudio() {
@@ -2899,25 +3001,29 @@ PLAYER_JS = """
     paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar), state);
   }
 
-  audioEl.addEventListener('ended', function () {
-    if (activeEngine === 'audio' && activeBar) {
-      var d = audioEl.duration || knownDuration(activeBar);
-      paint(activeBar, 1, fmt(d), fmt(d), 'paused');
-      stopPolling();
-      step(1);  // roll on to the next track, top to bottom
-    }
-  });
-  audioEl.addEventListener('error', function () {
-    if (activeEngine === 'audio' && activeBar) {
-      var r = row(activeBar);
-      if (r) r.classList.add('errored');
-    }
-  });
-
-  // An MP3 row can be followed by a YouTube one; line that up as well.
-  audioEl.addEventListener('playing', function () {
-    if (activeEngine === 'audio') preloadNext();
-  });
+  // Every <audio> gets these, preloaded ones included; each only acts while
+  // its element is the one you hear.
+  function wireAudio(el) {
+    el.addEventListener('ended', function () {
+      if (el === audioEl && activeEngine === 'audio' && activeBar) {
+        var d = audioEl.duration || knownDuration(activeBar);
+        paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+        stopPolling();
+        step(1);  // roll on to the next track, top to bottom
+      }
+    });
+    el.addEventListener('error', function () {
+      if (el === audioEl && activeEngine === 'audio' && activeBar) {
+        var r = row(activeBar);
+        if (r) r.classList.add('errored');
+      }
+    });
+    // An MP3 row can be followed by a YouTube one; line that up as well.
+    el.addEventListener('playing', function () {
+      if (el === audioEl && activeEngine === 'audio') preloadNext();
+    });
+  }
+  wireAudio(audioBase);
 
   function safePlay() {
     var p = audioEl.play();
@@ -2929,13 +3035,21 @@ PLAYER_JS = """
     if (activeBar && activeBar !== bar) resetBar(activeBar);
     if (activeEngine !== 'audio' || activeSrc !== src) {
       activeEngine = 'audio'; activeSrc = src; activeVideoId = null; activeBar = bar;
-      audioEl.src = src;
-      if (fraction > 0.01) {
+      // A preloaded element has (some of) the file already: play that one
+      // rather than start the same download over in audioBase.
+      var pooled = audioPool[src] && audioPool[src].el;
+      var el = pooled || audioBase;
+      if (audioEl !== el) { audioEl.pause(); audioEl = el; }
+      if (!pooled) audioEl.src = src;
+      if (pooled && audioEl.duration) {
+        // Also rewinds a clip that was heard before and left halfway.
+        audioEl.currentTime = fraction > 0.01 ? fraction * audioEl.duration : 0;
+      } else if (fraction > 0.01) {
         var onMeta = function () {
-          audioEl.currentTime = fraction * (audioEl.duration || 0);
-          audioEl.removeEventListener('loadedmetadata', onMeta);
+          el.currentTime = fraction * (el.duration || 0);
+          el.removeEventListener('loadedmetadata', onMeta);
         };
-        audioEl.addEventListener('loadedmetadata', onMeta);
+        el.addEventListener('loadedmetadata', onMeta);
       }
       safePlay();
     } else {
@@ -2947,6 +3061,186 @@ PLAYER_JS = """
     pollTimer = setInterval(pollAudio, 200);
     paint(bar, fraction, fmt(fraction * (audioEl.duration || knownDuration(bar))),
           durLabel(bar), 'loading');
+  }
+
+  // ---- preloading everything ----
+  //
+  // The spare above makes one press quick: the one most likely next. This
+  // makes every press quick, by loading the whole page before it is asked
+  // for. Each YouTube video gets a hidden, muted player of its own, which
+  // starts the video and is held right there (the same "held" state the
+  // spare reaches -- 190-390ms to sound instead of 520-1060ms); each MP3
+  // gets an <audio> of its own that downloads it. Both go top to bottom, a
+  // few at a time, and the counter at the top of the page shows how far.
+  //
+  // Heavy on purpose: every YouTube player is a whole embedded page, so a
+  // day with hundreds of clips costs a lot of memory and data. ?ahead=0
+  // or the browser's data saver turn it off, back to one track ahead.
+  var POOL_PARALLEL = 3;      // YouTube players being set up at once
+  var AUDIO_PARALLEL = 3;     // MP3s downloading at once
+  var POOL_TIMEOUT = 15000;   // stop waiting on one after this (it may still finish)
+  var PRESS_QUIET = 2000;     // after a press, start nothing new for this long
+  var ytPool = {}, audioPool = {};   // video id / MP3 url -> entry
+  var ytQueue = [], audioQueue = [], ytBlocked = [];
+  var ytBusy = 0, audioBusy = 0, ytPoolStarted = false, ytRefused = false;
+  var preloadTotal = 0, preloadLoaded = 0, preloadFailed = 0;
+  var lastPressAt = 0, pumpTimer = null, preloadLine = null;
+
+  function markErrored(attr, value) {
+    var bars = document.querySelectorAll('.bar[' + attr + ']');
+    for (var i = 0; i < bars.length; i++) {
+      if (bars[i].getAttribute(attr) !== value) continue;
+      var r = row(bars[i]);
+      if (r) r.classList.add('errored');
+    }
+  }
+
+  // Page order, each video / clip once however many rows share it.
+  function collectPreload() {
+    var bars = document.querySelectorAll('.bar');
+    for (var i = 0; i < bars.length; i++) {
+      var yt = bars[i].getAttribute('data-yt'), src = bars[i].getAttribute('data-src');
+      if (yt && !ytPool[yt]) {
+        ytPool[yt] = { kind: 'yt', key: yt, state: 'queued' };
+        ytQueue.push(ytPool[yt]);
+        preloadTotal++;
+      } else if (!yt && src && !audioPool[src]) {
+        audioPool[src] = { kind: 'audio', key: src, state: 'queued' };
+        audioQueue.push(audioPool[src]);
+        preloadTotal++;
+      }
+    }
+  }
+
+  function pumpPreload() {
+    clearTimeout(pumpTimer); pumpTimer = null;
+    if (!PRELOAD_ALL || document.hidden) return;
+    // A press gets the connection to itself: a load starting beside it was
+    // measured to make it several hundred ms slower (see the swap above).
+    var quiet = PRESS_QUIET - (Date.now() - lastPressAt);
+    if (quiet > 0) { pumpTimer = setTimeout(pumpPreload, quiet); return; }
+    while (ytPoolStarted && !ytRefused && ytBusy < POOL_PARALLEL && ytQueue.length) {
+      startYtPreload(ytQueue.shift());
+    }
+    while (audioBusy < AUDIO_PARALLEL && audioQueue.length) startAudioPreload(audioQueue.shift());
+    paintPreload();
+  }
+
+  function startYtPreload(entry) {
+    ytBusy++; entry.busy = true; entry.state = 'loading';
+    entry.timer = setTimeout(function () { poolRelease(entry); }, POOL_TIMEOUT);
+    if (entry.player) {
+      // Back from being blocked in a hidden tab: the player is standing.
+      if (entry.up) { try { entry.player.loadVideoById(entry.key); } catch (err) {} }
+      return;
+    }
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;left:-9999px;top:260px;width:200px;height:113px;';
+    wrap.innerHTML = '<div></div>';
+    document.body.appendChild(wrap);
+    entry.player = buildYt(wrap.firstChild, function () {
+      entry.up = true;
+      try {
+        entry.player.mute();
+        entry.player.loadVideoById(entry.key);
+      } catch (err) { poolSettle(entry, 'failed'); }
+    });
+    entry.player.__pool = entry;
+  }
+
+  function startAudioPreload(entry) {
+    audioBusy++; entry.busy = true; entry.state = 'loading';
+    entry.timer = setTimeout(function () { poolRelease(entry); }, POOL_TIMEOUT);
+    var el = new Audio();
+    el.preload = 'auto';
+    wireAudio(el);
+    // canplaythrough: the browser reckons it can play to the end without
+    // stopping to buffer, which is the whole point.
+    el.addEventListener('canplaythrough', function () { poolSettle(entry, 'loaded'); });
+    el.addEventListener('error', function () {
+      // 4 is what a missing file (404) turns into; a network blip is not
+      // a reason to grey the row out.
+      if (el.error && el.error.code === 4) markErrored('data-src', entry.key);
+      poolSettle(entry, 'failed');
+    });
+    entry.el = el;
+    el.src = entry.key;
+  }
+
+  // Frees the slot, without saying how it went: one that timed out keeps
+  // loading, and still counts if it gets there.
+  function poolRelease(entry) {
+    if (!entry.busy) return;
+    entry.busy = false;
+    clearTimeout(entry.timer);
+    if (entry.kind === 'yt') ytBusy--; else audioBusy--;
+    pumpPreload();
+  }
+
+  function poolSettle(entry, state) {
+    if (entry.state !== 'loaded' && entry.state !== state) {
+      if (entry.state === 'failed') preloadFailed--;
+      entry.state = state;
+      if (state === 'loaded') preloadLoaded++; else preloadFailed++;
+    }
+    poolRelease(entry);
+    paintPreload();
+  }
+
+  // A tab opened in the background may not start anything, muted or not.
+  // Those go back in line, first, for when the tab is shown.
+  function poolBlocked(entry) {
+    if (entry.state === 'loaded') return;
+    if (!document.hidden) {
+      // Shown, and still refused: this browser lets no page start video by
+      // itself, muted or not. Building the rest would only cost memory.
+      ytRefused = true;
+      poolSettle(entry, 'failed');
+      return;
+    }
+    entry.state = 'queued';
+    ytBlocked.push(entry);
+    poolRelease(entry);
+  }
+
+  function requeueBlocked() {
+    if (!ytBlocked.length) return;
+    ytQueue = ytBlocked.concat(ytQueue);
+    ytBlocked = [];
+  }
+
+  // Only a player whose video is loaded or loading: one whose embed is
+  // still being built would be slower than loading into the main player.
+  function poolPlayerFor(videoId) {
+    var entry = ytPool[videoId];
+    return entry && entry.up && entry.state !== 'failed' && entry.state !== 'queued'
+      ? entry : null;
+  }
+
+  function paintPreload() {
+    if (!preloadEl || !preloadTotal) return;
+    var pct = Math.floor(preloadLoaded * 100 / preloadTotal);
+    var ytFinished = ytRefused ||
+      (ytPoolStarted && !ytQueue.length && !ytBlocked.length && !ytBusy);
+    var finished = ytFinished && !audioQueue.length && !audioBusy;
+    var label = (finished ? 'Preloaded ' : 'Preloading ') + pct + '%';
+    if (pct < 100) label += ' \\u00b7 ' + preloadLoaded + '/' + preloadTotal;
+    preloadEl.hidden = false;
+    preloadEl.classList.toggle('done', finished);
+    preloadEl.querySelector('.plabel').textContent = label;
+    preloadEl.querySelector('.pfill').style.width = pct + '%';
+    preloadEl.title = preloadLoaded + ' of ' + preloadTotal + ' tracks ready to play' +
+      (preloadFailed ? ', ' + preloadFailed + ' could not be loaded' : '') +
+      (ytRefused ? '. This browser does not allow preloading video.' : '');
+    // A thin line along the top of the window, so the progress stays in
+    // sight further down the page. Gone once there is nothing left to do.
+    if (!preloadLine) {
+      preloadLine = document.createElement('div');
+      preloadLine.id = 'preloadline';
+      document.body.appendChild(preloadLine);
+    }
+    preloadLine.style.width = pct + '%';
+    preloadLine.hidden = finished;
   }
 
   // ---- track navigation: walk the page top to bottom ----
@@ -3057,6 +3351,7 @@ PLAYER_JS = """
   // ---- unified dispatch: only one backend plays at a time ----
 
   function playFrom(bar, fraction) {
+    lastPressAt = Date.now();
     var isAudio = !!bar.getAttribute('data-src');
     if (isAudio) {
       if (activeEngine === 'yt' && ytPlayer) { try { ytPlayer.pauseVideo(); } catch (err) {} }
@@ -3236,6 +3531,14 @@ PLAYER_JS = """
     }
   };
 
+  // The rows are all in the page by now (this script sits at the end of
+  // it). MP3s can start straight away; YouTube waits for the main player.
+  if (PRELOAD_ALL) {
+    collectPreload();
+    paintPreload();  // 0% from the start, even in a tab that waits until shown
+    pumpPreload();
+  }
+
   // Three cases, in order: the API is already loaded (its ready callback
   // fired before this script existed, so nothing will call ours -- warm up
   // directly); the page's <head> has the request in flight (leave it, our
@@ -3360,7 +3663,11 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
         '<div class="wrap">',
         f'<div class="topnav">'
         f'<a href="{e(likes_href)}">{ICON_HEART} Likes</a>'
-        f'<a href="{e(settings_href)}">{ICON_SETTINGS} Settings</a></div>',
+        f'<a href="{e(settings_href)}">{ICON_SETTINGS} Settings</a>'
+        # Filled in by the player as it preloads every track; also what
+        # tells the player this page wants everything preloaded.
+        '<span id="preload" class="preload" hidden>'
+        '<span class="pfill"></span><span class="plabel"></span></span></div>',
         '<h1>New on Discogs</h1>',
         f'<p class="sub">{total} record(s) listed since '
         f'{e(cutoff.strftime("%a %d %b %Y, %H:%M"))} UTC &middot; {e(filter_text)}</p>',
