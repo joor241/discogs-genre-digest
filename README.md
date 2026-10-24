@@ -608,7 +608,11 @@ for how the window and the schedule should be kept in step.
    reads one page per store, not the whole inventory.
 3. The inventory response **doesn't include genre**, so for each record that
    passed the cutoff, fetch `GET /releases/{id}` to read its `genres` and
-   `styles`, and keep it if it matches your filter.
+   `styles`, and keep it if it matches your filter. The same response also
+   carries the release's **tracklist** and its **Have / Want** counts (how
+   many Discogs users own it / have it on their wantlist), so those are
+   shown under every Discogs record in the email and on the player page at
+   no extra cost.
 4. Render the survivors as HTML and email them, with listen links.
 
 ### Listening to the records

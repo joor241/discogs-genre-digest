@@ -658,6 +658,11 @@ class Discogs:
             "videos": extract_videos(data.get("videos"), self.video_limit),
             "formats": [f.get("name") for f in (data.get("formats") or []) if f.get("name")],
             "year": release_year(data.get("year")),
+            # Also free, same response: the release's own tracklist, and how
+            # many Discogs users have it in their collection / wantlist.
+            "tracklist": extract_tracklist(data.get("tracklist")),
+            "have": community_count(data.get("community"), "have"),
+            "want": community_count(data.get("community"), "want"),
         }
         self._release_cache[release_id] = info
         return info
@@ -794,6 +799,80 @@ def extract_videos(raw: list | None, limit: int = MAX_VIDEOS_PER_RELEASE) -> lis
         if len(videos) >= limit:
             break
     return videos
+
+
+DISCOGS_NAME_NUMBER_RE = re.compile(r"\s*\(\d+\)$")
+
+
+def discogs_artist_names(artists: list | None) -> str:
+    """"A & B Feat. C" from a Discogs artists array, joined the way Discogs
+    joins them. Drops the "(2)" Discogs adds to tell same-named artists
+    apart, and the "*" it puts on a name credited differently on this
+    release -- both are bookkeeping, not part of the name."""
+    artists = [a for a in (artists or []) if a]
+    text = ""
+    for i, artist in enumerate(artists):
+        name = (artist.get("anv") or artist.get("name") or "").strip()
+        name = DISCOGS_NAME_NUMBER_RE.sub("", name).rstrip("*").strip()
+        if not name:
+            continue
+        text += name
+        if i < len(artists) - 1:
+            join = (artist.get("join") or "").strip()
+            text += ", " if join in ("", ",") else f" {join} "
+    return text.strip(" ,")
+
+
+def extract_tracklist(raw: list | None) -> list[dict]:
+    """The release's tracklist as [{"pos", "artist", "title", "dur"}].
+
+    Headings ("Side A") are dropped, since the positions already say which
+    side a track is on. An index track (a medley listed with sub-tracks) is
+    replaced by its sub-tracks. "artist" is only set when the track credits
+    someone of its own -- on most 12"s every track is by the release artist,
+    who is already in the title line above it.
+    """
+    tracks: list[dict] = []
+    for entry in raw or []:
+        entry = entry or {}
+        kind = entry.get("type_") or "track"
+        if kind == "index" and entry.get("sub_tracks"):
+            tracks.extend(extract_tracklist(entry["sub_tracks"]))
+            continue
+        if kind != "track":
+            continue
+        title = (entry.get("title") or "").strip()
+        if not title:
+            continue
+        tracks.append({
+            "pos": (entry.get("position") or "").strip(),
+            "artist": discogs_artist_names(entry.get("artists")),
+            "title": title,
+            "dur": (entry.get("duration") or "").strip(),
+        })
+    return tracks
+
+
+def community_count(community: dict | None, key: str) -> int | None:
+    """Have/want count from a release's `community` block, or None when
+    Discogs didn't send one (as opposed to a real 0)."""
+    value = (community or {}).get(key)
+    return value if isinstance(value, int) and value >= 0 else None
+
+
+def track_text(track: dict) -> str:
+    """One tracklist line as plain text: 'A1 Artist - Title (5:32)'."""
+    name = f'{track["artist"]} - {track["title"]}' if track.get("artist") else track["title"]
+    line = f'{track["pos"]} {name}' if track.get("pos") else name
+    return f'{line} ({track["dur"]})' if track.get("dur") else line
+
+
+def community_text(item: dict) -> str:
+    """'Have 567 · Want 1,234' for a Discogs release, or "" for anything
+    without counts (other sources, or digests saved before this existed)."""
+    parts = [f"{label} {item[key]:,}" for key, label in (("have", "Have"), ("want", "Want"))
+             if isinstance(item.get(key), int)]
+    return " · ".join(parts)
 
 
 def fmt_mmss(seconds: int) -> str:
@@ -1940,6 +2019,9 @@ def collect_seller(api: Discogs, username: str, display_name: str, cutoff: datet
             # Vinyl with nothing else bundled -- a release tagged ["Vinyl",
             # "File"] ships with a download code, so is not vinyl-only.
             "vinyl_only": (info.get("formats") or []) == ["Vinyl"],
+            "tracklist": info.get("tracklist") or [],
+            "have": info.get("have"),
+            "want": info.get("want"),
         })
 
     deduped = keep_best_copies(matched)
@@ -2240,7 +2322,21 @@ h2 {
 .badge.outofstock { background: #2b1414; color: #e08a8a; }
 .badge.vinylonly { background: #2b2410; color: #e0c452; font-weight: 700; }
 .fineprint { color: #6f6f78; font-size: 11.5px; margin-top: 3px; }
+.fineprint .community { color: #8a8a92; white-space: nowrap; }
 .tags { color: #5f5f68; font-size: 12px; margin-top: 3px; margin-bottom: 9px; }
+/* The release's own tracklist, as text: what is on the record, which is
+   not the same thing as the clips under it (those are whatever people
+   uploaded to YouTube). */
+ol.tracklist {
+  list-style: none; margin: -2px 0 11px; padding: 0;
+  font-size: 12.5px; line-height: 1.5; color: #b4b4bb;
+}
+ol.tracklist li { display: flex; gap: 8px; }
+ol.tracklist .pos {
+  flex: none; min-width: 2.4em; color: #6f6f78; font-variant-numeric: tabular-nums;
+}
+ol.tracklist .tt { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+ol.tracklist .tdur { flex: none; color: #6f6f78; font-variant-numeric: tabular-nums; }
 .buy {
   display: inline-block; font-size: 12px; color: #6ea8ff;
   text-decoration: none; margin-left: 10px;
@@ -3306,9 +3402,28 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                 stock_class = "preorder" if item.get("stock_status") == "preorder" else "outofstock"
                 meta_html += f'<span class="badge {stock_class}">{e(item["stock_note"])}</span>'
 
-            fine_html = ""
+            fine_parts = []
             if fineprint_text(item):
-                fine_html = f'<div class="fineprint">{e(fineprint_text(item))}</div>'
+                fine_parts.append(e(fineprint_text(item)))
+            if community_text(item):
+                fine_parts.append(f'<span class="community">{e(community_text(item))}</span>')
+            fine_html = ""
+            if fine_parts:
+                fine_html = f'<div class="fineprint">{" &middot; ".join(fine_parts)}</div>'
+
+            tracklist_html = ""
+            if item.get("tracklist"):
+                rows = []
+                for t in item["tracklist"]:
+                    name = (f'{e(t["artist"])} &ndash; {e(t["title"])}'
+                            if t.get("artist") else e(t["title"]))
+                    rows.append(
+                        f'<li><span class="pos">{e(t.get("pos") or "")}</span>'
+                        f'<span class="tt">{name}</span>'
+                        f'<span class="tdur">{e(t.get("dur") or "")}</span></li>'
+                    )
+                tracklist_html = ('<ol class="tracklist" aria-label="Tracklist">'
+                                  + "".join(rows) + '</ol>')
 
             tracks = []
             for video in (item.get("videos") or []):
@@ -3393,7 +3508,7 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                 + like_btn + '</div>'
                 + fine_html +
                 f'<div class="tags">{e(item["tags"])}</div>'
-                + track_html + '</div></div>'
+                + tracklist_html + track_html + '</div></div>'
             )
 
     if stats.get("unchecked"):
@@ -4002,10 +4117,32 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                         f'{e(item["stock_note"])}</span>'
                     )
 
-                catno = ""
+                fine_parts = []
                 if fineprint_text(item):
+                    fine_parts.append(e(fineprint_text(item)))
+                if community_text(item):
+                    fine_parts.append(f'<span style="color:#666;white-space:nowrap;">'
+                                      f'{e(community_text(item))}</span>')
+                catno = ""
+                if fine_parts:
                     catno = (f'<div style="color:#999;font-size:11.5px;margin-top:5px;">'
-                             f'{e(fineprint_text(item))}</div>')
+                             f'{" &middot; ".join(fine_parts)}</div>')
+
+                # Plain lines with <br>, not a list or a table: survives every
+                # mail client's CSS stripping and still lines up well enough.
+                tracklist = ""
+                if item.get("tracklist"):
+                    lines = []
+                    for t in item["tracklist"]:
+                        name = (f'{e(t["artist"])} &ndash; {e(t["title"])}'
+                                if t.get("artist") else e(t["title"]))
+                        pos = (f'<span style="color:#999;display:inline-block;'
+                               f'min-width:26px;">{e(t["pos"])}</span> ' if t.get("pos") else "")
+                        dur = (f' <span style="color:#999;">{e(t["dur"])}</span>'
+                               if t.get("dur") else "")
+                        lines.append(pos + name + dur)
+                    tracklist = ('<div style="margin-top:6px;color:#444;font-size:12px;'
+                                 'line-height:1.55;">' + "<br>".join(lines) + '</div>')
 
                 out.append(
                     '<table role="presentation" cellpadding="0" cellspacing="0" border="0" '
@@ -4018,7 +4155,7 @@ def render_html(sections, cutoff: datetime, genres: list[str], stats: dict,
                     f'<div style="margin-top:5px;">{meta}</div>'
                     + catno +
                     f'<div style="color:#888;font-size:12px;">{e(item["tags"])}</div>'
-                    + listen_html(item, e) +
+                    + tracklist + listen_html(item, e) +
                     '</td></tr></table>'
                 )
 
@@ -4072,6 +4209,10 @@ def render_text(sections, cutoff: datetime, genres: list[str], stats: dict,
             year = f" ({item['year']})" if item.get("year") else ""
             lines.append(f"  {item['description']}{year}")
             lines.append(f"    {item['price']} | {item['condition']} | {item['tags']}")
+            if community_text(item):
+                lines.append(f"    {community_text(item)}")
+            for track in item.get("tracklist") or []:
+                lines.append(f"      {track_text(track)}")
             lines.append(f"    {item['url']}")
             videos = item.get("videos") or []
             playlist = playlist_url(videos)
