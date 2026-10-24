@@ -1394,5 +1394,42 @@
       }
     ],
     "liked_at": "2026-10-23T17:27:21.090Z"
+  },
+  "https://www.discogs.com/sell/item/4427814624": {
+    "description": "Brothers' Vibe - Dub Plates 5 (12\", Ora)",
+    "price": "10.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4427814624",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/G0hNLNxo3knJoAseYRv3ONe86FtoVaW7ipUUlhWDqdk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4Njgt/MTY1MDQ4NzI2MC02/MDU1LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Brothers' Vibe - DUB Plates 5 - \"Bongoso\" - SOM1259a",
+        "yt": "LZcsTBDKAMM",
+        "src": null,
+        "dur": 603
+      },
+      {
+        "title": "Brothers' Vibe - Dub Plates 5 - Smooth Ride som1259",
+        "yt": "txjnE3pXWKg",
+        "src": null,
+        "dur": 519
+      },
+      {
+        "title": "Brothers' Vibe - DUB Plates 5 - \"Smooth Ride\" - SOM1259b",
+        "yt": "87nz8XnKBeU",
+        "src": null,
+        "dur": 500
+      },
+      {
+        "title": "Brothers' Vibe - DUB Plates 5 - \"Scat Track\" - SOM1259c",
+        "yt": "0GmZXSeq2rc",
+        "src": null,
+        "dur": 301
+      }
+    ],
+    "liked_at": "2026-10-24T16:16:23.565Z"
   }
 }
