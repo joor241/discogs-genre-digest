@@ -1431,5 +1431,54 @@
       }
     ],
     "liked_at": "2026-10-24T16:16:23.565Z"
+  },
+  "https://www.discogs.com/sell/item/4427880678": {
+    "description": "Argy, Jerome Sydenham & DJ Said - Thick & Thin (12\")",
+    "price": "8.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4427880678",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/pE-zUwW0dAK0wh9yN-L08fCH1oP2mnQ0WHXKNRc0kCE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNDg1/NTctMTI3ODc4NTk3/MS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Argy, DJ Said, Jerome Sydenham - Thick & Thin",
+        "yt": "BzM59v0vmA0",
+        "src": null,
+        "dur": 430
+      },
+      {
+        "title": "Argy, DJ Said & Jerome Sydenham - Mogadishu Nights (part 1)",
+        "yt": "JMav9elB_K0",
+        "src": null,
+        "dur": 371
+      },
+      {
+        "title": "Argy, DJ Said - Dope Track feat. DJ Said (Original) [Ibadan Records, IRC102_B1]",
+        "yt": "EbAsHccfSY8",
+        "src": null,
+        "dur": 356
+      },
+      {
+        "title": "Argy - Thick & Thin [Ibadan Records, IRC102_A1]",
+        "yt": "KGwoNzz7FS0",
+        "src": null,
+        "dur": 430
+      },
+      {
+        "title": "Argy, Jerome Sydenham - Mogadishu Nights (Pt 1) [Ibadan Records, IRC102_A2]",
+        "yt": "55CPtx39qFI",
+        "src": null,
+        "dur": 370
+      },
+      {
+        "title": "Argy, Jerome Sydenham - Mogadishu Night (Pt 2) [Ibadan Records, IRC102_B2]",
+        "yt": "KfW4yLrImas",
+        "src": null,
+        "dur": 312
+      }
+    ],
+    "liked_at": "2026-10-24T20:12:44.975Z"
   }
 }
