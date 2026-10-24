@@ -1,0 +1,954 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://s.ytimg.com">
+<link rel="preconnect" href="https://i.ytimg.com">
+<script src="https://www.youtube.com/iframe_api" async></script>
+<title>Record digest &mdash; 24 Oct 2026</title>
+<style>
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  /* Bottom padding clears the fixed transport bar (~48px) so the last
+     record and the footer are never hidden behind it. */
+  margin: 0; padding: 24px 16px 96px;
+  background: #0e0e10; color: #e8e8ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.45;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.sub { color: #8a8a92; font-size: 13px; margin: 0 0 28px; }
+h2 {
+  font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #8a8a92; margin: 34px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid #26262b;
+}
+.rec {
+  display: flex; gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid #1c1c21;
+}
+.rec img {
+  width: 68px; height: 68px; border-radius: 5px;
+  background: #26262b; flex: none; object-fit: cover;
+}
+.rec .body { min-width: 0; flex: 1; }
+.rec .title { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.rec .title a { color: #e8e8ea; text-decoration: none; }
+.rec .title a:hover { color: #6ea8ff; }
+.meta { color: #8a8a92; font-size: 12.5px; margin-bottom: 2px; }
+.price { font-weight: 700; font-size: 15px; color: #e8e8ea; margin-right: 7px; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 10px; margin: 0 5px 4px 0;
+  background: #202027; color: #9a9aa2;
+}
+.badge.format { background: #14202b; color: #7fb3e8; }
+.badge.preorder { background: #2b2210; color: #e0af52; }
+.badge.outofstock { background: #2b1414; color: #e08a8a; }
+.badge.vinylonly { background: #2b2410; color: #e0c452; font-weight: 700; }
+.fineprint { color: #6f6f78; font-size: 11.5px; margin-top: 3px; }
+.tags { color: #5f5f68; font-size: 12px; margin-top: 3px; margin-bottom: 9px; }
+.buy {
+  display: inline-block; font-size: 12px; color: #6ea8ff;
+  text-decoration: none; margin-left: 10px;
+}
+button.likebtn {
+  background: transparent; border: 0; cursor: pointer; font-size: 15px;
+  color: #6a6a72; padding: 0 0 0 8px; line-height: 1; vertical-align: middle;
+  font-family: inherit;
+}
+button.likebtn:hover { color: #e05a5a; }
+button.likebtn.liked { color: #e05a5a; }
+button.likebtn:disabled { opacity: .5; cursor: default; }
+.buy:hover { text-decoration: underline; }
+ul.tracks { list-style: none; margin: 0; padding: 0; }
+li.track { margin: 0 0 9px; }
+li.track .tname {
+  font-size: 12.5px; color: #9a9aa2; margin: 0 0 3px 37px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.trow { display: flex; align-items: center; gap: 8px; }
+button.ppbtn {
+  flex: none; width: 28px; height: 28px; border-radius: 50%;
+  background: #cc0000; color: #fff; border: 0; cursor: pointer;
+  font-size: 11px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; transition: background .12s, transform .08s;
+}
+button.ppbtn:hover { background: #e01212; }
+button.ppbtn:active { transform: scale(0.94); }
+button.ppbtn.loading { background: #4a4a52; }
+/* display:block kills the inline-baseline gap that would otherwise push
+   the icon a pixel off-centre inside the round button. The play path is
+   already drawn slightly right of the viewBox centre, which is what makes
+   a triangle look optically centred in a circle. */
+button.ppbtn svg { display: block; }
+/* .bar is the seek target: a tall, easy-to-tap hitbox around a thin visual
+   line, so it works on a phone without needing a precise touch. */
+.bar {
+  flex: 1 1 auto; min-width: 0; height: 28px; display: flex; align-items: center;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.bar .track {
+  position: relative; width: 100%; height: 6px; border-radius: 3px;
+  background: #26262b; overflow: hidden;
+}
+.bar .fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+  background: #cc0000; border-radius: 3px;
+}
+.bar:hover .track { background: #303038; }
+.bar:focus-visible { outline: 2px solid #6ea8ff; outline-offset: 3px; border-radius: 4px; }
+.trow.playing .bar .fill { background: #ff3b3b; }
+.time {
+  flex: none; font-variant-numeric: tabular-nums; font-size: 11px;
+  color: #6f6f78; width: 84px; text-align: right;
+}
+a.ytlink {
+  flex: none; color: #6a6a72; text-decoration: none; font-size: 14px;
+  width: 26px; height: 26px; display: inline-flex; align-items: center;
+  justify-content: center; border-radius: 5px;
+}
+a.ytlink:hover { color: #e8e8ea; background: #202027; }
+.trow.errored .bar { opacity: .45; cursor: not-allowed; pointer-events: none; }
+.trow.errored .time { color: #9a5a5a; }
+/* Floating transport, only visible once something is playing. Gives the
+   skip controls a permanent home no matter how far down the page you've
+   scrolled, so you can move through tracks without hunting for the row. */
+#nowbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: none; background: rgba(18,18,22,.97);
+  border-top: 1px solid #2c2c33; box-shadow: 0 -4px 24px rgba(0,0,0,.5);
+}
+#nowbar.show { display: block; }
+/* Progress for the playing track, spanning the full page width along the
+   bar's top edge. Click anywhere on it to seek, same as a row's own bar. */
+#nowbar .nbseek {
+  display: block; width: 100%; height: 10px; margin-top: -3px;
+  cursor: pointer; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#nowbar .nbseek .nbtrack {
+  position: relative; width: 100%; height: 4px; margin-top: 3px;
+  background: #2c2c33; overflow: hidden;
+}
+#nowbar .nbseek .nbfill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #cc0000;
+}
+#nowbar .nbseek:hover .nbtrack { background: #3a3a44; }
+/* The controls must not move when the track name changes length, so the
+   button group is flex:none at the start, the title is the ONLY flexible
+   element (it ellipsises), and the time is flex:none at the end. */
+#nowbar .nbrow {
+  display: flex; align-items: center;
+  max-width: 760px; margin: 0 auto; padding: 5px 16px 9px;
+}
+#nowbar .nbctrls { flex: none; display: flex; align-items: center; gap: 2px; }
+#nowbar button {
+  flex: none; width: 30px; height: 30px; padding: 0;
+  background: transparent; border: 0; color: #d4d4d8; cursor: pointer;
+  border-radius: 7px; font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+#nowbar button:hover { background: #26262b; color: #fff; }
+#nowbar button svg { display: block; }
+#nowbar .nowtitle {
+  flex: 1 1 auto; min-width: 0; margin: 0 12px;
+  font-size: 12.5px; color: #9a9aa2;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#nowbar .nbtime {
+  flex: none; font-variant-numeric: tabular-nums;
+  font-size: 11.5px; color: #6f6f78;
+}
+.topnav { margin: 0 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.topnav a {
+  color: #8a8a92; text-decoration: none; font-size: 13px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
+.topnav a svg { display: block; }
+.none { color: #5f5f68; font-size: 13px; }
+footer {
+  margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
+  color: #5f5f68; font-size: 12px;
+}
+footer a { color: #6ea8ff; }
+@media (max-width: 520px) {
+  .rec img { width: 52px; height: 52px; }
+  .time { width: 66px; font-size: 10.5px; }
+  button.ppbtn { width: 32px; height: 32px; }
+  .bar { height: 32px; }
+}
+</style></head><body>
+<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;"><div id="yt-audio-host"></div></div>
+<div class="wrap">
+<div class="topnav"><a href="https://joor241.github.io/discogs-genre-digest/likes.html"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 20.3l-1.45-1.32C5.4 14.24 2 11.16 2 7.4 2 4.42 4.42 2 7.4 2c1.68 0 3.3.78 4.6 2.09C13.3 2.78 14.92 2 16.6 2 19.58 2 22 4.42 22 7.4c0 3.76-3.4 6.84-8.55 11.58z"/></svg> Likes</a><a href="https://joor241.github.io/discogs-genre-digest/settings.html"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M19.14 12.94a7.1 7.1 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7 7 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.71 8.84a.5.5 0 00.12.64l2.03 1.58a7.1 7.1 0 000 1.88l-2.03 1.58a.5.5 0 00-.12.64l1.92 3.32c.13.22.39.3.6.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.25.42.5.42h3.84c.25 0 .46-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"/></svg> Settings</a></div>
+<h1>New on Discogs</h1>
+<p class="sub">19 record(s) listed since Fri 23 Oct 2026, 08:39 UTC &middot; house</p>
+<h2>Offbeat Records &middot; 17 <span style="color:#6f6f78;font-weight:normal;font-size:12px;">&mdash; filter: house</span></h2>
+<div class="rec"><img src="https://i.discogs.com/so0X2CdNgVJCgOh3L_GyAhFAk-RX3M-clWNw-mwCp5g/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTczOTAw/LTE2OTIwMTYwMTEt/NTkxMy5qcGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427843895">Louie Vega &amp; Jay &#x27;Sinister&#x27; Séalee* Presents Diamond Life Starring Julie McKnight - Diamond Life (2x12&quot;, Single, Ltd)</a></div><div class="meta"><span class="price">17.00 EUR</span><span class="badge">Very Good Plus (VG+)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427843895">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427843895" data-like-payload="{&quot;description&quot;: &quot;Louie Vega &amp; Jay &#x27;Sinister&#x27; Séalee* Presents Diamond Life Starring Julie McKnight - Diamond Life (2x12\&quot;, Single, Ltd)&quot;, &quot;price&quot;: &quot;17.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427843895&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/so0X2CdNgVJCgOh3L_GyAhFAk-RX3M-clWNw-mwCp5g/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTczOTAw/LTE2OTIwMTYwMTEt/NTkxMy5qcGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Life&#x27; (Masters At Work Mix)&quot;, &quot;yt&quot;: &quot;vIHz_crLy2k&quot;, &quot;src&quot;: null, &quot;dur&quot;: 428}, {&quot;title&quot;: &quot;Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Life&#x27; (Dance Ritual Mix)&quot;, &quot;yt&quot;: &quot;Ud9CTp2GO60&quot;, &quot;src&quot;: null, &quot;dur&quot;: 533}, {&quot;title&quot;: &quot;Louie Vega &amp; Jay Sealee Starring Julie Mcknight - Diamond Life (original mix)&quot;, &quot;yt&quot;: &quot;9j9Is_nK05E&quot;, &quot;src&quot;: null, &quot;dur&quot;: 294}, {&quot;title&quot;: &quot;Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Life&#x27; (Old School Dub)&quot;, &quot;yt&quot;: &quot;9T8a2UyyOfs&quot;, &quot;src&quot;: null, &quot;dur&quot;: 292}, {&quot;title&quot;: &quot;Louie Vega &amp; Jay &#x27;Sinister&#x27; Séalee - Diamond Life ((Jay &#x27;Sinister&#x27; Classic Xtravaganza Mix)&quot;, &quot;yt&quot;: &quot;Fr8pSjXY_pQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 425}, {&quot;title&quot;: &quot;Louie Vega &amp; Jay &#x27;Sinister&#x27; Sealee  Diamond Life Apocalyptic Instrumental&quot;, &quot;yt&quot;: &quot;Npfr6fp5ON0&quot;, &quot;src&quot;: null, &quot;dur&quot;: 435}]}">&#9825;</button></div><div class="fineprint">Distance - Di2408 - 2002</div><div class="tags">Electronic, House, Garage House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Life&#x27; (Masters At Work Mix)" data-yt="vIHz_crLy2k" data-dur="428"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:08</span><a class="ytlink" href="https://www.youtube.com/watch?v=vIHz_crLy2k" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif… on YouTube">&#8599;</a></div><div class="tname">Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Life&#x27; (Dance Ritual Mix)" data-yt="Ud9CTp2GO60" data-dur="533"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:53</span><a class="ytlink" href="https://www.youtube.com/watch?v=Ud9CTp2GO60" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif… on YouTube">&#8599;</a></div><div class="tname">Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Louie Vega &amp; Jay Sealee Starring Julie Mcknight - Diamond Life (origi…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Louie Vega &amp; Jay Sealee Starring Julie Mcknight - Diamond Life (original mix)" data-yt="9j9Is_nK05E" data-dur="294"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:54</span><a class="ytlink" href="https://www.youtube.com/watch?v=9j9Is_nK05E" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Louie Vega &amp; Jay Sealee Starring Julie Mcknight - Diamond Life (origi… on YouTube">&#8599;</a></div><div class="tname">Louie Vega &amp; Jay Sealee Starring Julie Mcknight - Diamond Life (origi…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Life&#x27; (Old School Dub)" data-yt="9T8a2UyyOfs" data-dur="292"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:52</span><a class="ytlink" href="https://www.youtube.com/watch?v=9T8a2UyyOfs" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif… on YouTube">&#8599;</a></div><div class="tname">Louie Vega &amp; Jay Sinister Sealee starring Julie McKnight &#x27;Diamond Lif…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Louie Vega &amp; Jay &#x27;Sinister&#x27; Séalee - Diamond Life ((Jay &#x27;Sinister&#x27; Cl…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Louie Vega &amp; Jay &#x27;Sinister&#x27; Séalee - Diamond Life ((Jay &#x27;Sinister&#x27; Classic Xtravaganza Mix)" data-yt="Fr8pSjXY_pQ" data-dur="425"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:05</span><a class="ytlink" href="https://www.youtube.com/watch?v=Fr8pSjXY_pQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Louie Vega &amp; Jay &#x27;Sinister&#x27; Séalee - Diamond Life ((Jay &#x27;Sinister&#x27; Cl… on YouTube">&#8599;</a></div><div class="tname">Louie Vega &amp; Jay &#x27;Sinister&#x27; Séalee - Diamond Life ((Jay &#x27;Sinister&#x27; Cl…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Louie Vega &amp; Jay &#x27;Sinister&#x27; Sealee  Diamond Life Apocalyptic Instrume…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Louie Vega &amp; Jay &#x27;Sinister&#x27; Sealee  Diamond Life Apocalyptic Instrumental" data-yt="Npfr6fp5ON0" data-dur="435"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:15</span><a class="ytlink" href="https://www.youtube.com/watch?v=Npfr6fp5ON0" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Louie Vega &amp; Jay &#x27;Sinister&#x27; Sealee  Diamond Life Apocalyptic Instrume… on YouTube">&#8599;</a></div><div class="tname">Louie Vega &amp; Jay &#x27;Sinister&#x27; Sealee  Diamond Life Apocalyptic Instrume…</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/vx7q6UjZH3uowjenaLul_uzOrM9CxYBoBudv-WpbtTk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzODEt/MTIyOTk2MTM2OC5q/cGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427843586">Peirre&#x27;s Fantasy Club* - Dream Girl (12&quot;, M/Print)</a></div><div class="meta"><span class="price">37.00 EUR</span><span class="badge">Near Mint (NM or M-)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427843586">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427843586" data-like-payload="{&quot;description&quot;: &quot;Peirre&#x27;s Fantasy Club* - Dream Girl (12\&quot;, M/Print)&quot;, &quot;price&quot;: &quot;37.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427843586&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/vx7q6UjZH3uowjenaLul_uzOrM9CxYBoBudv-WpbtTk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzODEt/MTIyOTk2MTM2OC5q/cGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Pierre&#x27;s Fantasy Club – Dream Girl (Acid Dream) 1988&quot;, &quot;yt&quot;: &quot;0BqCGfwFvi8&quot;, &quot;src&quot;: null, &quot;dur&quot;: 261}, {&quot;title&quot;: &quot;Pierre&#x27;s Fantasy Club – Dream Girl (Accapella Dream) 1988&quot;, &quot;yt&quot;: &quot;IbexLRj5wLY&quot;, &quot;src&quot;: null, &quot;dur&quot;: 191}, {&quot;title&quot;: &quot;Pierre&#x27;s Fantasy Club – Dream Girl (Mickey&#x27;s Mix) 1988&quot;, &quot;yt&quot;: &quot;6Nz7p-RCrqI&quot;, &quot;src&quot;: null, &quot;dur&quot;: 349}, {&quot;title&quot;: &quot;Pierre&#x27;s Fantasy Club – Dream Girl (Wet Dream) 1988&quot;, &quot;yt&quot;: &quot;W6bFdI4m9rY&quot;, &quot;src&quot;: null, &quot;dur&quot;: 533}, {&quot;title&quot;: &quot;Peirre&#x27;s Fantasy Club - Dream Girl (Mickey&#x27;s Mix)&quot;, &quot;yt&quot;: &quot;UvY7kiAWgcU&quot;, &quot;src&quot;: null, &quot;dur&quot;: 348}, {&quot;title&quot;: &quot;Peirre&#x27;s Fantasy Club - Dream Girl (Wet Dream)&quot;, &quot;yt&quot;: &quot;cxUzbE9bsAQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 532}]}">&#9825;</button></div><div class="fineprint">Hot Mix 5 Records - HMF 111 - 1988</div><div class="tags">Electronic, Acid House, House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Pierre&#x27;s Fantasy Club – Dream Girl (Acid Dream) 1988"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Pierre&#x27;s Fantasy Club – Dream Girl (Acid Dream) 1988" data-yt="0BqCGfwFvi8" data-dur="261"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:21</span><a class="ytlink" href="https://www.youtube.com/watch?v=0BqCGfwFvi8" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Pierre&#x27;s Fantasy Club – Dream Girl (Acid Dream) 1988 on YouTube">&#8599;</a></div><div class="tname">Pierre&#x27;s Fantasy Club – Dream Girl (Acid Dream) 1988</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Pierre&#x27;s Fantasy Club – Dream Girl (Accapella Dream) 1988"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Pierre&#x27;s Fantasy Club – Dream Girl (Accapella Dream) 1988" data-yt="IbexLRj5wLY" data-dur="191"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 3:11</span><a class="ytlink" href="https://www.youtube.com/watch?v=IbexLRj5wLY" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Pierre&#x27;s Fantasy Club – Dream Girl (Accapella Dream) 1988 on YouTube">&#8599;</a></div><div class="tname">Pierre&#x27;s Fantasy Club – Dream Girl (Accapella Dream) 1988</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Pierre&#x27;s Fantasy Club – Dream Girl (Mickey&#x27;s Mix) 1988"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Pierre&#x27;s Fantasy Club – Dream Girl (Mickey&#x27;s Mix) 1988" data-yt="6Nz7p-RCrqI" data-dur="349"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:49</span><a class="ytlink" href="https://www.youtube.com/watch?v=6Nz7p-RCrqI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Pierre&#x27;s Fantasy Club – Dream Girl (Mickey&#x27;s Mix) 1988 on YouTube">&#8599;</a></div><div class="tname">Pierre&#x27;s Fantasy Club – Dream Girl (Mickey&#x27;s Mix) 1988</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Pierre&#x27;s Fantasy Club – Dream Girl (Wet Dream) 1988"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Pierre&#x27;s Fantasy Club – Dream Girl (Wet Dream) 1988" data-yt="W6bFdI4m9rY" data-dur="533"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:53</span><a class="ytlink" href="https://www.youtube.com/watch?v=W6bFdI4m9rY" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Pierre&#x27;s Fantasy Club – Dream Girl (Wet Dream) 1988 on YouTube">&#8599;</a></div><div class="tname">Pierre&#x27;s Fantasy Club – Dream Girl (Wet Dream) 1988</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Peirre&#x27;s Fantasy Club - Dream Girl (Mickey&#x27;s Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Peirre&#x27;s Fantasy Club - Dream Girl (Mickey&#x27;s Mix)" data-yt="UvY7kiAWgcU" data-dur="348"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:48</span><a class="ytlink" href="https://www.youtube.com/watch?v=UvY7kiAWgcU" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Peirre&#x27;s Fantasy Club - Dream Girl (Mickey&#x27;s Mix) on YouTube">&#8599;</a></div><div class="tname">Peirre&#x27;s Fantasy Club - Dream Girl (Mickey&#x27;s Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Peirre&#x27;s Fantasy Club - Dream Girl (Wet Dream)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Peirre&#x27;s Fantasy Club - Dream Girl (Wet Dream)" data-yt="cxUzbE9bsAQ" data-dur="532"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:52</span><a class="ytlink" href="https://www.youtube.com/watch?v=cxUzbE9bsAQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Peirre&#x27;s Fantasy Club - Dream Girl (Wet Dream) on YouTube">&#8599;</a></div><div class="tname">Peirre&#x27;s Fantasy Club - Dream Girl (Wet Dream)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/yeJONXYXBZAoNw4rTTcuXNFMzvau_fvBW_qNpCNa3Co/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Nzc4/LTEyMDU4MTYzMzku/anBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427843199">The Black Science Orchestra* - The Altered States E.P (12&quot;, EP)</a></div><div class="meta"><span class="price">20.00 EUR</span><span class="badge">Very Good Plus (VG+)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427843199">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427843199" data-like-payload="{&quot;description&quot;: &quot;The Black Science Orchestra* - The Altered States E.P (12\&quot;, EP)&quot;, &quot;price&quot;: &quot;20.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427843199&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/yeJONXYXBZAoNw4rTTcuXNFMzvau_fvBW_qNpCNa3Co/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Nzc4/LTEyMDU4MTYzMzku/anBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;The Black Science Orchestra - Philadelphia [JBO 22]&quot;, &quot;yt&quot;: &quot;BgxJlHRWdE8&quot;, &quot;src&quot;: null, &quot;dur&quot;: 393}, {&quot;title&quot;: &quot;The Black Science Orchestra - Drumadelphia [JBO 22]&quot;, &quot;yt&quot;: &quot;WLbUEDa6Ftw&quot;, &quot;src&quot;: null, &quot;dur&quot;: 114}, {&quot;title&quot;: &quot;The Black Science Orchestra - New Jersey Deep [JBO 22]&quot;, &quot;yt&quot;: &quot;vxkFRWoDXx8&quot;, &quot;src&quot;: null, &quot;dur&quot;: 277}, {&quot;title&quot;: &quot;The Black Science Orchestra - Varrio (SOS) [JBO 22]&quot;, &quot;yt&quot;: &quot;kmMJ6zV7-fM&quot;, &quot;src&quot;: null, &quot;dur&quot;: 165}]}">&#9825;</button></div><div class="fineprint">Junior Boy&#x27;s Own - JBO 22 - 1994</div><div class="tags">Electronic, House, Latin, Deep House, Funk, Disco</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play The Black Science Orchestra - Philadelphia [JBO 22]"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="The Black Science Orchestra - Philadelphia [JBO 22]" data-yt="BgxJlHRWdE8" data-dur="393"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:33</span><a class="ytlink" href="https://www.youtube.com/watch?v=BgxJlHRWdE8" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch The Black Science Orchestra - Philadelphia [JBO 22] on YouTube">&#8599;</a></div><div class="tname">The Black Science Orchestra - Philadelphia [JBO 22]</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play The Black Science Orchestra - Drumadelphia [JBO 22]"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="The Black Science Orchestra - Drumadelphia [JBO 22]" data-yt="WLbUEDa6Ftw" data-dur="114"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 1:54</span><a class="ytlink" href="https://www.youtube.com/watch?v=WLbUEDa6Ftw" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch The Black Science Orchestra - Drumadelphia [JBO 22] on YouTube">&#8599;</a></div><div class="tname">The Black Science Orchestra - Drumadelphia [JBO 22]</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play The Black Science Orchestra - New Jersey Deep [JBO 22]"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="The Black Science Orchestra - New Jersey Deep [JBO 22]" data-yt="vxkFRWoDXx8" data-dur="277"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:37</span><a class="ytlink" href="https://www.youtube.com/watch?v=vxkFRWoDXx8" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch The Black Science Orchestra - New Jersey Deep [JBO 22] on YouTube">&#8599;</a></div><div class="tname">The Black Science Orchestra - New Jersey Deep [JBO 22]</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play The Black Science Orchestra - Varrio (SOS) [JBO 22]"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="The Black Science Orchestra - Varrio (SOS) [JBO 22]" data-yt="kmMJ6zV7-fM" data-dur="165"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 2:45</span><a class="ytlink" href="https://www.youtube.com/watch?v=kmMJ6zV7-fM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch The Black Science Orchestra - Varrio (SOS) [JBO 22] on YouTube">&#8599;</a></div><div class="tname">The Black Science Orchestra - Varrio (SOS) [JBO 22]</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/YyE9Et9n1unxTYm-fzg9nfeZchjLNkGdClmT4tCxGTg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MTIz/MS0xNTIxMDYzNzIx/LTQwNDEuanBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427842680">The A.N.M. Project - Into The Dark (12&quot;)</a></div><div class="meta"><span class="price">7.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427842680">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427842680" data-like-payload="{&quot;description&quot;: &quot;The A.N.M. Project - Into The Dark (12\&quot;)&quot;, &quot;price&quot;: &quot;7.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427842680&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/YyE9Et9n1unxTYm-fzg9nfeZchjLNkGdClmT4tCxGTg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MTIz/MS0xNTIxMDYzNzIx/LTQwNDEuanBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;The A N M  Project ‎– Into The Dark (Club Mix)&quot;, &quot;yt&quot;: &quot;ohvkj-4soHQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 425}, {&quot;title&quot;: &quot;The A N M  Project ‎– Into The Dark (Sound Factory Mix)&quot;, &quot;yt&quot;: &quot;wNvKM2tPhNA&quot;, &quot;src&quot;: null, &quot;dur&quot;: 309}, {&quot;title&quot;: &quot;The A N M  Project ‎– Into The Dark (Night Town Holland Mix)&quot;, &quot;yt&quot;: &quot;klBNS89cZjc&quot;, &quot;src&quot;: null, &quot;dur&quot;: 317}]}">&#9825;</button></div><div class="fineprint">Strictly Rhythm - SR12294 - 1994</div><div class="tags">Electronic, House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play The A N M  Project ‎– Into The Dark (Club Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="The A N M  Project ‎– Into The Dark (Club Mix)" data-yt="ohvkj-4soHQ" data-dur="425"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:05</span><a class="ytlink" href="https://www.youtube.com/watch?v=ohvkj-4soHQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch The A N M  Project ‎– Into The Dark (Club Mix) on YouTube">&#8599;</a></div><div class="tname">The A N M  Project ‎– Into The Dark (Club Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play The A N M  Project ‎– Into The Dark (Sound Factory Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="The A N M  Project ‎– Into The Dark (Sound Factory Mix)" data-yt="wNvKM2tPhNA" data-dur="309"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:09</span><a class="ytlink" href="https://www.youtube.com/watch?v=wNvKM2tPhNA" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch The A N M  Project ‎– Into The Dark (Sound Factory Mix) on YouTube">&#8599;</a></div><div class="tname">The A N M  Project ‎– Into The Dark (Sound Factory Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play The A N M  Project ‎– Into The Dark (Night Town Holland Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="The A N M  Project ‎– Into The Dark (Night Town Holland Mix)" data-yt="klBNS89cZjc" data-dur="317"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:17</span><a class="ytlink" href="https://www.youtube.com/watch?v=klBNS89cZjc" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch The A N M  Project ‎– Into The Dark (Night Town Holland Mix) on YouTube">&#8599;</a></div><div class="tname">The A N M  Project ‎– Into The Dark (Night Town Holland Mix)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/h_gSe2FSfTVUV90dXKrIDd4MkDpkQfu7kQTDy_Eb2es/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MTI1/My0xMjUzNzk5Mjcz/LmpwZWc.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427842557">Take One - Say My Name (I Don&#x27;t Think So) / Don&#x27;t You Want Some Good Times (12&quot;)</a></div><div class="meta"><span class="price">18.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427842557">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427842557" data-like-payload="{&quot;description&quot;: &quot;Take One - Say My Name (I Don&#x27;t Think So) / Don&#x27;t You Want Some Good Times (12\&quot;)&quot;, &quot;price&quot;: &quot;18.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427842557&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/h_gSe2FSfTVUV90dXKrIDd4MkDpkQfu7kQTDy_Eb2es/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MTI1/My0xMjUzNzk5Mjcz/LmpwZWc.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Say My Name (I Don&#x27;t Think So) (Morel And Bobby \&quot;D\&quot; Metro Mix)&quot;, &quot;yt&quot;: &quot;V1LuGSIjnMg&quot;, &quot;src&quot;: null, &quot;dur&quot;: 335}, {&quot;title&quot;: &quot;Say My Name (I Don&#x27;t Think So) (Instrumental Groove Mix)&quot;, &quot;yt&quot;: &quot;K8W3QEMxhlU&quot;, &quot;src&quot;: null, &quot;dur&quot;: 338}, {&quot;title&quot;: &quot;Don&#x27;t You Want Some Good Times (Club Time Mix)&quot;, &quot;yt&quot;: &quot;gPhvVz-DEvM&quot;, &quot;src&quot;: null, &quot;dur&quot;: 404}, {&quot;title&quot;: &quot;Don&#x27;t You Want Some Good Times (Metro Time Mix)&quot;, &quot;yt&quot;: &quot;eM8_KDQ54ZI&quot;, &quot;src&quot;: null, &quot;dur&quot;: 313}]}">&#9825;</button></div><div class="fineprint">Strictly Rhythm - SR1296 - 1992</div><div class="tags">Electronic, House, Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Say My Name (I Don&#x27;t Think So) (Morel And Bobby &quot;D&quot; Metro Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Say My Name (I Don&#x27;t Think So) (Morel And Bobby &quot;D&quot; Metro Mix)" data-yt="V1LuGSIjnMg" data-dur="335"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:35</span><a class="ytlink" href="https://www.youtube.com/watch?v=V1LuGSIjnMg" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Say My Name (I Don&#x27;t Think So) (Morel And Bobby &quot;D&quot; Metro Mix) on YouTube">&#8599;</a></div><div class="tname">Say My Name (I Don&#x27;t Think So) (Morel And Bobby &quot;D&quot; Metro Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Say My Name (I Don&#x27;t Think So) (Instrumental Groove Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Say My Name (I Don&#x27;t Think So) (Instrumental Groove Mix)" data-yt="K8W3QEMxhlU" data-dur="338"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:38</span><a class="ytlink" href="https://www.youtube.com/watch?v=K8W3QEMxhlU" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Say My Name (I Don&#x27;t Think So) (Instrumental Groove Mix) on YouTube">&#8599;</a></div><div class="tname">Say My Name (I Don&#x27;t Think So) (Instrumental Groove Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Don&#x27;t You Want Some Good Times (Club Time Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Don&#x27;t You Want Some Good Times (Club Time Mix)" data-yt="gPhvVz-DEvM" data-dur="404"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:44</span><a class="ytlink" href="https://www.youtube.com/watch?v=gPhvVz-DEvM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Don&#x27;t You Want Some Good Times (Club Time Mix) on YouTube">&#8599;</a></div><div class="tname">Don&#x27;t You Want Some Good Times (Club Time Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Don&#x27;t You Want Some Good Times (Metro Time Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Don&#x27;t You Want Some Good Times (Metro Time Mix)" data-yt="eM8_KDQ54ZI" data-dur="313"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:13</span><a class="ytlink" href="https://www.youtube.com/watch?v=eM8_KDQ54ZI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Don&#x27;t You Want Some Good Times (Metro Time Mix) on YouTube">&#8599;</a></div><div class="tname">Don&#x27;t You Want Some Good Times (Metro Time Mix)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/zZk3iMj-hW_xjONMRQN7Y7HlYwjh9uU7lUwGG4pX084/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUzMjQy/LTExNzQ5MDE4MzEu/anBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427842212">Terry Hunter - Off The Wall (12&quot;)</a></div><div class="meta"><span class="price">7.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427842212">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427842212" data-like-payload="{&quot;description&quot;: &quot;Terry Hunter - Off The Wall (12\&quot;)&quot;, &quot;price&quot;: &quot;7.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427842212&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/zZk3iMj-hW_xjONMRQN7Y7HlYwjh9uU7lUwGG4pX084/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUzMjQy/LTExNzQ5MDE4MzEu/anBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Terry Hunter - Off The Wall (Terry´s Soul Mix)&quot;, &quot;yt&quot;: &quot;GRZsFQl2XIg&quot;, &quot;src&quot;: null, &quot;dur&quot;: 487}, {&quot;title&quot;: &quot;Terry Hunter - Off the wall (Terry&#x27;s soul mix) 2000&quot;, &quot;yt&quot;: &quot;E7Gd4z1nTFw&quot;, &quot;src&quot;: null, &quot;dur&quot;: 324}]}">&#9825;</button></div><div class="fineprint">Vinyl Soul - VS-105 - 2000</div><div class="tags">Electronic, House, Garage House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Terry Hunter - Off The Wall (Terry´s Soul Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Terry Hunter - Off The Wall (Terry´s Soul Mix)" data-yt="GRZsFQl2XIg" data-dur="487"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:07</span><a class="ytlink" href="https://www.youtube.com/watch?v=GRZsFQl2XIg" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Terry Hunter - Off The Wall (Terry´s Soul Mix) on YouTube">&#8599;</a></div><div class="tname">Terry Hunter - Off The Wall (Terry´s Soul Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Terry Hunter - Off the wall (Terry&#x27;s soul mix) 2000"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Terry Hunter - Off the wall (Terry&#x27;s soul mix) 2000" data-yt="E7Gd4z1nTFw" data-dur="324"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:24</span><a class="ytlink" href="https://www.youtube.com/watch?v=E7Gd4z1nTFw" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Terry Hunter - Off the wall (Terry&#x27;s soul mix) 2000 on YouTube">&#8599;</a></div><div class="tname">Terry Hunter - Off the wall (Terry&#x27;s soul mix) 2000</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/PnckwnAr7X65Vsws3Xw6ltLn7gUaE5ikrvnfR99gPaA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0Mjg4/Mi0xNjAyOTUzMDg2/LTYwMTYuanBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427842029">Outlaw Soundworks - Out (12&quot;)</a></div><div class="meta"><span class="price">10.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427842029">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427842029" data-like-payload="{&quot;description&quot;: &quot;Outlaw Soundworks - Out (12\&quot;)&quot;, &quot;price&quot;: &quot;10.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427842029&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/PnckwnAr7X65Vsws3Xw6ltLn7gUaE5ikrvnfR99gPaA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0Mjg4/Mi0xNjAyOTUzMDg2/LTYwMTYuanBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Outlaw Soundworks   Out Classic Mix&quot;, &quot;yt&quot;: &quot;-bsiPNPjFew&quot;, &quot;src&quot;: null, &quot;dur&quot;: 708}, {&quot;title&quot;: &quot;Outlaw Soundworks Out.Classic Mix.Dance Tracks NYC.&quot;, &quot;yt&quot;: &quot;MioOThHtPvk&quot;, &quot;src&quot;: null, &quot;dur&quot;: 415}]}">&#9825;</button></div><div class="fineprint">Dance Tracks - DTX 12-012 - 2001</div><div class="tags">Electronic, House, Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Outlaw Soundworks   Out Classic Mix"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Outlaw Soundworks   Out Classic Mix" data-yt="-bsiPNPjFew" data-dur="708"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 11:48</span><a class="ytlink" href="https://www.youtube.com/watch?v=-bsiPNPjFew" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Outlaw Soundworks   Out Classic Mix on YouTube">&#8599;</a></div><div class="tname">Outlaw Soundworks   Out Classic Mix</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Outlaw Soundworks Out.Classic Mix.Dance Tracks NYC."><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Outlaw Soundworks Out.Classic Mix.Dance Tracks NYC." data-yt="MioOThHtPvk" data-dur="415"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:55</span><a class="ytlink" href="https://www.youtube.com/watch?v=MioOThHtPvk" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Outlaw Soundworks Out.Classic Mix.Dance Tracks NYC. on YouTube">&#8599;</a></div><div class="tname">Outlaw Soundworks Out.Classic Mix.Dance Tracks NYC.</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/DNb6y8DZlbVnqZwWfm0GCnO_0DJY4ILOzIknMt_40s8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyNjYy/LTEzMTkyMTE4ODcu/anBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427841651">C.J. Mackintosh* - Sessions 4  (4xLP, Comp, Ltd, Gat)</a></div><div class="meta"><span class="price">25.00 EUR</span><span class="badge">Very Good Plus (VG+)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427841651">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427841651" data-like-payload="{&quot;description&quot;: &quot;C.J. Mackintosh* - Sessions 4  (4xLP, Comp, Ltd, Gat)&quot;, &quot;price&quot;: &quot;25.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427841651&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/DNb6y8DZlbVnqZwWfm0GCnO_0DJY4ILOzIknMt_40s8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyNjYy/LTEzMTkyMTE4ODcu/anBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Ministry Of Sound - Sessions 4 (1995) - Mixed By C.J. Mackintosh - Discs 1 &amp; 2&quot;, &quot;yt&quot;: &quot;uRhBS2vZtbA&quot;, &quot;src&quot;: null, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;MOS Sessions 4 Mixed by CJ Mackintosh&quot;, &quot;yt&quot;: &quot;WPaM4yXmQ3A&quot;, &quot;src&quot;: null, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;CJ Mackintosh@Ministry of Sound The Sessions Vol .4 1995&quot;, &quot;yt&quot;: &quot;_lguDGIPDTg&quot;, &quot;src&quot;: null, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Mixed by C.J. Mackintosh&quot;, &quot;yt&quot;: &quot;mHBxExKvKK4&quot;, &quot;src&quot;: null, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Ministry Of Sound Sessions 4 Compiled By C.J. Mackintosh&quot;, &quot;yt&quot;: &quot;NDhjfPRP3gc&quot;, &quot;src&quot;: null, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Sessions 4 - 01 &amp; 02&quot;, &quot;yt&quot;: &quot;Zj5V41PWJiA&quot;, &quot;src&quot;: null, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Ministry Of Sound, Ministry Of Sound - MINLPB4, MINLP FOUR - 1995</div><div class="tags">Electronic, House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Ministry Of Sound - Sessions 4 (1995) - Mixed By C.J. Mackintosh - Di…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Ministry Of Sound - Sessions 4 (1995) - Mixed By C.J. Mackintosh - Discs 1 &amp; 2" data-yt="uRhBS2vZtbA" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span><a class="ytlink" href="https://www.youtube.com/watch?v=uRhBS2vZtbA" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Ministry Of Sound - Sessions 4 (1995) - Mixed By C.J. Mackintosh - Di… on YouTube">&#8599;</a></div><div class="tname">Ministry Of Sound - Sessions 4 (1995) - Mixed By C.J. Mackintosh - Di…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play MOS Sessions 4 Mixed by CJ Mackintosh"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="MOS Sessions 4 Mixed by CJ Mackintosh" data-yt="WPaM4yXmQ3A" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span><a class="ytlink" href="https://www.youtube.com/watch?v=WPaM4yXmQ3A" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch MOS Sessions 4 Mixed by CJ Mackintosh on YouTube">&#8599;</a></div><div class="tname">MOS Sessions 4 Mixed by CJ Mackintosh</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play CJ Mackintosh@Ministry of Sound The Sessions Vol .4 1995"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="CJ Mackintosh@Ministry of Sound The Sessions Vol .4 1995" data-yt="_lguDGIPDTg" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span><a class="ytlink" href="https://www.youtube.com/watch?v=_lguDGIPDTg" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch CJ Mackintosh@Ministry of Sound The Sessions Vol .4 1995 on YouTube">&#8599;</a></div><div class="tname">CJ Mackintosh@Ministry of Sound The Sessions Vol .4 1995</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Mixed by C.J. Mackintosh"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Mixed by C.J. Mackintosh" data-yt="mHBxExKvKK4" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span><a class="ytlink" href="https://www.youtube.com/watch?v=mHBxExKvKK4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Mixed by C.J. Mackintosh on YouTube">&#8599;</a></div><div class="tname">Mixed by C.J. Mackintosh</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Ministry Of Sound Sessions 4 Compiled By C.J. Mackintosh"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Ministry Of Sound Sessions 4 Compiled By C.J. Mackintosh" data-yt="NDhjfPRP3gc" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span><a class="ytlink" href="https://www.youtube.com/watch?v=NDhjfPRP3gc" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Ministry Of Sound Sessions 4 Compiled By C.J. Mackintosh on YouTube">&#8599;</a></div><div class="tname">Ministry Of Sound Sessions 4 Compiled By C.J. Mackintosh</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Sessions 4 - 01 &amp; 02"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Sessions 4 - 01 &amp; 02" data-yt="Zj5V41PWJiA" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span><a class="ytlink" href="https://www.youtube.com/watch?v=Zj5V41PWJiA" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Sessions 4 - 01 &amp; 02 on YouTube">&#8599;</a></div><div class="tname">Sessions 4 - 01 &amp; 02</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/xUfDNZ-MPIWeWwy2DRLJRiM7pk-oat9fcZzJBr6O1Mk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4ODMx/NS0xNTAxODcyMTgw/LTQxNjAuanBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427832936">Sun Orchestra Meets Shade Of Soul / 220 (2) - Driftin&#x27; / Listen To Your Soul (12&quot;)</a></div><div class="meta"><span class="price">16.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427832936">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427832936" data-like-payload="{&quot;description&quot;: &quot;Sun Orchestra Meets Shade Of Soul / 220 (2) - Driftin&#x27; / Listen To Your Soul (12\&quot;)&quot;, &quot;price&quot;: &quot;16.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427832936&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/xUfDNZ-MPIWeWwy2DRLJRiM7pk-oat9fcZzJBr6O1Mk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4ODMx/NS0xNTAxODcyMTgw/LTQxNjAuanBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Sun Orchestra \&quot;Driftin\&quot; 2001 Straight Up Recordings&quot;, &quot;yt&quot;: &quot;fG7UDgpLoUA&quot;, &quot;src&quot;: null, &quot;dur&quot;: 560}, {&quot;title&quot;: &quot;Shade of Soul \&quot;Listen to your soul\&quot; (Vocal) 2001 Straight Up Recordings&quot;, &quot;yt&quot;: &quot;bPhQ_vcOHqI&quot;, &quot;src&quot;: null, &quot;dur&quot;: 382}, {&quot;title&quot;: &quot;Shade of Soul \&quot;Listen to your soul\&quot; (Instrumental) 2001 Straight Up Recordings&quot;, &quot;yt&quot;: &quot;D4pH12pH-G4&quot;, &quot;src&quot;: null, &quot;dur&quot;: 255}]}">&#9825;</button></div><div class="fineprint">Straight-Up - SUP 2006 - 2001</div><div class="tags">Electronic, House, Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Sun Orchestra &quot;Driftin&quot; 2001 Straight Up Recordings"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Sun Orchestra &quot;Driftin&quot; 2001 Straight Up Recordings" data-yt="fG7UDgpLoUA" data-dur="560"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 9:20</span><a class="ytlink" href="https://www.youtube.com/watch?v=fG7UDgpLoUA" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Sun Orchestra &quot;Driftin&quot; 2001 Straight Up Recordings on YouTube">&#8599;</a></div><div class="tname">Sun Orchestra &quot;Driftin&quot; 2001 Straight Up Recordings</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Shade of Soul &quot;Listen to your soul&quot; (Vocal) 2001 Straight Up Recordin…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Shade of Soul &quot;Listen to your soul&quot; (Vocal) 2001 Straight Up Recordings" data-yt="bPhQ_vcOHqI" data-dur="382"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:22</span><a class="ytlink" href="https://www.youtube.com/watch?v=bPhQ_vcOHqI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Shade of Soul &quot;Listen to your soul&quot; (Vocal) 2001 Straight Up Recordin… on YouTube">&#8599;</a></div><div class="tname">Shade of Soul &quot;Listen to your soul&quot; (Vocal) 2001 Straight Up Recordin…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Shade of Soul &quot;Listen to your soul&quot; (Instrumental) 2001 Straight Up R…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Shade of Soul &quot;Listen to your soul&quot; (Instrumental) 2001 Straight Up Recordings" data-yt="D4pH12pH-G4" data-dur="255"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:15</span><a class="ytlink" href="https://www.youtube.com/watch?v=D4pH12pH-G4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Shade of Soul &quot;Listen to your soul&quot; (Instrumental) 2001 Straight Up R… on YouTube">&#8599;</a></div><div class="tname">Shade of Soul &quot;Listen to your soul&quot; (Instrumental) 2001 Straight Up R…</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/Te89svng8tgp8RyMgsw5j4eA27aRsWnoIcQVTS3ZDYM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1MDU1/NC0xNDEzNDA2ODUw/LTY0NjMuanBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427832201">Halo + Jay-J* - Like Jazz EP (12&quot;, EP)</a></div><div class="meta"><span class="price">10.00 EUR</span><span class="badge">Near Mint (NM or M-)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427832201">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427832201" data-like-payload="{&quot;description&quot;: &quot;Halo + Jay-J* - Like Jazz EP (12\&quot;, EP)&quot;, &quot;price&quot;: &quot;10.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427832201&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/Te89svng8tgp8RyMgsw5j4eA27aRsWnoIcQVTS3ZDYM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1MDU1/NC0xNDEzNDA2ODUw/LTY0NjMuanBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Halo &amp;  Jay j - Like Jazz.&quot;, &quot;yt&quot;: &quot;HZ3Y3-DA4TM&quot;, &quot;src&quot;: null, &quot;dur&quot;: 436}, {&quot;title&quot;: &quot;Halo + Jay-J  -  The Large Tribute&quot;, &quot;yt&quot;: &quot;q2iOLlsA_nU&quot;, &quot;src&quot;: null, &quot;dur&quot;: 391}, {&quot;title&quot;: &quot;Jazz Drums&quot;, &quot;yt&quot;: &quot;qrjcCjCyIVg&quot;, &quot;src&quot;: null, &quot;dur&quot;: 235}, {&quot;title&quot;: &quot;(2004) Jay J &amp; Halo - The Large Tribute [Original Mix]&quot;, &quot;yt&quot;: &quot;dJwttCQfYbQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 475}, {&quot;title&quot;: &quot;Halo and jay j - Like Jazz (Original mix)&quot;, &quot;yt&quot;: &quot;OAt5cIsNu68&quot;, &quot;src&quot;: null, &quot;dur&quot;: 442}]}">&#9825;</button></div><div class="fineprint">Large Records - LAR-092 - 2004</div><div class="tags">Electronic, House, Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Halo &amp;  Jay j - Like Jazz."><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Halo &amp;  Jay j - Like Jazz." data-yt="HZ3Y3-DA4TM" data-dur="436"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:16</span><a class="ytlink" href="https://www.youtube.com/watch?v=HZ3Y3-DA4TM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Halo &amp;  Jay j - Like Jazz. on YouTube">&#8599;</a></div><div class="tname">Halo &amp;  Jay j - Like Jazz.</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Halo + Jay-J  -  The Large Tribute"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Halo + Jay-J  -  The Large Tribute" data-yt="q2iOLlsA_nU" data-dur="391"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:31</span><a class="ytlink" href="https://www.youtube.com/watch?v=q2iOLlsA_nU" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Halo + Jay-J  -  The Large Tribute on YouTube">&#8599;</a></div><div class="tname">Halo + Jay-J  -  The Large Tribute</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Jazz Drums"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Jazz Drums" data-yt="qrjcCjCyIVg" data-dur="235"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 3:55</span><a class="ytlink" href="https://www.youtube.com/watch?v=qrjcCjCyIVg" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Jazz Drums on YouTube">&#8599;</a></div><div class="tname">Jazz Drums</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play (2004) Jay J &amp; Halo - The Large Tribute [Original Mix]"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="(2004) Jay J &amp; Halo - The Large Tribute [Original Mix]" data-yt="dJwttCQfYbQ" data-dur="475"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:55</span><a class="ytlink" href="https://www.youtube.com/watch?v=dJwttCQfYbQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch (2004) Jay J &amp; Halo - The Large Tribute [Original Mix] on YouTube">&#8599;</a></div><div class="tname">(2004) Jay J &amp; Halo - The Large Tribute [Original Mix]</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Halo and jay j - Like Jazz (Original mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Halo and jay j - Like Jazz (Original mix)" data-yt="OAt5cIsNu68" data-dur="442"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:22</span><a class="ytlink" href="https://www.youtube.com/watch?v=OAt5cIsNu68" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Halo and jay j - Like Jazz (Original mix) on YouTube">&#8599;</a></div><div class="tname">Halo and jay j - Like Jazz (Original mix)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/kXFaZxPJG0PHqZxi3terv7k7fFi885eLfZplrr6P3OY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMjkx/LTE1ODI2NjM1OTAt/MTM3MS5qcGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427832045">Les Go - Dan Gna (12&quot;, Promo)</a></div><div class="meta"><span class="price">12.00 EUR</span><span class="badge">Very Good Plus (VG+)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427832045">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427832045" data-like-payload="{&quot;description&quot;: &quot;Les Go - Dan Gna (12\&quot;, Promo)&quot;, &quot;price&quot;: &quot;12.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427832045&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/kXFaZxPJG0PHqZxi3terv7k7fFi885eLfZplrr6P3OY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMjkx/LTE1ODI2NjM1OTAt/MTM3MS5qcGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Les go - Dan Gna (Sacred Rhythm Vokal Journey mix)&quot;, &quot;yt&quot;: &quot;XiAhp3e9qYQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 458}, {&quot;title&quot;: &quot;Les Go - Dan Gna (Spiritual Life Vokal Version)&quot;, &quot;yt&quot;: &quot;fphK8AAx_1g&quot;, &quot;src&quot;: null, &quot;dur&quot;: 488}, {&quot;title&quot;: &quot;Les Go - Dan Gna (Sacred Rhythm Drum)&quot;, &quot;yt&quot;: &quot;LR75U5sF8K0&quot;, &quot;src&quot;: null, &quot;dur&quot;: 329}, {&quot;title&quot;: &quot;Les Go - Dan Gna (Joe Claussell&#x27;s Spiritual Journey)&quot;, &quot;yt&quot;: &quot;-wcKWNzoGew&quot;, &quot;src&quot;: null, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Spiritual Life Music - SLM PRO 18 - 2001</div><div class="tags">Electronic, Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Les go - Dan Gna (Sacred Rhythm Vokal Journey mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Les go - Dan Gna (Sacred Rhythm Vokal Journey mix)" data-yt="XiAhp3e9qYQ" data-dur="458"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:38</span><a class="ytlink" href="https://www.youtube.com/watch?v=XiAhp3e9qYQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Les go - Dan Gna (Sacred Rhythm Vokal Journey mix) on YouTube">&#8599;</a></div><div class="tname">Les go - Dan Gna (Sacred Rhythm Vokal Journey mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Les Go - Dan Gna (Spiritual Life Vokal Version)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Les Go - Dan Gna (Spiritual Life Vokal Version)" data-yt="fphK8AAx_1g" data-dur="488"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:08</span><a class="ytlink" href="https://www.youtube.com/watch?v=fphK8AAx_1g" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Les Go - Dan Gna (Spiritual Life Vokal Version) on YouTube">&#8599;</a></div><div class="tname">Les Go - Dan Gna (Spiritual Life Vokal Version)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Les Go - Dan Gna (Sacred Rhythm Drum)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Les Go - Dan Gna (Sacred Rhythm Drum)" data-yt="LR75U5sF8K0" data-dur="329"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:29</span><a class="ytlink" href="https://www.youtube.com/watch?v=LR75U5sF8K0" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Les Go - Dan Gna (Sacred Rhythm Drum) on YouTube">&#8599;</a></div><div class="tname">Les Go - Dan Gna (Sacred Rhythm Drum)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Les Go - Dan Gna (Joe Claussell&#x27;s Spiritual Journey)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Les Go - Dan Gna (Joe Claussell&#x27;s Spiritual Journey)" data-yt="-wcKWNzoGew" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span><a class="ytlink" href="https://www.youtube.com/watch?v=-wcKWNzoGew" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Les Go - Dan Gna (Joe Claussell&#x27;s Spiritual Journey) on YouTube">&#8599;</a></div><div class="tname">Les Go - Dan Gna (Joe Claussell&#x27;s Spiritual Journey)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/G0hNLNxo3knJoAseYRv3ONe86FtoVaW7ipUUlhWDqdk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4Njgt/MTY1MDQ4NzI2MC02/MDU1LmpwZWc.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427814624">Brothers&#x27; Vibe - Dub Plates 5 (12&quot;, Ora)</a></div><div class="meta"><span class="price">10.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427814624">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427814624" data-like-payload="{&quot;description&quot;: &quot;Brothers&#x27; Vibe - Dub Plates 5 (12\&quot;, Ora)&quot;, &quot;price&quot;: &quot;10.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427814624&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/G0hNLNxo3knJoAseYRv3ONe86FtoVaW7ipUUlhWDqdk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4Njgt/MTY1MDQ4NzI2MC02/MDU1LmpwZWc.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Brothers&#x27; Vibe - DUB Plates 5 - \&quot;Bongoso\&quot; - SOM1259a&quot;, &quot;yt&quot;: &quot;LZcsTBDKAMM&quot;, &quot;src&quot;: null, &quot;dur&quot;: 603}, {&quot;title&quot;: &quot;Brothers&#x27; Vibe - Dub Plates 5 - Smooth Ride som1259&quot;, &quot;yt&quot;: &quot;txjnE3pXWKg&quot;, &quot;src&quot;: null, &quot;dur&quot;: 519}, {&quot;title&quot;: &quot;Brothers&#x27; Vibe - DUB Plates 5 - \&quot;Smooth Ride\&quot; - SOM1259b&quot;, &quot;yt&quot;: &quot;87nz8XnKBeU&quot;, &quot;src&quot;: null, &quot;dur&quot;: 500}, {&quot;title&quot;: &quot;Brothers&#x27; Vibe - DUB Plates 5 - \&quot;Scat Track\&quot; - SOM1259c&quot;, &quot;yt&quot;: &quot;0GmZXSeq2rc&quot;, &quot;src&quot;: null, &quot;dur&quot;: 301}]}">&#9825;</button></div><div class="fineprint">SOM Underground - som1259 - 2000</div><div class="tags">Electronic, Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Brothers&#x27; Vibe - DUB Plates 5 - &quot;Bongoso&quot; - SOM1259a"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Brothers&#x27; Vibe - DUB Plates 5 - &quot;Bongoso&quot; - SOM1259a" data-yt="LZcsTBDKAMM" data-dur="603"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 10:03</span><a class="ytlink" href="https://www.youtube.com/watch?v=LZcsTBDKAMM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Brothers&#x27; Vibe - DUB Plates 5 - &quot;Bongoso&quot; - SOM1259a on YouTube">&#8599;</a></div><div class="tname">Brothers&#x27; Vibe - DUB Plates 5 - &quot;Bongoso&quot; - SOM1259a</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Brothers&#x27; Vibe - Dub Plates 5 - Smooth Ride som1259"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Brothers&#x27; Vibe - Dub Plates 5 - Smooth Ride som1259" data-yt="txjnE3pXWKg" data-dur="519"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:39</span><a class="ytlink" href="https://www.youtube.com/watch?v=txjnE3pXWKg" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Brothers&#x27; Vibe - Dub Plates 5 - Smooth Ride som1259 on YouTube">&#8599;</a></div><div class="tname">Brothers&#x27; Vibe - Dub Plates 5 - Smooth Ride som1259</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Brothers&#x27; Vibe - DUB Plates 5 - &quot;Smooth Ride&quot; - SOM1259b"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Brothers&#x27; Vibe - DUB Plates 5 - &quot;Smooth Ride&quot; - SOM1259b" data-yt="87nz8XnKBeU" data-dur="500"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:20</span><a class="ytlink" href="https://www.youtube.com/watch?v=87nz8XnKBeU" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Brothers&#x27; Vibe - DUB Plates 5 - &quot;Smooth Ride&quot; - SOM1259b on YouTube">&#8599;</a></div><div class="tname">Brothers&#x27; Vibe - DUB Plates 5 - &quot;Smooth Ride&quot; - SOM1259b</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Brothers&#x27; Vibe - DUB Plates 5 - &quot;Scat Track&quot; - SOM1259c"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Brothers&#x27; Vibe - DUB Plates 5 - &quot;Scat Track&quot; - SOM1259c" data-yt="0GmZXSeq2rc" data-dur="301"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:01</span><a class="ytlink" href="https://www.youtube.com/watch?v=0GmZXSeq2rc" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Brothers&#x27; Vibe - DUB Plates 5 - &quot;Scat Track&quot; - SOM1259c on YouTube">&#8599;</a></div><div class="tname">Brothers&#x27; Vibe - DUB Plates 5 - &quot;Scat Track&quot; - SOM1259c</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/gkRKOMp_o4cTAk7rdAmrXIi7yFI47OvPrj92fe-DZME/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk2Nzg5/NC0xNDExMzA0OTI4/LTgwOTEuanBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427805177">Lenzini - Shine On (12&quot;)</a></div><div class="meta"><span class="price">7.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427805177">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427805177" data-like-payload="{&quot;description&quot;: &quot;Lenzini - Shine On (12\&quot;)&quot;, &quot;price&quot;: &quot;7.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427805177&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/gkRKOMp_o4cTAk7rdAmrXIi7yFI47OvPrj92fe-DZME/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk2Nzg5/NC0xNDExMzA0OTI4/LTgwOTEuanBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;SHINE ON (lion zion original version) / LENZINI / rekawa sound #dub #housemusic #electronic #urei&quot;, &quot;yt&quot;: &quot;yuBBrr-26p0&quot;, &quot;src&quot;: null, &quot;dur&quot;: 477}]}">&#9825;</button></div><div class="fineprint">Rekawa Sound - RS009 - 2005</div><div class="tags">Electronic, Reggae, House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play SHINE ON (lion zion original version) / LENZINI / rekawa sound #dub #…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="SHINE ON (lion zion original version) / LENZINI / rekawa sound #dub #housemusic #electronic #urei" data-yt="yuBBrr-26p0" data-dur="477"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:57</span><a class="ytlink" href="https://www.youtube.com/watch?v=yuBBrr-26p0" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch SHINE ON (lion zion original version) / LENZINI / rekawa sound #dub #… on YouTube">&#8599;</a></div><div class="tname">SHINE ON (lion zion original version) / LENZINI / rekawa sound #dub #…</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/PGNp8vctzeN5ZDaO6Iqaii090dMqdik1aX0YD527bXw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwNjkw/NC0xMTg1MjcwOTc1/LmpwZWc.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427799792">Drizabone - Real Love (12&quot;)</a></div><div class="meta"><span class="price">7.00 EUR</span><span class="badge">Very Good Plus (VG+)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427799792">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427799792" data-like-payload="{&quot;description&quot;: &quot;Drizabone - Real Love (12\&quot;)&quot;, &quot;price&quot;: &quot;7.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427799792&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/PGNp8vctzeN5ZDaO6Iqaii090dMqdik1aX0YD527bXw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwNjkw/NC0xMTg1MjcwOTc1/LmpwZWc.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Drizabone - Real Love (Real Dub)&quot;, &quot;yt&quot;: &quot;5HM0_XsqXgI&quot;, &quot;src&quot;: null, &quot;dur&quot;: 309}, {&quot;title&quot;: &quot;Real Love - Drizabone (1991 - Original Mix)&quot;, &quot;yt&quot;: &quot;lqpe5NiMVXQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 355}, {&quot;title&quot;: &quot;Drizabone   Real Love Real Jazzy Mix   YouTube&quot;, &quot;yt&quot;: &quot;f1SHBYs1vXQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 303}, {&quot;title&quot;: &quot;Drizabone - Real Love (Real Jazzy)&quot;, &quot;yt&quot;: &quot;l5UXhiisLVE&quot;, &quot;src&quot;: null, &quot;dur&quot;: 301}, {&quot;title&quot;: &quot;Drizabone - Real Love (Edit)&quot;, &quot;yt&quot;: &quot;ZLk8-yVq1EE&quot;, &quot;src&quot;: null, &quot;dur&quot;: 355}, {&quot;title&quot;: &quot;MC - Drizabone - Real love&quot;, &quot;yt&quot;: &quot;QQFAjBffiBk&quot;, &quot;src&quot;: null, &quot;dur&quot;: 315}]}">&#9825;</button></div><div class="fineprint">4th &amp; Broadway, Island Records - 12 BRW 223, 868 561-1 - 1991</div><div class="tags">Electronic, Disco, Jazzdance, Garage House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Drizabone - Real Love (Real Dub)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Drizabone - Real Love (Real Dub)" data-yt="5HM0_XsqXgI" data-dur="309"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:09</span><a class="ytlink" href="https://www.youtube.com/watch?v=5HM0_XsqXgI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Drizabone - Real Love (Real Dub) on YouTube">&#8599;</a></div><div class="tname">Drizabone - Real Love (Real Dub)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Real Love - Drizabone (1991 - Original Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Real Love - Drizabone (1991 - Original Mix)" data-yt="lqpe5NiMVXQ" data-dur="355"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:55</span><a class="ytlink" href="https://www.youtube.com/watch?v=lqpe5NiMVXQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Real Love - Drizabone (1991 - Original Mix) on YouTube">&#8599;</a></div><div class="tname">Real Love - Drizabone (1991 - Original Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Drizabone   Real Love Real Jazzy Mix   YouTube"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Drizabone   Real Love Real Jazzy Mix   YouTube" data-yt="f1SHBYs1vXQ" data-dur="303"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:03</span><a class="ytlink" href="https://www.youtube.com/watch?v=f1SHBYs1vXQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Drizabone   Real Love Real Jazzy Mix   YouTube on YouTube">&#8599;</a></div><div class="tname">Drizabone   Real Love Real Jazzy Mix   YouTube</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Drizabone - Real Love (Real Jazzy)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Drizabone - Real Love (Real Jazzy)" data-yt="l5UXhiisLVE" data-dur="301"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:01</span><a class="ytlink" href="https://www.youtube.com/watch?v=l5UXhiisLVE" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Drizabone - Real Love (Real Jazzy) on YouTube">&#8599;</a></div><div class="tname">Drizabone - Real Love (Real Jazzy)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Drizabone - Real Love (Edit)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Drizabone - Real Love (Edit)" data-yt="ZLk8-yVq1EE" data-dur="355"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:55</span><a class="ytlink" href="https://www.youtube.com/watch?v=ZLk8-yVq1EE" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Drizabone - Real Love (Edit) on YouTube">&#8599;</a></div><div class="tname">Drizabone - Real Love (Edit)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play MC - Drizabone - Real love"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="MC - Drizabone - Real love" data-yt="QQFAjBffiBk" data-dur="315"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:15</span><a class="ytlink" href="https://www.youtube.com/watch?v=QQFAjBffiBk" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch MC - Drizabone - Real love on YouTube">&#8599;</a></div><div class="tname">MC - Drizabone - Real love</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/z0PSooAdXYyeXziZKL8A2mp0RooJ68fwpDksPwuF5CE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg5NTgt/MTE1OTA1NzQ5Ni5q/cGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427799681">Osunlade - Rader Du / Blackman (12&quot;)</a></div><div class="meta"><span class="price">20.00 EUR</span><span class="badge">Very Good Plus (VG+) / Near Mint (NM or M-) sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427799681">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427799681" data-like-payload="{&quot;description&quot;: &quot;Osunlade - Rader Du / Blackman (12\&quot;)&quot;, &quot;price&quot;: &quot;20.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427799681&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/z0PSooAdXYyeXziZKL8A2mp0RooJ68fwpDksPwuF5CE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg5NTgt/MTE1OTA1NzQ5Ni5q/cGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Osunlade ft Wunmi - Rader Du&quot;, &quot;yt&quot;: &quot;KQexnDlosNg&quot;, &quot;src&quot;: null, &quot;dur&quot;: 305}, {&quot;title&quot;: &quot;Osunlade - Blackman&quot;, &quot;yt&quot;: &quot;4sUXG-2-pEs&quot;, &quot;src&quot;: null, &quot;dur&quot;: 321}]}">&#9825;</button></div><div class="fineprint">Soul Jazz Records - SJR 051 - 2001</div><div class="tags">Electronic, House, Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Osunlade ft Wunmi - Rader Du"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Osunlade ft Wunmi - Rader Du" data-yt="KQexnDlosNg" data-dur="305"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:05</span><a class="ytlink" href="https://www.youtube.com/watch?v=KQexnDlosNg" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Osunlade ft Wunmi - Rader Du on YouTube">&#8599;</a></div><div class="tname">Osunlade ft Wunmi - Rader Du</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Osunlade - Blackman"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Osunlade - Blackman" data-yt="4sUXG-2-pEs" data-dur="321"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:21</span><a class="ytlink" href="https://www.youtube.com/watch?v=4sUXG-2-pEs" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Osunlade - Blackman on YouTube">&#8599;</a></div><div class="tname">Osunlade - Blackman</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/e8j7edUVOQyKcS6rn4j25b-DBImgpaciIIXP_daZ0gM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI3MzI1/LTE2MTI2MjUyNjIt/MTQyOC5qcGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427799411">Mood II Swing Feat. Carol Sylvan* - Closer (12&quot;)</a></div><div class="meta"><span class="price">18.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427799411">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427799411" data-like-payload="{&quot;description&quot;: &quot;Mood II Swing Feat. Carol Sylvan* - Closer (12\&quot;)&quot;, &quot;price&quot;: &quot;18.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427799411&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/e8j7edUVOQyKcS6rn4j25b-DBImgpaciIIXP_daZ0gM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI3MzI1/LTE2MTI2MjUyNjIt/MTQyOC5qcGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Mood II Swing Ft Carol Sylvan - Closer (King Street Moody Club)&quot;, &quot;yt&quot;: &quot;yTRQEwmvykI&quot;, &quot;src&quot;: null, &quot;dur&quot;: 377}, {&quot;title&quot;: &quot;Closer (Bounce Productions Remix)&quot;, &quot;yt&quot;: &quot;PlakyH-AU9E&quot;, &quot;src&quot;: null, &quot;dur&quot;: 438}, {&quot;title&quot;: &quot;Closer (Swing II Mood Dub)&quot;, &quot;yt&quot;: &quot;o9V8V_iJKAk&quot;, &quot;src&quot;: null, &quot;dur&quot;: 349}, {&quot;title&quot;: &quot;Mood II Swing featuring Carol Sylvan &#x27;95 Mixes - Closer (Red Cat Swing The Mix)&quot;, &quot;yt&quot;: &quot;GYJtXk1LcvI&quot;, &quot;src&quot;: null, &quot;dur&quot;: 311}, {&quot;title&quot;: &quot;Mood II Swing feat Carol Sylvan - Closer (Basshook Rub)&quot;, &quot;yt&quot;: &quot;JUIioPOPFvs&quot;, &quot;src&quot;: null, &quot;dur&quot;: 374}, {&quot;title&quot;: &quot;MOOD II SWING feat. CAROL SYLVAN - Closer (smoke the mic airwaves edit)&quot;, &quot;yt&quot;: &quot;0lD-JIMXp3g&quot;, &quot;src&quot;: null, &quot;dur&quot;: 219}]}">&#9825;</button></div><div class="fineprint">BPM King Street Sounds - KSS-1019 - 1994</div><div class="tags">Electronic, House, Deep House, Garage House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Mood II Swing Ft Carol Sylvan - Closer (King Street Moody Club)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Mood II Swing Ft Carol Sylvan - Closer (King Street Moody Club)" data-yt="yTRQEwmvykI" data-dur="377"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:17</span><a class="ytlink" href="https://www.youtube.com/watch?v=yTRQEwmvykI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Mood II Swing Ft Carol Sylvan - Closer (King Street Moody Club) on YouTube">&#8599;</a></div><div class="tname">Mood II Swing Ft Carol Sylvan - Closer (King Street Moody Club)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Closer (Bounce Productions Remix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Closer (Bounce Productions Remix)" data-yt="PlakyH-AU9E" data-dur="438"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 7:18</span><a class="ytlink" href="https://www.youtube.com/watch?v=PlakyH-AU9E" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Closer (Bounce Productions Remix) on YouTube">&#8599;</a></div><div class="tname">Closer (Bounce Productions Remix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Closer (Swing II Mood Dub)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Closer (Swing II Mood Dub)" data-yt="o9V8V_iJKAk" data-dur="349"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:49</span><a class="ytlink" href="https://www.youtube.com/watch?v=o9V8V_iJKAk" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Closer (Swing II Mood Dub) on YouTube">&#8599;</a></div><div class="tname">Closer (Swing II Mood Dub)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Mood II Swing featuring Carol Sylvan &#x27;95 Mixes - Closer (Red Cat Swin…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Mood II Swing featuring Carol Sylvan &#x27;95 Mixes - Closer (Red Cat Swing The Mix)" data-yt="GYJtXk1LcvI" data-dur="311"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:11</span><a class="ytlink" href="https://www.youtube.com/watch?v=GYJtXk1LcvI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Mood II Swing featuring Carol Sylvan &#x27;95 Mixes - Closer (Red Cat Swin… on YouTube">&#8599;</a></div><div class="tname">Mood II Swing featuring Carol Sylvan &#x27;95 Mixes - Closer (Red Cat Swin…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Mood II Swing feat Carol Sylvan - Closer (Basshook Rub)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Mood II Swing feat Carol Sylvan - Closer (Basshook Rub)" data-yt="JUIioPOPFvs" data-dur="374"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:14</span><a class="ytlink" href="https://www.youtube.com/watch?v=JUIioPOPFvs" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Mood II Swing feat Carol Sylvan - Closer (Basshook Rub) on YouTube">&#8599;</a></div><div class="tname">Mood II Swing feat Carol Sylvan - Closer (Basshook Rub)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play MOOD II SWING feat. CAROL SYLVAN - Closer (smoke the mic airwaves edi…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="MOOD II SWING feat. CAROL SYLVAN - Closer (smoke the mic airwaves edit)" data-yt="0lD-JIMXp3g" data-dur="219"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 3:39</span><a class="ytlink" href="https://www.youtube.com/watch?v=0lD-JIMXp3g" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch MOOD II SWING feat. CAROL SYLVAN - Closer (smoke the mic airwaves edi… on YouTube">&#8599;</a></div><div class="tname">MOOD II SWING feat. CAROL SYLVAN - Closer (smoke the mic airwaves edi…</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/Ze9T94oTdWIAmrpKmnWW6A9MBBpVPWDz0h-jk4ldiYc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExLTEz/OTg1ODQyMTAtMTY3/Mi5qcGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4427798826">Blue Six - Music And Wine (12&quot;)</a></div><div class="meta"><span class="price">25.00 EUR</span><span class="badge">Near Mint (NM or M-) / Very Good Plus (VG+) sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4427798826">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4427798826" data-like-payload="{&quot;description&quot;: &quot;Blue Six - Music And Wine (12\&quot;)&quot;, &quot;price&quot;: &quot;25.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4427798826&quot;, &quot;store&quot;: &quot;Offbeat Records&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/Ze9T94oTdWIAmrpKmnWW6A9MBBpVPWDz0h-jk4ldiYc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExLTEz/OTg1ODQyMTAtMTY3/Mi5qcGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Blue Six - Music &amp; Wine (Speakeasy 3000 Remix﻿)&quot;, &quot;yt&quot;: &quot;pQvT5cDa1d8&quot;, &quot;src&quot;: null, &quot;dur&quot;: 244}, {&quot;title&quot;: &quot;Blue Six   Music &amp; Wine Original Video HQ&quot;, &quot;yt&quot;: &quot;Md_EpLCExc4&quot;, &quot;src&quot;: null, &quot;dur&quot;: 237}, {&quot;title&quot;: &quot;Blue Six - Music And Wine (Mig&#x27;s Petalpusher Vocal) [NM 002]&quot;, &quot;yt&quot;: &quot;EOj1Fmm8ljM&quot;, &quot;src&quot;: null, &quot;dur&quot;: 502}, {&quot;title&quot;: &quot;Blue Six - Music And Wine (Th&#x27;Attaboy Vocal)&quot;, &quot;yt&quot;: &quot;wIIn9ew0294&quot;, &quot;src&quot;: null, &quot;dur&quot;: 547}, {&quot;title&quot;: &quot;Blue Six - Music &amp; Wine_Jay&#x27;s Blue Silk Dub&quot;, &quot;yt&quot;: &quot;Fg-t_eGJw5g&quot;, &quot;src&quot;: null, &quot;dur&quot;: 371}, {&quot;title&quot;: &quot;Blue Six - \&quot;Music &amp; Wine\&quot; [ Satin Souls Remix ]&quot;, &quot;yt&quot;: &quot;1MXmguMXvy4&quot;, &quot;src&quot;: null, &quot;dur&quot;: 372}]}">&#9825;</button></div><div class="fineprint">Naked Music Recordings, Naked Music Recordings - NM002, nm 002 - 1999</div><div class="tags">Electronic, Deep House</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blue Six - Music &amp; Wine (Speakeasy 3000 Remix﻿)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blue Six - Music &amp; Wine (Speakeasy 3000 Remix﻿)" data-yt="pQvT5cDa1d8" data-dur="244"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:04</span><a class="ytlink" href="https://www.youtube.com/watch?v=pQvT5cDa1d8" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blue Six - Music &amp; Wine (Speakeasy 3000 Remix﻿) on YouTube">&#8599;</a></div><div class="tname">Blue Six - Music &amp; Wine (Speakeasy 3000 Remix﻿)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blue Six   Music &amp; Wine Original Video HQ"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blue Six   Music &amp; Wine Original Video HQ" data-yt="Md_EpLCExc4" data-dur="237"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 3:57</span><a class="ytlink" href="https://www.youtube.com/watch?v=Md_EpLCExc4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blue Six   Music &amp; Wine Original Video HQ on YouTube">&#8599;</a></div><div class="tname">Blue Six   Music &amp; Wine Original Video HQ</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blue Six - Music And Wine (Mig&#x27;s Petalpusher Vocal) [NM 002]"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blue Six - Music And Wine (Mig&#x27;s Petalpusher Vocal) [NM 002]" data-yt="EOj1Fmm8ljM" data-dur="502"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:22</span><a class="ytlink" href="https://www.youtube.com/watch?v=EOj1Fmm8ljM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blue Six - Music And Wine (Mig&#x27;s Petalpusher Vocal) [NM 002] on YouTube">&#8599;</a></div><div class="tname">Blue Six - Music And Wine (Mig&#x27;s Petalpusher Vocal) [NM 002]</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blue Six - Music And Wine (Th&#x27;Attaboy Vocal)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blue Six - Music And Wine (Th&#x27;Attaboy Vocal)" data-yt="wIIn9ew0294" data-dur="547"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 9:07</span><a class="ytlink" href="https://www.youtube.com/watch?v=wIIn9ew0294" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blue Six - Music And Wine (Th&#x27;Attaboy Vocal) on YouTube">&#8599;</a></div><div class="tname">Blue Six - Music And Wine (Th&#x27;Attaboy Vocal)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blue Six - Music &amp; Wine_Jay&#x27;s Blue Silk Dub"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blue Six - Music &amp; Wine_Jay&#x27;s Blue Silk Dub" data-yt="Fg-t_eGJw5g" data-dur="371"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:11</span><a class="ytlink" href="https://www.youtube.com/watch?v=Fg-t_eGJw5g" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blue Six - Music &amp; Wine_Jay&#x27;s Blue Silk Dub on YouTube">&#8599;</a></div><div class="tname">Blue Six - Music &amp; Wine_Jay&#x27;s Blue Silk Dub</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blue Six - &quot;Music &amp; Wine&quot; [ Satin Souls Remix ]"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blue Six - &quot;Music &amp; Wine&quot; [ Satin Souls Remix ]" data-yt="1MXmguMXvy4" data-dur="372"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:12</span><a class="ytlink" href="https://www.youtube.com/watch?v=1MXmguMXvy4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blue Six - &quot;Music &amp; Wine&quot; [ Satin Souls Remix ] on YouTube">&#8599;</a></div><div class="tname">Blue Six - &quot;Music &amp; Wine&quot; [ Satin Souls Remix ]</div></li></ul></div></div>
+<h2>deejay.de (new arrivals) &middot; 2</h2>
+<div class="rec"><img src="https://www.deejay.de/images/l/3/8/1251238.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Robert_Babicz_Electric_Love_EP_FLOWER0001_Vinyl__1251238">Robert Babicz - Electric Love EP (excl)</a></div><div class="meta"><span class="price">12.56 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.deejay.de/Robert_Babicz_Electric_Love_EP_FLOWER0001_Vinyl__1251238">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Robert_Babicz_Electric_Love_EP_FLOWER0001_Vinyl__1251238" data-like-payload="{&quot;description&quot;: &quot;Robert Babicz - Electric Love EP (excl)&quot;, &quot;price&quot;: &quot;12.56 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Robert_Babicz_Electric_Love_EP_FLOWER0001_Vinyl__1251238&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/3/8/1251238.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Electric Love&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/8/1251238a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Cuerpo Con Color&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/8/1251238b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Tease Me&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/8/1251238c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: Tease Me (Tool)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/3/8/1251238d.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Dark Flower - FLOWER0001</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Electric Love"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Electric Love" data-src="https://www.deejay.de/streamit/3/8/1251238a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Electric Love</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Cuerpo Con Color"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Cuerpo Con Color" data-src="https://www.deejay.de/streamit/3/8/1251238b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Cuerpo Con Color</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Tease Me"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Tease Me" data-src="https://www.deejay.de/streamit/3/8/1251238c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Tease Me</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: Tease Me (Tool)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: Tease Me (Tool)" data-src="https://www.deejay.de/streamit/3/8/1251238d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: Tease Me (Tool)</div></li></ul></div></div>
+<div class="rec"><img src="https://www.deejay.de/images/l/1/5/1248715.jpg" alt=""><div class="body"><div class="title"><a href="https://www.deejay.de/Now_Always_Fades_Coalesce_NU008_Vinyl__1248715">Now Always Fades - Coalesce (12inch)</a></div><div class="meta"><span class="price">22.90 EUR</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://www.deejay.de/Now_Always_Fades_Coalesce_NU008_Vinyl__1248715">View on Deejay.de &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.deejay.de/Now_Always_Fades_Coalesce_NU008_Vinyl__1248715" data-like-payload="{&quot;description&quot;: &quot;Now Always Fades - Coalesce (12inch)&quot;, &quot;price&quot;: &quot;22.90 EUR&quot;, &quot;url&quot;: &quot;https://www.deejay.de/Now_Always_Fades_Coalesce_NU008_Vinyl__1248715&quot;, &quot;store&quot;: &quot;deejay.de (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://www.deejay.de/images/l/1/5/1248715.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;A1: Faithless&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/5/1248715a.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A2: Dummy&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/5/1248715b.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A3: Facless Angel&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/5/1248715c.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;A4: Coalesce&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/5/1248715d.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B1: Dwell&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/5/1248715e.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;B2: REM&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://www.deejay.de/streamit/1/5/1248715f.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Northern Underground Records - NU008</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A1: Faithless"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A1: Faithless" data-src="https://www.deejay.de/streamit/1/5/1248715a.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A1: Faithless</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A2: Dummy"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A2: Dummy" data-src="https://www.deejay.de/streamit/1/5/1248715b.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A2: Dummy</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A3: Facless Angel"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A3: Facless Angel" data-src="https://www.deejay.de/streamit/1/5/1248715c.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A3: Facless Angel</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play A4: Coalesce"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="A4: Coalesce" data-src="https://www.deejay.de/streamit/1/5/1248715d.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">A4: Coalesce</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B1: Dwell"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B1: Dwell" data-src="https://www.deejay.de/streamit/1/5/1248715e.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B1: Dwell</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play B2: REM"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="B2: REM" data-src="https://www.deejay.de/streamit/1/5/1248715f.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">B2: REM</div></li></ul></div></div>
+<footer>Generated 24 Oct 2026 10:39 UTC. Tap a bar to play from that point; only one track plays at a time. The arrow opens the original video on YouTube.<div style="margin-top:10px;">Earlier: <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-23.html">2026-10-23</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-22.html">2026-10-22</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-21.html">2026-10-21</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-20.html">2026-10-20</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-19.html">2026-10-19</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-18.html">2026-10-18</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-17.html">2026-10-17</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-16.html">2026-10-16</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-15.html">2026-10-15</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-14.html">2026-10-14</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-13.html">2026-10-13</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-12.html">2026-10-12</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-11.html">2026-10-11</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-05.html">2026-10-05</a></div></footer>
+</div><script>
+(function () {
+  // Substituted at render time from the ICON_* constants, so the markup
+  // and the JS that swaps it can never drift out of sync.
+  var ICON_PLAY = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
+  var ICON_PAUSE = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 5h3.5v14H6zM14.5 5H18v14h-3.5z"/></svg>';
+  var ICON_PREV = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 6h2.5v12H6zm3.5 6L18 6v12z"/></svg>';
+  var ICON_NEXT = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M15.5 6H18v12h-2.5zM6 6l8.5 6L6 18z"/></svg>';
+
+  // Two hidden YouTube players, not one: ytPlayer is the one you hear,
+  // ytSpare sits muted behind it and fetches ahead. See "fetching ahead".
+  var ytPlayer = null, ytSpare = null;
+  var ytApiReady = false;   // iframe_api has loaded
+  var ytUp = false;         // ytPlayer has fired onReady
+  var ytSpareUp = false;    // so has ytSpare
+  var ytQueued = null;      // a press that arrived before ytUp
+  var spareBar = null, spareVideoId = null, spareStart = 0, spareAt = 0;
+  var spareHeld = false;    // its fetch got as far as playing, and was paused there
+  var swapPending = false, swapTimer = null, nearEndDone = false;
+  var hoverTimer = null, hoverBar = null, hoverAt = 0, hoverEnterAt = 0, hoverFetchAt = 0;
+  // Fetching ahead costs a second request per track. Off for anyone who
+  // asked their browser to save data, and ?ahead=0 turns it off by hand --
+  // the player then behaves exactly like the single-player one it replaced.
+  var FETCH_AHEAD = !/[?&]ahead=0/.test(location.search) &&
+    !(navigator.connection && navigator.connection.saveData);
+  var audioEl = new Audio();
+  audioEl.preload = 'none';
+
+  var activeEngine = null;  // 'yt' | 'audio' | null
+  var activeBar = null, activeVideoId = null, activeSrc = null;
+  var pendingSeekFraction = null;
+  var pollTimer = null;
+
+  function fmt(t) {
+    if (!isFinite(t) || t < 0) t = 0;
+    var m = Math.floor(t / 60), s = Math.floor(t % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function row(bar) { return bar.closest('.trow'); }
+
+  function paint(bar, fraction, curLabel, durLabel, state) {
+    var fillEl = bar.querySelector('.fill');
+    if (fillEl) fillEl.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+    bar.setAttribute('aria-valuenow', Math.round(fraction * 100));
+    var r = row(bar);
+    if (!r) return;
+    r.classList.toggle('playing', state === 'playing');
+    var t = r.querySelector('.time');
+    if (t) t.textContent = curLabel + ' / ' + durLabel;
+    var btn = r.querySelector('.ppbtn');
+    if (btn) {
+      btn.classList.toggle('loading', state === 'loading');
+      btn.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    // Keep the bottom transport in step with the row: same play/pause icon,
+    // same progress, same clock.
+    var nbToggle = document.querySelector('#nowbar [data-toggle]');
+    if (nbToggle) {
+      nbToggle.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    if (bar === activeBar) {
+      var nbFill = document.querySelector('#nowbar .nbfill');
+      if (nbFill) nbFill.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+      var nbSeek = document.querySelector('#nowbar .nbseek');
+      if (nbSeek) nbSeek.setAttribute('aria-valuenow', Math.round(fraction * 100));
+      var nbTime = document.querySelector('#nowbar .nbtime');
+      if (nbTime) nbTime.textContent = curLabel + ' / ' + durLabel;
+    }
+  }
+
+  function knownDuration(bar) {
+    return parseInt(bar.getAttribute('data-dur'), 10) || 0;
+  }
+
+  function durLabel(bar) {
+    var known = knownDuration(bar);
+    return known ? fmt(known) : '--:--';
+  }
+
+  function resetBar(bar) {
+    if (!bar) return;
+    paint(bar, 0, '0:00', durLabel(bar), 'idle');
+  }
+
+  function stopPolling() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  // ---- YouTube backend (Discogs releases) ----
+
+  function pollYt() {
+    if (!ytPlayer || !activeBar) return;
+    var dur = 0, cur = 0, state = -1;
+    try {
+      dur = ytPlayer.getDuration() || 0;
+      cur = ytPlayer.getCurrentTime() || 0;
+      state = ytPlayer.getPlayerState();
+    } catch (err) { return; }
+    if (pendingSeekFraction !== null && dur > 0) {
+      var target = pendingSeekFraction; pendingSeekFraction = null;
+      ytPlayer.seekTo(target * dur, true);
+      cur = target * dur;
+    }
+    // Hovering another row borrows the spare, so by the end of a track it
+    // may no longer hold the one auto-advance is about to ask for.
+    if (!nearEndDone && state === 1 && dur > 0 && dur - cur < 20) {
+      nearEndDone = true;
+      preloadNext();
+    }
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar),
+          state === 1 ? 'playing' : (state === 3 ? 'loading' : 'paused'));
+  }
+
+  function buildYt(host, onReady) {
+    return new YT.Player(host, {
+      height: '113', width: '200',
+      playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1 },
+      events: {
+        onReady: onReady, onStateChange: onYtState, onError: onYtError,
+        onAutoplayBlocked: onYtBlocked
+      }
+    });
+  }
+
+  // A tab opened in the background is not allowed to start anything, muted
+  // or not, so the spare's fetch never happens there. Forget it, or the
+  // first press would sit waiting on it; visibilitychange asks again.
+  function onYtBlocked(ev) {
+    if (ev.target !== ytPlayer) { spareBar = null; spareVideoId = null; }
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) preloadNext();
+  });
+
+  // Which video a player says it has, or '' when it does not say.
+  function ytVideoId(player) {
+    try { return player.getVideoData().video_id || ''; } catch (err) { return ''; }
+  }
+
+  function onYtState(ev) {
+    if (ev.target !== ytPlayer) {
+      // The spare is there to fetch, never to be heard: hold it the moment
+      // it actually starts. Not earlier -- pausing a load that is still on
+      // its way throws the head start away (measured: paused 150ms in, the
+      // press then waited as long as a cold one).
+      if (ev.data === 1) {
+        // Unless this is the previous track's last word, arriving after
+        // the player was handed something new to fetch.
+        if (!ytVideoId(ev.target) || ytVideoId(ev.target) === spareVideoId) spareHeld = true;
+        try { ev.target.pauseVideo(); } catch (err) {}
+      }
+      return;
+    }
+    if (activeEngine !== 'yt' || !activeBar) return;
+    if (ev.data === 1 || ev.data === 3) swapPending = false;
+    if (ev.data === 1) {
+      preloadNext();
+    } else if (ev.data === YT.PlayerState.ENDED) {
+      var d = ytPlayer.getDuration() || knownDuration(activeBar);
+      paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+      stopPolling();
+      step(1);  // roll on to the next track, top to bottom
+    }
+  }
+
+  function onYtError(ev) {
+    if (ev.target !== ytPlayer) {
+      // Found out while fetching ahead that this one cannot play here
+      // (removed, or its owner switched embedding off). Grey the row out
+      // now rather than on the press, and line up the one after it, so
+      // auto-advance steps past a dead video instead of stopping on it.
+      // Unless it is about a fetch that has since been replaced: that must
+      // not grey out the row that replaced it.
+      var dead = ev.data === 100 || ev.data === 101 || ev.data === 150;
+      var failedId = ytVideoId(ev.target);
+      if (failedId && failedId !== spareVideoId) return;
+      var r = spareBar ? row(spareBar) : null;
+      spareBar = null; spareVideoId = null;
+      if (dead && r) { r.classList.add('errored'); preloadNext(); }
+      return;
+    }
+    if (activeEngine === 'yt' && activeBar) {
+      var ar = row(activeBar);
+      if (ar) ar.classList.add('errored');
+    }
+  }
+
+  function ensureYt(cb) {
+    if (ytUp) { if (cb) cb(); return; }
+    if (cb) ytQueued = cb;  // the latest press wins
+    if (ytPlayer || !ytApiReady) return;
+    var host = document.getElementById('yt-audio-host');
+    if (!host) return;
+    ytPlayer = buildYt(host, function () {
+      ytUp = true;
+      var queued = ytQueued; ytQueued = null;
+      if (queued) queued();
+      buildSpare();
+    });
+  }
+
+  function buildSpare() {
+    if (ytSpare || !FETCH_AHEAD) return;
+    // Off-screen rather than display:none, same as the first one: see
+    // render_player_page.
+    var wrap = document.createElement('div');
+    wrap.style.cssText =
+      'position:fixed;left:-9999px;top:130px;width:200px;height:113px;';
+    wrap.innerHTML = '<div></div>';
+    document.body.appendChild(wrap);
+    ytSpare = buildYt(wrap.firstChild, function () {
+      ytSpareUp = true;
+      preloadNext();
+    });
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytApiReady = true;
+    prewarm();
+  };
+
+  // Build the players while nothing is waiting on them, so the first press
+  // pays for none of the setup. A press that lands before they are up is
+  // queued in ensureYt and runs the moment the first one is.
+  function prewarm() {
+    ensureYt(null);
+  }
+
+  // ---- fetching ahead ----
+  //
+  // What makes a press slow is not the audio, it is everything YouTube does
+  // before the audio: loadVideoById() on a standing player still took
+  // 520-1060ms to first sound across five presses on a real digest page.
+  // The same video already sitting in a second player starts in 190-390ms.
+  // So the spare always holds the track most likely to be asked for next:
+  // the one after what is playing (the first on the page before anything
+  // is), or the row the mouse is aiming at, from the point on its bar the
+  // pointer is over. A press on that track swaps the two players.
+  //
+  // cueVideoById() looks like the call for this and is not: it fetches the
+  // thumbnail and nothing else, and playVideo() after it measured no faster
+  // than loading cold (726-1150ms). It has to be a real, muted
+  // loadVideoById(), held by onYtState as soon as it starts.
+
+  // Seconds into the track for a point along the bar, from the length
+  // Discogs gave us. 0 when that is unknown; the poll loop seeks then.
+  function startAt(bar, fraction) {
+    var known = knownDuration(bar);
+    return fraction > 0.01 && known > 0 ? Math.floor(fraction * known) : 0;
+  }
+
+  function ytLoadArg(videoId, start) {
+    return start > 0 ? { videoId: videoId, startSeconds: start } : videoId;
+  }
+
+  // Two points on a bar that are the same point to anyone listening: a
+  // few seconds apart, or a handful of pixels. What the spare fetched from
+  // one is played for a press on the other rather than fetched again.
+  function closeEnough(bar, a, b) {
+    return Math.abs(a - b) <= Math.max(3, knownDuration(bar) * 0.015);
+  }
+
+  // lastMoment: the press is already on its way (the button is down), so
+  // there is no time left to fetch the same track again from another point.
+  function preload(bar, fraction, lastMoment) {
+    if (!ytSpareUp || !bar) return;
+    var videoId = bar.getAttribute('data-yt');
+    if (!videoId) return;  // direct MP3s start fast enough as they are
+    if (activeEngine === 'yt' && videoId === activeVideoId) return;
+    var start = startAt(bar, fraction);
+    if (videoId === spareVideoId) {
+      if (closeEnough(bar, start, spareStart)) return;
+      // Seeking a player that has the video beat fetching it over
+      // (530-860ms against 680ms and up), so the swap will seek instead.
+      if (lastMoment && spareHeld) return;
+    }
+    spareBar = bar; spareVideoId = videoId; spareStart = start; spareHeld = false;
+    spareAt = Date.now();
+    try {
+      ytSpare.mute();
+      ytSpare.loadVideoById(ytLoadArg(videoId, start));
+    } catch (err) { spareBar = null; spareVideoId = null; }
+  }
+
+  function preloadNext() {
+    if (!ytSpareUp) return;
+    // The pointer has only just settled on the track the spare is holding:
+    // that one is the better guess for the next press.
+    if (hoverBar && hoverBar === spareBar && Date.now() - hoverAt < 4000) return;
+    var bars = playableBars();
+    var idx = activeBar ? bars.indexOf(activeBar) : -1;
+    if (activeBar && idx === -1) return;
+    preload(bars[idx + 1], 0);
+  }
+
+  // The swap asks a player that has only ever been muted and paused to
+  // play out loud. If a browser will not have that, fall back to loading
+  // the track the ordinary way rather than leave the press hanging.
+  function watchSwap(videoId, start) {
+    swapPending = true;
+    clearTimeout(swapTimer);
+    swapTimer = setTimeout(function () {
+      if (!swapPending || activeEngine !== 'yt' || activeVideoId !== videoId) return;
+      swapPending = false;
+      var state = -1;
+      try { state = ytPlayer.getPlayerState(); } catch (err) {}
+      // Buffering is slow, not stuck: it was swapped in mid-fetch on a poor
+      // connection, and starting that fetch over would only make it slower.
+      if (state === 1 || state === 3) return;
+      try { ytPlayer.loadVideoById(ytLoadArg(videoId, start)); } catch (err) {}
+    }, 1500);
+  }
+
+  function playYtFrom(bar, fraction) {
+    var videoId = bar.getAttribute('data-yt');
+    ensureYt(function () {
+      if (activeBar && activeBar !== bar) resetBar(activeBar);
+      if (activeEngine !== 'yt' || activeVideoId !== videoId) {
+        var start = startAt(bar, fraction);
+        // startSeconds puts the first request at the right place. Loading
+        // from 0:00 and seeking afterwards, as this used to, fetches the
+        // opening of the track only to throw it away.
+        pendingSeekFraction = fraction > 0.01 && start === 0 ? fraction : null;
+        swapPending = false; nearEndDone = false;
+        var swap = ytSpareUp && spareVideoId === videoId;
+        if (swap && !spareHeld && Date.now() - spareAt > 1000) {
+          // Asked for over a second ago and not even buffering: that fetch
+          // is not coming (blocked, most likely). Quicker to load it here.
+          var spareState = -1;
+          try { spareState = ytSpare.getPlayerState(); } catch (err) {}
+          if (spareState !== 3) { swap = false; spareBar = null; spareVideoId = null; }
+        }
+        activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
+        if (swap) {
+          // Muted on its way out: if it was itself still loading, it must
+          // not be heard for the instant before onYtState holds it.
+          try { ytPlayer.pauseVideo(); ytPlayer.mute(); } catch (err) {}
+          var was = ytPlayer; ytPlayer = ytSpare; ytSpare = was;
+          spareBar = null; spareVideoId = null;
+          ytPlayer.unMute();
+          var seek = !closeEnough(bar, start, spareStart);
+          if (seek) ytPlayer.seekTo(start, true);
+          watchSwap(videoId, start);
+          if (spareHeld) {
+            ytPlayer.playVideo();
+            // The player that just went quiet is free at once. Not waiting
+            // for this track to sound first is what keeps a run of quick
+            // "next" presses from outrunning the fetch every time.
+            if (!seek) preloadNext();
+          }
+          // Otherwise it is still fetching, and it is now the player you
+          // hear, so it starts by itself when it gets there. Both things
+          // done above for a held one make that later, not sooner:
+          // playVideo() into a load in progress, and a second player
+          // beginning its own load beside it (the two share a thread),
+          // each measured several hundred ms slower than leaving it be.
+          // A seek is a fetch too, hence no preloadNext() beside one;
+          // onYtState does it once this track is playing.
+        } else {
+          ytPlayer.loadVideoById(ytLoadArg(videoId, start));
+        }
+      } else {
+        activeBar = bar;
+        var dur = ytPlayer.getDuration() || knownDuration(bar);
+        if (dur > 0) ytPlayer.seekTo(fraction * dur, true);
+        ytPlayer.playVideo();
+      }
+      stopPolling();
+      pollTimer = setInterval(pollYt, 250);
+      paint(bar, fraction, fmt(fraction * (ytPlayer.getDuration() || knownDuration(bar))),
+            durLabel(bar), 'loading');
+    });
+  }
+
+  // ---- direct-audio backend (clone.nl, or any source with real MP3s) ----
+
+  function pollAudio() {
+    if (!activeBar) return;
+    var dur = audioEl.duration || 0;
+    var cur = audioEl.currentTime || 0;
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    var state = !audioEl.paused && !audioEl.ended ? 'playing'
+               : (audioEl.readyState < 2 ? 'loading' : 'paused');
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar), state);
+  }
+
+  audioEl.addEventListener('ended', function () {
+    if (activeEngine === 'audio' && activeBar) {
+      var d = audioEl.duration || knownDuration(activeBar);
+      paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+      stopPolling();
+      step(1);  // roll on to the next track, top to bottom
+    }
+  });
+  audioEl.addEventListener('error', function () {
+    if (activeEngine === 'audio' && activeBar) {
+      var r = row(activeBar);
+      if (r) r.classList.add('errored');
+    }
+  });
+
+  // An MP3 row can be followed by a YouTube one; line that up as well.
+  audioEl.addEventListener('playing', function () {
+    if (activeEngine === 'audio') preloadNext();
+  });
+
+  function safePlay() {
+    var p = audioEl.play();
+    if (p && p.catch) p.catch(function () {});  // ignore benign AbortError on rapid re-clicks
+  }
+
+  function playAudioFrom(bar, fraction) {
+    var src = bar.getAttribute('data-src');
+    if (activeBar && activeBar !== bar) resetBar(activeBar);
+    if (activeEngine !== 'audio' || activeSrc !== src) {
+      activeEngine = 'audio'; activeSrc = src; activeVideoId = null; activeBar = bar;
+      audioEl.src = src;
+      if (fraction > 0.01) {
+        var onMeta = function () {
+          audioEl.currentTime = fraction * (audioEl.duration || 0);
+          audioEl.removeEventListener('loadedmetadata', onMeta);
+        };
+        audioEl.addEventListener('loadedmetadata', onMeta);
+      }
+      safePlay();
+    } else {
+      activeBar = bar;
+      if (audioEl.duration) audioEl.currentTime = fraction * audioEl.duration;
+      safePlay();
+    }
+    stopPolling();
+    pollTimer = setInterval(pollAudio, 200);
+    paint(bar, fraction, fmt(fraction * (audioEl.duration || knownDuration(bar))),
+          durLabel(bar), 'loading');
+  }
+
+  // ---- track navigation: walk the page top to bottom ----
+
+  // Rebuilt on each call rather than cached: cheap at this page size, and
+  // it stays correct if a row gets marked .errored mid-session (a dead
+  // YouTube video or a 404 preview), which should then be skipped over
+  // rather than stopping playback dead when auto-advancing.
+  function playableBars() {
+    var out = [];
+    var all = document.querySelectorAll('.bar');
+    for (var i = 0; i < all.length; i++) {
+      var r = row(all[i]);
+      if (!r || !r.classList.contains('errored')) out.push(all[i]);
+    }
+    return out;
+  }
+
+  function step(delta) {
+    var bars = playableBars();
+    if (!bars.length) return;
+    var idx = -1;
+    for (var i = 0; i < bars.length; i++) {
+      if (bars[i] === activeBar) { idx = i; break; }
+    }
+    var next = idx === -1 ? (delta > 0 ? 0 : bars.length - 1) : idx + delta;
+    if (next < 0 || next >= bars.length) return;  // stop at the ends, don't wrap
+    var target = bars[next];
+    playFrom(target, 0);
+    if (target.scrollIntoView) {
+      target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+    try { target.focus({ preventScroll: true }); } catch (err) { target.focus(); }
+  }
+
+  // ---- floating transport ----
+
+  // The generated digest pages ship this markup in their HTML; likes.html
+  // does not, and building it here rather than hand-copying it there keeps
+  // the transport defined in exactly one place. Both call sites end up with
+  // the same controls, and adding a third page costs nothing.
+  function ensureChrome() {
+    if (!document.body) return;
+    if (!document.getElementById('yt-audio-host')) {
+      var host = document.createElement('div');
+      host.style.cssText =
+        'position:fixed;left:-9999px;top:0;width:200px;height:113px;';
+      host.innerHTML = '<div id="yt-audio-host"></div>';
+      document.body.appendChild(host);
+    }
+    if (!document.getElementById('nowbar')) {
+      var nb = document.createElement('div');
+      nb.id = 'nowbar';
+      nb.innerHTML =
+        '<div class="nbseek" role="slider" aria-valuemin="0" aria-valuemax="100" ' +
+        'aria-valuenow="0" aria-label="Seek in current track">' +
+        '<div class="nbtrack"><div class="nbfill"></div></div></div>' +
+        '<div class="nbrow"><div class="nbctrls">' +
+        '<button type="button" data-step="-1" title="Previous track (p)" ' +
+        'aria-label="Previous track">' + ICON_PREV + '</button>' +
+        '<button type="button" data-toggle="1" title="Play / pause (space)" ' +
+        'aria-label="Play or pause">' + ICON_PAUSE + '</button>' +
+        '<button type="button" data-step="1" title="Next track (n)" ' +
+        'aria-label="Next track">' + ICON_NEXT + '</button>' +
+        '</div><span class="nowtitle"></span>' +
+        '<span class="nbtime"></span></div>';
+      document.body.appendChild(nb);
+    }
+  }
+
+  ensureChrome();
+  var nowbar = document.getElementById('nowbar');
+  var nowtitle = nowbar ? nowbar.querySelector('.nowtitle') : null;
+
+  function updateNowBar(bar) {
+    if (!nowbar) return;
+    if (!bar) { nowbar.classList.remove('show'); return; }
+    nowbar.classList.add('show');
+    if (nowtitle) {
+      var li = bar.closest ? bar.closest('li.track') : null;
+      var name = li ? li.querySelector('.tname') : null;
+      nowtitle.textContent = name ? name.textContent : (bar.getAttribute('aria-label') || '');
+    }
+  }
+
+  if (nowbar) {
+    nowbar.addEventListener('click', function (ev) {
+      var btn = ev.target.closest ? ev.target.closest('button') : null;
+      if (btn) {
+        ev.preventDefault();
+        if (btn.getAttribute('data-toggle')) {
+          if (activeBar) togglePlayPause(activeBar);
+        } else {
+          step(parseInt(btn.getAttribute('data-step'), 10) || 1);
+        }
+        return;
+      }
+      // Seeking from the bottom bar acts on whatever is currently playing,
+      // so you can scrub without scrolling back to that record's row.
+      var seek = ev.target.closest ? ev.target.closest('.nbseek') : null;
+      if (seek && activeBar) {
+        ev.preventDefault();
+        playFrom(activeBar, fractionFromEvent(seek, ev));
+      }
+    });
+  }
+
+  // ---- unified dispatch: only one backend plays at a time ----
+
+  function playFrom(bar, fraction) {
+    var isAudio = !!bar.getAttribute('data-src');
+    if (isAudio) {
+      if (activeEngine === 'yt' && ytPlayer) { try { ytPlayer.pauseVideo(); } catch (err) {} }
+      playAudioFrom(bar, fraction);
+    } else {
+      if (activeEngine === 'audio') { audioEl.pause(); }
+      playYtFrom(bar, fraction);
+    }
+    updateNowBar(bar);
+  }
+
+  function togglePlayPause(bar) {
+    var isAudio = !!bar.getAttribute('data-src');
+    var isActiveTrack = isAudio
+      ? (activeEngine === 'audio' && activeSrc === bar.getAttribute('data-src'))
+      : (activeEngine === 'yt' && activeVideoId === bar.getAttribute('data-yt'));
+    if (!isActiveTrack) { playFrom(bar, 0); return; }
+    swapPending = false;  // a pause this soon after a swap is the listener's, not a failure
+    if (isAudio) {
+      if (audioEl.paused) { safePlay(); } else { audioEl.pause(); }
+    } else if (ytPlayer) {
+      var state = ytPlayer.getPlayerState();
+      if (state === 1) { ytPlayer.pauseVideo(); } else { ytPlayer.playVideo(); }
+    }
+  }
+
+  function fractionFromEvent(bar, ev) {
+    var rect = bar.getBoundingClientRect();
+    var x = (ev.clientX !== undefined && ev.clientX !== 0) ? ev.clientX
+          : (ev.changedTouches && ev.changedTouches[0] ? ev.changedTouches[0].clientX : rect.left);
+    return Math.min(1, Math.max(0, (x - rect.left) / rect.width));
+  }
+
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest ? ev.target.closest('button.ppbtn') : null;
+    if (btn) {
+      ev.preventDefault();
+      var pbar = row(btn).querySelector('.bar');
+      if (pbar) togglePlayPause(pbar);
+      return;
+    }
+    if (ev.target.closest && ev.target.closest('a.ytlink')) return; // let it navigate
+    var bar = ev.target.closest ? ev.target.closest('.bar') : null;
+    if (bar) {
+      ev.preventDefault();
+      playFrom(bar, fractionFromEvent(bar, ev));
+    }
+  });
+
+  // Start fetching before the press lands. A mouse comes to rest on a
+  // control a few hundred ms before its button goes down, and the button
+  // is down for another ~100ms before the click. Neither moment plays
+  // anything -- that still takes the click.
+  //
+  // Mouse only. A finger gives no hover, and its pointerdown is also how
+  // every scroll starts: fetching on that would spend mobile data on rows
+  // that were only being flicked past.
+
+  // The bar a play button or a bar belongs to; null anywhere else.
+  function barUnder(target) {
+    var el = target && target.closest ? target.closest('button.ppbtn, .bar') : null;
+    var r = el ? row(el) : null;
+    return r ? r.querySelector('.bar') : null;
+  }
+
+  function preloadAt(bar, target, x, lastMoment) {
+    var onBar = target.closest('.bar');
+    preload(bar, onBar ? fractionFromEvent(bar, { clientX: x }) : 0, lastMoment);
+  }
+
+  document.addEventListener('pointerdown', function (ev) {
+    if (ev.pointerType !== 'mouse' || ev.button) return;
+    var bar = barUnder(ev.target);
+    if (!bar) return;
+    clearTimeout(hoverTimer);
+    preloadAt(bar, ev.target, ev.clientX, true);
+  });
+
+  document.addEventListener('pointermove', function (ev) {
+    if (ev.pointerType !== 'mouse') return;
+    clearTimeout(hoverTimer);
+    var bar = barUnder(ev.target), target = ev.target, x = ev.clientX, now = Date.now();
+    if (bar !== hoverBar) { hoverBar = bar; hoverEnterAt = now; }
+    hoverAt = now;
+    if (!bar) {
+      // Off the controls again: hand the spare back to whatever plays
+      // next, in case a row the pointer paused on borrowed it.
+      hoverTimer = setTimeout(preloadNext, 1500);
+      return;
+    }
+    // A row the spare does not have yet: fetch once the pointer has been
+    // on its control for 100ms, still moving or not. That is long enough
+    // to tell aiming at it from passing over it, and every ms waited
+    // beyond that comes straight off the head start. Never within half a
+    // second of the last one, though, so a slow sweep down the list cannot
+    // turn into a burst of requests. A row it does have, from a different
+    // point on the bar: only once the pointer has stopped there.
+    var wait = spareBar === bar ? 150
+      : Math.max(100 - (now - hoverEnterAt), 500 - (now - hoverFetchAt), 0);
+    hoverTimer = setTimeout(function () {
+      if (spareBar !== bar) hoverFetchAt = Date.now();
+      preloadAt(bar, target, x, false);
+    }, wait);
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    var t = ev.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+
+    // Next / previous work from anywhere on the page, so you can skip
+    // through without first clicking a row to focus it. Deliberately NOT
+    // bound to bare Up/Down arrows at this level -- those still need to
+    // scroll the page normally.
+    var k = ev.key.toLowerCase();
+    if (k === 'n' || k === 'j' || ev.key === 'MediaTrackNext') {
+      ev.preventDefault(); step(1); return;
+    }
+    if (k === 'p' || k === 'k' || ev.key === 'MediaTrackPrevious') {
+      ev.preventDefault(); step(-1); return;
+    }
+
+    var el = document.activeElement;
+    if (!el || !el.classList || !el.classList.contains('bar')) return;
+    if (ev.key === ' ' || ev.key === 'Enter') {
+      ev.preventDefault();
+      togglePlayPause(el);
+    } else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+      // Only once a bar has focus, where arrow keys clearly belong to the
+      // player rather than to scrolling the page.
+      ev.preventDefault();
+      step(ev.key === 'ArrowDown' ? 1 : -1);
+    } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') {
+      ev.preventDefault();
+      if (activeBar !== el) return;
+      var delta = ev.key === 'ArrowRight' ? 5 : -5;
+      if (activeEngine === 'audio') {
+        audioEl.currentTime = Math.min(audioEl.duration || 1e9, Math.max(0, audioEl.currentTime + delta));
+      } else if (activeEngine === 'yt' && ytPlayer) {
+        var dur = ytPlayer.getDuration() || knownDuration(el);
+        var cur = ytPlayer.getCurrentTime() || 0;
+        ytPlayer.seekTo(Math.min(dur, Math.max(0, cur + delta)), true);
+      }
+    }
+  });
+
+  // Exported so likes.html can build identical track rows from the data
+  // stored in likes.json. One definition of the markup, several pages --
+  // a second hand-written copy over there would drift the moment either
+  // the structure or the icons change. The click/keyboard handlers above
+  // are delegated on document, so rows added later still work.
+  window.DigestPlayer = {
+    trackRowHtml: function (t) {
+      var esc = function (s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      };
+      var title = String(t.title || 'Listen');
+      var shown = title.length > 70 ? title.slice(0, 69).replace(/\s+$/, '') + '\u2026' : title;
+      var dur = parseInt(t.dur, 10) || 0;
+      var ytAttr = t.yt ? ' data-yt="' + esc(t.yt) + '"' : '';
+      var srcAttr = t.src ? ' data-src="' + esc(t.src) + '"' : '';
+      var link = t.yt
+        ? '<a class="ytlink" href="https://www.youtube.com/watch?v=' + esc(t.yt) +
+          '" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" ' +
+          'aria-label="Watch on YouTube">\u2197</a>'
+        : '';
+      return '<li class="track"><div class="trow">' +
+        '<button class="ppbtn" aria-label="Play ' + esc(shown) + '">' + ICON_PLAY + '</button>' +
+        '<div class="bar" tabindex="0" role="slider" aria-valuemin="0" ' +
+        'aria-valuemax="100" aria-valuenow="0" aria-label="' + esc(title) + '"' +
+        ytAttr + srcAttr + ' data-dur="' + dur + '">' +
+        '<div class="track"><div class="fill"></div></div></div>' +
+        '<span class="time">0:00 / ' + (dur ? fmt(dur) : '--:--') + '</span>' +
+        link + '</div><div class="tname">' + esc(shown) + '</div></li>';
+    }
+  };
+
+  // Three cases, in order: the API is already loaded (its ready callback
+  // fired before this script existed, so nothing will call ours -- warm up
+  // directly); the page's <head> has the request in flight (leave it, our
+  // onYouTubeIframeAPIReady above will fire); or nobody asked for it yet.
+  if (window.YT && window.YT.Player) {
+    ytApiReady = true;
+    prewarm();
+  } else if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
+})();
+</script><script>window.DIGEST_BASE_URL="https://joor241.github.io/discogs-genre-digest";</script><script src="https://joor241.github.io/discogs-genre-digest/assets/likes.js"></script></body></html>
