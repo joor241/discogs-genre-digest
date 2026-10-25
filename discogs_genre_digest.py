@@ -287,7 +287,7 @@ SELLERS_MAX_AGE_HOURS = 72
 #         the same truncated batch for three days running.
 #
 # For fuller emails without repeats, run less often and keep the two in step,
-# e.g. cron "0 6 */3 * *" in the workflow with LOOKBACK_HOURS = 74.
+# e.g. cron "17 5 */3 * *" in the workflow with LOOKBACK_HOURS = 74.
 LOOKBACK_HOURS = 48
 
 # ---------------------------------------------------------------------------
@@ -1151,6 +1151,16 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
     matched: list[dict] = []
     considered = 0
 
+    # pubDate is day-precision (always midnight), but `cutoff` is an exact
+    # time: a daily run at 11:00 with a 26h lookback cuts off at 09:00
+    # yesterday, so everything dated yesterday (00:00) fell outside it. An
+    # item clone.nl dated D but published after D's run was therefore never
+    # shown at all -- observed live on 2026-10-25: 14 items dated 2026-10-20
+    # and 2026-10-23 sitting in the feed, absent from clone_seen.json. Compare
+    # by calendar day instead, plus one day of slack for a late or skipped
+    # run. `seen` already stops the wider window repeating anything.
+    day_cutoff = cutoff.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+
     for item in root.findall("./channel/item"):
         title = (item.findtext("title") or "").strip()
         if not title:
@@ -1159,7 +1169,7 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
         posted = parse_posted((item.findtext("pubDate") or "").strip())
         if posted is None:
             continue
-        if posted < cutoff:
+        if posted < day_cutoff:
             # Feed is newest-first (verified), so nothing after this can be
             # newer -- same early-stop trick as the Discogs inventory pages.
             break
