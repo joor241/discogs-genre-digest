@@ -2,16 +2,20 @@ name: Daily Discogs digest
 
 on:
   schedule:
-    # 06:00 UTC every day = 08:00 Amsterdam in summer, 07:00 in winter.
-    # (Was 07:00 UTC until 2026-10-03; moved an hour earlier on request.)
+    # 05:17 UTC every day = 07:17 Amsterdam in summer, 06:17 in winter.
+    # (Was 07:00 UTC until 2026-10-03, then 06:00 UTC until 2026-10-25.)
     # Cron on GitHub Actions is ALWAYS UTC and ignores repo timezone settings.
-    # Scheduled runs can be delayed by a few minutes when GitHub is busy --
-    # the lookback window absorbs that.
+    #
+    # The odd minute is deliberate. GitHub queues scheduled runs, and the top
+    # of the hour is when everyone's fire: "0 6" started 4.5-6.5 hours late on
+    # every run from 2026-10-15 to 2026-10-25 (10:24-12:42 UTC). Avoiding :00
+    # is GitHub's own advice for this -- it helps, it is not a guarantee. The
+    # lookback window and the seen-files absorb whatever delay remains.
     #
     # Keep this in step with LOOKBACK_HOURS in the script: daily + 48h means a
     # record can show up in two digests running. For fuller emails with no
-    # repeats, use "0 6 */3 * *" with LOOKBACK_HOURS = 74.
-    - cron: "0 6 * * *"
+    # repeats, use "17 5 */3 * *" with LOOKBACK_HOURS = 74.
+    - cron: "17 5 * * *"
   workflow_dispatch:
     # These make the digest adjustable from the GitHub web UI: click
     # Actions > Daily Discogs digest > Run workflow and fill in the form.

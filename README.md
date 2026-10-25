@@ -585,17 +585,20 @@ otherwise silently drop the extension's update.
 Edit the `cron` line in `.github/workflows/daily-digest.yml`:
 
 ```yaml
-- cron: "0 6 * * *"
+- cron: "17 5 * * *"
 ```
 
-That's 06:00 **UTC** = 08:00 Amsterdam in summer, 07:00 in winter. GitHub cron
+That's 05:17 **UTC** = 07:17 Amsterdam in summer, 06:17 in winter. GitHub cron
 is always UTC and does not follow daylight saving, so the local time shifts by
 an hour twice a year. [crontab.guru](https://crontab.guru) is handy for editing
 the expression.
 
-GitHub may start scheduled runs a few minutes late when it's busy. The lookback
-window absorbs that — see [Why there's no database](#why-theres-no-database)
-for how the window and the schedule should be kept in step.
+GitHub starts scheduled runs late when it's busy — and it's busiest on the hour.
+With `0 6 * * *` every run from 15 to 25 Oct 2026 started 4.5–6.5 hours late,
+which is why the minute is now an odd one; keep it off `:00` if you change it.
+The lookback window absorbs whatever delay remains — see
+[Why there's no database](#why-theres-no-database) for how the window and the
+schedule should be kept in step.
 
 ---
 
@@ -840,7 +843,7 @@ records, it re-shows the same ones for longer. If the repeats bother you, the
 clean fix is to run less often and keep the window matched to it:
 
 ```yaml
-- cron: "0 6 */3 * *"   # every 3 days, pairs with LOOKBACK_HOURS = 74
+- cron: "17 5 */3 * *"   # every 3 days, pairs with LOOKBACK_HOURS = 74
 ```
 
 That gives fuller emails with no repeats at all.
