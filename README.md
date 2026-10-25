@@ -448,6 +448,14 @@ once a listing has appeared in a digest, it never appears again, no matter
 how the lookback window keeps sliding over it. Same `DEEJAY_SEEN_KEEP_DAYS`
 retention applies to all four files.
 
+**Clone.nl's feed is read further back than the lookback window.** Its dates
+are whole days, and its Cloudflare still answers GitHub Actions with 403 on
+some days (soft-failed, see `CLONE_RSS_SOFT_FAIL`). So the feed is compared by
+calendar day, reaching `CLONE_RSS_SLACK_DAYS` (default `7`) days before the
+cutoff: the first run that gets through after a blocked stretch catches up on
+everything published during it, and `clone_seen.json` keeps that from
+re-showing anything already in a digest.
+
 **Turning any of them off** — set a repo Variable to `false`:
 
 - `CLONE_RSS_ENABLED` = `false`

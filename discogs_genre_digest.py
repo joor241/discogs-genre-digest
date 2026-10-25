@@ -129,6 +129,18 @@ CLONE_RSS_ENABLED = True
 # Set CLONE_RSS_SOFT_FAIL=false to go back to a hard failure (red run).
 CLONE_RSS_SOFT_FAIL = True
 
+# How many whole days before the lookback cutoff the clone.nl feed is still
+# read back to. pubDate is day-precision (see fetch_clone_rss), and the 403
+# above still happens on some days (again on 2026-10-22..25, while 10-19 and
+# 10-21 got through): without slack, anything clone.nl published on a
+# blocked day has aged out of the window by the next day the fetch works,
+# and is never shown. With it, the first run that gets through catches up on
+# the whole blocked stretch. clone_seen.json stops the wider window from
+# repeating anything, so the only cost is skipping a few more already-seen
+# items per run. The feed only holds its newest 100 items -- about ten days'
+# worth on 2026-10-25 -- so going much past 7 buys nothing.
+CLONE_RSS_SLACK_DAYS = 7
+
 # clone.nl's own item pages embed direct MP3 preview clips per track (not
 # YouTube), e.g. clone.nl/platen/mp3/84483/1 Release It.mp3 -- confirmed live
 # by fetching a real item page, not assumed. That means real inline playback
@@ -1157,9 +1169,10 @@ def fetch_clone_rss(cutoff: datetime, wanted_norm: list[str], wanted_formats: li
     # item clone.nl dated D but published after D's run was therefore never
     # shown at all -- observed live on 2026-10-25: 14 items dated 2026-10-20
     # and 2026-10-23 sitting in the feed, absent from clone_seen.json. Compare
-    # by calendar day instead, plus one day of slack for a late or skipped
-    # run. `seen` already stops the wider window repeating anything.
-    day_cutoff = cutoff.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+    # by calendar day instead, plus CLONE_RSS_SLACK_DAYS for days the fetch
+    # was blocked. `seen` already stops the wider window repeating anything.
+    day_cutoff = (cutoff.replace(hour=0, minute=0, second=0, microsecond=0)
+                  - timedelta(days=CLONE_RSS_SLACK_DAYS))
 
     for item in root.findall("./channel/item"):
         title = (item.findtext("title") or "").strip()
