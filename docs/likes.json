@@ -1505,5 +1505,42 @@
       }
     ],
     "liked_at": "2026-10-27T10:35:03.017Z"
+  },
+  "https://www.deejay.de/M%26M_Max_Jacobson_Matheiu_Stars_EP_WH8S003_Vinyl__1256557": {
+    "description": "M&M - Stars EP (excl)",
+    "price": "12.56 EUR",
+    "url": "https://www.deejay.de/M%26M_Max_Jacobson_Matheiu_Stars_EP_WH8S003_Vinyl__1256557",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/5/7/1256557.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Stars",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/7/1256557a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Stars (Harry Wills Remix)",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/7/1256557b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Compound",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/7/1256557c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Le Pump",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/5/7/1256557d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-27T10:39:29.907Z"
   }
 }
