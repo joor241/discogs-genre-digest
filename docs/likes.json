@@ -1579,5 +1579,36 @@
       }
     ],
     "liked_at": "2026-10-27T10:40:17.308Z"
+  },
+  "https://yoyaku.io/release/terry-francis-el-tel-collection-black-prtr37/": {
+    "description": "Terry Francis - El Tel Collection (Black)",
+    "price": "€14.90",
+    "url": "https://yoyaku.io/release/terry-francis-el-tel-collection-black-prtr37/",
+    "store": "Yoyaku (new arrivals)",
+    "thumb": "https://yoyaku.io/wp-content/uploads/2025/12/PRTR37_Artwork-400x400.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1 Took From Me",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/PRTR37_1.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1 Little 'N' Large",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/PRTR37_2.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2 Furry (Retake)",
+        "yt": null,
+        "src": "https://yydistribution.ams3.cdn.digitaloceanspaces.com/yyplayer/mp3/PRTR37_3.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-27T10:43:31.529Z"
   }
 }
