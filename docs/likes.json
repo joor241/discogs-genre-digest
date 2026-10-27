@@ -1480,5 +1480,30 @@
       }
     ],
     "liked_at": "2026-10-24T20:12:44.975Z"
+  },
+  "https://www.discogs.com/sell/item/4429997694": {
+    "description": "Mashupheadz - Sweet Tings (12\")",
+    "price": "14.99 EUR",
+    "url": "https://www.discogs.com/sell/item/4429997694",
+    "store": "Demonfuzz Records",
+    "thumb": "https://i.discogs.com/OGWyH6TgjZvVkVZWn4v4SQSnJJcxlSw6LVxXqQ7efbE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MDgx/OC0xNDIzMTQ3MDQ4/LTcwMjQuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Mashupheadz - Sweet Tings",
+        "yt": "acOZEkwW-Wk",
+        "src": null,
+        "dur": 417
+      },
+      {
+        "title": "Mashupheadz - The Twits",
+        "yt": "1-YT7J1V9dU",
+        "src": null,
+        "dur": 321
+      }
+    ],
+    "liked_at": "2026-10-27T10:35:03.017Z"
   }
 }
