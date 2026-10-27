@@ -1542,5 +1542,42 @@
       }
     ],
     "liked_at": "2026-10-27T10:39:29.907Z"
+  },
+  "https://www.deejay.de/Tonema_Verve_EP_BIFU02_Vinyl__1256569": {
+    "description": "Tonema - Verve EP (excl)",
+    "price": "11.72 EUR",
+    "url": "https://www.deejay.de/Tonema_Verve_EP_BIFU02_Vinyl__1256569",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/6/9/1256569.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Verve",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/9/1256569a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Moveme",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/9/1256569b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Taker",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/9/1256569c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Firstime",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/9/1256569d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-27T10:40:17.308Z"
   }
 }
