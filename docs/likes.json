@@ -1610,5 +1610,54 @@
       }
     ],
     "liked_at": "2026-10-27T10:43:31.529Z"
+  },
+  "https://www.deejay.de/Picasso_Abstract_Grooves_Vol_4_2x12_AGV004_Vinyl__1271004": {
+    "description": "Picasso - Abstract Grooves Vol. 4 2x12\" (excl)",
+    "price": "22.65 EUR",
+    "url": "https://www.deejay.de/Picasso_Abstract_Grooves_Vol_4_2x12_AGV004_Vinyl__1271004",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/0/4/1271004.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Peace Of Mind",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/4/1271004a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Dubbin 4 Jesus",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/4/1271004b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Friday In Paris",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/4/1271004c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Live From Planet Zorg",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/4/1271004d.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B3: Chortle Of Joy",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/4/1271004e.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C1: For Dance",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/0/4/1271004f.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-28T13:20:33.540Z"
   }
 }
