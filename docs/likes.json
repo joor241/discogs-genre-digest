@@ -1659,5 +1659,42 @@
       }
     ],
     "liked_at": "2026-10-28T13:20:33.540Z"
+  },
+  "https://www.deejay.de/Janeret_Vibrations_SPCS002_Vinyl__1263866": {
+    "description": "Janeret - Vibrations (12inch)",
+    "price": "14.08 EUR",
+    "url": "https://www.deejay.de/Janeret_Vibrations_SPCS002_Vinyl__1263866",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/6/6/1263866.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Vibrations",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/6/1263866a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: No End",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/6/1263866b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Fazed",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/6/1263866c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Sub Pressure",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/6/1263866d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-28T13:21:01.944Z"
   }
 }
