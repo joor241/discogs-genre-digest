@@ -1,4 +1,4 @@
-﻿# Discogs record-store genre digest
+# Discogs record-store genre digest
 
 Once a day, checks a list of record stores' Discogs marketplace inventories for
 newly listed records, keeps only the genres you care about, and emails you an
