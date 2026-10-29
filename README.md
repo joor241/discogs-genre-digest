@@ -691,10 +691,13 @@ then reads `Preloading 18/36 nearby`. A row outside that window, such as one
 far down the page, is fetched as soon as the mouse rests on it, the same as
 the one-ahead player. Measured on the 29 Oct page: Chrome stays flat at
 ~1.9GB, and 40 "next" presses in a row all played from a preloaded player.
-`?pool=N` sets the number of players by hand. A press only uses a preloaded
-player that actually has its video. One whose load hung is passed over for a
-plain load (~0.75s) rather than waited on, which used to make some tracks
-take seconds. Once the page has been on screen, it keeps preloading while
+`?pool=N` sets the number of players by hand. Some videos, mostly
+official/label uploads, take 6-20s to start in any YouTube player: YouTube
+keeps them black at "unstarted" before it plays them (measured in a bare
+player on this site, in a signed-in Chrome with no ad blocker). Nothing on the
+page can shorten that. What it does is avoid starting that wait over: a press
+uses a preloaded player even while it is still waiting, since it has a head
+start, and nothing reloads a video YouTube is holding back. Once the page has been on screen, it keeps preloading while
 the tab is in the background, so listening top to bottom in another tab stays
 quick past the first dozen tracks. A dead video reached by next or
 auto-advance is skipped rather than stopping playback.

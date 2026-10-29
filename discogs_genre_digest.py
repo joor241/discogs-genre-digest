@@ -2959,6 +2959,16 @@ PLAYER_JS = """
       // Buffering is slow, not stuck: it was swapped in mid-fetch on a poor
       // connection, and starting that fetch over would only make it slower.
       if (state === 1 || state === 3) return;
+      // Unstarted (-1) with this very video is YouTube holding it back
+      // before it starts (see playYtFrom). Loading it again restarts that
+      // wait, which the console log caught doing exactly that: 7.8s for one
+      // that was retried twice. Only paused or cued -- the browser would not
+      // let a muted player play out loud -- or a different video is stuck.
+      var holding = ytVideoId(ytPlayer);
+      if (state === -1 && (!holding || holding === videoId)) {
+        logWarn('YouTube is holding this video back before it starts; waiting for it');
+        return;
+      }
       logWarn('not started after 1.5s (player state ' + state + '), loading it again');
       try { ytPlayer.loadVideoById(ytLoadArg(videoId, start)); } catch (err) {}
     }, 1500);
@@ -2976,13 +2986,14 @@ PLAYER_JS = """
         // opening of the track only to throw it away.
         pendingSeekFraction = fraction > 0.01 && start === 0 ? fraction : null;
         swapPending = false; nearEndDone = false;
-        // Only a pooled player that has its video. One still on its way may
-        // never get there (a load that hung, an ad in front of it), and
-        // waiting on it cost the press 1.5s before watchSwap gave up and
-        // loaded it after all -- "some tracks take seconds". A cold load
-        // into the main player is ~0.75s, every time.
+        // A pooled player still on its way is used too: it has a head start.
+        // YouTube holds some videos back before it starts them -- mostly
+        // official/label uploads, 6-20s of black at state -1, measured in a
+        // bare player on this site in a signed-in Chrome with no ad blocker,
+        // and the same in any player. Loading such a track again from cold,
+        // as this briefly did, starts that wait over from zero (17-18s in
+        // the console log, against a few for the ones that kept going).
         var pooled = poolPlayerFor(videoId);
-        if (pooled && !pooled.held) pooled = null;
         var swap = !pooled && ytSpareUp && spareVideoId === videoId;
         if (swap && !spareHeld && Date.now() - spareAt > 1000) {
           // Asked for over a second ago and not even buffering: that fetch
@@ -2993,7 +3004,8 @@ PLAYER_JS = """
         }
         activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
         if (pooled) {
-          logHow('preloaded');
+          logHow(pooled.held ? 'preloaded' : 'preload still starting, ' +
+            Math.round((Date.now() - pooled.startedAt) / 1000) + 's head start');
           playPooled(pooled, bar, fraction);
         } else if (swap) {
           logHow(spareHeld ? 'fetched ahead (hover/next)' : 'fetched ahead, still loading');
@@ -3062,15 +3074,23 @@ PLAYER_JS = """
     try { player.pauseVideo(); player.mute(); } catch (err) {}
   }
 
-  // Make a preloaded player the one you hear (only ever one that has its
-  // video; see playYtFrom). It keeps its video when it goes quiet again,
-  // so coming back to a track is as quick as the first time.
+  // Make a preloaded player the one you hear. It keeps its video when it
+  // goes quiet again, so coming back to a track is as quick as the first
+  // time.
   function playPooled(entry, bar, fraction) {
     if (ytPlayer !== entry.player) {
       silence(ytPlayer);
       ytPlayer = entry.player;
     }
     try { ytPlayer.unMute(); } catch (err) {}
+    if (!entry.held) {
+      // Still on its way. It is now the one you hear, so it starts by
+      // itself when it gets there, and the poll loop seeks once it knows
+      // the length -- same as a swap onto a spare that is still fetching.
+      pendingSeekFraction = fraction > 0.01 ? fraction : null;
+      watchSwap(entry.key, 0);
+      return;
+    }
     pendingSeekFraction = null;
     var dur = 0, cur = 0;
     try { dur = ytPlayer.getDuration() || 0; cur = ytPlayer.getCurrentTime() || 0; } catch (err) {}
@@ -3199,7 +3219,11 @@ PLAYER_JS = """
   // data saver turn all of it off, back to one track ahead.
   var POOL_PARALLEL = 3;      // YouTube players being set up at once
   var AUDIO_PARALLEL = 3;     // MP3s downloading at once
-  var POOL_TIMEOUT = 15000;   // stop waiting on one after this (it may still finish)
+  // Stop holding a slot for one after this; it keeps loading and still
+  // counts when it gets there. Short, because the slow ones are YouTube
+  // holding a video back (up to ~20s), which costs no bandwidth: waiting
+  // them out three at a time stalled the window behind them.
+  var POOL_TIMEOUT = 5000;
   var PRESS_QUIET = 2000;     // after a press, start nothing new for this long
   var poolArg = /[?&]pool=(\\d+)/.exec(location.search);
   // Measured on that page in Chrome: each standing player is ~40MB.
@@ -3358,7 +3382,7 @@ PLAYER_JS = """
   }
 
   function startYtPreload(entry) {
-    ytBusy++; entry.busy = true; entry.state = 'loading';
+    ytBusy++; entry.busy = true; entry.state = 'loading'; entry.startedAt = Date.now();
     entry.timer = setTimeout(function () { poolRelease(entry); }, POOL_TIMEOUT);
     if (entry.player) {
       // A standing player: back from being blocked in a hidden tab, or
