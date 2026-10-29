@@ -1794,5 +1794,30 @@
       }
     ],
     "liked_at": "2026-10-29T14:39:30.532Z"
+  },
+  "https://www.discogs.com/sell/item/4104154062": {
+    "description": "Kenny Simpson - Classic Break Trax (Volume One) (12\", EP)",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/4104154062",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/m3lwCMV9DkOWENB4gtVzZhYAJX--58BGulORk3pi9O4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQwMzQw/LTE1NjI4Njk3ODgt/OTE0OS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Kenny Simpson ‎– Break For Vacation (Celebration Mix)",
+        "yt": "XDQWNOqyBgo",
+        "src": null,
+        "dur": 300
+      },
+      {
+        "title": "Kenny Simpson - Tic Tac Toe",
+        "yt": "vpTt-vWdkHI",
+        "src": null,
+        "dur": 203
+      }
+    ],
+    "liked_at": "2026-10-29T14:50:13.652Z"
   }
 }
