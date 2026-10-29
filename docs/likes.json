@@ -1881,5 +1881,54 @@
       }
     ],
     "liked_at": "2026-10-29T15:48:57.411Z"
+  },
+  "https://www.discogs.com/sell/item/3977021275": {
+    "description": "Audiowhores - Subject Of My Affection (12\")",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/3977021275",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/OEM-cQ6o8ZXCxzfN42jLRWO70ZicwwFEuoH9PKknttI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQxMTEw/NS0xMzIwMjQ0ODYy/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Subject Of My Affection (feat. Alexis Hall)",
+        "yt": "nh0Rwgbn2MU",
+        "src": null,
+        "dur": 460
+      },
+      {
+        "title": "Subject Of My Affection (feat. Alexis Hall) (Club Mix)",
+        "yt": "7zfA6TLILXM",
+        "src": null,
+        "dur": 473
+      },
+      {
+        "title": "Subject Of My Affection (feat. Alexis Hall) (Dub Mix)",
+        "yt": "EkqHlZlepLc",
+        "src": null,
+        "dur": 520
+      },
+      {
+        "title": "Subject Of My Affection (Vibe)",
+        "yt": "KUMOF1cmDxc",
+        "src": null,
+        "dur": 460
+      },
+      {
+        "title": "Subject Of My Affection (Dub Mix)",
+        "yt": "oiNvNazNzSk",
+        "src": null,
+        "dur": 520
+      },
+      {
+        "title": "Audiowhores featuring Alexis Hall - Subject Of My Affection (Original Vibe)",
+        "yt": "C6ZEtVItoiY",
+        "src": null,
+        "dur": 458
+      }
+    ],
+    "liked_at": "2026-10-29T15:58:45.661Z"
   }
 }
