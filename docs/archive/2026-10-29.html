@@ -1046,6 +1046,23 @@ footer a { color: #6ea8ff; }
 
   var activeEngine = null;  // 'yt' | 'audio' | null
   var activeBar = null, activeVideoId = null, activeSrc = null;
+  var steppedTo = null;     // see playFrom
+
+  // One console line per press: how the track was loaded and how long it
+  // took to sound. Open the browser console (F12) on a slow track to see
+  // which way it went. Over 1.5s is a warning.
+  var pressLog = null;
+  function logHow(how) { if (pressLog) pressLog.how = how; }
+  function logSound() {
+    if (!pressLog || pressLog.done) return;
+    pressLog.done = true;
+    var ms = Math.round(performance.now() - pressLog.t);
+    (ms > 1500 ? console.warn : console.info)(
+      '[digest] ' + ms + ' ms to sound \u00b7 ' + pressLog.how + ' \u00b7 ' + pressLog.name);
+  }
+  function logWarn(text) {
+    console.warn('[digest] ' + text + (pressLog ? ' \u00b7 ' + pressLog.name : ''));
+  }
   var pendingSeekFraction = null;
   var pollTimer = null;
 
@@ -1154,6 +1171,7 @@ footer a { color: #6ea8ff; }
 
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) return;
+    everShown = true; hiddenRefused = false;
     preloadNext();
     pumpPreload();
   });
@@ -1193,6 +1211,7 @@ footer a { color: #6ea8ff; }
     if (activeEngine !== 'yt' || !activeBar) return;
     if (ev.data === 1 || ev.data === 3) swapPending = false;
     if (ev.data === 1) {
+      logSound();
       preloadNext();
     } else if (ev.data === YT.PlayerState.ENDED) {
       var d = ytPlayer.getDuration() || knownDuration(activeBar);
@@ -1233,6 +1252,11 @@ footer a { color: #6ea8ff; }
     if (activeEngine === 'yt' && activeBar) {
       var ar = row(activeBar);
       if (ar) ar.classList.add('errored');
+      logWarn('YouTube cannot play this video (error ' + ev.data + ')' +
+              (activeBar === steppedTo ? ', skipping to the next' : ''));
+      if (pressLog) pressLog.done = true;
+      // Listening top to bottom: one dead video must not stop the run.
+      if (activeBar === steppedTo) step(1);
     }
   }
 
@@ -1346,10 +1370,8 @@ footer a { color: #6ea8ff; }
     // The pointer has only just settled on the track the spare is holding:
     // that one is the better guess for the next press.
     if (hoverBar && hoverBar === spareBar && Date.now() - hoverAt < 4000) return;
-    var bars = playableBars();
-    var idx = activeBar ? bars.indexOf(activeBar) : -1;
-    if (activeBar && idx === -1) return;
-    preload(bars[idx + 1], 0);
+    if (activeBar && !activeBar.isConnected) return;
+    preload(neighbour(activeBar, 1), 0);
   }
 
   // The swap asks a player that has only ever been muted and paused to
@@ -1366,12 +1388,14 @@ footer a { color: #6ea8ff; }
       // Buffering is slow, not stuck: it was swapped in mid-fetch on a poor
       // connection, and starting that fetch over would only make it slower.
       if (state === 1 || state === 3) return;
+      logWarn('not started after 1.5s (player state ' + state + '), loading it again');
       try { ytPlayer.loadVideoById(ytLoadArg(videoId, start)); } catch (err) {}
     }, 1500);
   }
 
   function playYtFrom(bar, fraction) {
     var videoId = bar.getAttribute('data-yt');
+    logHow('waited for the YouTube player to start up');  // until the callback runs
     ensureYt(function () {
       if (activeBar && activeBar !== bar) resetBar(activeBar);
       if (activeEngine !== 'yt' || activeVideoId !== videoId) {
@@ -1381,7 +1405,13 @@ footer a { color: #6ea8ff; }
         // opening of the track only to throw it away.
         pendingSeekFraction = fraction > 0.01 && start === 0 ? fraction : null;
         swapPending = false; nearEndDone = false;
+        // Only a pooled player that has its video. One still on its way may
+        // never get there (a load that hung, an ad in front of it), and
+        // waiting on it cost the press 1.5s before watchSwap gave up and
+        // loaded it after all -- "some tracks take seconds". A cold load
+        // into the main player is ~0.75s, every time.
         var pooled = poolPlayerFor(videoId);
+        if (pooled && !pooled.held) pooled = null;
         var swap = !pooled && ytSpareUp && spareVideoId === videoId;
         if (swap && !spareHeld && Date.now() - spareAt > 1000) {
           // Asked for over a second ago and not even buffering: that fetch
@@ -1392,8 +1422,10 @@ footer a { color: #6ea8ff; }
         }
         activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
         if (pooled) {
+          logHow('preloaded');
           playPooled(pooled, bar, fraction);
         } else if (swap) {
+          logHow(spareHeld ? 'fetched ahead (hover/next)' : 'fetched ahead, still loading');
           // Muted on its way out: if it was itself still loading, it must
           // not be heard for the instant before onYtState holds it.
           try { ytPlayer.pauseVideo(); ytPlayer.mute(); } catch (err) {}
@@ -1425,6 +1457,8 @@ footer a { color: #6ea8ff; }
           // Not preloaded yet. Never into a preloaded player that happens
           // to be the one you hear: that would throw away the video it
           // holds. Back to the main player instead.
+          var pe = ytPool[videoId];
+          logHow('cold load' + (pe ? ' (preload: ' + (pe.player ? pe.state : 'not near yet') + ')' : ''));
           if (PRELOAD_ALL && ytMain && ytPlayer !== ytMain) {
             silence(ytPlayer);
             ytPlayer = ytMain;
@@ -1433,6 +1467,8 @@ footer a { color: #6ea8ff; }
           ytPlayer.loadVideoById(ytLoadArg(videoId, start));
         }
       } else {
+        // A seek within the track already playing: nothing to time.
+        if (pressLog) pressLog.done = true;
         activeBar = bar;
         var dur = ytPlayer.getDuration() || knownDuration(bar);
         if (dur > 0) ytPlayer.seekTo(fraction * dur, true);
@@ -1450,23 +1486,15 @@ footer a { color: #6ea8ff; }
     try { player.pauseVideo(); player.mute(); } catch (err) {}
   }
 
-  // Make a preloaded player the one you hear. It keeps its video when it
-  // goes quiet again, so coming back to a track is as quick as the first
-  // time.
+  // Make a preloaded player the one you hear (only ever one that has its
+  // video; see playYtFrom). It keeps its video when it goes quiet again,
+  // so coming back to a track is as quick as the first time.
   function playPooled(entry, bar, fraction) {
     if (ytPlayer !== entry.player) {
       silence(ytPlayer);
       ytPlayer = entry.player;
     }
     try { ytPlayer.unMute(); } catch (err) {}
-    if (!entry.held) {
-      // Still on its way. It is now the one you hear, so it starts by
-      // itself when it gets there, and the poll loop seeks once it knows
-      // the length -- same as a swap onto a spare that is still fetching.
-      pendingSeekFraction = fraction > 0.01 ? fraction : null;
-      watchSwap(entry.key, 0);
-      return;
-    }
     pendingSeekFraction = null;
     var dur = 0, cur = 0;
     try { dur = ytPlayer.getDuration() || 0; cur = ytPlayer.getCurrentTime() || 0; } catch (err) {}
@@ -1507,11 +1535,15 @@ footer a { color: #6ea8ff; }
       if (el === audioEl && activeEngine === 'audio' && activeBar) {
         var r = row(activeBar);
         if (r) r.classList.add('errored');
+        logWarn('MP3 could not be played (error ' + (el.error ? el.error.code : '?') + ')' +
+                (activeBar === steppedTo ? ', skipping to the next' : ''));
+        if (pressLog) pressLog.done = true;
+        if (activeBar === steppedTo) step(1);  // same as a dead video
       }
     });
     // An MP3 row can be followed by a YouTube one; line that up as well.
     el.addEventListener('playing', function () {
-      if (el === audioEl && activeEngine === 'audio') preloadNext();
+      if (el === audioEl && activeEngine === 'audio') { logSound(); preloadNext(); }
     });
   }
   wireAudio(audioBase);
@@ -1529,6 +1561,7 @@ footer a { color: #6ea8ff; }
       // A preloaded element has (some of) the file already: play that one
       // rather than start the same download over in audioBase.
       var pooled = audioPool[src] && audioPool[src].el;
+      logHow(pooled ? 'MP3, preload ' + audioPool[src].state : 'MP3, not preloaded');
       var el = pooled || audioBase;
       if (audioEl !== el) { audioEl.pause(); audioEl = el; }
       if (!pooled) audioEl.src = src;
@@ -1544,6 +1577,7 @@ footer a { color: #6ea8ff; }
       }
       safePlay();
     } else {
+      if (pressLog) pressLog.done = true;  // a seek, nothing to time
       activeBar = bar;
       if (audioEl.duration) audioEl.currentTime = fraction * audioEl.duration;
       safePlay();
@@ -1596,6 +1630,7 @@ footer a { color: #6ea8ff; }
   var audioQueue = [], audioEntries = [];
   var ytBusy = 0, audioBusy = 0, ytPoolStarted = false, ytRefused = false;
   var ytWindowed = false;     // more videos on the page than POOL_MAX
+  var everShown = !document.hidden, hiddenRefused = false;
   var allBars = [], recFirstBar = [], visibleRecs = {};
   var lastPressAt = 0, pumpTimer = null, scrollTimer = null, preloadLine = null;
 
@@ -1626,6 +1661,8 @@ footer a { color: #6ea8ff; }
       }
     }
     ytWindowed = videos > POOL_MAX;
+    console.info('[digest] ' + videos + ' YouTube videos, ' + audioEntries.length + ' MP3s; ' +
+      (ytWindowed ? 'preloading the ' + POOL_MAX + ' videos nearest to you' : 'preloading all of them'));
     watchScreen();
   }
 
@@ -1696,7 +1733,11 @@ footer a { color: #6ea8ff; }
 
   function pumpPreload() {
     clearTimeout(pumpTimer); pumpTimer = null;
-    if (!PRELOAD_ALL || document.hidden) return;
+    // A tab opened in the background may not start video, so wait for it
+    // to be shown once. After that, carry on while it is in the background:
+    // listening top to bottom in another tab is exactly when the pool must
+    // keep moving, or every track after the first dozen loads cold.
+    if (!PRELOAD_ALL || (document.hidden && (!everShown || hiddenRefused))) return;
     // A press gets the connection to itself: a load starting beside it was
     // measured to make it several hundred ms slower (see the swap above).
     var quiet = PRESS_QUIET - (Date.now() - lastPressAt);
@@ -1811,7 +1852,9 @@ footer a { color: #6ea8ff; }
       poolSettle(entry, 'failed');
       return;
     }
-    // Back in line; pumpPreload starts nothing while the tab is hidden.
+    // Back in line, and nothing more until the tab is shown again.
+    if (!hiddenRefused) console.info('[digest] browser paused preloading in this background tab');
+    hiddenRefused = true;
     entry.state = 'queued';
     poolRelease(entry);
   }
@@ -1866,31 +1909,28 @@ footer a { color: #6ea8ff; }
 
   // ---- track navigation: walk the page top to bottom ----
 
-  // Rebuilt on each call rather than cached: cheap at this page size, and
-  // it stays correct if a row gets marked .errored mid-session (a dead
-  // YouTube video or a 404 preview), which should then be skipped over
-  // rather than stopping playback dead when auto-advancing.
-  function playableBars() {
-    var out = [];
+  // The first playable bar after (delta 1) or before (-1) `bar`, counted
+  // from where `bar` sits on the page even when it has just been greyed
+  // out itself. Looking it up among the playable ones only, as this used
+  // to, lost a dead track's place and "next" went back to the top.
+  // null at the ends: stop there, don't wrap. Read from the page on each
+  // call, so a row marked .errored mid-session (a dead YouTube video or a
+  // 404 preview) is skipped from then on.
+  function neighbour(bar, delta) {
     var all = document.querySelectorAll('.bar');
-    for (var i = 0; i < all.length; i++) {
+    var idx = bar ? Array.prototype.indexOf.call(all, bar) : -1;
+    var i = idx === -1 ? (delta > 0 ? 0 : all.length - 1) : idx + delta;
+    for (; i >= 0 && i < all.length; i += delta) {
       var r = row(all[i]);
-      if (!r || !r.classList.contains('errored')) out.push(all[i]);
+      if (!r || !r.classList.contains('errored')) return all[i];
     }
-    return out;
+    return null;
   }
 
   function step(delta) {
-    var bars = playableBars();
-    if (!bars.length) return;
-    var idx = -1;
-    for (var i = 0; i < bars.length; i++) {
-      if (bars[i] === activeBar) { idx = i; break; }
-    }
-    var next = idx === -1 ? (delta > 0 ? 0 : bars.length - 1) : idx + delta;
-    if (next < 0 || next >= bars.length) return;  // stop at the ends, don't wrap
-    var target = bars[next];
-    playFrom(target, 0);
+    var target = neighbour(activeBar, delta);
+    if (!target) return;
+    playFrom(target, 0, true);
     if (target.scrollIntoView) {
       target.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
@@ -1971,8 +2011,16 @@ footer a { color: #6ea8ff; }
 
   // ---- unified dispatch: only one backend plays at a time ----
 
-  function playFrom(bar, fraction) {
+  // viaStep: reached by next/previous or auto-advance rather than picked
+  // by hand. A track like that which turns out to be dead is skipped; one
+  // you picked yourself just greys out.
+  function playFrom(bar, fraction, viaStep) {
     lastPressAt = Date.now();
+    steppedTo = viaStep ? bar : null;
+    var li = bar.closest ? bar.closest('li.track') : null;
+    var tn = li ? li.querySelector('.tname') : null;
+    pressLog = { t: performance.now(), how: '?',
+                 name: tn ? tn.textContent : (bar.getAttribute('aria-label') || '') };
     var isAudio = !!bar.getAttribute('data-src');
     if (isAudio) {
       if (activeEngine === 'yt' && ytPlayer) { try { ytPlayer.pauseVideo(); } catch (err) {} }

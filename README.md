@@ -691,7 +691,19 @@ then reads `Preloading 18/36 nearby`. A row outside that window, such as one
 far down the page, is fetched as soon as the mouse rests on it, the same as
 the one-ahead player. Measured on the 29 Oct page: Chrome stays flat at
 ~1.9GB, and 40 "next" presses in a row all played from a preloaded player.
-`?pool=N` sets the number of players by hand. Records that are off screen are
+`?pool=N` sets the number of players by hand. A press only uses a preloaded
+player that actually has its video. One whose load hung is passed over for a
+plain load (~0.75s) rather than waited on, which used to make some tracks
+take seconds. Once the page has been on screen, it keeps preloading while
+the tab is in the background, so listening top to bottom in another tab stays
+quick past the first dozen tracks. A dead video reached by next or
+auto-advance is skipped rather than stopping playback.
+
+**Seeing why a track was slow.** Open the browser console (F12) on the digest
+page. Every press logs one line, such as `[digest] 289 ms to sound ·
+preloaded · <track>`, or `cold load (preload: not near yet)`, or
+`MP3, preload loaded`. Anything over 1.5s is logged as a warning, along with
+dead videos and loads that had to be retried. Records that are off screen are
 not laid out until they come near, and covers below the first 80 records load
 lazily, so the page itself scrolls smoothly at that size too.
 
