@@ -679,9 +679,23 @@ in ~0.5s for a YouTube track and ~0.2s for an MP3, anywhere on the page. A
 dead video found along the way is greyed out straight away, so auto-advance
 skips it.
 
-This is deliberately heavy: each YouTube player is a whole embedded page, so
-a day with hundreds of clips costs a lot of memory and data, especially on a
-phone. The same `?ahead=0` / data-saver switch turns it off. It waits while
+**On a big day, the tracks near you are preloaded.** Each YouTube player is a
+whole embedded page (~40MB in Chrome), so there are at most 24 of them. On
+29 Oct Rush Hour bulk-listed 727 records with 3008 videos, and one player per
+video made Chrome grow by ~260MB a minute for as long as the tab was open.
+When a page has more videos than that, the players go to the 12 tracks after
+the one playing (listening top to bottom never waits), then the rows on
+screen, then further down. As you listen or scroll they move along: a player
+holding a track you are now far from loads one nearby instead. The counter
+then reads `Preloading 18/36 nearby`. A row outside that window, such as one
+far down the page, is fetched as soon as the mouse rests on it, the same as
+the one-ahead player. Measured on the 29 Oct page: Chrome stays flat at
+~1.9GB, and 40 "next" presses in a row all played from a preloaded player.
+`?pool=N` sets the number of players by hand. Records that are off screen are
+not laid out until they come near, and covers below the first 80 records load
+lazily, so the page itself scrolls smoothly at that size too.
+
+The same `?ahead=0` / data-saver switch turns preloading off. It waits while
 the tab is in the background (a hidden tab may not start video), and a
 press always gets the connection to itself for two seconds before anything
 new starts loading. The Likes page keeps the one-ahead behaviour.
