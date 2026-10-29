@@ -12,14 +12,14 @@ Currently tracking:
 |---|---|---|
 | Rush Hour | rushhour.nl | `RushHour` |
 | Clone | clone.nl | `clone.nl` |
-| Offbeat Records | â€” | `offbeat__records` (two underscores) |
-| Decks | decks.de | `decks.de` â€” huge, very active (~40,000 items) |
+| Offbeat Records | — | `offbeat__records` (two underscores) |
+| Decks | decks.de | `decks.de` — huge, very active (~40,000 items) |
 
 All four were verified against the live Discogs API (Rush Hour/Clone/Offbeat on
 2026-08-18, Decks on 2026-08-23).
 
 Three more stores are checked directly on their own sites rather than through
-Discogs â€” Clone.nl's own new-arrivals RSS feed, a scrape of deejay.de's "News"
+Discogs — Clone.nl's own new-arrivals RSS feed, a scrape of deejay.de's "News"
 page (deejay.de has no feed and their Discogs account is empty), and
 Yoyaku's public WordPress/WooCommerce REST API, which gives real genre tags
 and direct MP3 previews without any scraping at all. See
@@ -28,7 +28,7 @@ below.
 
 > **Note on Redlight Records:** their old domain no longer hosts a record shop.
 > The Discogs account `Red_Light_Records` exists but had **0 items for sale**
-> when checked, so it was left out. If they restock, add them â€” see
+> when checked, so it was left out. If they restock, add them — see
 > [Adding a store](#adding-a-store).
 
 ---
@@ -37,22 +37,22 @@ below.
 
 Three accounts, all free:
 
-1. **GitHub** â€” runs the script on a schedule.
-2. **Discogs** â€” for an API token, so you can read the shops' inventories.
-3. **An email account that can send mail** â€” Gmail is fine.
+1. **GitHub** — runs the script on a schedule.
+2. **Discogs** — for an API token, so you can read the shops' inventories.
+3. **An email account that can send mail** — Gmail is fine.
 
 ---
 
 ## Setup
 
-### Step 1 â€” Get this folder onto GitHub
+### Step 1 — Get this folder onto GitHub
 
 The script only runs automatically once it lives in a GitHub repository.
 
 1. Create a new repository at [github.com/new](https://github.com/new). Give it
-   a name like `discogs-genre-digest`. **Private is fine** â€” scheduled Actions
+   a name like `discogs-genre-digest`. **Private is fine** — scheduled Actions
    work on private repos too.
-2. Don't tick "Add a README" â€” this folder already has one.
+2. Don't tick "Add a README" — this folder already has one.
 3. In this folder, run:
 
 ```bash
@@ -71,7 +71,7 @@ on first push.
 > `.gitignore` already excludes `.env` and generated HTML, so you won't
 > accidentally commit anything secret.
 
-### Step 2 â€” Get a Discogs API token
+### Step 2 — Get a Discogs API token
 
 1. Sign in to Discogs, then go to
    [discogs.com/settings/developers](https://www.discogs.com/settings/developers).
@@ -81,15 +81,15 @@ on first push.
 This token only reads public marketplace data. It raises your rate limit from
 25 to 60 requests per minute, which is why the script needs it.
 
-### Step 3 â€” Set up email sending (SMTP)
+### Step 3 — Set up email sending (SMTP)
 
 **What SMTP is:** it's just the standard way a program logs into an email
 account and asks it to send a message. You give the script an email address and
 a password, and it sends the digest to you from that address. Nothing is
-installed â€” it connects over the internet like your phone's mail app does.
+installed — it connects over the internet like your phone's mail app does.
 
 You can use any email provider. **Gmail is the easiest**, but Gmail won't let a
-script use your normal password â€” you need an *App Password*, which is a
+script use your normal password — you need an *App Password*, which is a
 16-character password that works only for this one purpose and can be revoked
 at any time.
 
@@ -110,7 +110,7 @@ That gives you these values for Step 4:
 | `SMTP_PORT` | `465` |
 | `SMTP_USER` | your full Gmail address |
 | `SMTP_PASS` | the 16-character App Password (**not** your Google password) |
-| `MAIL_TO` | where the digest goes â€” your own address is fine |
+| `MAIL_TO` | where the digest goes — your own address is fine |
 
 <details>
 <summary>Using a provider other than Gmail</summary>
@@ -133,10 +133,10 @@ you only need to set `SMTP_PORT` correctly.
 Most providers with 2FA require an app-specific password, same as Gmail.
 </details>
 
-### Step 4 â€” Add the secrets to GitHub
+### Step 4 — Add the secrets to GitHub
 
-In your repository: **Settings â†’ Secrets and variables â†’ Actions â†’ Secrets tab
-â†’ New repository secret**. Add one at a time:
+In your repository: **Settings → Secrets and variables → Actions → Secrets tab
+→ New repository secret**. Add one at a time:
 
 | Secret name | What to put in it | Required |
 |---|---|---|
@@ -148,10 +148,10 @@ In your repository: **Settings â†’ Secrets and variables â†’ Actions �
 | `SMTP_PORT` | defaults to `465` if you leave it out | no |
 | `MAIL_FROM` | defaults to `SMTP_USER` if you leave it out | no |
 
-Secrets are write-only â€” GitHub will never show them again, and they're masked
+Secrets are write-only — GitHub will never show them again, and they're masked
 in logs. That's the right place for these.
 
-### Step 5 â€” Test it
+### Step 5 — Test it
 
 Don't wait for tomorrow morning.
 
@@ -159,7 +159,7 @@ Don't wait for tomorrow morning.
 2. Pick **Daily Discogs digest** in the left sidebar.
 3. Click **Run workflow**. A small form drops down.
 4. **First run: tick `dry_run`.** That builds the digest and prints it in the
-   log without sending any email â€” so you can confirm the Discogs half works
+   log without sending any email — so you can confirm the Discogs half works
    before debugging the email half.
 5. Click the green **Run workflow** button and watch the log.
 
@@ -174,7 +174,7 @@ looked like.
 
 ## Changing what you get
 
-### The settings page â€” edit everything from your phone
+### The settings page — edit everything from your phone
 
 **https://joor241.github.io/discogs-genre-digest/settings.html**
 
@@ -186,14 +186,14 @@ served the same way.
 
 It edits the exact same repo Variables the two methods below describe by hand
 (`GENRES_INCLUDE`, `FORMATS_INCLUDE`, `SELLERS`, `LOOKBACK_HOURS`,
-`MAX_RELEASE_LOOKUPS`) â€” so use
+`MAX_RELEASE_LOOKUPS`) — so use
 whichever is more convenient, they're not different systems. Store rows have a
 **Check** button that queries Discogs live and shows how many items that
 seller currently has for sale, the same sanity check described in
 [Adding a store](#adding-a-store), without leaving the page.
 
 **Why it needs a token, and what that means:** the page itself is static
-(just a file GitHub serves, like the player page) â€” it has no server of its
+(just a file GitHub serves, like the player page) — it has no server of its
 own, so the *only* way it can change your repo's settings is by talking to
 GitHub's API directly from your browser, which needs a GitHub access token.
 The page asks for one on first use and explains exactly how to create it. Two
@@ -201,21 +201,21 @@ things worth knowing:
 
 - The token is a **fine-grained personal access token, scoped to only this one
   repository**, with permission to read/write its Variables and trigger Action
-  runs â€” nothing else. It cannot touch any other repo, and cannot read code,
+  runs — nothing else. It cannot touch any other repo, and cannot read code,
   issues, or anything not explicitly granted.
 - It's sent straight from your browser to `api.github.com` and stored only in
   that browser's own local storage (or session storage if you don't tick
-  "remember") â€” never to any server this project runs, because there isn't
-  one. Since **the page is public** (same reasoning as the player page â€” see
+  "remember") — never to any server this project runs, because there isn't
+  one. Since **the page is public** (same reasoning as the player page — see
   the note in [Listening to the records](#listening-to-the-records)), anyone
   with physical or malware access to that specific browser profile could in
   principle read it back out of storage. If that's ever a concern, click
   **Forget token**, and revoke it at
-  [github.com/settings/tokens](https://github.com/settings/tokens) â€” since
+  [github.com/settings/tokens](https://github.com/settings/tokens) — since
   it's scoped to one repo, the blast radius of a leaked token is small either
   way.
 
-### Genres â€” from the GitHub UI, no code editing
+### Genres — from the GitHub UI, no code editing
 
 Genre filtering matches **whole words, case-insensitively**, against the
 release's genres *and* styles. So `house` catches Deep House, Acid House, Tech
@@ -230,7 +230,7 @@ Techno. Punctuation is ignored, so `italo` catches Italo-Disco.
 > not every record tagged Electronic.
 >
 > The flip side: terms only match complete words. `dub` matches Dub and Dub
-> Techno but not Dubstep â€” add `dubstep` separately if you want it.
+> Techno but not Dubstep — add `dubstep` separately if you want it.
 
 The shipped default covers what these three shops actually stock:
 
@@ -240,22 +240,22 @@ techno, house, electro, acid, disco, italo, new beat, ebm, breakbeat, trance
 
 Three ways to change it, in priority order:
 
-**1. For one run only** â€” Actions â†’ Run workflow â†’ type into the `genres` box:
+**1. For one run only** — Actions → Run workflow → type into the `genres` box:
 
 ```
 techno, deep house, electro
 ```
 
-**2. Permanently, from the web UI** â€” Settings â†’ Secrets and variables â†’
-Actions â†’ **Variables** tab â†’ New repository variable:
+**2. Permanently, from the web UI** — Settings → Secrets and variables →
+Actions → **Variables** tab → New repository variable:
 
 - Name: `GENRES_INCLUDE`
 - Value: `techno, house, electro, disco`
 
-This is a *variable*, not a secret â€” it's not sensitive, and unlike a secret you
+This is a *variable*, not a secret — it's not sensitive, and unlike a secret you
 can read and edit it later. This is the setting to use for day-to-day tweaking.
 
-**3. In the code** â€” edit `GENRES_INCLUDE` near the top of
+**3. In the code** — edit `GENRES_INCLUDE` near the top of
 `discogs_genre_digest.py` and push.
 
 To turn filtering off entirely and receive **everything** these shops list, set
@@ -268,7 +268,7 @@ The same pattern works for `LOOKBACK_HOURS` (how many hours back to look) and
 #### Different genres for different stores
 
 `GENRES_INCLUDE` applies to every store by default. To use different terms for
-one store instead â€” e.g. Offbeat leans trance/new-beat while Clone leans house â€”
+one store instead — e.g. Offbeat leans trance/new-beat while Clone leans house —
 set the `GENRES_BY_STORE` repo variable:
 
 ```
@@ -277,7 +277,7 @@ offbeat__records: trance, new beat; clone.nl: house
 
 Format: `username: term, term; username2: term`, semicolons between stores,
 commas between that store's terms. A store **not** listed here just keeps using
-the global `GENRES_INCLUDE` filter â€” this replaces it for that store, it doesn't
+the global `GENRES_INCLUDE` filter — this replaces it for that store, it doesn't
 add to it. Give a store's list as `all` to turn off genre filtering for just
 that one store while everyone else keeps the global filter:
 
@@ -286,24 +286,24 @@ offbeat__records: all
 ```
 
 When a store has its own filter, both the emailed digest and the player page
-show a small "â€” filter: ..." note under that store's heading, so it's visible
+show a small "— filter: ..." note under that store's heading, so it's visible
 at a glance which stores are using something different from the rest.
 
 The settings page (`settings.html`) has a **Genres** column per store in the
-same editor used for adding stores â€” leave it blank to use the global filter.
+same editor used for adding stores — leave it blank to use the global filter.
 
-### Formats â€” filtering to vinyl
+### Formats — filtering to vinyl
 
 Every listing shows its format(s) (Vinyl, CD, Cassette, File, ...) right next
 to the price and condition. By default, only **Vinyl** is kept.
 
-This comes from the release's own `formats` field on Discogs â€” the same
+This comes from the release's own `formats` field on Discogs — the same
 release-detail lookup already made for genre filtering, so checking format
 costs no extra API calls. A release can legitimately carry more than one
 format (e.g. a 12" that ships with a download code is tagged both `Vinyl` and
-`File`) â€” it's kept if it matches *any* of the formats you list.
+`File`) — it's kept if it matches *any* of the formats you list.
 
-Change it the same three ways as genres â€” repo variable `FORMATS_INCLUDE`,
+Change it the same three ways as genres — repo variable `FORMATS_INCLUDE`,
 or a one-off in the code. There's no per-run dispatch-form input for it (the
 manual "Run workflow" form only overrides genres/lookback), since format is
 more of a set-once-and-forget preference than something you'd want to try
@@ -316,7 +316,7 @@ FORMATS_INCLUDE = all                # no format filtering at all
 ```
 
 Matching is case-insensitive but otherwise exact against Discogs' own format
-names â€” a small fixed vocabulary, so unlike genres there's no whole-word
+names — a small fixed vocabulary, so unlike genres there's no whole-word
 subtlety to worry about.
 
 ### Adding a store
@@ -326,7 +326,7 @@ website name.
 
 1. Search for the shop on Discogs, or open any record they're selling.
 2. Click through to their shop. The URL looks like
-   `discogs.com/seller/SOMENAME/profile` â€” `SOMENAME` is what you need.
+   `discogs.com/seller/SOMENAME/profile` — `SOMENAME` is what you need.
 3. Sanity-check it in a browser:
    `https://api.discogs.com/users/SOMENAME/inventory?per_page=1`
    You should get JSON back. If `pagination.items` is `0`, they have nothing
@@ -343,7 +343,7 @@ SELLERS = {
 }
 ```
 
-â€¦or set a `SELLERS` repo variable without touching code, using
+…or set a `SELLERS` repo variable without touching code, using
 `username=Display Name` pairs:
 
 ```
@@ -359,12 +359,12 @@ Three more sources run alongside the Discogs sellers, using the same genre and
 format filters, but fetched directly from each shop's own site rather than
 through the Discogs API:
 
-- **Clone.nl new arrivals** â€” their own RSS feed
+- **Clone.nl new arrivals** — their own RSS feed
   (`clone.nl/rss/all`). This is a real, publisher-provided feed, separate from
   whatever `clone.nl` shows under Sellers above (that's their Discogs
-  marketplace listings â€” a different, smaller catalogue). Both can appear as
+  marketplace listings — a different, smaller catalogue). Both can appear as
   separate sections without duplicating each other.
-- **deejay.de new arrivals** â€” scraped from their "All / News" page.
+- **deejay.de new arrivals** — scraped from their "All / News" page.
   deejay.de has **no RSS/Atom feed** (checked directly against the live site)
   and their Discogs seller account exists but has 0 items for sale, so
   scraping their page's HTML was the only option that actually works. That
@@ -375,42 +375,42 @@ through the Discogs API:
   always has some") rather than failing silently, so it's noticeable. Turn it
   off with the `DEEJAY_ENABLED` variable (below) if that happens and you don't
   want to wait for a fix. Their tracklist DOES play inline, real audio, same
-  as clone.nl â€” each track's own MP3 lives at a predictable static URL
+  as clone.nl — each track's own MP3 lives at a predictable static URL
   (confirmed with a real browser network capture, then verified live over
   plain HTTP), so it's fetched directly rather than needing anything
   special. For the rare item with no tracklist of its own, this falls back
   to cross-referencing Discogs' release search and borrowing its
   community-submitted YouTube links when a confident match is found (see
-  [Listening to the records](#listening-to-the-records)) â€” that fallback
+  [Listening to the records](#listening-to-the-records)) — that fallback
   path needs `DISCOGS_TOKEN`; items that hit neither just keep the
   existing "search YouTube" fallback link.
-- **Yoyaku (Paris) new arrivals** â€” their public WordPress/WooCommerce REST
+- **Yoyaku (Paris) new arrivals** — their public WordPress/WooCommerce REST
   API. This is the best-behaved source here and the only one that needs no
   scraping at all: everything comes from documented JSON endpoints rather
   than from regexes over markup that can be redesigned away. It also gives
   three things the other two can't:
   - **Real genre tags.** Yoyaku tags every release with its own *Styles*
-    ("House", "Deep House", "Electro", â€¦), so this source filters on actual
-    metadata, exactly like Discogs does â€” not on whether a word happens to
+    ("House", "Deep House", "Electro", …), so this source filters on actual
+    metadata, exactly like Discogs does — not on whether a word happens to
     appear in the blurb.
   - **Server-side date filtering.** The lookback window costs one request no
     matter how much they listed that day.
   - **Direct MP3s.** Their player's own endpoint hands back per-track MP3
-    URLs on a CDN â€” plain GET, no session needed, and it supports byte
+    URLs on a CDN — plain GET, no session needed, and it supports byte
     ranges, so the playbar can seek inside them.
 
   One caveat: their API exposes no **format** field (7"/12"/LP appears only
   in the item page's HTML, which this deliberately never fetches), so
-  everything from Yoyaku is reported as **Vinyl**. Merch is still excluded â€”
+  everything from Yoyaku is reported as **Vinyl**. Merch is still excluded —
   slipmats, needles, t-shirts and gift cards carry no Styles tag, and that's
-  what's used to tell a record from an accessory â€” but a rare CD-only
+  what's used to tell a record from an accessory — but a rare CD-only
   release would slip through a Vinyl-only filter. That's the cost of not
   fetching an extra page per item just to read one word.
 
 clone.nl and deejay.de have no Discogs-style structured genre/style data, so
 for those two genre filtering runs against each item's title and description
 **text** instead (the same whole-word matching, just fed prose instead of a
-tags array) â€” functionally the same filtering, just working from different
+tags array) — functionally the same filtering, just working from different
 raw material. Their `tags` line in the digest shows which genre term actually
 matched, rather than a real genre/style list, so it's clear the match came
 from text rather than metadata. Yoyaku items show their real Styles instead,
@@ -422,15 +422,15 @@ Freshness also isn't identical across all sources:
 |---|---|---|
 | Discogs marketplace | `posted` timestamp | seconds |
 | Clone.nl RSS | `pubDate` | whole days (every item observed was midnight) |
-| deejay.de scrape | none â€” tracked explicitly instead | per article id |
+| deejay.de scrape | none — tracked explicitly instead | per article id |
 | Yoyaku API | `date_gmt` | seconds |
 
 deejay.de's own per-item date looks like a release date rather than "when
 added to the shop" (some items literally say "Release unknown"), so it can't
 be used for a `LOOKBACK_HOURS`-style cutoff the way the other three sources
 are. Instead, `docs/deejay_seen.json` remembers every article id already
-shown â€” committed by the workflow alongside the player pages, same
-git-as-state pattern as `docs/likes.json` â€” and each run skips anything
+shown — committed by the workflow alongside the player pages, same
+git-as-state pattern as `docs/likes.json` — and each run skips anything
 already in it. So "new" here means "not shown before", not "posted
 recently": an id is only ever shown once, full stop, however long ago it
 first appeared. Ids are forgotten after `DEEJAY_SEEN_KEEP_DAYS` (default
@@ -439,7 +439,7 @@ first appeared. Ids are forgotten after `DEEJAY_SEEN_KEEP_DAYS` (default
 
 **Discogs sellers, clone.nl's RSS feed and Yoyaku get the same "shown once"
 treatment, for a different reason.** They do have a real per-item date, so
-`LOOKBACK_HOURS` alone bounds what gets checked each run â€” but a listing
+`LOOKBACK_HOURS` alone bounds what gets checked each run — but a listing
 posted, say, 20 hours ago is *inside* both today's 48-hour window and
 tomorrow's, so it would otherwise show up twice purely because the windows
 overlap. `docs/discogs_seen.json`, `docs/clone_seen.json` and
@@ -456,7 +456,7 @@ cutoff: the first run that gets through after a blocked stretch catches up on
 everything published during it, and `clone_seen.json` keeps that from
 re-showing anything already in a digest.
 
-**Turning any of them off** â€” set a repo Variable to `false`:
+**Turning any of them off** — set a repo Variable to `false`:
 
 - `CLONE_RSS_ENABLED` = `false`
 - `DEEJAY_ENABLED` = `false`
@@ -467,7 +467,7 @@ All three default to on.
 **deejay.de failing doesn't fail the whole run.** Observed live, repeatedly:
 deejay.de answers in under a second from a plain connection, but the exact
 same request from GitHub Actions has failed with a connect timeout several
-times in a row, then started working again on its own a run or two later â€”
+times in a row, then started working again on its own a run or two later —
 consistent with the runner's datacenter IP range being rate-limited or
 blocked rather than deejay.de actually being down. Retrying more or waiting
 longer doesn't help a deliberate block, and it isn't something you can fix
@@ -490,7 +490,7 @@ failure again.
 `DEEJAY_MAX_ITEMS` (default `60`) caps how many of the
 page's items are considered each run. `CLONE_AUDIO_MAX_ITEMS` (default `30`)
 caps how many clone.nl items get their tracklist fetched for inline playback
-each run â€” each one costs an extra request beyond the single feed fetch, so
+each run — each one costs an extra request beyond the single feed fetch, so
 this bounds the worst case on a very broad filter. Items beyond the cap still
 appear in the digest, just without playable tracks. `DEEJAY_DISCOGS_LOOKUP_MAX_ITEMS`
 (default `20`) does the same for how many deejay.de items get cross-referenced
@@ -502,7 +502,7 @@ many of the window's releases are considered if they bulk-list, and
 fetched. Everything else about that source is a fixed number of requests
 regardless of window size.
 
-Per-store genre overrides (`GENRES_BY_STORE`, see above) work for these too â€”
+Per-store genre overrides (`GENRES_BY_STORE`, see above) work for these too —
 use the keys `clone-rss`, `deejay` and `yoyaku`:
 
 ```
@@ -511,7 +511,7 @@ clone-rss: house; deejay: techno, breakbeat; yoyaku: deep house, minimal
 
 Yoyaku's key is worth using: because it filters on real Styles rather than
 blurb text, narrow terms behave precisely there. Their vocabulary is the
-list at [yoyaku.io/style/](https://yoyaku.io/style/) â€” House, Techno, Deep
+list at [yoyaku.io/style/](https://yoyaku.io/style/) — House, Techno, Deep
 House, Minimal, Electro, Tech House, Breakbeat, Ambient, Acid, Dub Techno
 and so on.
 
@@ -519,13 +519,13 @@ and so on.
 
 clone.nl and deejay.de's "new arrivals" feeds mix items that are genuinely in
 stock with pre-orders and sold-out listings that just haven't been removed
-yet â€” checked live: 9 of 10 sampled clone.nl items, and every sampled
+yet — checked live: 9 of 10 sampled clone.nl items, and every sampled
 deejay.de item, were "preorder" or "out of stock", not immediately buyable.
 Discogs marketplace listings never have this problem (a seller's own listing
 is always real, owned inventory), so this only applies to those two sources.
 
 When a matched item isn't immediately available, both the emailed digest and
-the player page show a badge next to it â€” amber "Pre-order" (with an expected
+the player page show a badge next to it — amber "Pre-order" (with an expected
 date when the site gives one) or muted red "Out of stock". An item with
 neither badge is available now. Nothing is filtered out based on this; it's
 shown so you know before clicking through, not hidden.
@@ -540,11 +540,11 @@ Yoyaku costs nothing extra: WooCommerce reports stock in the same batched
 call that supplies prices, and "Forthcoming"/"Pre-Order" come from the
 product's own categories (a pre-order is technically "in stock" as far as
 WooCommerce is concerned, so the flag alone would wrongly call it available
-now â€” both signals are checked).
+now — both signals are checked).
 
 #### "Vinyl Only" highlight
 
-A gold "â˜… Vinyl Only" badge marks releases that ship with nothing bundled --
+A gold "★ Vinyl Only" badge marks releases that ship with nothing bundled --
 no download code, no CD. This only shows where there's real evidence, never
 a guess:
 
@@ -556,7 +556,7 @@ a guess:
 - **clone.nl**: no badge. Checked live and found no equivalent marker on
   their item pages, so this is left unflagged rather than guessed at.
 - **Yoyaku**: no badge either. Their API carries no format field at all, so
-  there's nothing that would count as evidence â€” same call as clone.nl.
+  there's nothing that would count as evidence — same call as clone.nl.
 
 ### SoundCloud likes and Discogs sellers (from the browser extension)
 
@@ -601,10 +601,10 @@ is always UTC and does not follow daylight saving, so the local time shifts by
 an hour twice a year. [crontab.guru](https://crontab.guru) is handy for editing
 the expression.
 
-GitHub starts scheduled runs late when it's busy â€” and it's busiest on the hour.
-With `0 6 * * *` every run from 15 to 25 Oct 2026 started 4.5â€“6.5 hours late,
+GitHub starts scheduled runs late when it's busy — and it's busiest on the hour.
+With `0 6 * * *` every run from 15 to 25 Oct 2026 started 4.5–6.5 hours late,
 which is why the minute is now an odd one; keep it off `:00` if you change it.
-The lookback window absorbs whatever delay remains â€” see
+The lookback window absorbs whatever delay remains — see
 [Why there's no database](#why-theres-no-database) for how the window and the
 schedule should be kept in step.
 
@@ -615,7 +615,7 @@ schedule should be kept in step.
 1. For each store, fetch their inventory sorted newest-listed-first
    (`GET /users/{username}/inventory?sort=listed&sort_order=desc`).
 2. Walk down the list until a record older than the cutoff appears, then stop.
-   Because it's sorted, everything after that is older too â€” so a typical run
+   Because it's sorted, everything after that is older too — so a typical run
    reads one page per store, not the whole inventory.
 3. The inventory response **doesn't include genre**, so for each record that
    passed the cutoff, fetch `GET /releases/{id}` to read its `genres` and
@@ -629,7 +629,7 @@ schedule should be kept in step.
 ### Listening to the records
 
 Every digest links to a **player page**: one web page with a click-to-seek play
-bar per track â€” tap anywhere along the bar and it plays from that point, like a
+bar per track — tap anywhere along the bar and it plays from that point, like a
 podcast app scrubber, rather than opening a YouTube video frame.
 
 - Live site: **https://joor241.github.io/discogs-genre-digest/**
@@ -638,23 +638,23 @@ podcast app scrubber, rather than opening a YouTube video frame.
 - Pages older than `ARCHIVE_KEEP_DAYS` (30) are pruned automatically. Each page
   links to the surviving earlier ones at the bottom.
 
-**How the bar works:** tapping it seeks to that point and plays immediately â€”
+**How the bar works:** tapping it seeks to that point and plays immediately —
 for a track you've already tapped once, this is instant; for a track you
 haven't touched yet, there's a brief (sub-second, usually) load while YouTube
 fetches it, same as the first tap on any streaming app. The bar shows the real
 track length up front, taken from Discogs' own video metadata, not guessed.
-Only one track plays at a time â€” starting another stops the first outright.
+Only one track plays at a time — starting another stops the first outright.
 A small arrow icon next to each bar opens the original video on YouTube, for
 when you'd rather watch than just listen. Works with touch as well as a mouse,
 and the tap target is taller than the visible line so it's comfortable on a
 phone.
 
-There's no real waveform drawn on the bar â€” YouTube doesn't expose audio data
+There's no real waveform drawn on the bar — YouTube doesn't expose audio data
 to embedded players, so a true waveform isn't something this can build. It's
 an even progress fill, same idea as any basic scrubber.
 
 Under the hood, two hidden YouTube players (invisible, not video frames you
-see) are created once when the page loads and reused for every track â€” clicking
+see) are created once when the page loads and reused for every track — clicking
 a bar just tells one what to load and where to seek, rather than building a new
 embed per click. This is also what makes seeking on an already-loaded track
 truly instant.
@@ -672,7 +672,7 @@ every YouTube video on the page gets a hidden, muted player of its own that
 starts it and pauses right there, and every MP3 gets its own `<audio>` that
 downloads it -- top to bottom, three at a time, so a press anywhere on the
 page plays from what is already loaded. A counter next to Likes/Settings
-shows how far it has got (`Preloading 42% Â· 30/71`), with a thin line along
+shows how far it has got (`Preloading 42% · 30/71`), with a thin line along
 the top of the window while it runs. Measured on the 24 Oct page (69 videos,
 11 MP3s): everything loaded in about 55 seconds, after which a press played
 in ~0.5s for a YouTube track and ~0.2s for an MP3, anywhere on the page. A
@@ -700,9 +700,11 @@ quick past the first dozen tracks. A dead video reached by next or
 auto-advance is skipped rather than stopping playback.
 
 **Seeing why a track was slow.** Open the browser console (F12) on the digest
-page. Every press logs one line, such as `[digest] 289 ms to sound Â·
-preloaded Â· <track>`, or `cold load (preload: not near yet)`, or
-`MP3, preload loaded`. Clicking along a bar logs where it started (`at 2:31`), and a jump within the playing track is timed as well (`jump within this track`). Anything over 1.5s is logged as a warning, along with
+page. Every press logs one line, such as `[digest] 289 ms to sound ·
+preloaded · <track>`, or `cold load (preload: not near yet)`, or
+`MP3, preload loaded`. Clicking along a bar logs where it started
+(`at 2:31`), and a jump within the playing track is timed as well
+(`jump within this track`). Anything over 1.5s is logged as a warning, along with
 dead videos and loads that had to be retried. Records that are off screen are
 not laid out until they come near, and covers below the first 80 records load
 lazily, so the page itself scrolls smoothly at that size too.
@@ -714,8 +716,8 @@ new starts loading. The Likes page keeps the one-ahead behaviour.
 
 **Not every track plays through YouTube.** Discogs releases only have
 community-submitted YouTube links to work with, but clone.nl, deejay.de and
-Yoyaku all give up real, direct MP3 preview clips instead â€” confirmed live on
-all three, not assumed â€” so those tracks play through a plain, native
+Yoyaku all give up real, direct MP3 preview clips instead — confirmed live on
+all three, not assumed — so those tracks play through a plain, native
 `<audio>` element: no video platform involved, no metadata-loading delay,
 instant seeking on first tap rather than only after the first play. Yoyaku is
 the easy one: their player plugin has a public endpoint that simply returns
@@ -723,12 +725,12 @@ the MP3 URLs, so there's nothing to parse or guess.
 deejay.de's case took real digging: their tracklist "Play" buttons route
 through a session-gated internal API in their own player JS, which looked
 like a hard wall, but a real browser network capture showed each track's MP3
-sits at a predictable, static URL underneath that needs no session at all â€”
+sits at a predictable, static URL underneath that needs no session at all —
 sharded by the item's own numeric id, the same pattern deejay.de already uses
 for its cover image URLs.
 
-Whichever backend a track uses is invisible from the outside â€” same bar, same
-tap-to-seek behaviour â€” except direct-MP3 tracks skip the "watch on YouTube"
+Whichever backend a track uses is invisible from the outside — same bar, same
+tap-to-seek behaviour — except direct-MP3 tracks skip the "watch on YouTube"
 arrow, since there's no video to link to. Only one track plays at a time
 regardless of which backend it's using; starting a YouTube track stops a
 playing MP3 clip and vice versa. The rare deejay.de item with no tracklist of
@@ -739,7 +741,7 @@ See [Non-Discogs sources](#non-discogs-sources-clonenl-rss-deejayde-and-yoyakuio
 for how those work.
 
 **Why a separate page, and not just play inside the email:** every mail client
-strips `<script>`, `<iframe>` and `<audio>` before rendering â€” Gmail included â€”
+strips `<script>`, `<iframe>` and `<audio>` before rendering — Gmail included —
 so no embedded player can work in any of them. A real web page has no such
 limit. The email itself still carries per-track YouTube links and a **Play
 all** button as a fallback if you'd rather not open the page at all.
@@ -747,7 +749,7 @@ all** button as a fallback if you'd rather not open the page at all.
 > **The player page is public.** GitHub Pages on a free plan is only available
 > for public repositories, and the site is readable by anyone who knows the URL
 > (private Pages is an Enterprise feature). The page contains public Discogs
-> listings and YouTube embeds â€” no secrets. Your Discogs token and SMTP
+> listings and YouTube embeds — no secrets. Your Discogs token and SMTP
 > password live in encrypted GitHub Secrets and are never in the repository.
 > The pages carry `noindex, nofollow` so search engines skip them, which is not
 > access control, just tidiness.
@@ -755,12 +757,12 @@ all** button as a fallback if you'd rather not open the page at all.
 **The button under each item's price says where it actually goes.** It reads
 "Buy on Discogs" only for Discogs listings; clone.nl, deejay.de and Yoyaku
 items say "View on Clone.nl" / "View on Deejay.de" / "View on Yoyaku.io"
-instead, since that's genuinely where they link â€” the label is derived from the link's own URL, so it can never
+instead, since that's genuinely where they link — the label is derived from the link's own URL, so it can never
 drift out of sync with where it actually points.
 
 #### Likes, synced across your devices
 
-Tap the heart on any record to save it â€” visible from a separate **Likes**
+Tap the heart on any record to save it — visible from a separate **Likes**
 page (linked at the top of the player page), grouped by store, on any device.
 
 This needed real syncing rather than a per-browser "favourites" list, since
@@ -769,9 +771,9 @@ backend to hold that, so likes are stored the same way the player pages
 themselves are: as a file in this repo (`docs/likes.json`), read and written
 through GitHub's own API rather than a database you'd have to run.
 
-**Viewing likes needs nothing** â€” `likes.html` just fetches the public JSON
+**Viewing likes needs nothing** — `likes.html` just fetches the public JSON
 file, so anyone can see what's liked, from any device, without setting
-anything up. **Saving or removing a like needs a token** â€” same one used by
+anything up. **Saving or removing a like needs a token** — same one used by
 the [settings page](#the-settings-page--edit-everything-from-your-phone),
 plus one extra permission: set
 **Contents** to **Read and write** too when creating it (see
@@ -780,13 +782,13 @@ that walkthrough). Tap a heart without a token connected and it opens the
 Likes page instead of silently doing nothing, so it's obvious what's needed.
 
 Each like carries its own snapshot of the record's title, price, thumbnail,
-store **and its playable tracks** â€” not just a link â€” so the Likes page
+store **and its playable tracks** — not just a link — so the Likes page
 renders and plays without needing to re-fetch anything, even after that
 record has scrolled out of every digest and archive page.
 
 Tracks play on the Likes page exactly as they do in the digest: same bars,
 same keyboard shortcuts, same floating transport. That is not a second
-implementation â€” `docs/assets/player.{css,js}` is written fresh by every
+implementation — `docs/assets/player.{css,js}` is written fresh by every
 run from the same source the digest pages inline, and `likes.html` loads
 it. The player installs its own transport if a page doesn't ship one, so
 adding it to another page needs nothing but those two tags.
@@ -803,15 +805,15 @@ digest ever contains a dead link. The per-track YouTube links work regardless.
 
 Three steps, once:
 
-1. **Make the repository public.** Settings â†’ General â†’ Danger Zone â†’ *Change
-   visibility* â†’ *Change to public*. GitHub asks you to confirm twice, and the
+1. **Make the repository public.** Settings → General → Danger Zone → *Change
+   visibility* → *Change to public*. GitHub asks you to confirm twice, and the
    second step wants you to type the repository name.
    *Free plans can only serve Pages from a public repository.*
-2. **Enable Pages.** Settings â†’ Pages â†’ under *Build and deployment*, set
+2. **Enable Pages.** Settings → Pages → under *Build and deployment*, set
    **Source** to `Deploy from a branch`, **Branch** to `main`, folder to
    `/docs`, then *Save*. The first build takes a minute or so.
-3. **Point the email at it.** Settings â†’ Secrets and variables â†’ Actions â†’
-   **Variables** â†’ *New repository variable*, named `PAGES_BASE_URL`:
+3. **Point the email at it.** Settings → Secrets and variables → Actions →
+   **Variables** → *New repository variable*, named `PAGES_BASE_URL`:
 
    ```
    https://joor241.github.io/discogs-genre-digest
@@ -820,7 +822,7 @@ Three steps, once:
 Then run the workflow once with `dry_run` ticked and check the log says
 `Player page will be at ...`. Opening that URL should show the play bars.
 
-To turn the player back off, delete the `PAGES_BASE_URL` variable â€” the emails
+To turn the player back off, delete the `PAGES_BASE_URL` variable — the emails
 go back to plain YouTube links with no other change.
 
 #### How publishing works
@@ -831,7 +833,7 @@ repo means the dated archive persists in git for free, with no second branch.
 
 Two consequences worth knowing:
 
-- Pages takes 30â€“60 seconds to build after a push, so a link opened the instant
+- Pages takes 30–60 seconds to build after a push, so a link opened the instant
   the email lands may 404 briefly. Reload.
 - The publish step runs on dry runs too, so the whole pipeline is testable
   without emailing yourself. A dry run with experimental genres will briefly
@@ -840,15 +842,15 @@ Two consequences worth knowing:
 The links come from the `videos` array on the release, which Discogs users
 attach themselves. It arrives in the same API response already fetched for
 genre filtering, so this costs **no extra requests**. Coverage measured on a
-sample of these shops' listings was 8 out of 8 â€” when a release has nothing
+sample of these shops' listings was 8 out of 8 — when a release has nothing
 attached, the link falls back to a YouTube search for the artist and title.
 
 **Play all** uses YouTube's `watch_videos` endpoint, which builds a throwaway
 playlist from a list of video ids, so one click plays the record end to end.
 
 Two quirks of community-contributed data are handled: the same clip is often
-listed twice (deduplicated by video id), and popular records can carry dozens â€”
-one Steve Bug 12" had 56 â€” so the list is capped by `MAX_VIDEOS_PER_RELEASE`
+listed twice (deduplicated by video id), and popular records can carry dozens —
+one Steve Bug 12" had 56 — so the list is capped by `MAX_VIDEOS_PER_RELEASE`
 (default 6). Raise it with a repo variable if you want more.
 
 Note the clips are whatever people uploaded, so they can include remixes or
@@ -871,7 +873,7 @@ run happens gets sent again. So the window and the schedule are linked.
 72 is the default because Rush Hour lists in batches every few days rather than
 daily, so a 26-hour window often shows nothing from them.
 
-Worth knowing: a 26-hour window on a daily schedule **never misses anything** â€”
+Worth knowing: a 26-hour window on a daily schedule **never misses anything** —
 the windows cover every hour of the day. Widening it doesn't surface extra
 records, it re-shows the same ones for longer. If the repeats bother you, the
 clean fix is to run less often and keep the window matched to it:
@@ -902,14 +904,14 @@ take forever or blow past its API budget:
 | `MAX_PAGES` | 20 | Inventory pages read per seller (100 listings/page, so 2,000 listings). |
 | `MAX_RELEASE_LOOKUPS` | 400 | Release-detail lookups (genre/format checks) per run, across all sellers. |
 
-Both are ordinary repo Variables, same as everything else â€” set them from the
+Both are ordinary repo Variables, same as everything else — set them from the
 [settings page](#the-settings-page--edit-everything-from-your-phone) or by
 hand. Raise them high enough and effectively nothing gets left out, even for a
 seller with a huge catalog (Demonfuzz Records, one of the shops this instance
 tracks, has 120,000+ items listed in total).
 
 The real trade-off is time, not money: at Discogs' ~54 req/min pace, checking
-a few thousand releases can take over an hour. That's fine â€” GitHub Actions
+a few thousand releases can take over an hour. That's fine — GitHub Actions
 minutes are unlimited and free for a public repo no matter how long a job
 runs, and the workflow's `timeout-minutes` is set generously (180) to give
 a large run room to actually finish rather than getting killed partway through.
@@ -917,13 +919,13 @@ If you raise the caps enough that even that isn't enough, raise
 `timeout-minutes` in `daily-digest.yml` too.
 
 When a run does hit `MAX_RELEASE_LOOKUPS` before finishing, nothing is silently
-dropped without you knowing â€” the email says how many listings were left
+dropped without you knowing — the email says how many listings were left
 unchecked, and the log names the seller responsible.
 
 ### If one store breaks
 
 A store that gets renamed, deleted, or is temporarily failing is logged and
-skipped â€” the other stores still get through and you still get your email, with
+skipped — the other stores still get through and you still get your email, with
 a note at the bottom listing what couldn't be checked. The workflow run is
 marked red so you notice.
 
@@ -944,7 +946,7 @@ $env:DISCOGS_TOKEN="your_token_here"
 python discogs_genre_digest.py --dry-run --out digest.html
 ```
 
-`--dry-run` needs only `DISCOGS_TOKEN` â€” no email settings â€” and prints the
+`--dry-run` needs only `DISCOGS_TOKEN` — no email settings — and prints the
 digest instead of sending it. `--out digest.html` writes the HTML so you can
 open it in a browser.
 
@@ -962,11 +964,11 @@ To test the email path too, also set `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` and
 | `HTTP 404 ... check the seller username` | The seller username is wrong or the shop was deleted. Verify with the API URL in [Adding a store](#adding-a-store). |
 | `HTTP 403 ... Discogs may be blocking the User-Agent` | Discogs blocks generic user agents. The workflow sets a distinctive one automatically; if you run locally, set `USER_AGENT` to anything identifying. |
 | `SMTPAuthenticationError` | For Gmail: you used your Google password instead of an App Password, or 2-Step Verification isn't on. |
-| Email never arrives | Check spam. Then check `MAIL_TO` for typos â€” SMTP accepts the message and drops it silently if the address doesn't exist. |
+| Email never arrives | Check spam. Then check `MAIL_TO` for typos — SMTP accepts the message and drops it silently if the address doesn't exist. |
 | Digest is empty every day | Filter may be too narrow, or the shops genuinely listed nothing overnight. Run with `genres` set to `all` once to confirm the pipeline works. |
-| Scheduled run never fires | GitHub disables scheduled workflows in repos with no activity for 60 days â€” push a commit or click Run workflow to re-enable. |
-| Same record on several days running | Shouldn't happen any more â€” `discogs_seen.json`/`clone_seen.json`/`deejay_seen.json` mean every item is shown exactly once, regardless of lookback overlap. If it does, check the workflow log for "Could not write the player page" (a failed publish means that run's seen-file update never got committed, so the next run doesn't know it already showed that item). |
-| Tapping the heart on a record does nothing, or reverts with no explanation | Almost always a token that predates the Likes feature and so lacks the `Contents` permission it needs â€” the failure now shows a clear alert saying exactly this. On Settings, forget the token and generate a new one with `Contents: Read and write` enabled (see [Likes, synced across your devices](#likes-synced-across-your-devices)). |
+| Scheduled run never fires | GitHub disables scheduled workflows in repos with no activity for 60 days — push a commit or click Run workflow to re-enable. |
+| Same record on several days running | Shouldn't happen any more — `discogs_seen.json`/`clone_seen.json`/`deejay_seen.json` mean every item is shown exactly once, regardless of lookback overlap. If it does, check the workflow log for "Could not write the player page" (a failed publish means that run's seen-file update never got committed, so the next run doesn't know it already showed that item). |
+| Tapping the heart on a record does nothing, or reverts with no explanation | Almost always a token that predates the Likes feature and so lacks the `Contents` permission it needs — the failure now shows a clear alert saying exactly this. On Settings, forget the token and generate a new one with `Contents: Read and write` enabled (see [Likes, synced across your devices](#likes-synced-across-your-devices)). |
 
 ---
 
@@ -978,5 +980,5 @@ To test the email path too, also set `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` and
 | `requirements.txt` | One dependency: `requests`. |
 | `.github/workflows/daily-digest.yml` | The daily schedule, the manual-run form, and publishing to `docs/`. |
 | `.gitignore` | Keeps `.env` and generated HTML out of git. |
-| `docs/settings.html` | The live [settings page](#the-settings-page--edit-everything-from-your-phone) â€” static, no build step. |
-| `docs/index.html`, `docs/archive/*.html` | Generated by the workflow on every run. Don't hand-edit â€” they're overwritten. |
+| `docs/settings.html` | The live [settings page](#the-settings-page--edit-everything-from-your-phone) — static, no build step. |
+| `docs/index.html`, `docs/archive/*.html` | Generated by the workflow on every run. Don't hand-edit — they're overwritten. |
