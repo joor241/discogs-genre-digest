@@ -1819,5 +1819,36 @@
       }
     ],
     "liked_at": "2026-10-29T14:50:13.652Z"
+  },
+  "https://www.discogs.com/sell/item/3977037079": {
+    "description": "Mark Grant - Jungle X (12\")",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/3977037079",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/xDfYR9poHiwZ7tvqkp1c7U5Uwz12wiYNttSN_i-uq_s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2NDYx/NC0xMTM5NDQ3NDk1/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Mark Grant – Jungle X - Pitch Records – PR-002 (1996)",
+        "yt": "zjo6wCatDyE",
+        "src": null,
+        "dur": 59
+      },
+      {
+        "title": "Mark Grant – Jungle X - Pitch Records – PR-002 (1996)",
+        "yt": "nXjLJddO0s4",
+        "src": null,
+        "dur": 59
+      },
+      {
+        "title": "Mark Grant – Jungle X - Pitch Records – PR-002 (1996)",
+        "yt": "hL6IWI0jpMc",
+        "src": null,
+        "dur": 59
+      }
+    ],
+    "liked_at": "2026-10-29T15:18:33.832Z"
   }
 }
