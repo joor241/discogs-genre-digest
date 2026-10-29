@@ -683,7 +683,7 @@ skips it.
 whole embedded page (~40MB in Chrome), so there are at most 24 of them. On
 29 Oct Rush Hour bulk-listed 727 records with 3008 videos, and one player per
 video made Chrome grow by ~260MB a minute for as long as the tab was open.
-When a page has more videos than that, the players go to the 12 tracks after
+When a page has more videos than that, the players go to the 18 tracks after
 the one playing (listening top to bottom never waits), then the rows on
 screen, then further down. As you listen or scroll they move along: a player
 holding a track you are now far from loads one nearby instead. The counter
@@ -691,7 +691,21 @@ then reads `Preloading 18/36 nearby`. A row outside that window, such as one
 far down the page, is fetched as soon as the mouse rests on it, the same as
 the one-ahead player. Measured on the 29 Oct page: Chrome stays flat at
 ~1.9GB, and 40 "next" presses in a row all played from a preloaded player.
-`?pool=N` sets the number of players by hand. Some videos, mostly
+`?pool=N` sets the number of players by hand.
+
+**Preloaded where you start.** Each preloaded video waits, muted and paused,
+where you usually start a track. The page remembers in your browser where you
+started your last 20 tracks. When at least 60% of those were clicks along the
+bar rather than "next" from 0:00, players wait 3s before the middle of those
+points instead of at 0:00. A paused player only buffers 10-22s past where it
+waits, so a click in that stretch plays from what it already has. Measured
+with clicks 40% along: median 338ms instead of 422-467ms, and the slowest
+press 0.5-1.2s instead of 3.2-3.4s. "Next" from 0:00 costs a little more in
+that mode (417ms instead of 285ms), which is why it only switches on when
+most of your presses are along the bar. The console shows where a player
+waited, e.g. `preloaded, held at 1:37`.
+
+Some videos, mostly
 official/label uploads, take 6-20s to start in any YouTube player: YouTube
 keeps them black at "unstarted" before it plays them (measured in a bare
 player on this site, in a signed-in Chrome with no ad blocker). Nothing on the

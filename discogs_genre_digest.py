@@ -3004,8 +3004,9 @@ PLAYER_JS = """
         }
         activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
         if (pooled) {
-          logHow(pooled.held ? 'preloaded' : 'preload still starting, ' +
-            Math.round((Date.now() - pooled.startedAt) / 1000) + 's head start');
+          logHow((pooled.held ? 'preloaded' : 'preload still starting, ' +
+            Math.round((Date.now() - pooled.startedAt) / 1000) + 's head start') +
+            (pooled.at ? ', held at ' + fmt(pooled.at) : ''));
           playPooled(pooled, bar, fraction);
         } else if (swap) {
           logHow(spareHeld ? 'fetched ahead (hover/next)' : 'fetched ahead, still loading');
@@ -3231,8 +3232,10 @@ PLAYER_JS = """
   // open (3.2GB at five minutes and climbing); with 24 it stays flat at
   // ~1.9GB, against ~0.9GB for the page with no preloading at all.
   var POOL_MAX = poolArg ? Math.max(1, parseInt(poolArg[1], 10)) : 24;
-  var POOL_AHEAD = 12;        // tracks after the one playing, always first in line
-  var POOL_VIEW = 10;         // then this many from the top of the screen down
+  // Skimming a track every 5-10s (the console log of 2026-10-29) outran a
+  // dozen; some videos need up to 20s before YouTube lets them start.
+  var POOL_AHEAD = 18;        // tracks after the one playing, always first in line
+  var POOL_VIEW = 5;          // then this many from the top of the screen down
   var ytPool = {}, audioPool = {};   // video id / MP3 url -> entry
   var ytPlayers = [];         // every pooled player built so far (<= POOL_MAX)
   var ytTargets = [];         // video ids the pool should hold right now, best first
@@ -3240,6 +3243,47 @@ PLAYER_JS = """
   var ytBusy = 0, audioBusy = 0, ytPoolStarted = false, ytRefused = false;
   var ytWindowed = false;     // more videos on the page than POOL_MAX
   var everShown = !document.hidden, hiddenRefused = false;
+
+  // ---- where you start a track ----
+  //
+  // The console log of 2026-10-29 had nearly every press somewhere along
+  // the bar, 1:00-2:30 in, hardly any at 0:00. A player held at 0:00 then
+  // has to fetch that part first: most of the 300-1200ms those presses
+  // took. So the pool holds each video where you tend to start instead --
+  // a little before it, because YouTube buffers ahead of where a player is
+  // paused, not behind: a press anywhere in the next stretch plays from
+  // what it already has. Learned from your last PRESS_HISTORY presses,
+  // kept in this browser; mostly "next" (from 0:00) keeps it at 0:00.
+  var PRESS_HISTORY = 20;
+  var PRESS_KEY = 'digest.pressFractions';
+  var pressFractions = [];
+  try { pressFractions = JSON.parse(localStorage.getItem(PRESS_KEY) || '[]') || []; } catch (err) {}
+
+  function rememberPress(fraction) {
+    pressFractions.push(Math.round(fraction * 1000) / 1000);
+    if (pressFractions.length > PRESS_HISTORY) pressFractions.shift();
+    try { localStorage.setItem(PRESS_KEY, JSON.stringify(pressFractions)); } catch (err) {}
+  }
+
+  // The fraction of a track to hold preloaded videos at: the middle of
+  // where you started, when at least 60% of recent presses were along the
+  // bar; 0 otherwise. The middle rather than lower down, because a paused
+  // player only buffers 10-22s ahead (measured on that page): held further
+  // back, most presses landed past what it had.
+  function holdFraction() {
+    var along = pressFractions.filter(function (f) { return f > 0.05; });
+    if (along.length < 3 || along.length < pressFractions.length * 0.6) return 0;
+    along.sort(function (a, b) { return a - b; });
+    return along[Math.floor((along.length - 1) / 2)];
+  }
+
+  // Seconds into this video to hold it at; 0 when its length is unknown.
+  // A few seconds early, so a press just short of the usual point is
+  // still inside what it buffered.
+  function holdAt(entry) {
+    var f = holdFraction();
+    return f > 0 && entry.dur > 0 ? Math.max(0, Math.floor(f * entry.dur) - 3) : 0;
+  }
   var allBars = [], recFirstBar = [], visibleRecs = {};
   var lastPressAt = 0, pumpTimer = null, scrollTimer = null, preloadLine = null;
 
@@ -3261,7 +3305,7 @@ PLAYER_JS = """
     for (var i = 0; i < allBars.length; i++) {
       var yt = allBars[i].getAttribute('data-yt'), src = allBars[i].getAttribute('data-src');
       if (yt && !ytPool[yt]) {
-        ytPool[yt] = { kind: 'yt', key: yt, state: 'queued' };
+        ytPool[yt] = { kind: 'yt', key: yt, state: 'queued', dur: knownDuration(allBars[i]) };
         videos++;
       } else if (!yt && src && !audioPool[src]) {
         audioPool[src] = { kind: 'audio', key: src, state: 'queued' };
@@ -3383,6 +3427,7 @@ PLAYER_JS = """
 
   function startYtPreload(entry) {
     ytBusy++; entry.busy = true; entry.state = 'loading'; entry.startedAt = Date.now();
+    entry.at = holdAt(entry);  // decided now, so playPooled knows where it is held
     entry.timer = setTimeout(function () { poolRelease(entry); }, POOL_TIMEOUT);
     if (entry.player) {
       // A standing player: back from being blocked in a hidden tab, or
@@ -3390,7 +3435,7 @@ PLAYER_JS = """
       if (entry.up) {
         try {
           entry.player.mute();
-          entry.player.loadVideoById(entry.key);
+          entry.player.loadVideoById(ytLoadArg(entry.key, entry.at));
         } catch (err) { poolSettle(entry, 'failed'); }
       }
       return;
@@ -3407,7 +3452,7 @@ PLAYER_JS = """
       owner.up = true;
       try {
         player.mute();
-        player.loadVideoById(owner.key);
+        player.loadVideoById(ytLoadArg(owner.key, owner.at));
       } catch (err) { poolSettle(owner, 'failed'); }
     });
     entry.player = player;
@@ -3625,6 +3670,8 @@ PLAYER_JS = """
   // you picked yourself just greys out.
   function playFrom(bar, fraction, viaStep) {
     lastPressAt = Date.now();
+    // Where a track was started, not a jump within the one playing.
+    if (bar !== activeBar) rememberPress(fraction);
     steppedTo = viaStep ? bar : null;
     var li = bar.closest ? bar.closest('li.track') : null;
     var tn = li ? li.querySelector('.tname') : null;
