@@ -1850,5 +1850,36 @@
       }
     ],
     "liked_at": "2026-10-29T15:18:33.832Z"
+  },
+  "https://www.discogs.com/sell/item/3977030758": {
+    "description": "Level 9 - Don't Stop (12\")",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/3977030758",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/WMTveItMEL4cUjAvM9pUsSBxSsMQLOSXrHWibU9QsBc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4NDcz/Ny0xNDU3MDE5NDQ3/LTYzNjIuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Level 9 - Don't Stop (House Music)",
+        "yt": "NCtX1EIX3E8",
+        "src": null,
+        "dur": 477
+      },
+      {
+        "title": "Level 9 - Don't Stop (Original $20 Krash)",
+        "yt": "5IEtQrEHR5U",
+        "src": null,
+        "dur": 432
+      },
+      {
+        "title": "Satoshi Tomiie & Ko Kimura 「LEVEL 9」【最強HOUSE】@ QOO '96",
+        "yt": "4ulQOdD4Hko",
+        "src": null,
+        "dur": 186
+      }
+    ],
+    "liked_at": "2026-10-29T15:48:57.411Z"
   }
 }
