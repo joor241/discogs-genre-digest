@@ -1745,5 +1745,54 @@
       }
     ],
     "liked_at": "2026-10-29T14:27:51.407Z"
+  },
+  "https://www.discogs.com/sell/item/4150193001": {
+    "description": "Kimara Lovelace - I Luv You More (12\")",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/4150193001",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/gE8PlC4wJNs0URF-XPgpoKJcm-FlzvFLIRS83Ln7tkw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0ODc2/LTE1NzQwNjUyMzQt/NzcwOC5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Kimara Lovelace - I luv you more (D`Ambrosio mix)",
+        "yt": "wmX14NKY3Zc",
+        "src": null,
+        "dur": 514
+      },
+      {
+        "title": "KIMARA LOVELACE -  I LOVE YOU MORE (HECTIC DUB)",
+        "yt": "4RG4rlu9GRo",
+        "src": null,
+        "dur": 371
+      },
+      {
+        "title": "Kimara Lovelace - I Luv You More (John Ciafone's Full Swing Dub)",
+        "yt": "0qWQgxaIr8g",
+        "src": null,
+        "dur": 379
+      },
+      {
+        "title": "Kimara Lovelace.I Luv You More.Dub U More Mix.King Street Sounds...",
+        "yt": "8396il83oy0",
+        "src": null,
+        "dur": 483
+      },
+      {
+        "title": "Kimara Lovelace - I Luv You More (Unreleased Air Mix)",
+        "yt": "wYhBShhv41o",
+        "src": null,
+        "dur": 423
+      },
+      {
+        "title": "Kimara Lovelace - I Luv You More (Mega Men Mix)",
+        "yt": "It6HhtoKVrI",
+        "src": null,
+        "dur": 405
+      }
+    ],
+    "liked_at": "2026-10-29T14:39:30.532Z"
   }
 }
