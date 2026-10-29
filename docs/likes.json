@@ -1696,5 +1696,54 @@
       }
     ],
     "liked_at": "2026-10-28T13:21:01.944Z"
+  },
+  "https://www.discogs.com/sell/item/4350898140": {
+    "description": "Audio Bullys - We Don't Care (12\")",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/4350898140",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/s_eL_vSgFj4n8Ct1C0_UqIBQlTf_fUMo3zfMHgx5dYo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1Njk2/Ny0xMTQ3MTc4MjA0/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Audio Bullys - We Don't Care (Official Video)",
+        "yt": "QXMUY4deXs0",
+        "src": null,
+        "dur": 218
+      },
+      {
+        "title": "Audio Bullys - We Don't Care (The Buffalo Bunch Night Train Extended Mix)",
+        "yt": "vv-QDoXPZdo",
+        "src": null,
+        "dur": 444
+      },
+      {
+        "title": "We Don't Care (Mutiny Vocal Scrub)",
+        "yt": "W2F38GiE93k",
+        "src": null,
+        "dur": 407
+      },
+      {
+        "title": "Audio Bullys - We Don't Care (Sicilian Dub)",
+        "yt": "blHUuMDqfQw",
+        "src": null,
+        "dur": 373
+      },
+      {
+        "title": "Audio Bullys - We Don't Care",
+        "yt": "DMaonX1qKDM",
+        "src": null,
+        "dur": 211
+      },
+      {
+        "title": "Audio Bullys - We Don't Care (Buffalo Bunch Night Train Rmx)",
+        "yt": "xbTF3RbQGf8",
+        "src": null,
+        "dur": 444
+      }
+    ],
+    "liked_at": "2026-10-29T14:27:51.407Z"
   }
 }
