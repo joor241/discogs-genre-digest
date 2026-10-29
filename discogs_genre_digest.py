@@ -2606,12 +2606,19 @@ PLAYER_JS = """
   // which way it went. Over 1.5s is a warning.
   var pressLog = null;
   function logHow(how) { if (pressLog) pressLog.how = how; }
-  function logSound() {
+  // at: where in the track it started, in seconds, for a press that
+  // started somewhere along the bar rather than at the beginning.
+  function logSound(at) {
     if (!pressLog || pressLog.done) return;
     pressLog.done = true;
     var ms = Math.round(performance.now() - pressLog.t);
+    var where = pressLog.fromBar && isFinite(at) ? ' at ' + fmt(at) : '';
     (ms > 1500 ? console.warn : console.info)(
-      '[digest] ' + ms + ' ms to sound \\u00b7 ' + pressLog.how + ' \\u00b7 ' + pressLog.name);
+      '[digest] ' + ms + ' ms to sound' + where + ' \\u00b7 ' + pressLog.how +
+      ' \\u00b7 ' + pressLog.name);
+  }
+  function ytNow() {
+    try { return ytPlayer.getCurrentTime(); } catch (err) { return NaN; }
   }
   function logWarn(text) {
     console.warn('[digest] ' + text + (pressLog ? ' \\u00b7 ' + pressLog.name : ''));
@@ -2685,10 +2692,19 @@ PLAYER_JS = """
       cur = ytPlayer.getCurrentTime() || 0;
       state = ytPlayer.getPlayerState();
     } catch (err) { return; }
+    var justSeeked = false;
     if (pendingSeekFraction !== null && dur > 0) {
       var target = pendingSeekFraction; pendingSeekFraction = null;
       ytPlayer.seekTo(target * dur, true);
       cur = target * dur;
+      justSeeked = true;
+      if (pressLog && !pressLog.done) pressLog.seekTo = cur;
+    }
+    // A jump within the playing track that never stopped to buffer gives
+    // onYtState nothing to report; this sees it arrive instead.
+    if (!justSeeked && pressLog && !pressLog.done && pressLog.seekTo !== undefined &&
+        state === 1 && Math.abs(cur - pressLog.seekTo) < 3) {
+      logSound(cur);
     }
     // Hovering another row borrows the spare, so by the end of a track it
     // may no longer hold the one auto-advance is about to ask for.
@@ -2764,7 +2780,9 @@ PLAYER_JS = """
     if (activeEngine !== 'yt' || !activeBar) return;
     if (ev.data === 1 || ev.data === 3) swapPending = false;
     if (ev.data === 1) {
-      logSound();
+      // Not while a seek is still to come (length unknown until now):
+      // pollYt times that one once it lands.
+      if (pendingSeekFraction === null) logSound(ytNow());
       preloadNext();
     } else if (ev.data === YT.PlayerState.ENDED) {
       var d = ytPlayer.getDuration() || knownDuration(activeBar);
@@ -3020,11 +3038,16 @@ PLAYER_JS = """
           ytPlayer.loadVideoById(ytLoadArg(videoId, start));
         }
       } else {
-        // A seek within the track already playing: nothing to time.
-        if (pressLog) pressLog.done = true;
+        // A click on the bar of the track already playing (or paused).
+        // Timed until it plays from the new point: onYtState when the seek
+        // made it buffer, pollYt when it had that part already.
+        logHow('jump within this track');
         activeBar = bar;
         var dur = ytPlayer.getDuration() || knownDuration(bar);
-        if (dur > 0) ytPlayer.seekTo(fraction * dur, true);
+        if (dur > 0) {
+          ytPlayer.seekTo(fraction * dur, true);
+          if (pressLog) pressLog.seekTo = fraction * dur;
+        }
         ytPlayer.playVideo();
       }
       stopPolling();
@@ -3096,7 +3119,13 @@ PLAYER_JS = """
     });
     // An MP3 row can be followed by a YouTube one; line that up as well.
     el.addEventListener('playing', function () {
-      if (el === audioEl && activeEngine === 'audio') { logSound(); preloadNext(); }
+      if (el === audioEl && activeEngine === 'audio') { logSound(el.currentTime); preloadNext(); }
+    });
+    // A jump within a clip that is already playing fires no 'playing'.
+    el.addEventListener('seeked', function () {
+      if (el === audioEl && !el.paused && pressLog && pressLog.seekTo !== undefined) {
+        logSound(el.currentTime);
+      }
     });
   }
   wireAudio(audioBase);
@@ -3130,9 +3159,12 @@ PLAYER_JS = """
       }
       safePlay();
     } else {
-      if (pressLog) pressLog.done = true;  // a seek, nothing to time
+      logHow('jump within this MP3');
       activeBar = bar;
-      if (audioEl.duration) audioEl.currentTime = fraction * audioEl.duration;
+      if (audioEl.duration) {
+        audioEl.currentTime = fraction * audioEl.duration;
+        if (pressLog) pressLog.seekTo = audioEl.currentTime;
+      }
       safePlay();
     }
     stopPolling();
@@ -3572,7 +3604,7 @@ PLAYER_JS = """
     steppedTo = viaStep ? bar : null;
     var li = bar.closest ? bar.closest('li.track') : null;
     var tn = li ? li.querySelector('.tname') : null;
-    pressLog = { t: performance.now(), how: '?',
+    pressLog = { t: performance.now(), how: '?', fromBar: fraction > 0.01,
                  name: tn ? tn.textContent : (bar.getAttribute('aria-label') || '') };
     var isAudio = !!bar.getAttribute('data-src');
     if (isAudio) {
