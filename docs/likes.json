@@ -1955,5 +1955,36 @@
       }
     ],
     "liked_at": "2026-10-30T18:00:38.702Z"
+  },
+  "https://www.discogs.com/sell/item/4436305743": {
+    "description": "Jay Kaufman - The Fear (12\", W/Lbl)",
+    "price": "9.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4436305743",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/uRETitJA4DcpmaxefnD1kf9-yGbbj7u1WyPOvKpImx8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY1ODQw/NzktMTUxNzc1OTI5/Ni05MTI5LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Jay Kaufman - The Fear (Youth In Asia's Fearless Dub) [SONB 003]",
+        "yt": "xRJbGcHtQOE",
+        "src": null,
+        "dur": 390
+      },
+      {
+        "title": "Jay Kaufman - The Fear (Lushreed Remix) [SONB 003]",
+        "yt": "OcA6Ix2N2sg",
+        "src": null,
+        "dur": 430
+      },
+      {
+        "title": "A - Jay Kaufman - The Fear (Original Progression Mix)",
+        "yt": "C1lwBqSw5Bw",
+        "src": null,
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-30T18:02:18.318Z"
   }
 }
