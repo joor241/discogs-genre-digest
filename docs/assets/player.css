@@ -20,6 +20,12 @@ h2 {
 .rec {
   display: flex; gap: 14px; padding: 14px 0;
   border-bottom: 1px solid #1c1c21;
+  /* A record off screen is not laid out or painted until it nears the
+     viewport -- what keeps a page of 700+ records (2026-10-29) scrolling
+     smoothly. "auto" remembers each one's real height once it has been
+     seen, so the scrollbar settles instead of jumping. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 260px;
 }
 .rec img {
   width: 68px; height: 68px; border-radius: 5px;

@@ -37,6 +37,30 @@
 
   var activeEngine = null;  // 'yt' | 'audio' | null
   var activeBar = null, activeVideoId = null, activeSrc = null;
+  var steppedTo = null;     // see playFrom
+
+  // One console line per press: how the track was loaded and how long it
+  // took to sound. Open the browser console (F12) on a slow track to see
+  // which way it went. Over 1.5s is a warning.
+  var pressLog = null;
+  function logHow(how) { if (pressLog) pressLog.how = how; }
+  // at: where in the track it started, in seconds, for a press that
+  // started somewhere along the bar rather than at the beginning.
+  function logSound(at) {
+    if (!pressLog || pressLog.done) return;
+    pressLog.done = true;
+    var ms = Math.round(performance.now() - pressLog.t);
+    var where = pressLog.fromBar && isFinite(at) ? ' at ' + fmt(at) : '';
+    (ms > 1500 ? console.warn : console.info)(
+      '[digest] ' + ms + ' ms to sound' + where + ' \u00b7 ' + pressLog.how +
+      ' \u00b7 ' + pressLog.name);
+  }
+  function ytNow() {
+    try { return ytPlayer.getCurrentTime(); } catch (err) { return NaN; }
+  }
+  function logWarn(text) {
+    console.warn('[digest] ' + text + (pressLog ? ' \u00b7 ' + pressLog.name : ''));
+  }
   var pendingSeekFraction = null;
   var pollTimer = null;
 
@@ -106,10 +130,19 @@
       cur = ytPlayer.getCurrentTime() || 0;
       state = ytPlayer.getPlayerState();
     } catch (err) { return; }
+    var justSeeked = false;
     if (pendingSeekFraction !== null && dur > 0) {
       var target = pendingSeekFraction; pendingSeekFraction = null;
       ytPlayer.seekTo(target * dur, true);
       cur = target * dur;
+      justSeeked = true;
+      if (pressLog && !pressLog.done) pressLog.seekTo = cur;
+    }
+    // A jump within the playing track that never stopped to buffer gives
+    // onYtState nothing to report; this sees it arrive instead.
+    if (!justSeeked && pressLog && !pressLog.done && pressLog.seekTo !== undefined &&
+        state === 1 && Math.abs(cur - pressLog.seekTo) < 3) {
+      logSound(cur);
     }
     // Hovering another row borrows the spare, so by the end of a track it
     // may no longer hold the one auto-advance is about to ask for.
@@ -145,8 +178,8 @@
 
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) return;
+    everShown = true; hiddenRefused = false;
     preloadNext();
-    requeueBlocked();
     pumpPreload();
   });
 
@@ -160,6 +193,10 @@
     // counts as loaded whether it is held below or is already the one
     // you hear (pressed while still on its way).
     var entry = ev.target.__pool;
+    // Not a word from the video a reclaimed player held before.
+    if (entry && ev.data === 1 && ytVideoId(ev.target) && ytVideoId(ev.target) !== entry.key) {
+      return;
+    }
     if (entry && ev.data === 1) { entry.held = true; poolSettle(entry, 'loaded'); }
     if (ev.target !== ytPlayer) {
       if (entry) {
@@ -181,6 +218,9 @@
     if (activeEngine !== 'yt' || !activeBar) return;
     if (ev.data === 1 || ev.data === 3) swapPending = false;
     if (ev.data === 1) {
+      // Not while a seek is still to come (length unknown until now):
+      // pollYt times that one once it lands.
+      if (pendingSeekFraction === null) logSound(ytNow());
       preloadNext();
     } else if (ev.data === YT.PlayerState.ENDED) {
       var d = ytPlayer.getDuration() || knownDuration(activeBar);
@@ -195,6 +235,8 @@
       // Same as the spare below: a dead video found while preloading greys
       // its rows out now, so a press or auto-advance never stops on it.
       var pooled = ev.target.__pool;
+      var gone = ytVideoId(ev.target);
+      if (gone && gone !== pooled.key) return;  // about the video it held before
       if (ev.data === 100 || ev.data === 101 || ev.data === 150) {
         markErrored('data-yt', pooled.key);
       }
@@ -219,6 +261,11 @@
     if (activeEngine === 'yt' && activeBar) {
       var ar = row(activeBar);
       if (ar) ar.classList.add('errored');
+      logWarn('YouTube cannot play this video (error ' + ev.data + ')' +
+              (activeBar === steppedTo ? ', skipping to the next' : ''));
+      if (pressLog) pressLog.done = true;
+      // Listening top to bottom: one dead video must not stop the run.
+      if (activeBar === steppedTo) step(1);
     }
   }
 
@@ -242,7 +289,9 @@
 
   function buildSpare() {
     // With every video preloaded there is nothing left for a spare to do.
-    if (ytSpare || !FETCH_AHEAD || PRELOAD_ALL) return;
+    // Only some of them (a windowed page), and it takes the row the mouse
+    // is aiming at when that is outside the pool.
+    if (ytSpare || !FETCH_AHEAD || (PRELOAD_ALL && !ytWindowed)) return;
     // Off-screen rather than display:none, same as the first one: see
     // render_player_page.
     var wrap = document.createElement('div');
@@ -309,6 +358,7 @@
     var videoId = bar.getAttribute('data-yt');
     if (!videoId) return;  // direct MP3s start fast enough as they are
     if (activeEngine === 'yt' && videoId === activeVideoId) return;
+    if (poolPlayerFor(videoId)) return;  // a pooled player has it already
     var start = startAt(bar, fraction);
     if (videoId === spareVideoId) {
       if (closeEnough(bar, start, spareStart)) return;
@@ -329,10 +379,8 @@
     // The pointer has only just settled on the track the spare is holding:
     // that one is the better guess for the next press.
     if (hoverBar && hoverBar === spareBar && Date.now() - hoverAt < 4000) return;
-    var bars = playableBars();
-    var idx = activeBar ? bars.indexOf(activeBar) : -1;
-    if (activeBar && idx === -1) return;
-    preload(bars[idx + 1], 0);
+    if (activeBar && !activeBar.isConnected) return;
+    preload(neighbour(activeBar, 1), 0);
   }
 
   // The swap asks a player that has only ever been muted and paused to
@@ -349,12 +397,24 @@
       // Buffering is slow, not stuck: it was swapped in mid-fetch on a poor
       // connection, and starting that fetch over would only make it slower.
       if (state === 1 || state === 3) return;
+      // Unstarted (-1) with this very video is YouTube holding it back
+      // before it starts (see playYtFrom). Loading it again restarts that
+      // wait, which the console log caught doing exactly that: 7.8s for one
+      // that was retried twice. Only paused or cued -- the browser would not
+      // let a muted player play out loud -- or a different video is stuck.
+      var holding = ytVideoId(ytPlayer);
+      if (state === -1 && (!holding || holding === videoId)) {
+        logWarn('YouTube is holding this video back before it starts; waiting for it');
+        return;
+      }
+      logWarn('not started after 1.5s (player state ' + state + '), loading it again');
       try { ytPlayer.loadVideoById(ytLoadArg(videoId, start)); } catch (err) {}
     }, 1500);
   }
 
   function playYtFrom(bar, fraction) {
     var videoId = bar.getAttribute('data-yt');
+    logHow('waited for the YouTube player to start up');  // until the callback runs
     ensureYt(function () {
       if (activeBar && activeBar !== bar) resetBar(activeBar);
       if (activeEngine !== 'yt' || activeVideoId !== videoId) {
@@ -364,6 +424,13 @@
         // opening of the track only to throw it away.
         pendingSeekFraction = fraction > 0.01 && start === 0 ? fraction : null;
         swapPending = false; nearEndDone = false;
+        // A pooled player still on its way is used too: it has a head start.
+        // YouTube holds some videos back before it starts them -- mostly
+        // official/label uploads, 6-20s of black at state -1, measured in a
+        // bare player on this site in a signed-in Chrome with no ad blocker,
+        // and the same in any player. Loading such a track again from cold,
+        // as this briefly did, starts that wait over from zero (17-18s in
+        // the console log, against a few for the ones that kept going).
         var pooled = poolPlayerFor(videoId);
         var swap = !pooled && ytSpareUp && spareVideoId === videoId;
         if (swap && !spareHeld && Date.now() - spareAt > 1000) {
@@ -375,12 +442,19 @@
         }
         activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
         if (pooled) {
+          logHow((pooled.held ? 'preloaded' : 'preload still starting, ' +
+            Math.round((Date.now() - pooled.startedAt) / 1000) + 's head start') +
+            (pooled.at ? ', held at ' + fmt(pooled.at) : ''));
           playPooled(pooled, bar, fraction);
         } else if (swap) {
+          logHow(spareHeld ? 'fetched ahead (hover/next)' : 'fetched ahead, still loading');
           // Muted on its way out: if it was itself still loading, it must
           // not be heard for the instant before onYtState holds it.
           try { ytPlayer.pauseVideo(); ytPlayer.mute(); } catch (err) {}
-          var was = ytPlayer; ytPlayer = ytSpare; ytSpare = was;
+          // A pooled player stays in the pool, holding its track: the
+          // main player is the one that becomes the next spare.
+          var was = ytPlayer.__pool ? ytMain : ytPlayer;
+          ytPlayer = ytSpare; ytSpare = was; ytMain = ytPlayer;
           spareBar = null; spareVideoId = null;
           ytPlayer.unMute();
           var seek = !closeEnough(bar, start, spareStart);
@@ -405,6 +479,8 @@
           // Not preloaded yet. Never into a preloaded player that happens
           // to be the one you hear: that would throw away the video it
           // holds. Back to the main player instead.
+          var pe = ytPool[videoId];
+          logHow('cold load' + (pe ? ' (preload: ' + (pe.player ? pe.state : 'not near yet') + ')' : ''));
           if (PRELOAD_ALL && ytMain && ytPlayer !== ytMain) {
             silence(ytPlayer);
             ytPlayer = ytMain;
@@ -413,9 +489,16 @@
           ytPlayer.loadVideoById(ytLoadArg(videoId, start));
         }
       } else {
+        // A click on the bar of the track already playing (or paused).
+        // Timed until it plays from the new point: onYtState when the seek
+        // made it buffer, pollYt when it had that part already.
+        logHow('jump within this track');
         activeBar = bar;
         var dur = ytPlayer.getDuration() || knownDuration(bar);
-        if (dur > 0) ytPlayer.seekTo(fraction * dur, true);
+        if (dur > 0) {
+          ytPlayer.seekTo(fraction * dur, true);
+          if (pressLog) pressLog.seekTo = fraction * dur;
+        }
         ytPlayer.playVideo();
       }
       stopPolling();
@@ -487,11 +570,21 @@
       if (el === audioEl && activeEngine === 'audio' && activeBar) {
         var r = row(activeBar);
         if (r) r.classList.add('errored');
+        logWarn('MP3 could not be played (error ' + (el.error ? el.error.code : '?') + ')' +
+                (activeBar === steppedTo ? ', skipping to the next' : ''));
+        if (pressLog) pressLog.done = true;
+        if (activeBar === steppedTo) step(1);  // same as a dead video
       }
     });
     // An MP3 row can be followed by a YouTube one; line that up as well.
     el.addEventListener('playing', function () {
-      if (el === audioEl && activeEngine === 'audio') preloadNext();
+      if (el === audioEl && activeEngine === 'audio') { logSound(el.currentTime); preloadNext(); }
+    });
+    // A jump within a clip that is already playing fires no 'playing'.
+    el.addEventListener('seeked', function () {
+      if (el === audioEl && !el.paused && pressLog && pressLog.seekTo !== undefined) {
+        logSound(el.currentTime);
+      }
     });
   }
   wireAudio(audioBase);
@@ -509,6 +602,7 @@
       // A preloaded element has (some of) the file already: play that one
       // rather than start the same download over in audioBase.
       var pooled = audioPool[src] && audioPool[src].el;
+      logHow(pooled ? 'MP3, preload ' + audioPool[src].state : 'MP3, not preloaded');
       var el = pooled || audioBase;
       if (audioEl !== el) { audioEl.pause(); audioEl = el; }
       if (!pooled) audioEl.src = src;
@@ -524,8 +618,12 @@
       }
       safePlay();
     } else {
+      logHow('jump within this MP3');
       activeBar = bar;
-      if (audioEl.duration) audioEl.currentTime = fraction * audioEl.duration;
+      if (audioEl.duration) {
+        audioEl.currentTime = fraction * audioEl.duration;
+        if (pressLog) pressLog.seekTo = audioEl.currentTime;
+      }
       safePlay();
     }
     stopPolling();
@@ -544,18 +642,88 @@
   // gets an <audio> of its own that downloads it. Both go top to bottom, a
   // few at a time, and the counter at the top of the page shows how far.
   //
-  // Heavy on purpose: every YouTube player is a whole embedded page, so a
-  // day with hundreds of clips costs a lot of memory and data. ?ahead=0
-  // or the browser's data saver turn it off, back to one track ahead.
+  // Every YouTube player is a whole embedded page, so they cannot all be
+  // standing at once: 2026-10-29 had 3008 videos on one page, one player
+  // each, and that brought the browser to its knees. There are at most
+  // POOL_MAX players, and they go where a press is most likely to land
+  // next -- the tracks after the one playing, then the rows on screen, then
+  // further ahead. When that moves (a press, a scroll), a player holding a
+  // track that is no longer near gets the new one: loading a video into a
+  // standing player is cheap, building the player is what is slow. On a
+  // day with no more videos than that, this is simply all of them, as
+  // before. Further than that, the spare takes the row the mouse is aiming
+  // at, so a press far down the page is still fetched ahead.
+  //
+  // ?pool=N sets the number of players by hand; ?ahead=0 or the browser's
+  // data saver turn all of it off, back to one track ahead.
   var POOL_PARALLEL = 3;      // YouTube players being set up at once
   var AUDIO_PARALLEL = 3;     // MP3s downloading at once
-  var POOL_TIMEOUT = 15000;   // stop waiting on one after this (it may still finish)
+  // Stop holding a slot for one after this; it keeps loading and still
+  // counts when it gets there. Short, because the slow ones are YouTube
+  // holding a video back (up to ~20s), which costs no bandwidth: waiting
+  // them out three at a time stalled the window behind them.
+  var POOL_TIMEOUT = 5000;
   var PRESS_QUIET = 2000;     // after a press, start nothing new for this long
+  var poolArg = /[?&]pool=(\d+)/.exec(location.search);
+  // Measured on that page in Chrome: each standing player is ~40MB.
+  // Unbounded, Chrome grew by ~260MB a minute for as long as the tab was
+  // open (3.2GB at five minutes and climbing); with 24 it stays flat at
+  // ~1.9GB, against ~0.9GB for the page with no preloading at all.
+  var POOL_MAX = poolArg ? Math.max(1, parseInt(poolArg[1], 10)) : 24;
+  // Skimming a track every 5-10s (the console log of 2026-10-29) outran a
+  // dozen; some videos need up to 20s before YouTube lets them start.
+  var POOL_AHEAD = 18;        // tracks after the one playing, always first in line
+  var POOL_VIEW = 5;          // then this many from the top of the screen down
   var ytPool = {}, audioPool = {};   // video id / MP3 url -> entry
-  var ytQueue = [], audioQueue = [], ytBlocked = [];
+  var ytPlayers = [];         // every pooled player built so far (<= POOL_MAX)
+  var ytTargets = [];         // video ids the pool should hold right now, best first
+  var audioQueue = [], audioEntries = [];
   var ytBusy = 0, audioBusy = 0, ytPoolStarted = false, ytRefused = false;
-  var preloadTotal = 0, preloadLoaded = 0, preloadFailed = 0;
-  var lastPressAt = 0, pumpTimer = null, preloadLine = null;
+  var ytWindowed = false;     // more videos on the page than POOL_MAX
+  var everShown = !document.hidden, hiddenRefused = false;
+
+  // ---- where you start a track ----
+  //
+  // The console log of 2026-10-29 had nearly every press somewhere along
+  // the bar, 1:00-2:30 in, hardly any at 0:00. A player held at 0:00 then
+  // has to fetch that part first: most of the 300-1200ms those presses
+  // took. So the pool holds each video where you tend to start instead --
+  // a little before it, because YouTube buffers ahead of where a player is
+  // paused, not behind: a press anywhere in the next stretch plays from
+  // what it already has. Learned from your last PRESS_HISTORY presses,
+  // kept in this browser; mostly "next" (from 0:00) keeps it at 0:00.
+  var PRESS_HISTORY = 20;
+  var PRESS_KEY = 'digest.pressFractions';
+  var pressFractions = [];
+  try { pressFractions = JSON.parse(localStorage.getItem(PRESS_KEY) || '[]') || []; } catch (err) {}
+
+  function rememberPress(fraction) {
+    pressFractions.push(Math.round(fraction * 1000) / 1000);
+    if (pressFractions.length > PRESS_HISTORY) pressFractions.shift();
+    try { localStorage.setItem(PRESS_KEY, JSON.stringify(pressFractions)); } catch (err) {}
+  }
+
+  // The fraction of a track to hold preloaded videos at: the middle of
+  // where you started, when at least 60% of recent presses were along the
+  // bar; 0 otherwise. The middle rather than lower down, because a paused
+  // player only buffers 10-22s ahead (measured on that page): held further
+  // back, most presses landed past what it had.
+  function holdFraction() {
+    var along = pressFractions.filter(function (f) { return f > 0.05; });
+    if (along.length < 3 || along.length < pressFractions.length * 0.6) return 0;
+    along.sort(function (a, b) { return a - b; });
+    return along[Math.floor((along.length - 1) / 2)];
+  }
+
+  // Seconds into this video to hold it at; 0 when its length is unknown.
+  // A few seconds early, so a press just short of the usual point is
+  // still inside what it buffered.
+  function holdAt(entry) {
+    var f = holdFraction();
+    return f > 0 && entry.dur > 0 ? Math.max(0, Math.floor(f * entry.dur) - 3) : 0;
+  }
+  var allBars = [], recFirstBar = [], visibleRecs = {};
+  var lastPressAt = 0, pumpTimer = null, scrollTimer = null, preloadLine = null;
 
   function markErrored(attr, value) {
     var bars = document.querySelectorAll('.bar[' + attr + ']');
@@ -566,57 +734,168 @@
     }
   }
 
-  // Page order, each video / clip once however many rows share it.
+  // Each video / clip once however many rows share it. MP3s are cheap (an
+  // <audio> each) and all go in line, top to bottom; YouTube videos only
+  // get an entry here, and a player once they are near (see ytWanted).
   function collectPreload() {
-    var bars = document.querySelectorAll('.bar');
-    for (var i = 0; i < bars.length; i++) {
-      var yt = bars[i].getAttribute('data-yt'), src = bars[i].getAttribute('data-src');
+    allBars = Array.prototype.slice.call(document.querySelectorAll('.bar'));
+    var videos = 0;
+    for (var i = 0; i < allBars.length; i++) {
+      var yt = allBars[i].getAttribute('data-yt'), src = allBars[i].getAttribute('data-src');
       if (yt && !ytPool[yt]) {
-        ytPool[yt] = { kind: 'yt', key: yt, state: 'queued' };
-        ytQueue.push(ytPool[yt]);
-        preloadTotal++;
+        ytPool[yt] = { kind: 'yt', key: yt, state: 'queued', dur: knownDuration(allBars[i]) };
+        videos++;
       } else if (!yt && src && !audioPool[src]) {
         audioPool[src] = { kind: 'audio', key: src, state: 'queued' };
         audioQueue.push(audioPool[src]);
-        preloadTotal++;
+        audioEntries.push(audioPool[src]);
       }
     }
+    ytWindowed = videos > POOL_MAX;
+    console.info('[digest] ' + videos + ' YouTube videos, ' + audioEntries.length + ' MP3s; ' +
+      (ytWindowed ? 'preloading the ' + POOL_MAX + ' videos nearest to you' : 'preloading all of them'));
+    watchScreen();
+  }
+
+  // Which records are on screen, so the pool can follow a scroll. Records
+  // rather than bars: far fewer to watch, and a record that is off screen
+  // is not laid out at all (content-visibility in PLAYER_CSS).
+  function watchScreen() {
+    if (!ytWindowed || !window.IntersectionObserver) return;
+    var recs = document.querySelectorAll('.rec');
+    var recIndex = new Map();
+    for (var i = 0; i < recs.length; i++) recIndex.set(recs[i], i);
+    for (var b = 0; b < allBars.length; b++) {
+      var rec = allBars[b].closest('.rec');
+      var ri = rec ? recIndex.get(rec) : undefined;
+      if (ri !== undefined && recFirstBar[ri] === undefined) recFirstBar[ri] = b;
+    }
+    var io = new IntersectionObserver(function (changes) {
+      for (var c = 0; c < changes.length; c++) {
+        var idx = recIndex.get(changes[c].target);
+        if (changes[c].isIntersecting) visibleRecs[idx] = true; else delete visibleRecs[idx];
+      }
+      // Settle first: a flick down the page passes hundreds of rows that
+      // nobody is going to press.
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(pumpPreload, 400);
+    });
+    for (var r = 0; r < recs.length; r++) io.observe(recs[r]);
+  }
+
+  // The first bar on screen, or 0 when that is not known.
+  function firstBarOnScreen() {
+    var top = -1;
+    for (var k in visibleRecs) {
+      var n = +k;
+      if (top === -1 || n < top) top = n;
+    }
+    if (top === -1) return 0;
+    for (var ri = top; ri < recFirstBar.length; ri++) {
+      if (recFirstBar[ri] !== undefined) return recFirstBar[ri];
+    }
+    return 0;
+  }
+
+  // The videos the pool should hold, best first: the one playing and the
+  // ones after it, the one before it (a "previous" press), the rows on
+  // screen, then on down the page from whichever of those comes first.
+  function ytWanted() {
+    var out = [], have = {};
+    function take(from, dir, count) {
+      for (var i = from; count > 0 && out.length < POOL_MAX && i >= 0 && i < allBars.length; i += dir) {
+        var yt = allBars[i].getAttribute('data-yt');
+        if (!yt || have[yt]) continue;
+        var r = row(allBars[i]);
+        if (r && r.classList.contains('errored')) continue;
+        have[yt] = true; out.push(yt); count--;
+      }
+    }
+    var active = activeBar ? allBars.indexOf(activeBar) : -1;
+    var screen = ytWindowed ? firstBarOnScreen() : 0;
+    if (active !== -1) {
+      take(active, 1, POOL_AHEAD);
+      take(active - 1, -1, 1);
+    }
+    take(screen, 1, POOL_VIEW);
+    take(active !== -1 ? Math.min(active, screen) : screen, 1, POOL_MAX);
+    return out;
   }
 
   function pumpPreload() {
     clearTimeout(pumpTimer); pumpTimer = null;
-    if (!PRELOAD_ALL || document.hidden) return;
+    // A tab opened in the background may not start video, so wait for it
+    // to be shown once. After that, carry on while it is in the background:
+    // listening top to bottom in another tab is exactly when the pool must
+    // keep moving, or every track after the first dozen loads cold.
+    if (!PRELOAD_ALL || (document.hidden && (!everShown || hiddenRefused))) return;
     // A press gets the connection to itself: a load starting beside it was
     // measured to make it several hundred ms slower (see the swap above).
     var quiet = PRESS_QUIET - (Date.now() - lastPressAt);
     if (quiet > 0) { pumpTimer = setTimeout(pumpPreload, quiet); return; }
-    while (ytPoolStarted && !ytRefused && ytBusy < POOL_PARALLEL && ytQueue.length) {
-      startYtPreload(ytQueue.shift());
+    ytTargets = ytWanted();
+    if (ytPoolStarted && !ytRefused) {
+      var wanted = {};
+      for (var w = 0; w < ytTargets.length; w++) wanted[ytTargets[w]] = true;
+      for (var t = 0; t < ytTargets.length && ytBusy < POOL_PARALLEL; t++) {
+        var entry = ytPool[ytTargets[t]];
+        if (entry.state !== 'queued' || entry.busy) continue;
+        if (!entry.player && ytPlayers.length >= POOL_MAX && !reclaimPlayer(entry, wanted)) break;
+        startYtPreload(entry);
+      }
     }
     while (audioBusy < AUDIO_PARALLEL && audioQueue.length) startAudioPreload(audioQueue.shift());
     paintPreload();
   }
 
+  // Hand a player that holds a track nobody is near any more to `entry`.
+  // Never the one you hear, and never one still setting up.
+  function reclaimPlayer(entry, wanted) {
+    for (var i = 0; i < ytPlayers.length; i++) {
+      var p = ytPlayers[i], old = p.__pool;
+      if (p === ytPlayer || !old || old.busy || !old.up || wanted[old.key]) continue;
+      silence(p);
+      old.player = null; old.up = false; old.held = false; old.state = 'queued';
+      entry.player = p; entry.up = true; entry.held = false;
+      p.__pool = entry;
+      return true;
+    }
+    return false;
+  }
+
   function startYtPreload(entry) {
-    ytBusy++; entry.busy = true; entry.state = 'loading';
+    ytBusy++; entry.busy = true; entry.state = 'loading'; entry.startedAt = Date.now();
+    entry.at = holdAt(entry);  // decided now, so playPooled knows where it is held
     entry.timer = setTimeout(function () { poolRelease(entry); }, POOL_TIMEOUT);
     if (entry.player) {
-      // Back from being blocked in a hidden tab: the player is standing.
-      if (entry.up) { try { entry.player.loadVideoById(entry.key); } catch (err) {} }
+      // A standing player: back from being blocked in a hidden tab, or
+      // handed over by reclaimPlayer.
+      if (entry.up) {
+        try {
+          entry.player.mute();
+          entry.player.loadVideoById(ytLoadArg(entry.key, entry.at));
+        } catch (err) { poolSettle(entry, 'failed'); }
+      }
       return;
     }
     var wrap = document.createElement('div');
     wrap.style.cssText = 'position:fixed;left:-9999px;top:260px;width:200px;height:113px;';
     wrap.innerHTML = '<div></div>';
     document.body.appendChild(wrap);
-    entry.player = buildYt(wrap.firstChild, function () {
-      entry.up = true;
+    var player = buildYt(wrap.firstChild, function () {
+      // By whichever entry holds it now: it may have changed hands while
+      // it was being built.
+      var owner = player.__pool;
+      if (!owner) return;
+      owner.up = true;
       try {
-        entry.player.mute();
-        entry.player.loadVideoById(entry.key);
-      } catch (err) { poolSettle(entry, 'failed'); }
+        player.mute();
+        player.loadVideoById(ytLoadArg(owner.key, owner.at));
+      } catch (err) { poolSettle(owner, 'failed'); }
     });
-    entry.player.__pool = entry;
+    entry.player = player;
+    player.__pool = entry;
+    ytPlayers.push(player);
   }
 
   function startAudioPreload(entry) {
@@ -649,11 +928,7 @@
   }
 
   function poolSettle(entry, state) {
-    if (entry.state !== 'loaded' && entry.state !== state) {
-      if (entry.state === 'failed') preloadFailed--;
-      entry.state = state;
-      if (state === 'loaded') preloadLoaded++; else preloadFailed++;
-    }
+    if (entry.state !== 'loaded') entry.state = state;
     poolRelease(entry);
     paintPreload();
   }
@@ -669,39 +944,49 @@
       poolSettle(entry, 'failed');
       return;
     }
+    // Back in line, and nothing more until the tab is shown again.
+    if (!hiddenRefused) console.info('[digest] browser paused preloading in this background tab');
+    hiddenRefused = true;
     entry.state = 'queued';
-    ytBlocked.push(entry);
     poolRelease(entry);
-  }
-
-  function requeueBlocked() {
-    if (!ytBlocked.length) return;
-    ytQueue = ytBlocked.concat(ytQueue);
-    ytBlocked = [];
   }
 
   // Only a player whose video is loaded or loading: one whose embed is
   // still being built would be slower than loading into the main player.
   function poolPlayerFor(videoId) {
     var entry = ytPool[videoId];
-    return entry && entry.up && entry.state !== 'failed' && entry.state !== 'queued'
-      ? entry : null;
+    return entry && entry.player && entry.up && entry.state !== 'failed' &&
+      entry.state !== 'queued' ? entry : null;
   }
 
+  // Counted over what is wanted right now: on a windowed page that is the
+  // tracks near you, so the pill fills up again after a jump down the page.
   function paintPreload() {
-    if (!preloadEl || !preloadTotal) return;
-    var pct = Math.floor(preloadLoaded * 100 / preloadTotal);
-    var ytFinished = ytRefused ||
-      (ytPoolStarted && !ytQueue.length && !ytBlocked.length && !ytBusy);
-    var finished = ytFinished && !audioQueue.length && !audioBusy;
-    var label = (finished ? 'Preloaded ' : 'Preloading ') + pct + '%';
-    if (pct < 100) label += ' \u00b7 ' + preloadLoaded + '/' + preloadTotal;
+    if (!preloadEl) return;
+    var entries = audioEntries.slice();
+    for (var t = 0; t < ytTargets.length; t++) entries.push(ytPool[ytTargets[t]]);
+    var total = entries.length, loaded = 0, failed = 0, waiting = 0;
+    for (var i = 0; i < total; i++) {
+      var st = entries[i].state;
+      if (st === 'loaded') loaded++;
+      else if (st === 'failed') failed++;
+      else if (st === 'queued' && !(entries[i].kind === 'yt' && ytRefused)) waiting++;
+    }
+    if (!total) return;
+    var pct = Math.floor(loaded * 100 / total);
+    var finished = !waiting && !ytBusy && !audioBusy;
+    var label = ytWindowed
+      ? (finished ? 'Ready ' : 'Preloading ') + loaded + '/' + total + ' nearby'
+      : (finished ? 'Preloaded ' : 'Preloading ') + pct + '%' +
+        (pct < 100 ? ' \u00b7 ' + loaded + '/' + total : '');
     preloadEl.hidden = false;
     preloadEl.classList.toggle('done', finished);
     preloadEl.querySelector('.plabel').textContent = label;
     preloadEl.querySelector('.pfill').style.width = pct + '%';
-    preloadEl.title = preloadLoaded + ' of ' + preloadTotal + ' tracks ready to play' +
-      (preloadFailed ? ', ' + preloadFailed + ' could not be loaded' : '') +
+    preloadEl.title = loaded + ' of ' + total + ' tracks ready to play' +
+      (ytWindowed ? ' (the ones after what is playing and on screen; ' +
+        'this moves along as you listen and scroll)' : '') +
+      (failed ? ', ' + failed + ' could not be loaded' : '') +
       (ytRefused ? '. This browser does not allow preloading video.' : '');
     // A thin line along the top of the window, so the progress stays in
     // sight further down the page. Gone once there is nothing left to do.
@@ -716,31 +1001,28 @@
 
   // ---- track navigation: walk the page top to bottom ----
 
-  // Rebuilt on each call rather than cached: cheap at this page size, and
-  // it stays correct if a row gets marked .errored mid-session (a dead
-  // YouTube video or a 404 preview), which should then be skipped over
-  // rather than stopping playback dead when auto-advancing.
-  function playableBars() {
-    var out = [];
+  // The first playable bar after (delta 1) or before (-1) `bar`, counted
+  // from where `bar` sits on the page even when it has just been greyed
+  // out itself. Looking it up among the playable ones only, as this used
+  // to, lost a dead track's place and "next" went back to the top.
+  // null at the ends: stop there, don't wrap. Read from the page on each
+  // call, so a row marked .errored mid-session (a dead YouTube video or a
+  // 404 preview) is skipped from then on.
+  function neighbour(bar, delta) {
     var all = document.querySelectorAll('.bar');
-    for (var i = 0; i < all.length; i++) {
+    var idx = bar ? Array.prototype.indexOf.call(all, bar) : -1;
+    var i = idx === -1 ? (delta > 0 ? 0 : all.length - 1) : idx + delta;
+    for (; i >= 0 && i < all.length; i += delta) {
       var r = row(all[i]);
-      if (!r || !r.classList.contains('errored')) out.push(all[i]);
+      if (!r || !r.classList.contains('errored')) return all[i];
     }
-    return out;
+    return null;
   }
 
   function step(delta) {
-    var bars = playableBars();
-    if (!bars.length) return;
-    var idx = -1;
-    for (var i = 0; i < bars.length; i++) {
-      if (bars[i] === activeBar) { idx = i; break; }
-    }
-    var next = idx === -1 ? (delta > 0 ? 0 : bars.length - 1) : idx + delta;
-    if (next < 0 || next >= bars.length) return;  // stop at the ends, don't wrap
-    var target = bars[next];
-    playFrom(target, 0);
+    var target = neighbour(activeBar, delta);
+    if (!target) return;
+    playFrom(target, 0, true);
     if (target.scrollIntoView) {
       target.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
@@ -821,8 +1103,18 @@
 
   // ---- unified dispatch: only one backend plays at a time ----
 
-  function playFrom(bar, fraction) {
+  // viaStep: reached by next/previous or auto-advance rather than picked
+  // by hand. A track like that which turns out to be dead is skipped; one
+  // you picked yourself just greys out.
+  function playFrom(bar, fraction, viaStep) {
     lastPressAt = Date.now();
+    // Where a track was started, not a jump within the one playing.
+    if (bar !== activeBar) rememberPress(fraction);
+    steppedTo = viaStep ? bar : null;
+    var li = bar.closest ? bar.closest('li.track') : null;
+    var tn = li ? li.querySelector('.tname') : null;
+    pressLog = { t: performance.now(), how: '?', fromBar: fraction > 0.01,
+                 name: tn ? tn.textContent : (bar.getAttribute('aria-label') || '') };
     var isAudio = !!bar.getAttribute('data-src');
     if (isAudio) {
       if (activeEngine === 'yt' && ytPlayer) { try { ytPlayer.pauseVideo(); } catch (err) {} }
@@ -832,6 +1124,9 @@
       playYtFrom(bar, fraction);
     }
     updateNowBar(bar);
+    // Moves the pool along to the tracks after this one, once the press
+    // has had the connection to itself.
+    pumpPreload();
   }
 
   function togglePlayPause(bar) {
