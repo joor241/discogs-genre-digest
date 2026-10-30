@@ -1930,5 +1930,30 @@
       }
     ],
     "liked_at": "2026-10-29T15:58:45.661Z"
+  },
+  "https://www.discogs.com/sell/item/4436849766": {
+    "description": "Nigel Richards - Sextrax (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4436849766",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/s6mdec3FOW8SFnSHxMSIU8e8mh5DrxyhrDVGKYr-Vds/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMTY4/Ny0xMDkwMjgyNDk4/LmpwZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Ezra & Madame Buddafly - Dirty (Nigel Richards' Sexed Up Remix)",
+        "yt": "xc_1lX40geI",
+        "src": null,
+        "dur": 331
+      },
+      {
+        "title": "Nigel Richards - Honeymoon",
+        "yt": "xyP7PagmE98",
+        "src": null,
+        "dur": 416
+      }
+    ],
+    "liked_at": "2026-10-30T18:00:38.702Z"
   }
 }
