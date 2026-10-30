@@ -2060,5 +2060,36 @@
       }
     ],
     "liked_at": "2026-10-30T18:08:54.281Z"
+  },
+  "https://www.discogs.com/sell/item/3977039422": {
+    "description": "Benji Candelario - Benji Candelario Presents Killer Fillers Vol. 2 (12\", Promo)",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/3977039422",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/wxYiDdq8w2pRWhz_Gr-k_8bvtjhVgtFycpW6YH2feh4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4Njkw/MDItMTQ1MzQ2Mzc4/Ny02OTU2LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Benji Candelario - Killer fillers vol 2",
+        "yt": "CaU45JPCft0",
+        "src": null,
+        "dur": 302
+      },
+      {
+        "title": "Benji Candelario - Bring It On (1996)",
+        "yt": "qeb2ZDIUdKE",
+        "src": null,
+        "dur": 280
+      },
+      {
+        "title": "Benji Candelario - Rok Dat (1996)",
+        "yt": "7H0rYcjhxGE",
+        "src": null,
+        "dur": 384
+      }
+    ],
+    "liked_at": "2026-10-30T18:16:40.158Z"
   }
 }
