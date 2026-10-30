@@ -2263,5 +2263,36 @@
       }
     ],
     "liked_at": "2026-10-30T18:32:38.871Z"
+  },
+  "https://www.discogs.com/sell/item/3977035588": {
+    "description": "Box Saga* - Blackfly (12\")",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/3977035588",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/bLKXrAtfcnLCxz4zOHPmnA9rwqMX3BfTbJkJ6ZNjUvY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzg2/LTExNDY3NjY3MDQu/anBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Box Saga - Blackfly",
+        "yt": "rYZY0eHtXZQ",
+        "src": null,
+        "dur": 470
+      },
+      {
+        "title": "Box Saga - Blackfly (Instrumental)",
+        "yt": "ZzICoLaMwtk",
+        "src": null,
+        "dur": 393
+      },
+      {
+        "title": "Box Saga - Adventures Of The Funking Chinese",
+        "yt": "3x0_fUSXO5o",
+        "src": null,
+        "dur": 351
+      }
+    ],
+    "liked_at": "2026-10-30T18:34:39.219Z"
   }
 }
