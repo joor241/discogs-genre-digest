@@ -2091,5 +2091,54 @@
       }
     ],
     "liked_at": "2026-10-30T18:16:40.158Z"
+  },
+  "https://www.discogs.com/sell/item/3977037709": {
+    "description": "Sabrynaah Pope - Shelter (12\")",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/3977037709",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/fiqqofRdMdulWjKw0Jf08vxgKS6iQh3FlYEbUd54L60/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2OTkz/LTE2NDEyMDI1NzYt/NTQwNi5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Sabrynaah Pope - Shelter (Djaimin Zanz Mix) 1998",
+        "yt": "sJrGRogpLUo",
+        "src": null,
+        "dur": 773
+      },
+      {
+        "title": "Sabrinaah Pope - Shelter (Jamie Lewis Club Mix)",
+        "yt": "jG0p4EgJeFg",
+        "src": null,
+        "dur": 463
+      },
+      {
+        "title": "Sabrynaah Pope - Shelter (Sandy K.O.T. Rivera Mix)",
+        "yt": "jW7AmMadCws",
+        "src": null,
+        "dur": 412
+      },
+      {
+        "title": "Sabrynaah Pope – Shelter - (Shelter)",
+        "yt": "Y3l3JkIcbVc",
+        "src": null,
+        "dur": 429
+      },
+      {
+        "title": "Sabrynaah Pope - San's Groove (Sandy Rivera / Kings Of Tomorrow)",
+        "yt": "juaR6VWKdgo",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "Sabrynaah Pope - Shelter",
+        "yt": "mPb6x8TOyVk",
+        "src": null,
+        "dur": 573
+      }
+    ],
+    "liked_at": "2026-10-30T18:22:13.547Z"
   }
 }
