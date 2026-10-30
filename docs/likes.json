@@ -2140,5 +2140,36 @@
       }
     ],
     "liked_at": "2026-10-30T18:22:13.547Z"
+  },
+  "https://www.discogs.com/sell/item/3977036581": {
+    "description": "Brothers' Vibe - Bang The Drum (12\", Lig)",
+    "price": "2.19 EUR",
+    "url": "https://www.discogs.com/sell/item/3977036581",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/EHxlzEtC4-ZHgWiO8nAmxgshWpuojHtvNmOmwCXzG6E/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMjQ0/LTExNjU1MzUyNjUu/anBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Brothers Vibe - Bongo Beat",
+        "yt": "eP5PpRd2KGQ",
+        "src": null,
+        "dur": 475
+      },
+      {
+        "title": "Brothers Vibe - El Bajo",
+        "yt": "WCUXIWyk8Zg",
+        "src": null,
+        "dur": 318
+      },
+      {
+        "title": "Brothers Vibe - Ancestral Callings",
+        "yt": "l_d1tz51GzM",
+        "src": null,
+        "dur": 352
+      }
+    ],
+    "liked_at": "2026-10-30T18:27:44.685Z"
   }
 }
