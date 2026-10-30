@@ -1986,5 +1986,42 @@
       }
     ],
     "liked_at": "2026-10-30T18:02:18.318Z"
+  },
+  "https://www.discogs.com/sell/item/4435261200": {
+    "description": "Various - Paradiso Vol #1 (12\")",
+    "price": "4.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4435261200",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/aZdbvCxTa-sT-cLRRw0bzOxWfQf0jJ6cooHgrT_emsA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyOTg0/OTk3LTE1NDU5MTcw/MzAtMjkxMi5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Katie Drover - Meridian",
+        "yt": "If-e-MMTXcI",
+        "src": null,
+        "dur": 401
+      },
+      {
+        "title": "Alexkid - Tone Simple",
+        "yt": "NMoJIcR012o",
+        "src": null,
+        "dur": 311
+      },
+      {
+        "title": "Stephan Bazbaz - Working Working",
+        "yt": "qSet6MjULWA",
+        "src": null,
+        "dur": 531
+      },
+      {
+        "title": "Retza - Explorer",
+        "yt": "gHCs9d2GzVE",
+        "src": null,
+        "dur": 646
+      }
+    ],
+    "liked_at": "2026-10-30T18:07:10.014Z"
   }
 }
