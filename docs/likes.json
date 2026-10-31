@@ -2294,5 +2294,30 @@
       }
     ],
     "liked_at": "2026-10-30T18:34:39.219Z"
+  },
+  "https://clone.nl/item84472.html": {
+    "description": "Rob Pearson vs Chris Pascoe - One More Time / Shadow Maker (Reissue) (12inch)",
+    "price": "price on request",
+    "url": "https://clone.nl/item84472.html",
+    "store": "Clone.nl (new arrivals)",
+    "thumb": "https://clone.nl/platen/artwork/large/plaatimage83561.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Rob Pearson vs Chris Pascoe - One More Time / Shadow Maker (Reissue) - 1 One More Time",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/84472/1%20One%20More%20Time.mp3",
+        "dur": 0
+      },
+      {
+        "title": "Rob Pearson vs Chris Pascoe - One More Time / Shadow Maker (Reissue) - 2 Shadow Maker",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/84472/2%20Shadow%20Maker.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-31T11:00:45.252Z"
   }
 }
