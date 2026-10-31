@@ -260,7 +260,24 @@
         "dur": 354
       }
     ],
-    "liked_at": "2026-09-07T16:37:45.833Z"
+    "liked_at": "2026-09-07T16:37:45.833Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Do It Right!",
+        "dur": "6:00"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Do It Right! (Jumpin' Mix)",
+        "dur": "5:10"
+      }
+    ],
+    "release_id": 160626,
+    "have": 413,
+    "want": 127
   },
   "https://yoyaku.io/release/lazer-man-iveta-sonic-distorsion-ftj021/": {
     "description": "Lazer Man, Iveta - Sonic Distorsion",
@@ -334,7 +351,36 @@
         "dur": 171
       }
     ],
-    "liked_at": "2026-09-12T19:11:41.445Z"
+    "liked_at": "2026-09-12T19:11:41.445Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Tudo Lindo (Full Intention Original Vibe)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Tudo Lindo (Full Intention Chant Dub)",
+        "dur": ""
+      },
+      {
+        "pos": "AA1",
+        "artist": "",
+        "title": "Tudo Lindo (Full Intention Club Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "AA2",
+        "artist": "",
+        "title": "Tudo Lindo (Full Intention Dub)",
+        "dur": ""
+      }
+    ],
+    "release_id": 21493,
+    "have": 573,
+    "want": 94
   },
   "https://www.discogs.com/sell/item/4359823233": {
     "description": "Travis Nelson - The Devil's Disco (12\")",
@@ -365,7 +411,30 @@
         "dur": 499
       }
     ],
-    "liked_at": "2026-09-12T19:12:43.915Z"
+    "liked_at": "2026-09-12T19:12:43.915Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "The Remix (A Tribute)",
+        "dur": "6:29"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Breakin' Rocks",
+        "dur": "5:30"
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Now Scream",
+        "dur": "8:15"
+      }
+    ],
+    "release_id": 93588,
+    "have": 270,
+    "want": 164
   },
   "https://www.discogs.com/sell/item/4359712623": {
     "description": "Adventures Of Stevie V. - Dirty Cash (12\")",
@@ -414,7 +483,30 @@
         "dur": 376
       }
     ],
-    "liked_at": "2026-09-12T19:16:07.777Z"
+    "liked_at": "2026-09-12T19:16:07.777Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Dirty Cash (Money Talks) (Dime And Dollar Mix)",
+        "dur": "7:23"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Dirty Cash (Money Talks) (Hard Cash Mix)",
+        "dur": "7:25"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Dirty Cash (Money Talks) (Dirty Rap)",
+        "dur": "3:56"
+      }
+    ],
+    "release_id": 32911,
+    "have": 2897,
+    "want": 725
   },
   "https://www.deejay.de/Daniel_Broesecke_VAM13_VAM13_Vinyl__1216283": {
     "description": "Daniel Broesecke - VAM13 (excl)",
@@ -796,7 +888,24 @@
         "dur": 561
       }
     ],
-    "liked_at": "2026-09-30T13:12:12.738Z"
+    "liked_at": "2026-09-30T13:12:12.738Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Make The World Go Round (Deep Dish Vocal 12\" Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "AA",
+        "artist": "",
+        "title": "Make The World Go Round (Robbie Rivera Remix)",
+        "dur": ""
+      }
+    ],
+    "release_id": 677194,
+    "have": 425,
+    "want": 270
   },
   "https://clone.nl/item85137.html": {
     "description": "Cromby - Jackin Shit (12inch)",
@@ -858,7 +967,24 @@
         "dur": 421
       }
     ],
-    "liked_at": "2026-10-17T11:17:04.884Z"
+    "liked_at": "2026-10-17T11:17:04.884Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Untitled",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Untitled",
+        "dur": ""
+      }
+    ],
+    "release_id": 22284898,
+    "have": 80,
+    "want": 51
   },
   "https://www.discogs.com/sell/item/4414921764": {
     "description": "DiSKOP - Pavonine / Dusty Root (12\", Single)",
@@ -877,7 +1003,24 @@
         "dur": 484
       }
     ],
-    "liked_at": "2026-10-17T11:17:17.349Z"
+    "liked_at": "2026-10-17T11:17:17.349Z",
+    "tracklist": [
+      {
+        "pos": "1",
+        "artist": "",
+        "title": "Pavonine",
+        "dur": "8:12"
+      },
+      {
+        "pos": "2",
+        "artist": "",
+        "title": "Dusty Root",
+        "dur": "8:02"
+      }
+    ],
+    "release_id": 15636967,
+    "have": 91,
+    "want": 66
   },
   "https://www.discogs.com/sell/item/4418763402": {
     "description": "Clivillés & Cole - A Deeper Love (A Deeper Feeling Mix) (12\", Single)",
@@ -926,7 +1069,24 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-19T13:58:33.749Z"
+    "liked_at": "2026-10-19T13:58:33.749Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "A Deeper Love (A Deeper Feeling Mix)",
+        "dur": "12:00"
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Pride (In The Name Of Love) (MLK 12'' Remix)",
+        "dur": "7:00"
+      }
+    ],
+    "release_id": 100881,
+    "have": 1858,
+    "want": 876
   },
   "https://www.discogs.com/sell/item/4417570806": {
     "description": "Cassius - 1999 (2xLP, Album)",
@@ -975,7 +1135,108 @@
         "dur": 539
       }
     ],
-    "liked_at": "2026-10-19T14:09:13.756Z"
+    "liked_at": "2026-10-19T14:09:13.756Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Cassius 1999",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Feeling For You",
+        "dur": ""
+      },
+      {
+        "pos": "A3",
+        "artist": "",
+        "title": "Crazy Legs",
+        "dur": ""
+      },
+      {
+        "pos": "A4",
+        "artist": "",
+        "title": "La Mouche",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Chase",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Foxxy",
+        "dur": ""
+      },
+      {
+        "pos": "B3",
+        "artist": "",
+        "title": "Planetz",
+        "dur": ""
+      },
+      {
+        "pos": "B4",
+        "artist": "",
+        "title": "Hey Babe",
+        "dur": ""
+      },
+      {
+        "pos": "C1",
+        "artist": "",
+        "title": "Mister Eveready",
+        "dur": ""
+      },
+      {
+        "pos": "C2",
+        "artist": "",
+        "title": "Nulife",
+        "dur": ""
+      },
+      {
+        "pos": "C3",
+        "artist": "",
+        "title": "Interlude",
+        "dur": ""
+      },
+      {
+        "pos": "C4",
+        "artist": "",
+        "title": "Somebody",
+        "dur": ""
+      },
+      {
+        "pos": "D1",
+        "artist": "",
+        "title": "Club Soixante Quinze",
+        "dur": ""
+      },
+      {
+        "pos": "D2",
+        "artist": "",
+        "title": "Supa Crush",
+        "dur": ""
+      },
+      {
+        "pos": "D3",
+        "artist": "",
+        "title": "Invisible",
+        "dur": ""
+      },
+      {
+        "pos": "D4",
+        "artist": "",
+        "title": "Cassius 99 (Remix - Radio Edit)",
+        "dur": ""
+      }
+    ],
+    "release_id": 73261,
+    "have": 2147,
+    "want": 1544
   },
   "https://www.discogs.com/sell/item/4417564011": {
     "description": "Eddie S. - The Eddie S. EP (12\", EP)",
@@ -1012,7 +1273,36 @@
         "dur": 326
       }
     ],
-    "liked_at": "2026-10-19T14:09:41.028Z"
+    "liked_at": "2026-10-19T14:09:41.028Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Gotta Dance",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "The Spell",
+        "dur": ""
+      },
+      {
+        "pos": "AA1",
+        "artist": "",
+        "title": "Give Ya Love (Remix)",
+        "dur": ""
+      },
+      {
+        "pos": "AA2",
+        "artist": "",
+        "title": "You've Got Me Down",
+        "dur": ""
+      }
+    ],
+    "release_id": 124357,
+    "have": 436,
+    "want": 386
   },
   "https://www.discogs.com/sell/item/4418756910": {
     "description": "Cece Peniston* - Somebody Else's Guy (Tuff Jam / Eric Kupper Mixes) (12\", Single)",
@@ -1061,7 +1351,36 @@
         "dur": 314
       }
     ],
-    "liked_at": "2026-10-19T14:18:25.710Z"
+    "liked_at": "2026-10-19T14:18:25.710Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Somebody Else's Guy (Tuff Jam's Classic Garage)",
+        "dur": "7:27"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Somebody Else's Guy (T J's Ladies Choice Dub)",
+        "dur": "5:53"
+      },
+      {
+        "pos": "AA1",
+        "artist": "",
+        "title": "Somebody Else's Guy (LP Version)",
+        "dur": "5:37"
+      },
+      {
+        "pos": "AA2",
+        "artist": "",
+        "title": "Somebody Else's Guy (Kupper's Uplifting Club Mix)",
+        "dur": "5:50"
+      }
+    ],
+    "release_id": 22700,
+    "have": 936,
+    "want": 268
   },
   "https://www.discogs.com/sell/item/4207692717": {
     "description": "Sound Of One - As I Am (12\", Single)",
@@ -1110,7 +1429,36 @@
         "dur": 376
       }
     ],
-    "liked_at": "2026-10-19T14:26:06.053Z"
+    "liked_at": "2026-10-19T14:26:06.053Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "As I Am (Rogers Uplifting Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "As I Am (Rogers Uplifting Dub)",
+        "dur": ""
+      },
+      {
+        "pos": "AA1",
+        "artist": "",
+        "title": "As I Am (Nice And Stoned Classic Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "AA2",
+        "artist": "",
+        "title": "As I Am (Stones Raw Mix)",
+        "dur": ""
+      }
+    ],
+    "release_id": 176960,
+    "have": 327,
+    "want": 118
   },
   "https://www.discogs.com/sell/item/4420746288": {
     "description": "Cassius - Feeling For You (12\")",
@@ -1159,7 +1507,30 @@
         "dur": 350
       }
     ],
-    "liked_at": "2026-10-21T12:39:19.119Z"
+    "liked_at": "2026-10-21T12:39:19.119Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Feeling For You (Les Rythmes Digitales-Dreamix)",
+        "dur": "7:35"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Feeling For You (Cambridge Circus Mix par DJ Mehdi)",
+        "dur": "6:36"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Feeling For You (DJ Tool Short Mix)",
+        "dur": "5:53"
+      }
+    ],
+    "release_id": 20683,
+    "have": 2436,
+    "want": 935
   },
   "https://www.discogs.com/sell/item/4420743486": {
     "description": "Reality Check - Fantasy (12\", RE, RM)",
@@ -1202,7 +1573,30 @@
         "dur": 381
       }
     ],
-    "liked_at": "2026-10-21T12:40:20.912Z"
+    "liked_at": "2026-10-21T12:40:20.912Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Fantasy (Whipped And Turned Mix)",
+        "dur": "7:12"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Fantasy (Minimized Mix)",
+        "dur": "6:57"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Fantasy (Deeper Groove)",
+        "dur": "5:48"
+      }
+    ],
+    "release_id": 11498407,
+    "have": 129,
+    "want": 99
   },
   "https://www.discogs.com/sell/item/4420741413": {
     "description": "Ooze - Slipstream (12\")",
@@ -1233,7 +1627,30 @@
         "dur": 354
       }
     ],
-    "liked_at": "2026-10-21T12:40:43.525Z"
+    "liked_at": "2026-10-21T12:40:43.525Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Slipstream",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Easy Living",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Think About You",
+        "dur": ""
+      }
+    ],
+    "release_id": 16594,
+    "have": 648,
+    "want": 330
   },
   "https://www.discogs.com/sell/item/4420727265": {
     "description": "K-Hand* - Project 6 EP (12\", EP, W/Lbl)",
@@ -1264,7 +1681,30 @@
         "dur": 281
       }
     ],
-    "liked_at": "2026-10-21T12:59:35.358Z"
+    "liked_at": "2026-10-21T12:59:35.358Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Boiler Room Teaser",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "You Stepped Right Into My Life (K Hand Re-edit)",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Live",
+        "dur": ""
+      }
+    ],
+    "release_id": 14737191,
+    "have": 6,
+    "want": 38
   },
   "https://www.discogs.com/sell/item/4424161209": {
     "description": "Natural - Switch (12\")",
@@ -1295,7 +1735,24 @@
         "dur": 416
       }
     ],
-    "liked_at": "2026-10-22T11:38:44.899Z"
+    "liked_at": "2026-10-22T11:38:44.899Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Switch (Folsom Mix)",
+        "dur": "8:50"
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Switch (Natural High Mix)",
+        "dur": "9:39"
+      }
+    ],
+    "release_id": 34081,
+    "have": 205,
+    "want": 287
   },
   "https://www.discogs.com/sell/item/4424154423": {
     "description": "Indo - Are U Sleeping (12\")",
@@ -1344,7 +1801,48 @@
         "dur": 318
       }
     ],
-    "liked_at": "2026-10-22T11:40:37.929Z"
+    "liked_at": "2026-10-22T11:40:37.929Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Are U Sleeping (H&F Vox Mix)",
+        "dur": "4:38"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Are U Sleeping (H&F Vox Dub)",
+        "dur": "6:10"
+      },
+      {
+        "pos": "A3",
+        "artist": "",
+        "title": "Are U Sleeping (M.D. Re-Mix)",
+        "dur": "5:10"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Are U Sleeping (H&F Radio Mix)",
+        "dur": "3:45"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Are U Sleeping (H&F Club Mix)",
+        "dur": "5:13"
+      },
+      {
+        "pos": "B3",
+        "artist": "",
+        "title": "Are U Sleeping (H&F Nite Mix)",
+        "dur": "7:00"
+      }
+    ],
+    "release_id": 23720,
+    "have": 370,
+    "want": 348
   },
   "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_1_2x12_REPEAT05_Vinyl__999173": {
     "description": "Jay Tripwire - My Life With The Machines Vol 1 (2x12\") (excl)",
