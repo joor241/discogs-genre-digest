@@ -2319,5 +2319,42 @@
       }
     ],
     "liked_at": "2026-10-31T11:00:45.252Z"
+  },
+  "https://www.deejay.de/Chris_Fry_Harvey_Lowe_Kid_Mark_Claudio_Various_People_Vol_5_PPR29_Vinyl__1239082": {
+    "description": "Chris Fry - Various People Vol 5 (12inch)",
+    "price": "14.08 EUR",
+    "url": "https://www.deejay.de/Chris_Fry_Harvey_Lowe_Kid_Mark_Claudio_Various_People_Vol_5_PPR29_Vinyl__1239082",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/8/2/1239082.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Chris Fry - Come To Me",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/2/1239082a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Harvey Lowe - Swingin' Keys",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/2/1239082b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Kid Mark - Definition Of Dub",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/2/1239082c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Claudio - Boomer",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/8/2/1239082d.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-10-31T11:01:35.288Z"
   }
 }
