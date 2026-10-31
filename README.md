@@ -801,7 +801,11 @@ Likes page instead of silently doing nothing, so it's obvious what's needed.
 Each like carries its own snapshot of the record's title, price, thumbnail,
 store **and its playable tracks** — not just a link — so the Likes page
 renders and plays without needing to re-fetch anything, even after that
-record has scrolled out of every digest and archive page.
+record has scrolled out of every digest and archive page. Discogs likes also
+keep the release's **tracklist** and **Have / Want** counts (as they were on
+the day you liked it), shown the same way as in the digest. Likes saved before
+that were filled in once, on 2026-10-31, from the archive pages and the
+Discogs API.
 
 Tracks play on the Likes page exactly as they do in the digest: same bars,
 same keyboard shortcuts, same floating transport. That is not a second

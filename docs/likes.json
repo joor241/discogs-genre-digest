@@ -1430,7 +1430,29 @@
         "dur": 301
       }
     ],
-    "liked_at": "2026-10-24T16:16:23.565Z"
+    "liked_at": "2026-10-24T16:16:23.565Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Bongoso",
+        "dur": "10:01"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Smooth Ride",
+        "dur": "8:19"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Scat Track",
+        "dur": "5:00"
+      }
+    ],
+    "have": 223,
+    "want": 208
   },
   "https://www.discogs.com/sell/item/4427880678": {
     "description": "Argy, Jerome Sydenham & DJ Said - Thick & Thin (12\")",
@@ -1479,7 +1501,35 @@
         "dur": 312
       }
     ],
-    "liked_at": "2026-10-24T20:12:44.975Z"
+    "liked_at": "2026-10-24T20:12:44.975Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "Argy",
+        "title": "Thick & Thin",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "Jerome Sydenham & Argy",
+        "title": "Mogadishu Nights PT 1",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "Argy feat. DJ Said",
+        "title": "Dope Track",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "Jerome Sydenham & Argy",
+        "title": "Mogadishu Nights PT 2",
+        "dur": ""
+      }
+    ],
+    "have": 132,
+    "want": 143
   },
   "https://www.discogs.com/sell/item/4429997694": {
     "description": "Mashupheadz - Sweet Tings (12\")",
@@ -1504,7 +1554,23 @@
         "dur": 321
       }
     ],
-    "liked_at": "2026-10-27T10:35:03.017Z"
+    "liked_at": "2026-10-27T10:35:03.017Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Sweet Tings",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "The Twits",
+        "dur": ""
+      }
+    ],
+    "have": 408,
+    "want": 640
   },
   "https://www.deejay.de/M%26M_Max_Jacobson_Matheiu_Stars_EP_WH8S003_Vinyl__1256557": {
     "description": "M&M - Stars EP (excl)",
@@ -1744,7 +1810,35 @@
         "dur": 405
       }
     ],
-    "liked_at": "2026-10-29T14:39:30.532Z"
+    "liked_at": "2026-10-29T14:39:30.532Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "I Luv You More (D'Ambrosio Club Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "I Luv You More (Hectic Dub Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "I Luv You More (Full Swing Dub)",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "I Luv You More (Dub U More Mix)",
+        "dur": ""
+      }
+    ],
+    "have": 359,
+    "want": 95
   },
   "https://www.discogs.com/sell/item/4104154062": {
     "description": "Kenny Simpson - Classic Break Trax (Volume One) (12\", EP)",
@@ -1769,7 +1863,41 @@
         "dur": 203
       }
     ],
-    "liked_at": "2026-10-29T14:50:13.652Z"
+    "liked_at": "2026-10-29T14:50:13.652Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Out Of Order",
+        "dur": "4:42"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Break For Vacation (Celebration Mix)",
+        "dur": "4:53"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Getaway",
+        "dur": "3:04"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Tic Tac Toe",
+        "dur": "3:24"
+      },
+      {
+        "pos": "B3",
+        "artist": "",
+        "title": "100% Pure",
+        "dur": "3:21"
+      }
+    ],
+    "have": 77,
+    "want": 102
   },
   "https://www.discogs.com/sell/item/3977037079": {
     "description": "Mark Grant - Jungle X (12\")",
@@ -1800,7 +1928,29 @@
         "dur": 59
       }
     ],
-    "liked_at": "2026-10-29T15:18:33.832Z"
+    "liked_at": "2026-10-29T15:18:33.832Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Jungle X (Original Mix)",
+        "dur": "7:34"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Jungle X (Hard Play Mix)",
+        "dur": "9:03"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Jungle X (Go Bah Mix)",
+        "dur": "6:59"
+      }
+    ],
+    "have": 120,
+    "want": 83
   },
   "https://www.discogs.com/sell/item/3977030758": {
     "description": "Level 9 - Don't Stop (12\")",
@@ -1831,7 +1981,35 @@
         "dur": 186
       }
     ],
-    "liked_at": "2026-10-29T15:48:57.411Z"
+    "liked_at": "2026-10-29T15:48:57.411Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Don't Stop (The Nuke 12\")",
+        "dur": "7:37"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Don't Stop (ST The Warning)",
+        "dur": "6:44"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Don't Stop (Ruff & E-Z - Original 12\")",
+        "dur": "7:55"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Don't Stop (Ko's Won't Stop Dub)",
+        "dur": "7:11"
+      }
+    ],
+    "have": 255,
+    "want": 82
   },
   "https://www.discogs.com/sell/item/3977021275": {
     "description": "Audiowhores - Subject Of My Affection (12\")",
@@ -1880,7 +2058,23 @@
         "dur": 458
       }
     ],
-    "liked_at": "2026-10-29T15:58:45.661Z"
+    "liked_at": "2026-10-29T15:58:45.661Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Subject Of My Affection (Original Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Subject Of My Affection (Dub Mix)",
+        "dur": ""
+      }
+    ],
+    "have": 357,
+    "want": 65
   },
   "https://www.discogs.com/sell/item/4436849766": {
     "description": "Nigel Richards - Sextrax (12\")",
@@ -1905,7 +2099,23 @@
         "dur": 416
       }
     ],
-    "liked_at": "2026-10-30T18:00:38.702Z"
+    "liked_at": "2026-10-30T18:00:38.702Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "Ezra & Madame Buddafly",
+        "title": "Dirty (Nigel Richards' Sexed Up Remix)",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "Nigel Richards",
+        "title": "Honeymoon",
+        "dur": ""
+      }
+    ],
+    "have": 63,
+    "want": 47
   },
   "https://www.discogs.com/sell/item/4436305743": {
     "description": "Jay Kaufman - The Fear (12\", W/Lbl)",
@@ -1936,7 +2146,29 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-30T18:02:18.318Z"
+    "liked_at": "2026-10-30T18:02:18.318Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "The Fear (Original Progression Mix)",
+        "dur": "11:09"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "The Fear (Youth In Asia's Fearless Dub)",
+        "dur": "6:32"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "The Fear (Lushreed Remix)",
+        "dur": "7:12"
+      }
+    ],
+    "have": 21,
+    "want": 55
   },
   "https://www.discogs.com/sell/item/4435261200": {
     "description": "Various - Paradiso Vol #1 (12\")",
@@ -1973,7 +2205,35 @@
         "dur": 646
       }
     ],
-    "liked_at": "2026-10-30T18:07:10.014Z"
+    "liked_at": "2026-10-30T18:07:10.014Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "Alexkid",
+        "title": "Tone Simple",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "Stephan Bazbaz",
+        "title": "Working Working",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "Katie Drover",
+        "title": "Meridian",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "Retza",
+        "title": "Explorer",
+        "dur": ""
+      }
+    ],
+    "have": 70,
+    "want": 32
   },
   "https://clone.nl/item84566.html": {
     "description": "Philip Chernikov - Room 1 (12inch)",
@@ -2041,7 +2301,41 @@
         "dur": 384
       }
     ],
-    "liked_at": "2026-10-30T18:16:40.158Z"
+    "liked_at": "2026-10-30T18:16:40.158Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Nueva Jork (Uptown)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "The Stick Up",
+        "dur": ""
+      },
+      {
+        "pos": "A3",
+        "artist": "",
+        "title": "BC's Funk Scene",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Bring It On",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Rok Dat",
+        "dur": ""
+      }
+    ],
+    "have": 36,
+    "want": 71
   },
   "https://www.discogs.com/sell/item/3977037709": {
     "description": "Sabrynaah Pope - Shelter (12\")",
@@ -2090,7 +2384,35 @@
         "dur": 573
       }
     ],
-    "liked_at": "2026-10-30T18:22:13.547Z"
+    "liked_at": "2026-10-30T18:22:13.547Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Shelter (Djaimin Zanz Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Shelter (Accapella)",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Shelter (Jamie Lewis Club Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Shelter (Sandy K.O.T. Rivera Mix)",
+        "dur": ""
+      }
+    ],
+    "have": 225,
+    "want": 108
   },
   "https://www.discogs.com/sell/item/3977036581": {
     "description": "Brothers' Vibe - Bang The Drum (12\", Lig)",
@@ -2121,7 +2443,41 @@
         "dur": 352
       }
     ],
-    "liked_at": "2026-10-30T18:27:44.685Z"
+    "liked_at": "2026-10-30T18:27:44.685Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Ancestral Callings",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "El Bajo",
+        "dur": ""
+      },
+      {
+        "pos": "A3",
+        "artist": "",
+        "title": "A La Conga",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Sugar Cane",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Bongo Beat",
+        "dur": ""
+      }
+    ],
+    "have": 198,
+    "want": 127
   },
   "https://www.discogs.com/sell/item/3977037493": {
     "description": "Love Tribe - Stand Up (2x12\", Single)",
@@ -2170,7 +2526,59 @@
         "dur": 176
       }
     ],
-    "liked_at": "2026-10-30T18:29:55.402Z"
+    "liked_at": "2026-10-30T18:29:55.402Z",
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Stand Up (Narcotic Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Stand Up (Dub-Alicious)",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Stand Up (Tribe Vibe)",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Stand Up (Wildchild Renagade Dub)",
+        "dur": ""
+      },
+      {
+        "pos": "C1",
+        "artist": "",
+        "title": "Stand Up (Anthemlicious Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "C2",
+        "artist": "",
+        "title": "Stand Up (Love And Happiness Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "D1",
+        "artist": "",
+        "title": "Stand Up (Narcotic Dub)",
+        "dur": ""
+      },
+      {
+        "pos": "D2",
+        "artist": "",
+        "title": "Stand Up (Slam Dub)",
+        "dur": ""
+      }
+    ],
+    "have": 229,
+    "want": 151
   },
   "https://www.discogs.com/sell/item/3977034064": {
     "description": "Saffron Hill Feat. Ben Onono - My Love Is Always (12\", S/Sided, TP, W/Lbl)",
@@ -2213,7 +2621,17 @@
         "dur": 411
       }
     ],
-    "liked_at": "2026-10-30T18:32:38.871Z"
+    "liked_at": "2026-10-30T18:32:38.871Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "My Love Is Always",
+        "dur": ""
+      }
+    ],
+    "have": 23,
+    "want": 9
   },
   "https://www.discogs.com/sell/item/3977035588": {
     "description": "Box Saga* - Blackfly (12\")",
@@ -2244,7 +2662,29 @@
         "dur": 351
       }
     ],
-    "liked_at": "2026-10-30T18:34:39.219Z"
+    "liked_at": "2026-10-30T18:34:39.219Z",
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Blackfly",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Blackfly (Instrumental)",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Adventures Of The Funking Chinese",
+        "dur": ""
+      }
+    ],
+    "have": 320,
+    "want": 97
   },
   "https://clone.nl/item84472.html": {
     "description": "Rob Pearson vs Chris Pascoe - One More Time / Shadow Maker (Reissue) (12inch)",

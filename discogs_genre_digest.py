@@ -4133,6 +4133,12 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
                      "src": v.get("src"), "dur": v.get("dur") or 0}
                     for v in (item.get("videos") or [])
                 ],
+                # What is on the record and Have/Want, so the likes page can
+                # show them too. Discogs releases only -- other sources have
+                # neither. release_id lets a later script refresh the counts.
+                **({"tracklist": item["tracklist"]} if item.get("tracklist") else {}),
+                **{key: item[key] for key in ("have", "want", "release_id")
+                   if isinstance(item.get(key), int)},
             }, ensure_ascii=False)
             like_btn = (
                 '<button class="likebtn" type="button" aria-label="Like" '

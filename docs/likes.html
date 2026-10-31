@@ -68,6 +68,11 @@ button.unlike {
   font-family: inherit;
 }
 button.unlike:hover { background: #2a1414; }
+/* .fineprint and ol.tracklist come from player.css; here they follow the
+   meta row directly rather than a tags line, so they need their own gap. */
+.rec .fineprint { margin-top: 5px; }
+.rec ol.tracklist { margin: 9px 0 11px; }
+.rec .meta + ul.tracks, .rec .fineprint + ul.tracks { margin-top: 10px; }
 .none { color: #5f5f68; font-size: 13px; }
 .connect-hint {
   margin-top: 16px; padding: 11px 13px; border-radius: 7px; font-size: 13px;
@@ -137,6 +142,28 @@ button.unlike:hover { background: #2a1414; }
         }).join("");
         if (it.price) badges = '<span class="badge">' + e(it.price) + '</span>' + badges;
 
+        // Have/Want and the tracklist, same markup as the digest so
+        // player.css styles them. Discogs releases only; likes saved before
+        // this shipped were filled in once from Discogs.
+        var counts = [["have", "Have"], ["want", "Want"]].filter(function (kv) {
+          return typeof it[kv[0]] === "number";
+        }).map(function (kv) {
+          return kv[1] + " " + it[kv[0]].toLocaleString("en-US");
+        });
+        var fine = counts.length
+          ? '<div class="fineprint"><span class="community">' + e(counts.join(" · ")) + '</span></div>'
+          : "";
+        var tracklist = "";
+        if ((it.tracklist || []).length) {
+          tracklist = '<ol class="tracklist" aria-label="Tracklist">' +
+            it.tracklist.map(function (t) {
+              var name = t.artist ? e(t.artist) + " &ndash; " + e(t.title) : e(t.title);
+              return '<li><span class="pos">' + e(t.pos || "") + '</span>' +
+                '<span class="tt">' + name + '</span>' +
+                '<span class="tdur">' + e(t.dur || "") + '</span></li>';
+            }).join("") + '</ol>';
+        }
+
         // Playable bars, built by the shared player so they behave exactly
         // as they do in the digest. Likes saved before this shipped have no
         // videos stored, so they simply render without a tracklist rather
@@ -156,7 +183,7 @@ button.unlike:hover { background: #2a1414; }
           '<div class="meta">' + badges +
           '<a class="buy" href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">Open &rarr;</a>' +
           '<button class="unlike" data-url="' + e(it.url) + '" type="button">Unlike</button>' +
-          '</div>' + tracks + '</div></div>';
+          '</div>' + fine + tracklist + tracks + '</div></div>';
       });
     });
     content.innerHTML = html;
