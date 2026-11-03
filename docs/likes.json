@@ -3192,5 +3192,54 @@
       }
     ],
     "liked_at": "2026-10-31T11:01:35.288Z"
+  },
+  "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_2_2x12_REPEAT06_Vinyl__999174": {
+    "description": "Jay Tripwire - My Life With The Machines Vol. 2 (2x12\") (excl)",
+    "price": "24.33 EUR",
+    "url": "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_2_2x12_REPEAT06_Vinyl__999174",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/7/4/999174.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Satompy",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/4/999174a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Rollin In The Gutter",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/4/999174b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Bam! It's A Banana",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/4/999174c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C1: Deep Rumbler",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/4/999174d.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C2: Just Wanna",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/4/999174e.mp3",
+        "dur": 0
+      },
+      {
+        "title": "D1: Peeping Tom",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/7/4/999174f.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-11-03T18:57:04.256Z"
   }
 }
