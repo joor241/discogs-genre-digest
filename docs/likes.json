@@ -3241,5 +3241,53 @@
       }
     ],
     "liked_at": "2026-11-03T18:57:04.256Z"
+  },
+  "https://www.discogs.com/sell/item/4453392064": {
+    "description": "Goncharov - Outbreak (12\")",
+    "price": "5.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4453392064",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/ZGBi6XD9XPshN4e-sjZd7d32DUECemLjGe0GwtxZK7k/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgzNzk1/NDQtMTQ2MDQ5MzA2/My02Mzg1LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Goncharov - Outbreak (VINYL RIP)",
+        "yt": "eCOCl07fUNc",
+        "src": null,
+        "dur": 432
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Outbreak",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Outbreak (Oddmann Remix)",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Naros",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Oblack",
+        "dur": ""
+      }
+    ],
+    "have": 103,
+    "want": 50,
+    "release_id": 8379544,
+    "liked_at": "2026-11-04T13:10:01.644Z"
   }
 }
