@@ -3439,5 +3439,82 @@
     "want": 16,
     "release_id": 197891,
     "liked_at": "2026-11-05T13:21:32.882Z"
+  },
+  "https://www.discogs.com/sell/item/461251566": {
+    "description": "Robbie Rivera - The Beat Bandit EP (12\")",
+    "price": "3.75 EUR",
+    "url": "https://www.discogs.com/sell/item/461251566",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/_s2nuQz_36cDeuQzVcvkMnthGCcAD4UUQJiI-wszlWE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2MzAz/OS0xMjQzOTI3OTY5/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Magnetic",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Tribal Beat",
+        "dur": ""
+      },
+      {
+        "pos": "A3",
+        "artist": "",
+        "title": "San Juan Groove",
+        "dur": ""
+      },
+      {
+        "pos": "A4",
+        "artist": "",
+        "title": "Tech Track",
+        "dur": ""
+      },
+      {
+        "pos": "A5",
+        "artist": "",
+        "title": "NYC",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Banging DJ Tool",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Disco Beat",
+        "dur": ""
+      },
+      {
+        "pos": "B3",
+        "artist": "",
+        "title": "Dark Thang",
+        "dur": ""
+      },
+      {
+        "pos": "B4",
+        "artist": "",
+        "title": "80's Beat",
+        "dur": ""
+      },
+      {
+        "pos": "B5",
+        "artist": "",
+        "title": "Hardheads",
+        "dur": ""
+      }
+    ],
+    "have": 62,
+    "want": 22,
+    "release_id": 363039,
+    "liked_at": "2026-11-05T13:27:33.803Z"
   }
 }
