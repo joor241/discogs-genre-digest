@@ -3397,5 +3397,47 @@
     "want": 40,
     "release_id": 24691,
     "liked_at": "2026-11-05T13:20:48.353Z"
+  },
+  "https://www.discogs.com/sell/item/636216776": {
+    "description": "Peter Presta - Disko-Rama (12\")",
+    "price": "2.00 EUR",
+    "url": "https://www.discogs.com/sell/item/636216776",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/j7d7OSFVGYjpwaeEM1dH_UzWUs3ymQYFr6UjvmzNwQY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5Nzg5/MS0xNTE0MTk4NzIz/LTQzMzguanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Peter Presta - Got The Feelin",
+        "yt": "IdgW3Wqlrok",
+        "src": null,
+        "dur": 325
+      },
+      {
+        "title": "Peter Presta - We Got To Come",
+        "yt": "CLe2-3gpPQY",
+        "src": null,
+        "dur": 305
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Got The Feelin'",
+        "dur": "5:23"
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "We Got To Come",
+        "dur": "5:05"
+      }
+    ],
+    "have": 50,
+    "want": 16,
+    "release_id": 197891,
+    "liked_at": "2026-11-05T13:21:32.882Z"
   }
 }
