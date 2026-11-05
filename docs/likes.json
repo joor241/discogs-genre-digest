@@ -3349,5 +3349,53 @@
     "want": 13,
     "release_id": 667071,
     "liked_at": "2026-11-05T13:20:09.684Z"
+  },
+  "https://www.discogs.com/sell/item/2838872830": {
+    "description": "Amr Diab - Habibe (Rhythm Masters Remixes) (12\")",
+    "price": "4.00 EUR",
+    "url": "https://www.discogs.com/sell/item/2838872830",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/ieFoKdXwWq1ZVN-hoWmSqWPzAFZgn05oxKGmLuzoi9A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0Njkx/LTEzNjY2OTcwODYt/ODY0Mi5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Amr Diab - Habibe (Rhythm Masters Disfunctional Mix)",
+        "yt": "q17oBVDlFkM",
+        "src": null,
+        "dur": 413
+      },
+      {
+        "title": "AMR DIAB 7ABEBI RHYTHM MASTERS VOCAL CLUB MIX",
+        "yt": "J66R7GYhfFo",
+        "src": null,
+        "dur": 379
+      },
+      {
+        "title": "Nour El Ein - Amr Diab ( Music Video ) نور العين - عمرو دياب",
+        "yt": "KLJA-srM_yM",
+        "src": null,
+        "dur": 407
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Habibe (Rhythm Masters Vocal Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Habibe (Rhythm Masters Disfunctional Mix)",
+        "dur": ""
+      }
+    ],
+    "have": 65,
+    "want": 40,
+    "release_id": 24691,
+    "liked_at": "2026-11-05T13:20:48.353Z"
   }
 }
