@@ -3516,5 +3516,53 @@
     "want": 22,
     "release_id": 363039,
     "liked_at": "2026-11-05T13:27:33.803Z"
+  },
+  "https://www.discogs.com/sell/item/4458033217": {
+    "description": "Dan Farserelli & Seb Zito - Takatakatak (12\")",
+    "price": "6.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4458033217",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/s3eCfXr_ym1WsBZhU0Dw42NrmsCIbvS5135zEOYj-HM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY4MjA2/OTYtMTQyNzMxNTk4/OC0yOTQ0LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Trackdigger tracked 0262 B1 „Nininin“ from the Takatakatak Ep",
+        "yt": "A-TI23aHxj8",
+        "src": null,
+        "dur": 211
+      },
+      {
+        "title": "Dan Farserelli, Seb Zito - Takataka (Original Mix)",
+        "yt": "ecoNSL0fAmM",
+        "src": null,
+        "dur": 554
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Takataka",
+        "dur": "9:21"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Nininin",
+        "dur": "7:45"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Icci",
+        "dur": "8:02"
+      }
+    ],
+    "have": 108,
+    "want": 64,
+    "release_id": 6820696,
+    "liked_at": "2026-11-05T13:30:43.156Z"
   }
 }
