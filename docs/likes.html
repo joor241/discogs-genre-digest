@@ -42,6 +42,16 @@ h2 {
   color: #8a8a92; margin: 34px 0 12px; padding-bottom: 8px;
   border-bottom: 1px solid #26262b;
 }
+h2.tier-in_stock { color: #6fcf8e; border-bottom-color: #1f3a28; }
+h3 { font-size: 13px; font-weight: 600; color: #8a8a92; margin: 18px 0 2px; }
+.tiernote { color: #6f6f78; font-size: 12.5px; margin: -6px 0 6px; }
+.sub a { color: inherit; }
+.badge.instock { background: #12261a; color: #6fcf8e; }
+.badge.gone { background: #3a1616; color: #ff8c8c; }
+.was { color: #6f6f78; font-size: 12px; }
+/* Gone: still listed so you decide, but visibly not buyable. The meta row
+   stays at full strength so Unlike is as easy to reach as ever. */
+.rec.gone > img, .rec.gone .body > :not(.meta) { opacity: .5; }
 .rec {
   display: flex; gap: 14px; padding: 14px 0;
   border-bottom: 1px solid #1c1c21;
@@ -89,7 +99,7 @@ button.unlike:hover { background: #2a1414; }
     <a href="settings.html">&#9881; Settings</a>
   </div>
   <h1>Likes</h1>
-  <p class="sub">Everything you've liked, grouped by store. Synced across your devices via this site's repo, not this browser.</p>
+  <p class="sub" id="sub">Everything you've liked, what's in stock first. Synced across your devices via this site's repo, not this browser.</p>
   <div id="connectHint" class="connect-hint">
     Not connected -- you can see likes here, but unliking needs a token.
     <a href="settings.html">Connect on Settings</a> to manage them from this device too.
@@ -115,7 +125,56 @@ button.unlike:hover { background: #2a1414; }
     return d.innerHTML;
   }
 
-  function render(likes) {
+  // Availability comes from likes_status.json, written by every daily run
+  // (refresh_likes_status in the script); likes.json itself is only ever
+  // written from the browser. A like the run hasn't checked yet -- liked
+  // since, or its shop couldn't be reached -- has no entry and lands in
+  // "Not checked yet" rather than being guessed at.
+  var TIERS = [
+    ["in_stock", "In stock", ""],
+    ["preorder", "Pre-order", "Orderable now, not on the shelf yet."],
+    ["unknown", "Not checked yet", "Liked after the last daily check, or the shop couldn't be reached."],
+    ["out_of_stock", "Out of stock", "Still listed by the shop, but it can't be ordered right now."],
+    ["gone", "Gone", "Sold or taken down. Left here for you to decide: Unlike removes it."],
+  ];
+  var DAY = 864e5;
+
+  function shortDate(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? "" : d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  }
+
+  // The status badge, plus "as of <date>" when the last successful check
+  // is older than a day and a half: a shop that blocks the runner leaves
+  // the previous answer standing, and that shouldn't pass for today's.
+  function statusBadge(st) {
+    if (!st) return "";
+    var text, cls;
+    if (st.status === "in_stock") {
+      var back = st.prev && st.prev !== "in_stock" && Date.now() - new Date(st.since) < 7 * DAY;
+      text = back ? "Back in stock" : "In stock";
+      cls = "instock";
+    } else if (st.status === "preorder") {
+      text = st.note || "Pre-order"; cls = "preorder";
+    } else if (st.status === "out_of_stock") {
+      text = st.note || "Out of stock"; cls = "outofstock";
+    } else if (st.status === "gone") {
+      text = "Gone" + (st.note ? " · " + st.note : ""); cls = "gone";
+      // Only when a check saw it change: on the very first check `since`
+      // is just the day checking started, not when it sold.
+      if (st.prev && st.since) text += " since " + shortDate(st.since);
+    } else {
+      return "";
+    }
+    if (st.checked && Date.now() - new Date(st.checked) > 1.5 * DAY) {
+      text += " · as of " + shortDate(st.checked);
+    }
+    var title = st.checked ? "Last checked " + new Date(st.checked).toLocaleString("en-GB") : "";
+    return '<span class="badge ' + cls + '" title="' + e(title) + '">' + e(text) + '</span>';
+  }
+
+  function render(likes, status) {
+    var items = (status && status.items) || {};
     var entries = Object.keys(likes).map(function (url) {
       return Object.assign({ url: url }, likes[url]);
     });
@@ -125,72 +184,114 @@ button.unlike:hover { background: #2a1414; }
     }
     entries.sort(function (a, b) { return (b.liked_at || "").localeCompare(a.liked_at || ""); });
 
-    var byStore = {};
+    var byTier = {};
     entries.forEach(function (it) {
-      var store = it.store || "Other";
-      (byStore[store] = byStore[store] || []).push(it);
+      var st = items[it.url];
+      var tier = st && TIERS.some(function (t) { return t[0] === st.status; }) ? st.status : "unknown";
+      (byTier[tier] = byTier[tier] || []).push(it);
     });
 
+    var summary = TIERS.filter(function (t) { return byTier[t[0]]; }).map(function (t) {
+      return '<a href="#tier-' + t[0] + '">' + byTier[t[0]].length + " " + e(t[1].toLowerCase()) + '</a>';
+    }).join(" &middot; ");
+    if (status && status.updated) {
+      summary += " &middot; checked " + e(shortDate(status.updated) + ", " +
+        new Date(status.updated).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }));
+    }
+    document.getElementById("sub").innerHTML = summary;
+
     var html = "";
-    Object.keys(byStore).sort().forEach(function (store) {
-      var items = byStore[store];
-      html += '<h2>' + e(store) + ' &middot; ' + items.length + '</h2>';
-      items.forEach(function (it) {
-        var thumb = it.thumb ? '<img src="' + e(it.thumb) + '" alt="" loading="lazy">' : '<img alt="">';
-        var badges = (it.formats || []).map(function (f) {
-          return '<span class="badge">' + e(f) + '</span>';
-        }).join("");
-        if (it.price) badges = '<span class="badge">' + e(it.price) + '</span>' + badges;
+    TIERS.forEach(function (tier) {
+      var tierItems = byTier[tier[0]];
+      if (!tierItems) return;
+      html += '<h2 id="tier-' + tier[0] + '" class="tier-' + tier[0] + '">' + e(tier[1]) +
+        ' &middot; ' + tierItems.length + '</h2>';
+      if (tier[2]) html += '<p class="tiernote">' + e(tier[2]) + '</p>';
 
-        // Have/Want and the tracklist, same markup as the digest so
-        // player.css styles them. Discogs releases only; likes saved before
-        // this shipped were filled in once from Discogs.
-        var counts = [["have", "Have"], ["want", "Want"]].filter(function (kv) {
-          return typeof it[kv[0]] === "number";
-        }).map(function (kv) {
-          return kv[1] + " " + it[kv[0]].toLocaleString("en-US");
-        });
-        var fine = counts.length
-          ? '<div class="fineprint"><span class="community">' + e(counts.join(" · ")) + '</span></div>'
-          : "";
-        var tracklist = "";
-        if ((it.tracklist || []).length) {
-          tracklist = '<ol class="tracklist" aria-label="Tracklist">' +
-            it.tracklist.map(function (t) {
-              var name = t.artist ? e(t.artist) + " &ndash; " + e(t.title) : e(t.title);
-              return '<li><span class="pos">' + e(t.pos || "") + '</span>' +
-                '<span class="tt">' + name + '</span>' +
-                '<span class="tdur">' + e(t.dur || "") + '</span></li>';
-            }).join("") + '</ol>';
-        }
-
-        // Playable bars, built by the shared player so they behave exactly
-        // as they do in the digest. Likes saved before this shipped have no
-        // videos stored, so they simply render without a tracklist rather
-        // than breaking the row -- they'll gain one if re-liked later.
-        var tracks = "";
-        var vids = (it.videos || []).filter(function (v) { return v && (v.yt || v.src); });
-        if (vids.length && window.DigestPlayer) {
-          tracks = '<ul class="tracks">' +
-            vids.map(function (v) { return window.DigestPlayer.trackRowHtml(v); }).join("") +
-            '</ul>';
-        }
-
-        html +=
-          '<div class="rec">' + thumb + '<div class="body">' +
-          '<div class="title"><a href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">' +
-          e(it.description || it.url) + '</a></div>' +
-          '<div class="meta">' + badges +
-          '<a class="buy" href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">Open &rarr;</a>' +
-          '<button class="unlike" data-url="' + e(it.url) + '" type="button">Unlike</button>' +
-          '</div>' + fine + tracklist + tracks + '</div></div>';
+      var byStore = {};
+      tierItems.forEach(function (it) {
+        var store = it.store || "Other";
+        (byStore[store] = byStore[store] || []).push(it);
+      });
+      Object.keys(byStore).sort().forEach(function (store) {
+        html += '<h3>' + e(store) + ' &middot; ' + byStore[store].length + '</h3>';
+        byStore[store].forEach(function (it) { html += recHtml(it, items[it.url]); });
       });
     });
     content.innerHTML = html;
   }
 
+  function recHtml(it, st) {
+    var thumb = it.thumb ? '<img src="' + e(it.thumb) + '" alt="" loading="lazy">' : '<img alt="">';
+    var badges = (it.formats || []).map(function (f) {
+      return '<span class="badge">' + e(f) + '</span>';
+    }).join("");
+    // Today's price when the daily check found one, else the price on
+    // the day you liked it; the old one alongside when it changed.
+    var price = (st && st.price) || it.price;
+    if (price) {
+      var was = st && st.price && it.price && /\d/.test(it.price) && it.price !== st.price
+        ? ' <span class="was">(was ' + e(it.price) + ')</span>' : "";
+      badges = '<span class="badge">' + e(price) + '</span>' + was + badges;
+    }
+    badges = statusBadge(st) + badges;
+
+    // Have/Want and the tracklist, same markup as the digest so
+    // player.css styles them. Discogs releases only; likes saved before
+    // this shipped were filled in once from Discogs.
+    var counts = [["have", "Have"], ["want", "Want"]].filter(function (kv) {
+      return typeof it[kv[0]] === "number";
+    }).map(function (kv) {
+      return kv[1] + " " + it[kv[0]].toLocaleString("en-US");
+    });
+    var fine = counts.length
+      ? '<div class="fineprint"><span class="community">' + e(counts.join(" · ")) + '</span></div>'
+      : "";
+    var tracklist = "";
+    if ((it.tracklist || []).length) {
+      tracklist = '<ol class="tracklist" aria-label="Tracklist">' +
+        it.tracklist.map(function (t) {
+          var name = t.artist ? e(t.artist) + " &ndash; " + e(t.title) : e(t.title);
+          return '<li><span class="pos">' + e(t.pos || "") + '</span>' +
+            '<span class="tt">' + name + '</span>' +
+            '<span class="tdur">' + e(t.dur || "") + '</span></li>';
+        }).join("") + '</ol>';
+    }
+
+    // Playable bars, built by the shared player so they behave exactly
+    // as they do in the digest. Likes saved before this shipped have no
+    // videos stored, so they simply render without a tracklist rather
+    // than breaking the row -- they'll gain one if re-liked later.
+    var tracks = "";
+    var vids = (it.videos || []).filter(function (v) { return v && (v.yt || v.src); });
+    if (vids.length && window.DigestPlayer) {
+      tracks = '<ul class="tracks">' +
+        vids.map(function (v) { return window.DigestPlayer.trackRowHtml(v); }).join("") +
+        '</ul>';
+    }
+
+    return '<div class="rec' + (st && st.status === "gone" ? " gone" : "") + '">' +
+      thumb + '<div class="body">' +
+      '<div class="title"><a href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">' +
+      e(it.description || it.url) + '</a></div>' +
+      '<div class="meta">' + badges +
+      '<a class="buy" href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">Open &rarr;</a>' +
+      '<button class="unlike" data-url="' + e(it.url) + '" type="button">Unlike</button>' +
+      '</div>' + fine + tracklist + tracks + '</div></div>';
+  }
+
+  // Public file straight off Pages, like likes.json. Missing (before the
+  // first run that writes it) just means everything is "Not checked yet".
+  function fetchStatus() {
+    return fetch("likes_status.json", { cache: "no-store" })
+      .then(function (res) { return res.ok ? res.json() : {}; })
+      .catch(function () { return {}; });
+  }
+
   function load() {
-    DigestLikes.fetchLikes().then(render);
+    Promise.all([DigestLikes.fetchLikes(), fetchStatus()]).then(function (both) {
+      render(both[0], both[1]);
+    });
   }
 
   if (!DigestLikes.getToken()) hint.classList.add("show");

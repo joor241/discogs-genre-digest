@@ -117,6 +117,11 @@ jobs:
           SOUNDCLOUD_ENABLED: ${{ vars.SOUNDCLOUD_ENABLED }}
           SELLERS_ENABLED: ${{ vars.SELLERS_ENABLED }}
           SELLERS_MAX_AGE_HOURS: ${{ vars.SELLERS_MAX_AGE_HOURS }}
+          # Every run checks each like again (still for sale? in stock?) and
+          # writes docs/likes_status.json, which the Likes page sorts by.
+          # "false" turns it off; the cap is how many likes per run.
+          LIKES_STATUS_ENABLED: ${{ vars.LIKES_STATUS_ENABLED }}
+          LIKES_CHECK_MAX_ITEMS: ${{ vars.LIKES_CHECK_MAX_ITEMS }}
           USER_AGENT: DiscogsGenreDigest/1.0 +https://github.com/${{ github.repository }}
 
           # Where the published player pages end up. The script appends

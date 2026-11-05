@@ -273,6 +273,19 @@ YOYAKU_AUDIO_MAX_ITEMS = 30
 # "-X ours" merge would otherwise silently drop the extension's update).
 SOUNDCLOUD_ENABLED = True
 SOUNDCLOUD_MAX_ITEMS = 25      # releases listed in the "came in stock" block
+
+# Likes (the hearts on the player page): every run checks each liked record
+# at its shop again -- is the Discogs listing still for sale, is the shop's
+# copy in stock, on pre-order, sold out, or gone -- and writes the answer to
+# docs/likes_status.json, which likes.html sorts by: in stock on top, out of
+# stock and gone below. Nothing is ever removed from your likes: a sold
+# Discogs listing stays, marked gone, until you unlike it yourself.
+# likes.json is written only by the browser and likes_status.json only by
+# this script, for the same never-two-writers reason as above.
+LIKES_STATUS_ENABLED = True
+# Most likes checked per run, longest-unchecked first, so a long list is
+# worked through over a few days rather than stretching one run.
+LIKES_CHECK_MAX_ITEMS = 200
 SOUNDCLOUD_SEEN_KEEP_DAYS = 30 # a shop row that vanishes is remembered this long
 SELLERS_ENABLED = True
 # Older than this and the sellers block says so instead of presenting the
@@ -467,11 +480,24 @@ def env_genres_by_store(name: str, default: dict[str, list[str]]) -> dict[str, l
 # ---------------------------------------------------------------------------
 
 class DiscogsError(RuntimeError):
-    """A Discogs request failed after exhausting retries."""
+    """A Discogs request failed after exhausting retries.
+
+    `status` is the HTTP status when Discogs answered with a 4xx, None for
+    network errors and exhausted retries. The likes check needs the
+    difference: a 404 means the listing is gone, a timeout means nothing."""
+
+    def __init__(self, message: str, status: int | None = None) -> None:
+        super().__init__(message)
+        self.status = status
 
 
 class FeedError(RuntimeError):
-    """A non-Discogs source (RSS feed or scraped page) failed."""
+    """A non-Discogs source (RSS feed or scraped page) failed. `status` as
+    for DiscogsError: set only when the server answered with a 4xx."""
+
+    def __init__(self, message: str, status: int | None = None) -> None:
+        super().__init__(message)
+        self.status = status
 
 
 # Fuller, more browser-like headers than User-Agent alone. Doesn't change
@@ -489,6 +515,12 @@ def http_headers(user_agent: str) -> dict[str, str]:
 
 def http_get_text(url: str, user_agent: str, timeout: int = HTTP_TIMEOUT,
                   attempts: int = 3, backoff: tuple[float, ...] = (3, 10)) -> str:
+    """The body of http_get(); see there."""
+    return http_get(url, user_agent, timeout, attempts, backoff).text
+
+
+def http_get(url: str, user_agent: str, timeout: int = HTTP_TIMEOUT,
+             attempts: int = 3, backoff: tuple[float, ...] = (3, 10)) -> requests.Response:
     """Plain GET with retries and growing backoff. Used by the non-Discogs
     sources, which don't need the Discogs client's rate-limit and paging
     machinery -- that's specific to a 60/min marketplace budget.
@@ -513,7 +545,7 @@ def http_get_text(url: str, user_agent: str, timeout: int = HTTP_TIMEOUT,
         try:
             resp = requests.get(url, headers=http_headers(user_agent), timeout=timeout)
             resp.raise_for_status()
-            return resp.text
+            return resp
         except requests.RequestException as exc:
             last_exc = exc
             # A 4xx is the server's answer, not a hiccup: a 403 from a block
@@ -522,7 +554,7 @@ def http_get_text(url: str, user_agent: str, timeout: int = HTTP_TIMEOUT,
             # per run for nothing). 408 and 429 are the two worth retrying.
             status = getattr(getattr(exc, "response", None), "status_code", None)
             if status is not None and 400 <= status < 500 and status not in (408, 429):
-                raise FeedError(f"GET {url} failed: {exc}")
+                raise FeedError(f"GET {url} failed: {exc}", status=status)
             if attempt < attempts:
                 wait = backoff[min(attempt - 1, len(backoff) - 1)]
                 LOG.warning("GET %s failed (attempt %d/%d): %s - retrying in %ss",
@@ -634,7 +666,8 @@ class Discogs:
                     hint = " - Discogs may be blocking the User-Agent"
                 raise DiscogsError(
                     f"HTTP {resp.status_code} on {path}{hint}"
-                    + (f": {detail}" if detail else "")
+                    + (f": {detail}" if detail else ""),
+                    status=resp.status_code,
                 )
 
             self._respect_ratelimit(resp)
@@ -1053,6 +1086,10 @@ CLONE_STATUS_RE = re.compile(
     r'<td class="col-xs-2 status">\s*<span class="hidden-xs">\s*([^<]*?)\s*</span>'
 )
 CLONE_TRACK_TAG_RE = re.compile(r'<a class="preview"[^>]*>', re.I)
+# The item's own add-to-cart button carries its price, keyed by the item id
+# (`addplaat85137`), so a related item elsewhere on the page can't match.
+# Seen live 2026-11-05: `...addplaat84566" ...> <i ...></i> &euro;&nbsp;15,99`.
+CLONE_PRICE_RE = r'addplaat{id}"[^>]*>\s*<i[^>]*>\s*</i>\s*&euro;(?:&nbsp;|\s)*([\d.,]+)'
 HREF_ATTR_RE = re.compile(r'href="([^"]+)"')
 TITLE_ATTR_RE = re.compile(r'title="([^"]*)"')
 
@@ -1114,6 +1151,9 @@ def classify_clone_stock(status_text: str) -> tuple[str, str]:
         return "out_of_stock", "Out of stock"
     if "backorder" in t or "back order" in t:
         return "preorder", "Back order"
+    # Seen live from 2026-11-05: the cell now also says "in stock" outright.
+    if "in stock" in t:
+        return "in_stock", ""
     return "", ""  # unrecognised text -- say nothing rather than guess
 
 
@@ -1336,8 +1376,82 @@ DEEJAY_STOCKSTATUS_RE = re.compile(
 # "Vinyl Only, 180g" when present, but is frequently absent entirely (its
 # absence means nothing either way -- just that deejay.de didn't add that
 # particular marketing callout for this release, not that it ships with a
-# download code).
-DEEJAY_FEATURE_RE = re.compile(r'<span class="feature"><b>Features:</b>\s*([^<]*)</span>')
+# download code). The "Features:" label went away in the redesign that also
+# removed the stockstatus div (seen 2026-11-05: `<span class="feature">Vinyl
+# Only, 2x12"</span>`), so it is optional here.
+DEEJAY_FEATURE_RE = re.compile(r'<span class="feature">(?:<b>Features:</b>)?\s*([^<]*)</span>')
+
+# The stockstatus div above is gone since deejay.de's redesign (checked
+# 2026-11-05 on 21 item pages: not one had it, so every stock badge had
+# silently disappeared). What every page does carry is schema.org product
+# data for search engines, whose `availability` agreed with the page's own
+# meta description on all 21 ("currently out of stock", "available to
+# order", ...). Search-engine data is a contract the shop has its own reasons
+# to keep stable, unlike class names, so it's read first.
+LD_JSON_RE = re.compile(r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', re.S)
+DEEJAY_EXPECTED_RE = re.compile(r'expected to be published on\s*([^<]{3,20}?)\s*<')
+SCHEMA_STOCK = {
+    "instock": ("in_stock", ""),
+    "instoreonly": ("in_stock", ""),
+    "limitedavailability": ("in_stock", ""),
+    "preorder": ("preorder", "Pre-order"),
+    "presale": ("preorder", "Pre-order"),
+    # deejay.de's own wording for this one: "available to order".
+    "backorder": ("preorder", "Available to order"),
+    "outofstock": ("out_of_stock", "Out of stock"),
+    "soldout": ("out_of_stock", "Out of stock"),
+    "discontinued": ("out_of_stock", "Discontinued"),
+}
+
+
+def schema_offers(page_html: str) -> list[dict]:
+    """Every schema.org Offer in a page's JSON-LD blocks."""
+    offers: list[dict] = []
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            if node.get("@type") in ("Offer", "AggregateOffer"):
+                offers.append(node)
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    for block in LD_JSON_RE.findall(page_html):
+        try:
+            walk(json.loads(block))
+        except ValueError:
+            continue
+    return offers
+
+
+def deejay_page_stock(page_html: str) -> tuple[str, str]:
+    """(status_code, human note) from a deejay.de item page.
+
+    schema.org data first (see LD_JSON_RE), the pre-redesign stockstatus
+    div as a fallback. ("", "") when neither is there -- unknown, which
+    callers must not mistake for out of stock.
+
+    The offer's price is deliberately not used: it includes VAT for wherever
+    the request comes from (checked 2026-11-05 from the Netherlands: every
+    one exactly 21% above the list-page price the digest shows), so it would
+    differ by runner location rather than by anything the shop changed.
+    """
+    for offer in schema_offers(page_html):
+        key = str(offer.get("availability") or "").rstrip("/").rsplit("/", 1)[-1].lower()
+        if key not in SCHEMA_STOCK:
+            continue
+        status, note = SCHEMA_STOCK[key]
+        if status == "preorder" and note == "Pre-order":
+            expected = DEEJAY_EXPECTED_RE.search(page_html)
+            if expected:
+                note = f"Pre-order — expected {html.unescape(expected.group(1)).strip()}"
+        return status, note
+    match = DEEJAY_STOCKSTATUS_RE.search(page_html)
+    if match:
+        return classify_deejay_stock(*match.groups())
+    return "", ""
 
 
 def classify_deejay_stock(first_text: str, second_text: str) -> tuple[str, str]:
@@ -1551,9 +1665,7 @@ def fetch_deejay_html(wanted_norm: list[str], wanted_formats: list[str], user_ag
             try:
                 detail_html = http_get_text(item_url, user_agent, **ITEM_FETCH_KW)
                 stock_consecutive_failures = 0
-                stock_match = DEEJAY_STOCKSTATUS_RE.search(detail_html)
-                if stock_match:
-                    stock_status, stock_note = classify_deejay_stock(*stock_match.groups())
+                stock_status, stock_note = deejay_page_stock(detail_html)
                 # Free: same page fetch as the stock check above.
                 feature_match = DEEJAY_FEATURE_RE.search(detail_html)
                 if feature_match:
@@ -4319,6 +4431,288 @@ def merge_sections(existing: list[Section], new: list[Section]) -> list[Section]
 
 
 # ---------------------------------------------------------------------------
+# Likes: is each liked record still available?
+# ---------------------------------------------------------------------------
+
+# The statuses written to docs/likes_status.json, in the order likes.html
+# shows them. The first three are the same vocabulary as the digest's own
+# stock badges.
+#   in_stock      orderable now
+#   preorder      orderable, not on the shelf yet (pre-order, back order)
+#   out_of_stock  the shop still lists it, but it can't be ordered
+#   gone          the listing or page no longer exists: a Discogs listing
+#                 that sold or was taken down, a shop page that now 404s
+DISCOGS_LISTING_RE = re.compile(r"discogs\.com/sell/item/(\d+)")
+CLONE_ITEM_RE = re.compile(r"clone\.nl/item(\d+)\.html")
+
+
+def like_source(url: str) -> str:
+    """Which checker a liked URL belongs to, "" for one none of them know."""
+    host = urlparse(url).netloc.lower()
+    if DISCOGS_LISTING_RE.search(url):
+        return "discogs"
+    if host.endswith("deejay.de"):
+        return "deejay"
+    if host.endswith("clone.nl") and CLONE_ITEM_RE.search(url):
+        return "clone"
+    if host.endswith("yoyaku.io"):
+        return "yoyaku"
+    return ""
+
+
+def discogs_listing_price(listing: dict) -> str:
+    """The seller's own asking price, e.g. "7.00 EUR", the way the digest and
+    likes.json show it. `price` is converted to the viewer's currency (USD
+    without a token); `original_price` is what the seller actually set."""
+    original = listing.get("original_price") or {}
+    try:
+        return f'{float(original["value"]):.2f} {original.get("curr_abbr") or ""}'.strip()
+    except (KeyError, TypeError, ValueError):
+        return format_price(listing)
+
+
+def discogs_token_ok(api: Discogs) -> bool:
+    """Whether Discogs accepts the token, so a listing it then refuses to
+    show can be read as "not for sale any more" rather than "bad token"."""
+    try:
+        api.get("/oauth/identity")
+        return True
+    except DiscogsError as exc:
+        LOG.warning("[likes] could not confirm the Discogs token (%s) - listings "
+                    "Discogs refuses to show are left as they were, not marked gone", exc)
+        return False
+
+
+def check_discogs_like(api: Discogs, url: str, token_ok: bool) -> dict | None:
+    """Availability of one liked Discogs listing. Raises DiscogsError when
+    Discogs could not be asked, so the caller can stop after a few."""
+    listing_id = DISCOGS_LISTING_RE.search(url).group(1)
+    try:
+        listing = api.get(f"/marketplace/listings/{listing_id}")
+    except DiscogsError as exc:
+        if exc.status == 404:
+            # Discogs' own message: "Item not found. It may have been deleted."
+            return {"status": "gone", "note": "Listing removed"}
+        # Seen live 2026-11-05: without a token, liked listings that are no
+        # longer for sale answer 401 while still-for-sale ones from the same
+        # seller answer 200 -- a sold listing is only shown to its buyer and
+        # seller. With a token Discogs has just accepted, 401/403 can only
+        # mean the same thing.
+        if exc.status in (401, 403) and token_ok:
+            return {"status": "gone", "note": "No longer for sale"}
+        # Anything else counts as a failed check, so a token Discogs keeps
+        # refusing stops the Discogs likes after a few rather than all.
+        raise
+    if listing.get("status") == "For Sale":
+        return {"status": "in_stock", "note": "", "price": discogs_listing_price(listing)}
+    # Only reached when Discogs does show it: "Sold", "Draft", "Expired"...
+    return {"status": "gone",
+            "note": "Sold" if listing.get("status") == "Sold" else "No longer for sale"}
+
+
+def shop_price(text: str, currency: str = "EUR") -> str:
+    """"15,99" or "1.015,00" (European notation) -> "15.99 EUR"."""
+    try:
+        return f'{float(text.replace(".", "").replace(",", ".")):.2f} {currency}'
+    except ValueError:
+        return ""
+
+
+def check_deejay_like(url: str, user_agent: str) -> dict | None:
+    """Availability of one liked deejay.de item. Raises FeedError when the
+    page could not be fetched (but not for a 404: that means it's gone)."""
+    try:
+        page = http_get_text(url, user_agent, **ITEM_FETCH_KW)
+    except FeedError as exc:
+        if exc.status in (404, 410):
+            return {"status": "gone", "note": "No longer listed"}
+        raise
+    status, note = deejay_page_stock(page)
+    if not status:
+        LOG.warning("[likes] no stock information on %s (%d bytes)", url, len(page))
+        return None
+    # No price: see deejay_page_stock. The one saved with the like stands.
+    return {"status": status, "note": note}
+
+
+def check_clone_like(url: str, user_agent: str) -> dict | None:
+    """Availability of one liked clone.nl item; same contract as above."""
+    item_id = CLONE_ITEM_RE.search(url).group(1)
+    try:
+        page = http_get_text(url, user_agent, **ITEM_FETCH_KW)
+    except FeedError as exc:
+        if exc.status in (404, 410):
+            return {"status": "gone", "note": "No longer listed"}
+        raise
+    # Unlike the digest, a page without the status cell is "unknown" here,
+    # not "in stock": a Cloudflare interstitial has no status cell either,
+    # and calling that in stock would be a guess.
+    match = CLONE_STATUS_RE.search(page)
+    status, note = classify_clone_stock(match.group(1)) if match else ("", "")
+    if not status:
+        LOG.warning("[likes] no stock information on %s (%d bytes)", url, len(page))
+        return None
+    price_match = re.search(CLONE_PRICE_RE.format(id=item_id), page)
+    return {"status": status, "note": note,
+            "price": shop_price(price_match.group(1)) if price_match else ""}
+
+
+def check_yoyaku_likes(urls: list[str], user_agent: str,
+                       api_base: str = YOYAKU_API_BASE) -> dict[str, dict]:
+    """url -> availability for liked yoyaku.io releases.
+
+    One Store API request for all of them, looked up by the slug in the
+    liked URL. yoyaku.io sometimes renames a release and redirects the old
+    address (seen live: ...-ftj021/ -> ...-ftj02/), so a slug that isn't
+    found costs one more request to follow that redirect. A like missing
+    from the result was not found and stays as it was.
+    """
+    def slug_of(link: str) -> str:
+        return urlparse(link).path.rstrip("/").rsplit("/", 1)[-1]
+
+    def lookup(slugs: list[str]) -> dict[str, dict]:
+        found: dict[str, dict] = {}
+        for start in range(0, len(slugs), 50):
+            chunk = ",".join(quote(s) for s in slugs[start:start + 50])
+            url = f"{api_base}/wc/store/v1/products?per_page=100&slug={chunk}"
+            for entry in yoyaku_get_json(url, user_agent, **ITEM_FETCH_KW) or []:
+                if isinstance(entry, dict) and entry.get("slug"):
+                    found[str(entry["slug"])] = entry
+        return found
+
+    def availability(entry: dict) -> dict:
+        categories = [str(c.get("name") or "") for c in entry.get("categories") or []
+                      if isinstance(c, dict)]
+        status, note = yoyaku_stock(entry.get("is_in_stock"), categories)
+        # e.g. "Estimated arrival: November 2026" on a Forthcoming release.
+        arrival = str((entry.get("stock_availability") or {}).get("text") or "").strip()
+        if status == "preorder" and arrival:
+            note = f"{note} — {arrival[:1].lower()}{arrival[1:]}"
+        price = yoyaku_price(entry.get("prices") or {})
+        return {"status": status, "note": note,
+                "price": "" if price == "price on request" else price}
+
+    by_slug = {slug_of(u): u for u in urls}
+    found = lookup(list(by_slug))
+    results: dict[str, dict] = {}
+    for slug, url in by_slug.items():
+        if slug in found:
+            results[url] = availability(found[slug])
+            continue
+        try:
+            final_slug = slug_of(http_get(url, user_agent, **ITEM_FETCH_KW).url)
+        except FeedError as exc:
+            if exc.status in (404, 410):
+                results[url] = {"status": "gone", "note": "No longer listed"}
+            else:
+                LOG.warning("[likes] could not check %s: %s", url, exc)
+            continue
+        moved = lookup([final_slug]).get(final_slug) if final_slug != slug else None
+        if moved:
+            results[url] = availability(moved)
+        else:
+            LOG.warning("[likes] %s is still online but not in yoyaku.io's API", url)
+    return results
+
+
+def refresh_likes_status(likes: dict, previous: dict | None, api: Discogs,
+                         user_agent: str, now: datetime,
+                         max_items: int = LIKES_CHECK_MAX_ITEMS) -> dict:
+    """Check every like again and return the new docs/likes_status.json.
+
+    A like that couldn't be checked keeps what was known before, with its
+    old `checked` time, so likes.html can say how old that is: a shop that
+    blocks this runner is never reported as sold out. Likes that are no
+    longer in likes.json are dropped. `since` is when the status last
+    changed and `prev` what it was before, so the page can tell "back in
+    stock" from "in stock".
+    """
+    now_iso = now.isoformat()
+    old_items = (previous or {}).get("items") or {}
+    items = {url: old_items[url] for url in likes if url in old_items}
+
+    # Never-checked first, then longest-unchecked.
+    order = sorted((u for u in likes if like_source(u)),
+                   key=lambda u: (items.get(u) or {}).get("checked") or "")[:max(max_items, 0)]
+    by_source: dict[str, list[str]] = {}
+    for url in order:
+        by_source.setdefault(like_source(url), []).append(url)
+
+    def apply(url: str, found: dict) -> None:
+        old = items.get(url) or {}
+        entry = {"status": found["status"], "note": found.get("note") or "", "checked": now_iso}
+        if old.get("status") == found["status"]:
+            entry["since"] = old.get("since") or now_iso
+            if old.get("prev"):
+                entry["prev"] = old["prev"]
+        else:
+            entry["since"] = now_iso
+            if old.get("status"):
+                entry["prev"] = old["status"]
+        price = found.get("price") or (old.get("price") if found["status"] != "gone" else "")
+        if price:
+            entry["price"] = price
+        items[url] = entry
+
+    checked = unknown = failed = skipped = 0
+    token_ok = discogs_token_ok(api) if by_source.get("discogs") else False
+    checks = {
+        "discogs": lambda url: check_discogs_like(api, url, token_ok),
+        "deejay": lambda url: check_deejay_like(url, user_agent),
+        "clone": lambda url: check_clone_like(url, user_agent),
+    }
+    for source, check in checks.items():
+        consecutive_failures = 0
+        for url in by_source.get(source, []):
+            # Same circuit breaker as the digest's per-item fetches: a few
+            # failures in a row means this runner can't reach the shop.
+            if consecutive_failures >= ITEM_FETCH_GIVE_UP_AFTER:
+                skipped += 1
+                continue
+            try:
+                found = check(url)
+                consecutive_failures = 0
+            except (DiscogsError, FeedError) as exc:
+                failed += 1
+                consecutive_failures += 1
+                LOG.warning("[likes] could not check %s: %s", url, exc)
+                if consecutive_failures >= ITEM_FETCH_GIVE_UP_AFTER:
+                    LOG.warning("[likes] %d %s checks failed in a row - leaving the "
+                                "rest as they were this run", consecutive_failures, source)
+            else:
+                if found:
+                    apply(url, found)
+                    checked += 1
+                else:
+                    unknown += 1
+            if source != "discogs":
+                time.sleep(0.5)  # the Discogs client paces itself; shops get this
+
+    yoyaku_urls = by_source.get("yoyaku", [])
+    if yoyaku_urls:
+        try:
+            results = check_yoyaku_likes(yoyaku_urls, user_agent)
+        except FeedError as exc:
+            LOG.warning("[likes] could not check yoyaku.io: %s", exc)
+            failed += len(yoyaku_urls)
+        else:
+            for url, found in results.items():
+                apply(url, found)
+            checked += len(results)
+            unknown += len(yoyaku_urls) - len(results)
+
+    tally: dict[str, int] = {}
+    for entry in items.values():
+        tally[entry["status"]] = tally.get(entry["status"], 0) + 1
+    LOG.info("Likes: %d checked this run (%d without an answer, %d failed, %d skipped). "
+             "Now %d in stock, %d pre-order, %d out of stock, %d gone, %d not known yet.",
+             checked, unknown, failed, skipped,
+             tally.get("in_stock", 0), tally.get("preorder", 0),
+             tally.get("out_of_stock", 0), tally.get("gone", 0), len(likes) - len(items))
+    return {"updated": now_iso, "items": items}
+
+
+# ---------------------------------------------------------------------------
 # SoundCloud likes + Discogs sellers (files written by the browser extension)
 # ---------------------------------------------------------------------------
 
@@ -5165,6 +5559,23 @@ def main() -> int:
         LOG.info("Player page will be at %s", player_url)
     elif args.player_dir:
         LOG.warning("PAGES_BASE_URL is not set - the email will have no player link")
+
+    # Is each liked record still available? See LIKES_STATUS_ENABLED near the
+    # top. Runs on dry runs too: it only describes the shops, it doesn't mark
+    # anything as already reported.
+    if docs_dir and env_flag("LIKES_STATUS_ENABLED", LIKES_STATUS_ENABLED):
+        liked = load_json_file(os.path.join(docs_dir, "likes.json"), {})
+        if isinstance(liked, dict) and liked:
+            likes_status_path = os.path.join(docs_dir, "likes_status.json")
+            try:
+                save_json_file(likes_status_path, refresh_likes_status(
+                    liked, load_json_file(likes_status_path, {}), api, user_agent,
+                    generated, env_int("LIKES_CHECK_MAX_ITEMS", LIKES_CHECK_MAX_ITEMS),
+                ))
+            except Exception as exc:
+                # Anything at all: this is extra information on the Likes
+                # page, never worth losing the email or the publish over.
+                LOG.error("Could not refresh the likes' availability: %s", exc)
 
     # The browser extension's files (see SOUNDCLOUD_ENABLED near the top).
     # Read from docs/, compared with this script's own memory of last time.
