@@ -3289,5 +3289,65 @@
     "want": 50,
     "release_id": 8379544,
     "liked_at": "2026-11-04T13:10:01.644Z"
+  },
+  "https://www.discogs.com/sell/item/1549633993": {
+    "description": "D-Monsta - Got To Let You Know (12\")",
+    "price": "2.90 EUR",
+    "url": "https://www.discogs.com/sell/item/1549633993",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/SqcldK4kt_A-_uldHq28sYR07IBlBK5InJ03tToHjyg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY2NzA3/MS0xMjk4NzUxNDky/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "D-Monsta - Got To Let You Know (D-Monsta Remix)",
+        "yt": "tc32L1DKdqs",
+        "src": null,
+        "dur": 393
+      },
+      {
+        "title": "D-Monsta - Got To Let You Know (Robbie Rivera Remix)",
+        "yt": "e6K3ZcSoZeI",
+        "src": null,
+        "dur": 470
+      },
+      {
+        "title": "D-Monsta - Got To Let You Know (Joe Anthony Remix)",
+        "yt": "12lvZ9TZS38",
+        "src": null,
+        "dur": 330
+      },
+      {
+        "title": "Robbie Rivera Presents D-Monsta - Got To Let You Know (Main Ride)",
+        "yt": "gYwKHTx3fIM",
+        "src": null,
+        "dur": 591
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Got To Let You Know (D-Monsta Remix)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Got To Let You Know (Joe Anthony Remix)",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Got To Let You Know (Robbie Rivera Remix)",
+        "dur": ""
+      }
+    ],
+    "have": 66,
+    "want": 13,
+    "release_id": 667071,
+    "liked_at": "2026-11-05T13:20:09.684Z"
   }
 }
