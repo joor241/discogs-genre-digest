@@ -1,0 +1,1567 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://s.ytimg.com">
+<link rel="preconnect" href="https://i.ytimg.com">
+<script src="https://www.youtube.com/iframe_api" async></script>
+<title>Record digest &mdash; 07 Nov 2026</title>
+<style>
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  /* Bottom padding clears the fixed transport bar (~48px) so the last
+     record and the footer are never hidden behind it. */
+  margin: 0; padding: 24px 16px 96px;
+  background: #0e0e10; color: #e8e8ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.45;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.sub { color: #8a8a92; font-size: 13px; margin: 0 0 28px; }
+h2 {
+  font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #8a8a92; margin: 34px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid #26262b;
+}
+.rec {
+  display: flex; gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid #1c1c21;
+  /* A record off screen is not laid out or painted until it nears the
+     viewport -- what keeps a page of 700+ records (2026-10-29) scrolling
+     smoothly. "auto" remembers each one's real height once it has been
+     seen, so the scrollbar settles instead of jumping. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 260px;
+}
+.rec img {
+  width: 68px; height: 68px; border-radius: 5px;
+  background: #26262b; flex: none; object-fit: cover;
+}
+.rec .body { min-width: 0; flex: 1; }
+.rec .title { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.rec .title a { color: #e8e8ea; text-decoration: none; }
+.rec .title a:hover { color: #6ea8ff; }
+.meta { color: #8a8a92; font-size: 12.5px; margin-bottom: 2px; }
+.price { font-weight: 700; font-size: 15px; color: #e8e8ea; margin-right: 7px; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 10px; margin: 0 5px 4px 0;
+  background: #202027; color: #9a9aa2;
+}
+.badge.format { background: #14202b; color: #7fb3e8; }
+.badge.preorder { background: #2b2210; color: #e0af52; }
+.badge.outofstock { background: #2b1414; color: #e08a8a; }
+.badge.vinylonly { background: #2b2410; color: #e0c452; font-weight: 700; }
+.fineprint { color: #6f6f78; font-size: 11.5px; margin-top: 3px; }
+.fineprint .community { color: #8a8a92; white-space: nowrap; }
+.tags { color: #5f5f68; font-size: 12px; margin-top: 3px; margin-bottom: 9px; }
+/* The release's own tracklist, as text: what is on the record, which is
+   not the same thing as the clips under it (those are whatever people
+   uploaded to YouTube). */
+ol.tracklist {
+  list-style: none; margin: -2px 0 11px; padding: 0;
+  font-size: 12.5px; line-height: 1.5; color: #b4b4bb;
+}
+ol.tracklist li { display: flex; gap: 8px; }
+ol.tracklist .pos {
+  flex: none; min-width: 2.4em; color: #6f6f78; font-variant-numeric: tabular-nums;
+}
+ol.tracklist .tt { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+ol.tracklist .tdur { flex: none; color: #6f6f78; font-variant-numeric: tabular-nums; }
+.buy {
+  display: inline-block; font-size: 12px; color: #6ea8ff;
+  text-decoration: none; margin-left: 10px;
+}
+button.likebtn {
+  background: transparent; border: 0; cursor: pointer; font-size: 15px;
+  color: #6a6a72; padding: 0 0 0 8px; line-height: 1; vertical-align: middle;
+  font-family: inherit;
+}
+button.likebtn:hover { color: #e05a5a; }
+button.likebtn.liked { color: #e05a5a; }
+button.likebtn:disabled { opacity: .5; cursor: default; }
+.buy:hover { text-decoration: underline; }
+ul.tracks { list-style: none; margin: 0; padding: 0; }
+li.track { margin: 0 0 9px; }
+li.track .tname {
+  font-size: 12.5px; color: #9a9aa2; margin: 0 0 3px 37px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.trow { display: flex; align-items: center; gap: 8px; }
+button.ppbtn {
+  flex: none; width: 28px; height: 28px; border-radius: 50%;
+  background: #cc0000; color: #fff; border: 0; cursor: pointer;
+  font-size: 11px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; transition: background .12s, transform .08s;
+}
+button.ppbtn:hover { background: #e01212; }
+button.ppbtn:active { transform: scale(0.94); }
+button.ppbtn.loading { background: #4a4a52; }
+/* display:block kills the inline-baseline gap that would otherwise push
+   the icon a pixel off-centre inside the round button. The play path is
+   already drawn slightly right of the viewBox centre, which is what makes
+   a triangle look optically centred in a circle. */
+button.ppbtn svg { display: block; }
+/* .bar is the seek target: a tall, easy-to-tap hitbox around a thin visual
+   line, so it works on a phone without needing a precise touch. */
+.bar {
+  flex: 1 1 auto; min-width: 0; height: 28px; display: flex; align-items: center;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.bar .track {
+  position: relative; width: 100%; height: 6px; border-radius: 3px;
+  background: #26262b; overflow: hidden;
+}
+.bar .fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+  background: #cc0000; border-radius: 3px;
+}
+.bar:hover .track { background: #303038; }
+.bar:focus-visible { outline: 2px solid #6ea8ff; outline-offset: 3px; border-radius: 4px; }
+.trow.playing .bar .fill { background: #ff3b3b; }
+.time {
+  flex: none; font-variant-numeric: tabular-nums; font-size: 11px;
+  color: #6f6f78; width: 84px; text-align: right;
+}
+a.ytlink {
+  flex: none; color: #6a6a72; text-decoration: none; font-size: 14px;
+  width: 26px; height: 26px; display: inline-flex; align-items: center;
+  justify-content: center; border-radius: 5px;
+}
+a.ytlink:hover { color: #e8e8ea; background: #202027; }
+.trow.errored .bar { opacity: .45; cursor: not-allowed; pointer-events: none; }
+.trow.errored .time { color: #9a5a5a; }
+/* Floating transport, only visible once something is playing. Gives the
+   skip controls a permanent home no matter how far down the page you've
+   scrolled, so you can move through tracks without hunting for the row. */
+#nowbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: none; background: rgba(18,18,22,.97);
+  border-top: 1px solid #2c2c33; box-shadow: 0 -4px 24px rgba(0,0,0,.5);
+}
+#nowbar.show { display: block; }
+/* Progress for the playing track, spanning the full page width along the
+   bar's top edge. Click anywhere on it to seek, same as a row's own bar. */
+#nowbar .nbseek {
+  display: block; width: 100%; height: 10px; margin-top: -3px;
+  cursor: pointer; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#nowbar .nbseek .nbtrack {
+  position: relative; width: 100%; height: 4px; margin-top: 3px;
+  background: #2c2c33; overflow: hidden;
+}
+#nowbar .nbseek .nbfill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #cc0000;
+}
+#nowbar .nbseek:hover .nbtrack { background: #3a3a44; }
+/* The controls must not move when the track name changes length, so the
+   button group is flex:none at the start, the title is the ONLY flexible
+   element (it ellipsises), and the time is flex:none at the end. */
+#nowbar .nbrow {
+  display: flex; align-items: center;
+  max-width: 760px; margin: 0 auto; padding: 5px 16px 9px;
+}
+#nowbar .nbctrls { flex: none; display: flex; align-items: center; gap: 2px; }
+#nowbar button {
+  flex: none; width: 30px; height: 30px; padding: 0;
+  background: transparent; border: 0; color: #d4d4d8; cursor: pointer;
+  border-radius: 7px; font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+#nowbar button:hover { background: #26262b; color: #fff; }
+#nowbar button svg { display: block; }
+#nowbar .nowtitle {
+  flex: 1 1 auto; min-width: 0; margin: 0 12px;
+  font-size: 12.5px; color: #9a9aa2;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#nowbar .nbtime {
+  flex: none; font-variant-numeric: tabular-nums;
+  font-size: 11.5px; color: #6f6f78;
+}
+.topnav { margin: 0 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.topnav a {
+  color: #8a8a92; text-decoration: none; font-size: 13px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
+.topnav a svg { display: block; }
+/* How much of the page is preloaded: the pill fills up as it goes. */
+.preload {
+  position: relative; overflow: hidden; display: inline-flex; align-items: center;
+  color: #b4b4bb; font-size: 13px; font-variant-numeric: tabular-nums;
+  border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
+}
+.preload[hidden] { display: none; }
+.preload .pfill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+  background: rgba(204, 0, 0, .22); transition: width .3s;
+}
+.preload .plabel { position: relative; }
+.preload.done { color: #8a8a92; }
+.preload.done .pfill { background: rgba(110, 168, 255, .12); }
+#preloadline {
+  position: fixed; left: 0; top: 0; z-index: 60; height: 2px; width: 0;
+  background: #cc0000; transition: width .3s; pointer-events: none;
+}
+#preloadline[hidden] { display: none; }
+.none { color: #5f5f68; font-size: 13px; }
+footer {
+  margin-top: 40px; padding-top: 14px; border-top: 1px solid #1c1c21;
+  color: #5f5f68; font-size: 12px;
+}
+footer a { color: #6ea8ff; }
+@media (max-width: 520px) {
+  .rec img { width: 52px; height: 52px; }
+  .time { width: 66px; font-size: 10.5px; }
+  button.ppbtn { width: 32px; height: 32px; }
+  .bar { height: 32px; }
+}
+</style></head><body>
+<div style="position:fixed;left:-9999px;top:0;width:200px;height:113px;"><div id="yt-audio-host"></div></div>
+<div class="wrap">
+<div class="topnav"><a href="https://joor241.github.io/discogs-genre-digest/likes.html"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 20.3l-1.45-1.32C5.4 14.24 2 11.16 2 7.4 2 4.42 4.42 2 7.4 2c1.68 0 3.3.78 4.6 2.09C13.3 2.78 14.92 2 16.6 2 19.58 2 22 4.42 22 7.4c0 3.76-3.4 6.84-8.55 11.58z"/></svg> Likes</a><a href="https://joor241.github.io/discogs-genre-digest/settings.html"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M19.14 12.94a7.1 7.1 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7 7 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.71 8.84a.5.5 0 00.12.64l2.03 1.58a7.1 7.1 0 000 1.88l-2.03 1.58a.5.5 0 00-.12.64l1.92 3.32c.13.22.39.3.6.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.25.42.5.42h3.84c.25 0 .46-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"/></svg> Settings</a><span id="preload" class="preload" hidden><span class="pfill"></span><span class="plabel"></span></span></div>
+<h1>New on Discogs</h1>
+<p class="sub">13 record(s) listed since Fri 06 Nov 2026, 09:42 UTC &middot; house</p>
+<h2>Killa Cutz &middot; 1 <span style="color:#6f6f78;font-weight:normal;font-size:12px;">&mdash; filter: house</span></h2>
+<div class="rec"><img src="https://i.discogs.com/csjOd4ToMXfuM5kMGEUR18aC4iJ9ptTMtTeOW3_D-24/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzOTc2/MDE2LTE1NjcxODY3/NjYtOTg2Mi5qcGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4464034089">Scan 7 - Between Worlds (3xLP, Album)</a></div><div class="meta"><span class="price">17.90 EUR</span><span class="badge">Mint (M)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4464034089">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4464034089" data-like-payload="{&quot;description&quot;: &quot;Scan 7 - Between Worlds (3xLP, Album)&quot;, &quot;price&quot;: &quot;17.90 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4464034089&quot;, &quot;store&quot;: &quot;Killa Cutz&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/csjOd4ToMXfuM5kMGEUR18aC4iJ9ptTMtTeOW3_D-24/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzOTc2/MDE2LTE1NjcxODY3/NjYtOTg2Mi5qcGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Scan7 - Stringin Me Along (Deeptrax Records, DPTX-021)&quot;, &quot;yt&quot;: &quot;D2uYN78v_l4&quot;, &quot;src&quot;: null, &quot;dur&quot;: 374}, {&quot;title&quot;: &quot;Scan7 - No Place Like Home (Deeptrax Records, DPTX-021)&quot;, &quot;yt&quot;: &quot;vNivlCyjbT8&quot;, &quot;src&quot;: null, &quot;dur&quot;: 328}, {&quot;title&quot;: &quot;Scan7 - A Wonder Of Space (Deeptrax Records, DPTX-021)&quot;, &quot;yt&quot;: &quot;A8ILV9r7dnE&quot;, &quot;src&quot;: null, &quot;dur&quot;: 267}, {&quot;title&quot;: &quot;Scan7 - It&#x27;s Time (Deeptrax Records, DPTX-021)&quot;, &quot;yt&quot;: &quot;2r5dTpeBWtM&quot;, &quot;src&quot;: null, &quot;dur&quot;: 360}, {&quot;title&quot;: &quot;Scan7 - Cream Dreams (Deeptrax Records, DPTX-021)&quot;, &quot;yt&quot;: &quot;FAGB8F4ONio&quot;, &quot;src&quot;: null, &quot;dur&quot;: 400}, {&quot;title&quot;: &quot;Scan7 - I&#x27;m Covered (Deeptrax Records, DPTX-021)&quot;, &quot;yt&quot;: &quot;_4xu_E8YEao&quot;, &quot;src&quot;: null, &quot;dur&quot;: 321}], &quot;tracklist&quot;: [{&quot;pos&quot;: &quot;A1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Stringin Me Along&quot;, &quot;dur&quot;: &quot;6:13&quot;}, {&quot;pos&quot;: &quot;A2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;No Place Like Home&quot;, &quot;dur&quot;: &quot;5:27&quot;}, {&quot;pos&quot;: &quot;A3&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;A Wonder Of Space&quot;, &quot;dur&quot;: &quot;4:26&quot;}, {&quot;pos&quot;: &quot;B1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;It&#x27;s Time&quot;, &quot;dur&quot;: &quot;5:59&quot;}, {&quot;pos&quot;: &quot;B2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Cream Dreams&quot;, &quot;dur&quot;: &quot;6:39&quot;}, {&quot;pos&quot;: &quot;C1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;I&#x27;m Covered&quot;, &quot;dur&quot;: &quot;5:20&quot;}, {&quot;pos&quot;: &quot;C2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Moments Like This&quot;, &quot;dur&quot;: &quot;6:39&quot;}, {&quot;pos&quot;: &quot;D1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;As Above So Below&quot;, &quot;dur&quot;: &quot;6:01&quot;}, {&quot;pos&quot;: &quot;D2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Trackmasta Hoop&quot;, &quot;dur&quot;: &quot;7:00&quot;}, {&quot;pos&quot;: &quot;E1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Electronic Evidence&quot;, &quot;dur&quot;: &quot;6:53&quot;}, {&quot;pos&quot;: &quot;E2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Smooth Scan&quot;, &quot;dur&quot;: &quot;6:54&quot;}, {&quot;pos&quot;: &quot;F1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Deep Roots&quot;, &quot;dur&quot;: &quot;6:56&quot;}, {&quot;pos&quot;: &quot;F2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Shadow Spirit&quot;, &quot;dur&quot;: &quot;6:21&quot;}], &quot;have&quot;: 361, &quot;want&quot;: 384, &quot;release_id&quot;: 13976016}">&#9825;</button></div><div class="fineprint">Deeptrax Records - DPTX-021 - 2019 &middot; <span class="community">Have 361 · Want 384</span></div><div class="tags">Electronic, Electro, Techno, Deep House, Future Jazz, Deep Techno</div><ol class="tracklist" aria-label="Tracklist"><li><span class="pos">A1</span><span class="tt">Stringin Me Along</span><span class="tdur">6:13</span></li><li><span class="pos">A2</span><span class="tt">No Place Like Home</span><span class="tdur">5:27</span></li><li><span class="pos">A3</span><span class="tt">A Wonder Of Space</span><span class="tdur">4:26</span></li><li><span class="pos">B1</span><span class="tt">It&#x27;s Time</span><span class="tdur">5:59</span></li><li><span class="pos">B2</span><span class="tt">Cream Dreams</span><span class="tdur">6:39</span></li><li><span class="pos">C1</span><span class="tt">I&#x27;m Covered</span><span class="tdur">5:20</span></li><li><span class="pos">C2</span><span class="tt">Moments Like This</span><span class="tdur">6:39</span></li><li><span class="pos">D1</span><span class="tt">As Above So Below</span><span class="tdur">6:01</span></li><li><span class="pos">D2</span><span class="tt">Trackmasta Hoop</span><span class="tdur">7:00</span></li><li><span class="pos">E1</span><span class="tt">Electronic Evidence</span><span class="tdur">6:53</span></li><li><span class="pos">E2</span><span class="tt">Smooth Scan</span><span class="tdur">6:54</span></li><li><span class="pos">F1</span><span class="tt">Deep Roots</span><span class="tdur">6:56</span></li><li><span class="pos">F2</span><span class="tt">Shadow Spirit</span><span class="tdur">6:21</span></li></ol><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Scan7 - Stringin Me Along (Deeptrax Records, DPTX-021)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan7 - Stringin Me Along (Deeptrax Records, DPTX-021)" data-yt="D2uYN78v_l4" data-dur="374"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:14</span><a class="ytlink" href="https://www.youtube.com/watch?v=D2uYN78v_l4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Scan7 - Stringin Me Along (Deeptrax Records, DPTX-021) on YouTube">&#8599;</a></div><div class="tname">Scan7 - Stringin Me Along (Deeptrax Records, DPTX-021)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Scan7 - No Place Like Home (Deeptrax Records, DPTX-021)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan7 - No Place Like Home (Deeptrax Records, DPTX-021)" data-yt="vNivlCyjbT8" data-dur="328"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:28</span><a class="ytlink" href="https://www.youtube.com/watch?v=vNivlCyjbT8" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Scan7 - No Place Like Home (Deeptrax Records, DPTX-021) on YouTube">&#8599;</a></div><div class="tname">Scan7 - No Place Like Home (Deeptrax Records, DPTX-021)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Scan7 - A Wonder Of Space (Deeptrax Records, DPTX-021)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan7 - A Wonder Of Space (Deeptrax Records, DPTX-021)" data-yt="A8ILV9r7dnE" data-dur="267"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:27</span><a class="ytlink" href="https://www.youtube.com/watch?v=A8ILV9r7dnE" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Scan7 - A Wonder Of Space (Deeptrax Records, DPTX-021) on YouTube">&#8599;</a></div><div class="tname">Scan7 - A Wonder Of Space (Deeptrax Records, DPTX-021)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Scan7 - It&#x27;s Time (Deeptrax Records, DPTX-021)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan7 - It&#x27;s Time (Deeptrax Records, DPTX-021)" data-yt="2r5dTpeBWtM" data-dur="360"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:00</span><a class="ytlink" href="https://www.youtube.com/watch?v=2r5dTpeBWtM" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Scan7 - It&#x27;s Time (Deeptrax Records, DPTX-021) on YouTube">&#8599;</a></div><div class="tname">Scan7 - It&#x27;s Time (Deeptrax Records, DPTX-021)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Scan7 - Cream Dreams (Deeptrax Records, DPTX-021)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan7 - Cream Dreams (Deeptrax Records, DPTX-021)" data-yt="FAGB8F4ONio" data-dur="400"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:40</span><a class="ytlink" href="https://www.youtube.com/watch?v=FAGB8F4ONio" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Scan7 - Cream Dreams (Deeptrax Records, DPTX-021) on YouTube">&#8599;</a></div><div class="tname">Scan7 - Cream Dreams (Deeptrax Records, DPTX-021)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Scan7 - I&#x27;m Covered (Deeptrax Records, DPTX-021)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan7 - I&#x27;m Covered (Deeptrax Records, DPTX-021)" data-yt="_4xu_E8YEao" data-dur="321"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:21</span><a class="ytlink" href="https://www.youtube.com/watch?v=_4xu_E8YEao" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Scan7 - I&#x27;m Covered (Deeptrax Records, DPTX-021) on YouTube">&#8599;</a></div><div class="tname">Scan7 - I&#x27;m Covered (Deeptrax Records, DPTX-021)</div></li></ul></div></div>
+<h2>Rush Hour &middot; 6 <span style="color:#6f6f78;font-weight:normal;font-size:12px;">&mdash; filter: house</span></h2>
+<div class="rec"><img src="https://i.discogs.com/URsw_yP65T0hvHYjKfuYshuQc6EjfSLKIOoghGkyncQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY5NzI3/LTE0MTgzOTIzMjEt/OTA5My5qcGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4464838431">Finchley Road - Infectious (12&quot;)</a></div><div class="meta"><span class="price">6.50 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4464838431">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4464838431" data-like-payload="{&quot;description&quot;: &quot;Finchley Road - Infectious (12\&quot;)&quot;, &quot;price&quot;: &quot;6.50 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4464838431&quot;, &quot;store&quot;: &quot;Rush Hour&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/URsw_yP65T0hvHYjKfuYshuQc6EjfSLKIOoghGkyncQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY5NzI3/LTE0MTgzOTIzMjEt/OTA5My5qcGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Finchley Road - Infectious (Super Dub Mix)&quot;, &quot;yt&quot;: &quot;gbEcejLksNc&quot;, &quot;src&quot;: null, &quot;dur&quot;: 319}, {&quot;title&quot;: &quot;Finchley Road - Infectious Club Mix 1987 QK 003&quot;, &quot;yt&quot;: &quot;0U4S2j89Ftg&quot;, &quot;src&quot;: null, &quot;dur&quot;: 329}, {&quot;title&quot;: &quot;Finchley Road – Infectious (Super Dub Mix)&quot;, &quot;yt&quot;: &quot;r0SBRZUhHMQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 318}], &quot;tracklist&quot;: [{&quot;pos&quot;: &quot;A&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Infectious&quot;, &quot;dur&quot;: &quot;8:10&quot;}, {&quot;pos&quot;: &quot;B1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Infectious (Club Mix)&quot;, &quot;dur&quot;: &quot;5:16&quot;}, {&quot;pos&quot;: &quot;B2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Infectious (Super Dub Mix)&quot;, &quot;dur&quot;: &quot;5:10&quot;}], &quot;have&quot;: 204, &quot;want&quot;: 247, &quot;release_id&quot;: 69727}">&#9825;</button></div><div class="fineprint">Quark - QK003 - 1987 &middot; <span class="community">Have 204 · Want 247</span></div><div class="tags">Electronic, Garage House</div><ol class="tracklist" aria-label="Tracklist"><li><span class="pos">A</span><span class="tt">Infectious</span><span class="tdur">8:10</span></li><li><span class="pos">B1</span><span class="tt">Infectious (Club Mix)</span><span class="tdur">5:16</span></li><li><span class="pos">B2</span><span class="tt">Infectious (Super Dub Mix)</span><span class="tdur">5:10</span></li></ol><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Finchley Road - Infectious (Super Dub Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Finchley Road - Infectious (Super Dub Mix)" data-yt="gbEcejLksNc" data-dur="319"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:19</span><a class="ytlink" href="https://www.youtube.com/watch?v=gbEcejLksNc" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Finchley Road - Infectious (Super Dub Mix) on YouTube">&#8599;</a></div><div class="tname">Finchley Road - Infectious (Super Dub Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Finchley Road - Infectious Club Mix 1987 QK 003"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Finchley Road - Infectious Club Mix 1987 QK 003" data-yt="0U4S2j89Ftg" data-dur="329"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:29</span><a class="ytlink" href="https://www.youtube.com/watch?v=0U4S2j89Ftg" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Finchley Road - Infectious Club Mix 1987 QK 003 on YouTube">&#8599;</a></div><div class="tname">Finchley Road - Infectious Club Mix 1987 QK 003</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Finchley Road – Infectious (Super Dub Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Finchley Road – Infectious (Super Dub Mix)" data-yt="r0SBRZUhHMQ" data-dur="318"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:18</span><a class="ytlink" href="https://www.youtube.com/watch?v=r0SBRZUhHMQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Finchley Road – Infectious (Super Dub Mix) on YouTube">&#8599;</a></div><div class="tname">Finchley Road – Infectious (Super Dub Mix)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/j1R4q5-ELAxewR8e5aiYk2mUZ4IREKpSJrjQzleVScM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI2NjIx/ODItMTYxMjg3MDQ2/My04MDIxLmpwZWc.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4464837948">Second Floor Collective - Blvd. East (12&quot;, Single, Promo)</a></div><div class="meta"><span class="price">6.50 EUR</span><span class="badge">Very Good Plus (VG+) / Not Graded sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4464837948">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4464837948" data-like-payload="{&quot;description&quot;: &quot;Second Floor Collective - Blvd. East (12\&quot;, Single, Promo)&quot;, &quot;price&quot;: &quot;6.50 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4464837948&quot;, &quot;store&quot;: &quot;Rush Hour&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/j1R4q5-ELAxewR8e5aiYk2mUZ4IREKpSJrjQzleVScM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI2NjIx/ODItMTYxMjg3MDQ2/My04MDIxLmpwZWc.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Second Floor Collective - Blvd. East&quot;, &quot;yt&quot;: &quot;kVgTVGMQITc&quot;, &quot;src&quot;: null, &quot;dur&quot;: 277}, {&quot;title&quot;: &quot;Blvd. East (Funky Organ Mix)&quot;, &quot;yt&quot;: &quot;MuQ8BJZDx-0&quot;, &quot;src&quot;: null, &quot;dur&quot;: 345}, {&quot;title&quot;: &quot;Blvd. East (Groove Dub)&quot;, &quot;yt&quot;: &quot;vjKzYeOfclg&quot;, &quot;src&quot;: null, &quot;dur&quot;: 330}, {&quot;title&quot;: &quot;Blvd. East (Retro Sax Mix)&quot;, &quot;yt&quot;: &quot;Kdicwx8AccQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 498}, {&quot;title&quot;: &quot;Blvd. East (NIte Groove House Mix)&quot;, &quot;yt&quot;: &quot;jQ_hhI7cE5k&quot;, &quot;src&quot;: null, &quot;dur&quot;: 481}, {&quot;title&quot;: &quot;Blvd. East (Nite Groove House Mix)&quot;, &quot;yt&quot;: &quot;ZVT2OBzFSgA&quot;, &quot;src&quot;: null, &quot;dur&quot;: 481}], &quot;tracklist&quot;: [{&quot;pos&quot;: &quot;A1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Blvd. East (Funky Organ Mix)&quot;, &quot;dur&quot;: &quot;&quot;}, {&quot;pos&quot;: &quot;A2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Blvd. East (Retro Sax Mix)&quot;, &quot;dur&quot;: &quot;&quot;}, {&quot;pos&quot;: &quot;B1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Blvd. East (Nite Groove House Mix)&quot;, &quot;dur&quot;: &quot;&quot;}, {&quot;pos&quot;: &quot;B2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Blvd. East (Groove Dub)&quot;, &quot;dur&quot;: &quot;&quot;}], &quot;have&quot;: 28, &quot;want&quot;: 28, &quot;release_id&quot;: 2662182}">&#9825;</button></div><div class="fineprint">Nite Grooves - KNG 65 - 1997 &middot; <span class="community">Have 28 · Want 28</span></div><div class="tags">Electronic, House</div><ol class="tracklist" aria-label="Tracklist"><li><span class="pos">A1</span><span class="tt">Blvd. East (Funky Organ Mix)</span><span class="tdur"></span></li><li><span class="pos">A2</span><span class="tt">Blvd. East (Retro Sax Mix)</span><span class="tdur"></span></li><li><span class="pos">B1</span><span class="tt">Blvd. East (Nite Groove House Mix)</span><span class="tdur"></span></li><li><span class="pos">B2</span><span class="tt">Blvd. East (Groove Dub)</span><span class="tdur"></span></li></ol><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Second Floor Collective - Blvd. East"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Second Floor Collective - Blvd. East" data-yt="kVgTVGMQITc" data-dur="277"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:37</span><a class="ytlink" href="https://www.youtube.com/watch?v=kVgTVGMQITc" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Second Floor Collective - Blvd. East on YouTube">&#8599;</a></div><div class="tname">Second Floor Collective - Blvd. East</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blvd. East (Funky Organ Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blvd. East (Funky Organ Mix)" data-yt="MuQ8BJZDx-0" data-dur="345"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:45</span><a class="ytlink" href="https://www.youtube.com/watch?v=MuQ8BJZDx-0" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blvd. East (Funky Organ Mix) on YouTube">&#8599;</a></div><div class="tname">Blvd. East (Funky Organ Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blvd. East (Groove Dub)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blvd. East (Groove Dub)" data-yt="vjKzYeOfclg" data-dur="330"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:30</span><a class="ytlink" href="https://www.youtube.com/watch?v=vjKzYeOfclg" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blvd. East (Groove Dub) on YouTube">&#8599;</a></div><div class="tname">Blvd. East (Groove Dub)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blvd. East (Retro Sax Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blvd. East (Retro Sax Mix)" data-yt="Kdicwx8AccQ" data-dur="498"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:18</span><a class="ytlink" href="https://www.youtube.com/watch?v=Kdicwx8AccQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blvd. East (Retro Sax Mix) on YouTube">&#8599;</a></div><div class="tname">Blvd. East (Retro Sax Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blvd. East (NIte Groove House Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blvd. East (NIte Groove House Mix)" data-yt="jQ_hhI7cE5k" data-dur="481"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:01</span><a class="ytlink" href="https://www.youtube.com/watch?v=jQ_hhI7cE5k" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blvd. East (NIte Groove House Mix) on YouTube">&#8599;</a></div><div class="tname">Blvd. East (NIte Groove House Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Blvd. East (Nite Groove House Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Blvd. East (Nite Groove House Mix)" data-yt="ZVT2OBzFSgA" data-dur="481"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:01</span><a class="ytlink" href="https://www.youtube.com/watch?v=ZVT2OBzFSgA" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Blvd. East (Nite Groove House Mix) on YouTube">&#8599;</a></div><div class="tname">Blvd. East (Nite Groove House Mix)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/2nE4aWBK4tcms2ghL7v1jEtvZDbdYutYY8t8HKweZ3M/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2ODU3/MjEwLTE2NDQxNDM5/MzItMjE3OS5qcGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4464810240">Eric Kupper Presents Organika - Havana (12&quot;, RM)</a></div><div class="meta"><span class="price">6.50 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4464810240">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4464810240" data-like-payload="{&quot;description&quot;: &quot;Eric Kupper Presents Organika - Havana (12\&quot;, RM)&quot;, &quot;price&quot;: &quot;6.50 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4464810240&quot;, &quot;store&quot;: &quot;Rush Hour&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/2nE4aWBK4tcms2ghL7v1jEtvZDbdYutYY8t8HKweZ3M/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2ODU3/MjEwLTE2NDQxNDM5/MzItMjE3OS5qcGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Havana&quot;, &quot;yt&quot;: &quot;7axY6be5D_s&quot;, &quot;src&quot;: null, &quot;dur&quot;: 646}, {&quot;title&quot;: &quot;Havana (Bonus Beats)&quot;, &quot;yt&quot;: &quot;EsLQ1ffue6U&quot;, &quot;src&quot;: null, &quot;dur&quot;: 417}], &quot;tracklist&quot;: [{&quot;pos&quot;: &quot;A&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Havana (Original Mix)&quot;, &quot;dur&quot;: &quot;10:24&quot;}, {&quot;pos&quot;: &quot;B&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Havana (Bonus Beats)&quot;, &quot;dur&quot;: &quot;6:54&quot;}], &quot;have&quot;: 55, &quot;want&quot;: 39, &quot;release_id&quot;: 16857210}">&#9825;</button></div><div class="fineprint">Wave Music - WM50058-1 - 2000 &middot; <span class="community">Have 55 · Want 39</span></div><div class="tags">Electronic, Deep House, Latin</div><ol class="tracklist" aria-label="Tracklist"><li><span class="pos">A</span><span class="tt">Havana (Original Mix)</span><span class="tdur">10:24</span></li><li><span class="pos">B</span><span class="tt">Havana (Bonus Beats)</span><span class="tdur">6:54</span></li></ol><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Havana"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Havana" data-yt="7axY6be5D_s" data-dur="646"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 10:46</span><a class="ytlink" href="https://www.youtube.com/watch?v=7axY6be5D_s" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Havana on YouTube">&#8599;</a></div><div class="tname">Havana</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Havana (Bonus Beats)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Havana (Bonus Beats)" data-yt="EsLQ1ffue6U" data-dur="417"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:57</span><a class="ytlink" href="https://www.youtube.com/watch?v=EsLQ1ffue6U" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Havana (Bonus Beats) on YouTube">&#8599;</a></div><div class="tname">Havana (Bonus Beats)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/tF-MKvgnG6ESfZvlX979KrmlhLvQJ7kPFoi01o5zXEs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTczMTkz/MzYtMTQzODc4ODY1/OC03NzY1LmpwZWc.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4464809484">Earth, Wind &amp; Fire - Soul Source Earth, Wind &amp; Fire Remixes (2x12&quot;, Comp, Promo)</a></div><div class="meta"><span class="price">20.00 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4464809484">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4464809484" data-like-payload="{&quot;description&quot;: &quot;Earth, Wind &amp; Fire - Soul Source Earth, Wind &amp; Fire Remixes (2x12\&quot;, Comp, Promo)&quot;, &quot;price&quot;: &quot;20.00 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4464809484&quot;, &quot;store&quot;: &quot;Rush Hour&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/tF-MKvgnG6ESfZvlX979KrmlhLvQJ7kPFoi01o5zXEs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTczMTkz/MzYtMTQzODc4ODY1/OC03NzY1LmpwZWc.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Earth, Wind &amp; Fire – The Essential Earth Wind &amp; Fire Remixes&quot;, &quot;yt&quot;: &quot;rfPiSrmsPlE&quot;, &quot;src&quot;: null, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Earth, Wind &amp; Fire - September (Phats &amp; Small Remix) (Official HD Video)&quot;, &quot;yt&quot;: &quot;wn5Q37qOiiA&quot;, &quot;src&quot;: null, &quot;dur&quot;: 214}, {&quot;title&quot;: &quot;Soul Source - Earth, Wind &amp; Fire Remixes (whole album)&quot;, &quot;yt&quot;: &quot;1YFgDDGRZSQ&quot;, &quot;src&quot;: null, &quot;dur&quot;: 4027}], &quot;tracklist&quot;: [{&quot;pos&quot;: &quot;A1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;September (FPM Beautiful Latin Mix)&quot;, &quot;dur&quot;: &quot;6:22&quot;}, {&quot;pos&quot;: &quot;A2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Shining Star (Asakusa Samba Remix)&quot;, &quot;dur&quot;: &quot;4:31&quot;}, {&quot;pos&quot;: &quot;B1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Brazilian Rythm (Fearless Mix - Long Version)&quot;, &quot;dur&quot;: &quot;8:49&quot;}, {&quot;pos&quot;: &quot;B2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Boogie Wonderland (Inspiration &#x27;83 Mix)&quot;, &quot;dur&quot;: &quot;6:26&quot;}, {&quot;pos&quot;: &quot;C1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Can&#x27;t Hide Love (Masters Club Mix)&quot;, &quot;dur&quot;: &quot;10:58&quot;}, {&quot;pos&quot;: &quot;C2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Getaway (Top Gear Mix)&quot;, &quot;dur&quot;: &quot;3:17&quot;}, {&quot;pos&quot;: &quot;D1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Zanzibar (Fantasista Re-Formation)&quot;, &quot;dur&quot;: &quot;6:43&quot;}, {&quot;pos&quot;: &quot;D2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Let&#x27;s Groove (Restless Soul Inspiration Mix)&quot;, &quot;dur&quot;: &quot;6:03&quot;}], &quot;have&quot;: 107, &quot;want&quot;: 175, &quot;release_id&quot;: 7319336}">&#9825;</button></div><div class="fineprint">Soul Source, Sony Records Int&#x27;l - none - 2002 &middot; <span class="community">Have 107 · Want 175</span></div><div class="tags">Electronic, Jazz, Latin, Funk / Soul, House, Latin, Deep House, Disco</div><ol class="tracklist" aria-label="Tracklist"><li><span class="pos">A1</span><span class="tt">September (FPM Beautiful Latin Mix)</span><span class="tdur">6:22</span></li><li><span class="pos">A2</span><span class="tt">Shining Star (Asakusa Samba Remix)</span><span class="tdur">4:31</span></li><li><span class="pos">B1</span><span class="tt">Brazilian Rythm (Fearless Mix - Long Version)</span><span class="tdur">8:49</span></li><li><span class="pos">B2</span><span class="tt">Boogie Wonderland (Inspiration &#x27;83 Mix)</span><span class="tdur">6:26</span></li><li><span class="pos">C1</span><span class="tt">Can&#x27;t Hide Love (Masters Club Mix)</span><span class="tdur">10:58</span></li><li><span class="pos">C2</span><span class="tt">Getaway (Top Gear Mix)</span><span class="tdur">3:17</span></li><li><span class="pos">D1</span><span class="tt">Zanzibar (Fantasista Re-Formation)</span><span class="tdur">6:43</span></li><li><span class="pos">D2</span><span class="tt">Let&#x27;s Groove (Restless Soul Inspiration Mix)</span><span class="tdur">6:03</span></li></ol><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Earth, Wind &amp; Fire – The Essential Earth Wind &amp; Fire Remixes"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Earth, Wind &amp; Fire – The Essential Earth Wind &amp; Fire Remixes" data-yt="rfPiSrmsPlE" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span><a class="ytlink" href="https://www.youtube.com/watch?v=rfPiSrmsPlE" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Earth, Wind &amp; Fire – The Essential Earth Wind &amp; Fire Remixes on YouTube">&#8599;</a></div><div class="tname">Earth, Wind &amp; Fire – The Essential Earth Wind &amp; Fire Remixes</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Earth, Wind &amp; Fire - September (Phats &amp; Small Remix) (Official HD Vid…"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Earth, Wind &amp; Fire - September (Phats &amp; Small Remix) (Official HD Video)" data-yt="wn5Q37qOiiA" data-dur="214"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 3:34</span><a class="ytlink" href="https://www.youtube.com/watch?v=wn5Q37qOiiA" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Earth, Wind &amp; Fire - September (Phats &amp; Small Remix) (Official HD Vid… on YouTube">&#8599;</a></div><div class="tname">Earth, Wind &amp; Fire - September (Phats &amp; Small Remix) (Official HD Vid…</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Soul Source - Earth, Wind &amp; Fire Remixes (whole album)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Soul Source - Earth, Wind &amp; Fire Remixes (whole album)" data-yt="1YFgDDGRZSQ" data-dur="4027"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 67:07</span><a class="ytlink" href="https://www.youtube.com/watch?v=1YFgDDGRZSQ" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Soul Source - Earth, Wind &amp; Fire Remixes (whole album) on YouTube">&#8599;</a></div><div class="tname">Soul Source - Earth, Wind &amp; Fire Remixes (whole album)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/icBUuHnRrLSL-R7NQSse2-EG5b4nZkY4EcPq1RB0-QI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY4MTE2/LTE0Nzc4MTkwOTkt/MjU2Ny5qcGVn.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4464804762">Michelle Ayers - Another Lover (12&quot;)</a></div><div class="meta"><span class="price">6.50 EUR</span><span class="badge">Very Good Plus (VG+)</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4464804762">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4464804762" data-like-payload="{&quot;description&quot;: &quot;Michelle Ayers - Another Lover (12\&quot;)&quot;, &quot;price&quot;: &quot;6.50 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4464804762&quot;, &quot;store&quot;: &quot;Rush Hour&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/icBUuHnRrLSL-R7NQSse2-EG5b4nZkY4EcPq1RB0-QI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY4MTE2/LTE0Nzc4MTkwOTkt/MjU2Ny5qcGVn.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Michelle Ayers - Another Lover (Blaze Mix)&quot;, &quot;yt&quot;: &quot;uGC9xEUj6d0&quot;, &quot;src&quot;: null, &quot;dur&quot;: 354}, {&quot;title&quot;: &quot;Michelle Ayers - Another Lover (1988)&quot;, &quot;yt&quot;: &quot;teKnHWCnoXE&quot;, &quot;src&quot;: null, &quot;dur&quot;: 356}, {&quot;title&quot;: &quot;Michelle Ayers – Another Lover (Mad As Hell Mix)&quot;, &quot;yt&quot;: &quot;LohcVOedmd0&quot;, &quot;src&quot;: null, &quot;dur&quot;: 361}, {&quot;title&quot;: &quot;Michelle Ayers - Another Lover (Blaze Mix) - 1988 (4K/HQ)&quot;, &quot;yt&quot;: &quot;nnuUK1Xyxno&quot;, &quot;src&quot;: null, &quot;dur&quot;: 354}, {&quot;title&quot;: &quot;another lover-michelle ayres&quot;, &quot;yt&quot;: &quot;p8rGrt7F3PI&quot;, &quot;src&quot;: null, &quot;dur&quot;: 356}, {&quot;title&quot;: &quot;Michelle Ayers - Another Lover (The Revenge Dub)&quot;, &quot;yt&quot;: &quot;leP2IzVDNu4&quot;, &quot;src&quot;: null, &quot;dur&quot;: 329}], &quot;tracklist&quot;: [{&quot;pos&quot;: &quot;A1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Another Lover (Club Mix)&quot;, &quot;dur&quot;: &quot;5:30&quot;}, {&quot;pos&quot;: &quot;A2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Another Lover (Dub Mix)&quot;, &quot;dur&quot;: &quot;5:16&quot;}, {&quot;pos&quot;: &quot;B1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Another Lover (Blassin&#x27; Mix)&quot;, &quot;dur&quot;: &quot;5:50&quot;}, {&quot;pos&quot;: &quot;B2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Another Lover (Accapella)&quot;, &quot;dur&quot;: &quot;2:48&quot;}, {&quot;pos&quot;: &quot;B3&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Another Lover (Bass Apella)&quot;, &quot;dur&quot;: &quot;4:29&quot;}], &quot;have&quot;: 169, &quot;want&quot;: 73, &quot;release_id&quot;: 68116}">&#9825;</button></div><div class="fineprint">Garage Trax - GTX 2 - 1988 &middot; <span class="community">Have 169 · Want 73</span></div><div class="tags">Electronic, Garage House</div><ol class="tracklist" aria-label="Tracklist"><li><span class="pos">A1</span><span class="tt">Another Lover (Club Mix)</span><span class="tdur">5:30</span></li><li><span class="pos">A2</span><span class="tt">Another Lover (Dub Mix)</span><span class="tdur">5:16</span></li><li><span class="pos">B1</span><span class="tt">Another Lover (Blassin&#x27; Mix)</span><span class="tdur">5:50</span></li><li><span class="pos">B2</span><span class="tt">Another Lover (Accapella)</span><span class="tdur">2:48</span></li><li><span class="pos">B3</span><span class="tt">Another Lover (Bass Apella)</span><span class="tdur">4:29</span></li></ol><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Michelle Ayers - Another Lover (Blaze Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Michelle Ayers - Another Lover (Blaze Mix)" data-yt="uGC9xEUj6d0" data-dur="354"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:54</span><a class="ytlink" href="https://www.youtube.com/watch?v=uGC9xEUj6d0" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Michelle Ayers - Another Lover (Blaze Mix) on YouTube">&#8599;</a></div><div class="tname">Michelle Ayers - Another Lover (Blaze Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Michelle Ayers - Another Lover (1988)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Michelle Ayers - Another Lover (1988)" data-yt="teKnHWCnoXE" data-dur="356"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:56</span><a class="ytlink" href="https://www.youtube.com/watch?v=teKnHWCnoXE" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Michelle Ayers - Another Lover (1988) on YouTube">&#8599;</a></div><div class="tname">Michelle Ayers - Another Lover (1988)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Michelle Ayers – Another Lover (Mad As Hell Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Michelle Ayers – Another Lover (Mad As Hell Mix)" data-yt="LohcVOedmd0" data-dur="361"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 6:01</span><a class="ytlink" href="https://www.youtube.com/watch?v=LohcVOedmd0" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Michelle Ayers – Another Lover (Mad As Hell Mix) on YouTube">&#8599;</a></div><div class="tname">Michelle Ayers – Another Lover (Mad As Hell Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Michelle Ayers - Another Lover (Blaze Mix) - 1988 (4K/HQ)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Michelle Ayers - Another Lover (Blaze Mix) - 1988 (4K/HQ)" data-yt="nnuUK1Xyxno" data-dur="354"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:54</span><a class="ytlink" href="https://www.youtube.com/watch?v=nnuUK1Xyxno" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Michelle Ayers - Another Lover (Blaze Mix) - 1988 (4K/HQ) on YouTube">&#8599;</a></div><div class="tname">Michelle Ayers - Another Lover (Blaze Mix) - 1988 (4K/HQ)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play another lover-michelle ayres"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="another lover-michelle ayres" data-yt="p8rGrt7F3PI" data-dur="356"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:56</span><a class="ytlink" href="https://www.youtube.com/watch?v=p8rGrt7F3PI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch another lover-michelle ayres on YouTube">&#8599;</a></div><div class="tname">another lover-michelle ayres</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Michelle Ayers - Another Lover (The Revenge Dub)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Michelle Ayers - Another Lover (The Revenge Dub)" data-yt="leP2IzVDNu4" data-dur="329"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 5:29</span><a class="ytlink" href="https://www.youtube.com/watch?v=leP2IzVDNu4" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Michelle Ayers - Another Lover (The Revenge Dub) on YouTube">&#8599;</a></div><div class="tname">Michelle Ayers - Another Lover (The Revenge Dub)</div></li></ul></div></div>
+<div class="rec"><img src="https://i.discogs.com/4CgzVv-JdVXBEzmH0tbXoaFJ-DN_BiWhK2XGIUO8UoU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4MDA5/Mi0xNDI3MDQ2OTc0/LTc1MTYuanBlZw.jpeg" alt=""><div class="body"><div class="title"><a href="https://www.discogs.com/sell/item/4464803556">Fourplay - Make &#x27;Em Rock (Our Way) (12&quot;)</a></div><div class="meta"><span class="price">6.50 EUR</span><span class="badge">Very Good Plus (VG+) / Generic sleeve</span><span class="badge format">Vinyl</span><span class="badge vinylonly">&#9733; Vinyl Only</span><a class="buy" href="https://www.discogs.com/sell/item/4464803556">Buy on Discogs &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://www.discogs.com/sell/item/4464803556" data-like-payload="{&quot;description&quot;: &quot;Fourplay - Make &#x27;Em Rock (Our Way) (12\&quot;)&quot;, &quot;price&quot;: &quot;6.50 EUR&quot;, &quot;url&quot;: &quot;https://www.discogs.com/sell/item/4464803556&quot;, &quot;store&quot;: &quot;Rush Hour&quot;, &quot;thumb&quot;: &quot;https://i.discogs.com/4CgzVv-JdVXBEzmH0tbXoaFJ-DN_BiWhK2XGIUO8UoU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4MDA5/Mi0xNDI3MDQ2OTc0/LTc1MTYuanBlZw.jpeg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Fourplay - Make &#x27;Em Rock Our Way (Freestyle Hip Hop Mix)&quot;, &quot;yt&quot;: &quot;UApgRjeUySc&quot;, &quot;src&quot;: null, &quot;dur&quot;: 486}, {&quot;title&quot;: &quot;FOURPLAY - make &#x27;em rock (our way)&quot;, &quot;yt&quot;: &quot;VAzhOBM68Kw&quot;, &quot;src&quot;: null, &quot;dur&quot;: 73}, {&quot;title&quot;: &quot;Fourplay   Make &#x27;Em Rock Our Way Westside Crazy DJ Dub&quot;, &quot;yt&quot;: &quot;1HbQ6Ov-fEA&quot;, &quot;src&quot;: null, &quot;dur&quot;: 545}, {&quot;title&quot;: &quot;4 Play - Make &#x27;Em Rock (Our Way) [After Play Beats]&quot;, &quot;yt&quot;: &quot;WJj6NGQJLvI&quot;, &quot;src&quot;: null, &quot;dur&quot;: 254}], &quot;tracklist&quot;: [{&quot;pos&quot;: &quot;A1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Make &#x27;Em Rock (Our Way) (Freestyle Hip Hop Mix)&quot;, &quot;dur&quot;: &quot;8:05&quot;}, {&quot;pos&quot;: &quot;A2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Make &#x27;Em Rock (Our Way) (Frankie&#x27;s Bone-A-Pella)&quot;, &quot;dur&quot;: &quot;1:10&quot;}, {&quot;pos&quot;: &quot;B1&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Make &#x27;Em Rock (Our Way) (Westside Crazy DJ Dub)&quot;, &quot;dur&quot;: &quot;9:30&quot;}, {&quot;pos&quot;: &quot;B2&quot;, &quot;artist&quot;: &quot;&quot;, &quot;title&quot;: &quot;Make &#x27;Em Rock (Our Way) (After Play Beats)&quot;, &quot;dur&quot;: &quot;4:10&quot;}], &quot;have&quot;: 373, &quot;want&quot;: 329, &quot;release_id&quot;: 180092}">&#9825;</button></div><div class="fineprint">Fourth Floor Records - FF-1091 - 1988 &middot; <span class="community">Have 373 · Want 329</span></div><div class="tags">Electronic, Breakbeat, House, Freestyle</div><ol class="tracklist" aria-label="Tracklist"><li><span class="pos">A1</span><span class="tt">Make &#x27;Em Rock (Our Way) (Freestyle Hip Hop Mix)</span><span class="tdur">8:05</span></li><li><span class="pos">A2</span><span class="tt">Make &#x27;Em Rock (Our Way) (Frankie&#x27;s Bone-A-Pella)</span><span class="tdur">1:10</span></li><li><span class="pos">B1</span><span class="tt">Make &#x27;Em Rock (Our Way) (Westside Crazy DJ Dub)</span><span class="tdur">9:30</span></li><li><span class="pos">B2</span><span class="tt">Make &#x27;Em Rock (Our Way) (After Play Beats)</span><span class="tdur">4:10</span></li></ol><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Fourplay - Make &#x27;Em Rock Our Way (Freestyle Hip Hop Mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Fourplay - Make &#x27;Em Rock Our Way (Freestyle Hip Hop Mix)" data-yt="UApgRjeUySc" data-dur="486"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 8:06</span><a class="ytlink" href="https://www.youtube.com/watch?v=UApgRjeUySc" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Fourplay - Make &#x27;Em Rock Our Way (Freestyle Hip Hop Mix) on YouTube">&#8599;</a></div><div class="tname">Fourplay - Make &#x27;Em Rock Our Way (Freestyle Hip Hop Mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play FOURPLAY - make &#x27;em rock (our way)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="FOURPLAY - make &#x27;em rock (our way)" data-yt="VAzhOBM68Kw" data-dur="73"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 1:13</span><a class="ytlink" href="https://www.youtube.com/watch?v=VAzhOBM68Kw" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch FOURPLAY - make &#x27;em rock (our way) on YouTube">&#8599;</a></div><div class="tname">FOURPLAY - make &#x27;em rock (our way)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Fourplay   Make &#x27;Em Rock Our Way Westside Crazy DJ Dub"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Fourplay   Make &#x27;Em Rock Our Way Westside Crazy DJ Dub" data-yt="1HbQ6Ov-fEA" data-dur="545"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 9:05</span><a class="ytlink" href="https://www.youtube.com/watch?v=1HbQ6Ov-fEA" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch Fourplay   Make &#x27;Em Rock Our Way Westside Crazy DJ Dub on YouTube">&#8599;</a></div><div class="tname">Fourplay   Make &#x27;Em Rock Our Way Westside Crazy DJ Dub</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play 4 Play - Make &#x27;Em Rock (Our Way) [After Play Beats]"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="4 Play - Make &#x27;Em Rock (Our Way) [After Play Beats]" data-yt="WJj6NGQJLvI" data-dur="254"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / 4:14</span><a class="ytlink" href="https://www.youtube.com/watch?v=WJj6NGQJLvI" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" aria-label="Watch 4 Play - Make &#x27;Em Rock (Our Way) [After Play Beats] on YouTube">&#8599;</a></div><div class="tname">4 Play - Make &#x27;Em Rock (Our Way) [After Play Beats]</div></li></ul></div></div>
+<h2>Clone.nl (new arrivals) &middot; 6</h2>
+<div class="rec"><img src="https://clone.nl/platen/artwork/large/plaatimage84273.jpg" alt=""><div class="body"><div class="title"><a href="https://clone.nl/item85200.html">Aleqs Notal  - Behind The Noise (12inch)</a></div><div class="meta"><span class="price">price on request</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://clone.nl/item85200.html">View on Clone.nl &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://clone.nl/item85200.html" data-like-payload="{&quot;description&quot;: &quot;Aleqs Notal  - Behind The Noise (12inch)&quot;, &quot;price&quot;: &quot;price on request&quot;, &quot;url&quot;: &quot;https://clone.nl/item85200.html&quot;, &quot;store&quot;: &quot;Clone.nl (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://clone.nl/platen/artwork/large/plaatimage84273.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Aleqs Notal  - Behind The Noise - 1 Indistinct Chatter&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/85200/1%20Indistinct%20Chatter.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Aleqs Notal  - Behind The Noise - 2 Heartproof&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/85200/2%20Heartproof.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Aleqs Notal  - Behind The Noise - 3 Am I Dreamin&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/85200/3%20Am%20I%20Dreamin.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Aleqs Notal  - Behind The Noise - 4 Behind The Noise&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/85200/4%20Behind%20The%20Noise.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">IL008</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Aleqs Notal  - Behind The Noise - 1 Indistinct Chatter"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Aleqs Notal  - Behind The Noise - 1 Indistinct Chatter" data-src="https://clone.nl/platen/mp3/85200/1%20Indistinct%20Chatter.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Aleqs Notal  - Behind The Noise - 1 Indistinct Chatter</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Aleqs Notal  - Behind The Noise - 2 Heartproof"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Aleqs Notal  - Behind The Noise - 2 Heartproof" data-src="https://clone.nl/platen/mp3/85200/2%20Heartproof.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Aleqs Notal  - Behind The Noise - 2 Heartproof</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Aleqs Notal  - Behind The Noise - 3 Am I Dreamin"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Aleqs Notal  - Behind The Noise - 3 Am I Dreamin" data-src="https://clone.nl/platen/mp3/85200/3%20Am%20I%20Dreamin.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Aleqs Notal  - Behind The Noise - 3 Am I Dreamin</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Aleqs Notal  - Behind The Noise - 4 Behind The Noise"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Aleqs Notal  - Behind The Noise - 4 Behind The Noise" data-src="https://clone.nl/platen/mp3/85200/4%20Behind%20The%20Noise.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Aleqs Notal  - Behind The Noise - 4 Behind The Noise</div></li></ul></div></div>
+<div class="rec"><img src="https://clone.nl/platen/artwork/large/plaatimage83932.jpg" alt=""><div class="body"><div class="title"><a href="https://clone.nl/item84851.html">Abacus - The Earthly pleasures EP (Reissue) (12inch)</a></div><div class="meta"><span class="price">price on request</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://clone.nl/item84851.html">View on Clone.nl &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://clone.nl/item84851.html" data-like-payload="{&quot;description&quot;: &quot;Abacus - The Earthly pleasures EP (Reissue) (12inch)&quot;, &quot;price&quot;: &quot;price on request&quot;, &quot;url&quot;: &quot;https://clone.nl/item84851.html&quot;, &quot;store&quot;: &quot;Clone.nl (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://clone.nl/platen/artwork/large/plaatimage83932.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Abacus - The Earthly pleasures EP (Reissue) - 1 Sunrayz&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84851/1%20Sunrayz.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Abacus - The Earthly pleasures EP (Reissue) - 2 Moonbeamz&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84851/2%20Moonbeamz.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Abacus - The Earthly pleasures EP (Reissue) - 3 Crazy Hazy Dayz&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84851/3%20Crazy%20Hazy%20Dayz.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Phonogramme84</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Abacus - The Earthly pleasures EP (Reissue) - 1 Sunrayz"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Abacus - The Earthly pleasures EP (Reissue) - 1 Sunrayz" data-src="https://clone.nl/platen/mp3/84851/1%20Sunrayz.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Abacus - The Earthly pleasures EP (Reissue) - 1 Sunrayz</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Abacus - The Earthly pleasures EP (Reissue) - 2 Moonbeamz"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Abacus - The Earthly pleasures EP (Reissue) - 2 Moonbeamz" data-src="https://clone.nl/platen/mp3/84851/2%20Moonbeamz.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Abacus - The Earthly pleasures EP (Reissue) - 2 Moonbeamz</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Abacus - The Earthly pleasures EP (Reissue) - 3 Crazy Hazy Dayz"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Abacus - The Earthly pleasures EP (Reissue) - 3 Crazy Hazy Dayz" data-src="https://clone.nl/platen/mp3/84851/3%20Crazy%20Hazy%20Dayz.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Abacus - The Earthly pleasures EP (Reissue) - 3 Crazy Hazy Dayz</div></li></ul></div></div>
+<div class="rec"><img src="https://clone.nl/platen/artwork/large/plaatimage83930.jpg" alt=""><div class="body"><div class="title"><a href="https://clone.nl/item84849.html">Rick Wade - Late Night Basix (reissue) (12inch)</a></div><div class="meta"><span class="price">price on request</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://clone.nl/item84849.html">View on Clone.nl &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://clone.nl/item84849.html" data-like-payload="{&quot;description&quot;: &quot;Rick Wade - Late Night Basix (reissue) (12inch)&quot;, &quot;price&quot;: &quot;price on request&quot;, &quot;url&quot;: &quot;https://clone.nl/item84849.html&quot;, &quot;store&quot;: &quot;Clone.nl (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://clone.nl/platen/artwork/large/plaatimage83930.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Rick Wade - Late Night Basix (reissue) - 1 Nothing To Fear&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84849/1%20Nothing%20To%20Fear.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Rick Wade - Late Night Basix (reissue) - 2 Nothing To Fear (DBX dub)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84849/2%20Nothing%20To%20Fear%20%28DBX%20dub%29.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Rick Wade - Late Night Basix (reissue) - 3 I Do Believe&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84849/3%20I%20Do%20Believe.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Rick Wade - Late Night Basix (reissue) - 4 I Can Feel It&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84849/4%20I%20Can%20Feel%20It.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Phonogramme82</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Rick Wade - Late Night Basix (reissue) - 1 Nothing To Fear"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Rick Wade - Late Night Basix (reissue) - 1 Nothing To Fear" data-src="https://clone.nl/platen/mp3/84849/1%20Nothing%20To%20Fear.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Rick Wade - Late Night Basix (reissue) - 1 Nothing To Fear</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Rick Wade - Late Night Basix (reissue) - 2 Nothing To Fear (DBX dub)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Rick Wade - Late Night Basix (reissue) - 2 Nothing To Fear (DBX dub)" data-src="https://clone.nl/platen/mp3/84849/2%20Nothing%20To%20Fear%20%28DBX%20dub%29.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Rick Wade - Late Night Basix (reissue) - 2 Nothing To Fear (DBX dub)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Rick Wade - Late Night Basix (reissue) - 3 I Do Believe"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Rick Wade - Late Night Basix (reissue) - 3 I Do Believe" data-src="https://clone.nl/platen/mp3/84849/3%20I%20Do%20Believe.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Rick Wade - Late Night Basix (reissue) - 3 I Do Believe</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Rick Wade - Late Night Basix (reissue) - 4 I Can Feel It"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Rick Wade - Late Night Basix (reissue) - 4 I Can Feel It" data-src="https://clone.nl/platen/mp3/84849/4%20I%20Can%20Feel%20It.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Rick Wade - Late Night Basix (reissue) - 4 I Can Feel It</div></li></ul></div></div>
+<div class="rec"><img src="https://clone.nl/platen/artwork/large/plaatimage83929.jpg" alt=""><div class="body"><div class="title"><a href="https://clone.nl/item84848.html">Nacho Marco - Colors In Dub Vol 2 (12inch)</a></div><div class="meta"><span class="price">price on request</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://clone.nl/item84848.html">View on Clone.nl &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://clone.nl/item84848.html" data-like-payload="{&quot;description&quot;: &quot;Nacho Marco - Colors In Dub Vol 2 (12inch)&quot;, &quot;price&quot;: &quot;price on request&quot;, &quot;url&quot;: &quot;https://clone.nl/item84848.html&quot;, &quot;store&quot;: &quot;Clone.nl (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://clone.nl/platen/artwork/large/plaatimage83929.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Nacho Marco - Colors In Dub Vol 2 - 1 Pitch Black&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84848/1%20Pitch%20Black.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Nacho Marco - Colors In Dub Vol 2 - 2 Pitch Black (Steve Bug remix)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84848/2%20Pitch%20Black%20%28Steve%20Bug%20remix%29.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Nacho Marco - Colors In Dub Vol 2 - 3 Strawberry Pink&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84848/3%20Strawberry%20Pink.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Nacho Marco - Colors In Dub Vol 2 - 4 Tiger Orange&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84848/4%20Tiger%20Orange.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Phonogramme81</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Nacho Marco - Colors In Dub Vol 2 - 1 Pitch Black"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Nacho Marco - Colors In Dub Vol 2 - 1 Pitch Black" data-src="https://clone.nl/platen/mp3/84848/1%20Pitch%20Black.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Nacho Marco - Colors In Dub Vol 2 - 1 Pitch Black</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Nacho Marco - Colors In Dub Vol 2 - 2 Pitch Black (Steve Bug remix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Nacho Marco - Colors In Dub Vol 2 - 2 Pitch Black (Steve Bug remix)" data-src="https://clone.nl/platen/mp3/84848/2%20Pitch%20Black%20%28Steve%20Bug%20remix%29.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Nacho Marco - Colors In Dub Vol 2 - 2 Pitch Black (Steve Bug remix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Nacho Marco - Colors In Dub Vol 2 - 3 Strawberry Pink"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Nacho Marco - Colors In Dub Vol 2 - 3 Strawberry Pink" data-src="https://clone.nl/platen/mp3/84848/3%20Strawberry%20Pink.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Nacho Marco - Colors In Dub Vol 2 - 3 Strawberry Pink</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Nacho Marco - Colors In Dub Vol 2 - 4 Tiger Orange"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Nacho Marco - Colors In Dub Vol 2 - 4 Tiger Orange" data-src="https://clone.nl/platen/mp3/84848/4%20Tiger%20Orange.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Nacho Marco - Colors In Dub Vol 2 - 4 Tiger Orange</div></li></ul></div></div>
+<div class="rec"><img src="https://clone.nl/platen/artwork/large/plaatimage83928.jpg" alt=""><div class="body"><div class="title"><a href="https://clone.nl/item84847.html">Zoo Brazil - Stockholm To Paris EP (12inch)</a></div><div class="meta"><span class="price">price on request</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://clone.nl/item84847.html">View on Clone.nl &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://clone.nl/item84847.html" data-like-payload="{&quot;description&quot;: &quot;Zoo Brazil - Stockholm To Paris EP (12inch)&quot;, &quot;price&quot;: &quot;price on request&quot;, &quot;url&quot;: &quot;https://clone.nl/item84847.html&quot;, &quot;store&quot;: &quot;Clone.nl (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://clone.nl/platen/artwork/large/plaatimage83928.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Zoo Brazil - Stockholm To Paris EP - 1 New One&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84847/1%20New%20One.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Zoo Brazil - Stockholm To Paris EP - 2 In The Place&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84847/2%20In%20The%20Place.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Zoo Brazil - Stockholm To Paris EP - 3 To Be With You (dub mix)&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84847/3%20To%20Be%20With%20You%20%28dub%20mix%29.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Zoo Brazil - Stockholm To Paris EP - 4 To Be With You&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/84847/4%20To%20Be%20With%20You.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">Phonogramme80</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Zoo Brazil - Stockholm To Paris EP - 1 New One"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Zoo Brazil - Stockholm To Paris EP - 1 New One" data-src="https://clone.nl/platen/mp3/84847/1%20New%20One.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Zoo Brazil - Stockholm To Paris EP - 1 New One</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Zoo Brazil - Stockholm To Paris EP - 2 In The Place"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Zoo Brazil - Stockholm To Paris EP - 2 In The Place" data-src="https://clone.nl/platen/mp3/84847/2%20In%20The%20Place.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Zoo Brazil - Stockholm To Paris EP - 2 In The Place</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Zoo Brazil - Stockholm To Paris EP - 3 To Be With You (dub mix)"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Zoo Brazil - Stockholm To Paris EP - 3 To Be With You (dub mix)" data-src="https://clone.nl/platen/mp3/84847/3%20To%20Be%20With%20You%20%28dub%20mix%29.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Zoo Brazil - Stockholm To Paris EP - 3 To Be With You (dub mix)</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Zoo Brazil - Stockholm To Paris EP - 4 To Be With You"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Zoo Brazil - Stockholm To Paris EP - 4 To Be With You" data-src="https://clone.nl/platen/mp3/84847/4%20To%20Be%20With%20You.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Zoo Brazil - Stockholm To Paris EP - 4 To Be With You</div></li></ul></div></div>
+<div class="rec"><img src="https://clone.nl/platen/artwork/large/plaatimage82383.jpg" alt=""><div class="body"><div class="title"><a href="https://clone.nl/item83277.html">Simoncino - Traxxx EP (12inch)</a></div><div class="meta"><span class="price">price on request</span><span class="badge">New</span><span class="badge format">Vinyl</span><a class="buy" href="https://clone.nl/item83277.html">View on Clone.nl &rarr;</a><button class="likebtn" type="button" aria-label="Like" aria-pressed="false" data-like-key="https://clone.nl/item83277.html" data-like-payload="{&quot;description&quot;: &quot;Simoncino - Traxxx EP (12inch)&quot;, &quot;price&quot;: &quot;price on request&quot;, &quot;url&quot;: &quot;https://clone.nl/item83277.html&quot;, &quot;store&quot;: &quot;Clone.nl (new arrivals)&quot;, &quot;thumb&quot;: &quot;https://clone.nl/platen/artwork/large/plaatimage82383.jpg&quot;, &quot;formats&quot;: [&quot;Vinyl&quot;], &quot;videos&quot;: [{&quot;title&quot;: &quot;Simoncino - Traxxx EP - 1 Traxxx I&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/83277/1%20Traxxx%20I.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Simoncino - Traxxx EP - 2 Traxxx II&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/83277/2%20Traxxx%20II.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Simoncino - Traxxx EP - 3 Traxxx III&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/83277/3%20Traxxx%20III.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Simoncino - Traxxx EP - 4 Traxxx IV&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/83277/4%20Traxxx%20IV.mp3&quot;, &quot;dur&quot;: 0}, {&quot;title&quot;: &quot;Simoncino - Traxxx EP - 5 Traxxx V&quot;, &quot;yt&quot;: null, &quot;src&quot;: &quot;https://clone.nl/platen/mp3/83277/5%20Traxxx%20V.mp3&quot;, &quot;dur&quot;: 0}]}">&#9825;</button></div><div class="fineprint">LAXSE11</div><div class="tags">house</div><ul class="tracks"><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Simoncino - Traxxx EP - 1 Traxxx I"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Simoncino - Traxxx EP - 1 Traxxx I" data-src="https://clone.nl/platen/mp3/83277/1%20Traxxx%20I.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Simoncino - Traxxx EP - 1 Traxxx I</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Simoncino - Traxxx EP - 2 Traxxx II"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Simoncino - Traxxx EP - 2 Traxxx II" data-src="https://clone.nl/platen/mp3/83277/2%20Traxxx%20II.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Simoncino - Traxxx EP - 2 Traxxx II</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Simoncino - Traxxx EP - 3 Traxxx III"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Simoncino - Traxxx EP - 3 Traxxx III" data-src="https://clone.nl/platen/mp3/83277/3%20Traxxx%20III.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Simoncino - Traxxx EP - 3 Traxxx III</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Simoncino - Traxxx EP - 4 Traxxx IV"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Simoncino - Traxxx EP - 4 Traxxx IV" data-src="https://clone.nl/platen/mp3/83277/4%20Traxxx%20IV.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Simoncino - Traxxx EP - 4 Traxxx IV</div></li><li class="track"><div class="trow"><button class="ppbtn" aria-label="Play Simoncino - Traxxx EP - 5 Traxxx V"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></button><div class="bar" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Simoncino - Traxxx EP - 5 Traxxx V" data-src="https://clone.nl/platen/mp3/83277/5%20Traxxx%20V.mp3" data-dur="0"><div class="track"><div class="fill"></div></div></div><span class="time">0:00 / --:--</span></div><div class="tname">Simoncino - Traxxx EP - 5 Traxxx V</div></li></ul></div></div>
+<footer>Generated 07 Nov 2026 11:42 UTC. Tap a bar to play from that point; only one track plays at a time. The arrow opens the original video on YouTube.<div style="margin-top:10px;">Earlier: <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-11-06.html">2026-11-06</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-11-05.html">2026-11-05</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-11-04.html">2026-11-04</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-11-03.html">2026-11-03</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-11-02.html">2026-11-02</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-11-01.html">2026-11-01</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-31.html">2026-10-31</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-30.html">2026-10-30</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-29.html">2026-10-29</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-28.html">2026-10-28</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-27.html">2026-10-27</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-26.html">2026-10-26</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-25.html">2026-10-25</a> &middot; <a href="https://joor241.github.io/discogs-genre-digest/archive/2026-10-24.html">2026-10-24</a></div></footer>
+</div><script>
+(function () {
+  // Substituted at render time from the ICON_* constants, so the markup
+  // and the JS that swaps it can never drift out of sync.
+  var ICON_PLAY = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
+  var ICON_PAUSE = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 5h3.5v14H6zM14.5 5H18v14h-3.5z"/></svg>';
+  var ICON_PREV = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 6h2.5v12H6zm3.5 6L18 6v12z"/></svg>';
+  var ICON_NEXT = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path fill="currentColor" d="M15.5 6H18v12h-2.5zM6 6l8.5 6L6 18z"/></svg>';
+
+  // Two hidden YouTube players, not one: ytPlayer is the one you hear,
+  // ytSpare sits muted behind it and fetches ahead. See "fetching ahead".
+  var ytPlayer = null, ytSpare = null;
+  var ytApiReady = false;   // iframe_api has loaded
+  var ytUp = false;         // ytPlayer has fired onReady
+  var ytSpareUp = false;    // so has ytSpare
+  var ytQueued = null;      // a press that arrived before ytUp
+  var spareBar = null, spareVideoId = null, spareStart = 0, spareAt = 0;
+  var spareHeld = false;    // its fetch got as far as playing, and was paused there
+  var swapPending = false, swapTimer = null, nearEndDone = false;
+  var hoverTimer = null, hoverBar = null, hoverAt = 0, hoverEnterAt = 0, hoverFetchAt = 0;
+  // Fetching ahead costs a second request per track. Off for anyone who
+  // asked their browser to save data, and ?ahead=0 turns it off by hand --
+  // the player then behaves exactly like the single-player one it replaced.
+  var FETCH_AHEAD = !/[?&]ahead=0/.test(location.search) &&
+    !(navigator.connection && navigator.connection.saveData);
+  // Preloading everything (see "preloading everything") is for the digest
+  // page, which ships the element that shows its progress. likes.html does
+  // not, and keeps fetching one track ahead.
+  var preloadEl = document.getElementById('preload');
+  var PRELOAD_ALL = FETCH_AHEAD && !!preloadEl;
+  var ytMain = null;        // the player cold loads go into; see playYtFrom
+  // audioBase plays any MP3 that was not preloaded; audioEl is whichever
+  // <audio> is the one you hear, audioBase or a preloaded one.
+  var audioBase = new Audio();
+  audioBase.preload = 'none';
+  var audioEl = audioBase;
+
+  var activeEngine = null;  // 'yt' | 'audio' | null
+  var activeBar = null, activeVideoId = null, activeSrc = null;
+  var steppedTo = null;     // see playFrom
+
+  // One console line per press: how the track was loaded and how long it
+  // took to sound. Open the browser console (F12) on a slow track to see
+  // which way it went. Over 1.5s is a warning.
+  var pressLog = null;
+  function logHow(how) { if (pressLog) pressLog.how = how; }
+  // at: where in the track it started, in seconds, for a press that
+  // started somewhere along the bar rather than at the beginning.
+  function logSound(at) {
+    if (!pressLog || pressLog.done) return;
+    pressLog.done = true;
+    var ms = Math.round(performance.now() - pressLog.t);
+    var where = pressLog.fromBar && isFinite(at) ? ' at ' + fmt(at) : '';
+    (ms > 1500 ? console.warn : console.info)(
+      '[digest] ' + ms + ' ms to sound' + where + ' \u00b7 ' + pressLog.how +
+      ' \u00b7 ' + pressLog.name);
+  }
+  function ytNow() {
+    try { return ytPlayer.getCurrentTime(); } catch (err) { return NaN; }
+  }
+  function logWarn(text) {
+    console.warn('[digest] ' + text + (pressLog ? ' \u00b7 ' + pressLog.name : ''));
+  }
+  var pendingSeekFraction = null;
+  var pollTimer = null;
+
+  function fmt(t) {
+    if (!isFinite(t) || t < 0) t = 0;
+    var m = Math.floor(t / 60), s = Math.floor(t % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function row(bar) { return bar.closest('.trow'); }
+
+  function paint(bar, fraction, curLabel, durLabel, state) {
+    var fillEl = bar.querySelector('.fill');
+    if (fillEl) fillEl.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+    bar.setAttribute('aria-valuenow', Math.round(fraction * 100));
+    var r = row(bar);
+    if (!r) return;
+    r.classList.toggle('playing', state === 'playing');
+    var t = r.querySelector('.time');
+    if (t) t.textContent = curLabel + ' / ' + durLabel;
+    var btn = r.querySelector('.ppbtn');
+    if (btn) {
+      btn.classList.toggle('loading', state === 'loading');
+      btn.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    // Keep the bottom transport in step with the row: same play/pause icon,
+    // same progress, same clock.
+    var nbToggle = document.querySelector('#nowbar [data-toggle]');
+    if (nbToggle) {
+      nbToggle.innerHTML = state === 'playing' ? ICON_PAUSE : ICON_PLAY;
+    }
+    if (bar === activeBar) {
+      var nbFill = document.querySelector('#nowbar .nbfill');
+      if (nbFill) nbFill.style.width = (Math.max(0, Math.min(1, fraction)) * 100) + '%';
+      var nbSeek = document.querySelector('#nowbar .nbseek');
+      if (nbSeek) nbSeek.setAttribute('aria-valuenow', Math.round(fraction * 100));
+      var nbTime = document.querySelector('#nowbar .nbtime');
+      if (nbTime) nbTime.textContent = curLabel + ' / ' + durLabel;
+    }
+  }
+
+  function knownDuration(bar) {
+    return parseInt(bar.getAttribute('data-dur'), 10) || 0;
+  }
+
+  function durLabel(bar) {
+    var known = knownDuration(bar);
+    return known ? fmt(known) : '--:--';
+  }
+
+  function resetBar(bar) {
+    if (!bar) return;
+    paint(bar, 0, '0:00', durLabel(bar), 'idle');
+  }
+
+  function stopPolling() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  // ---- YouTube backend (Discogs releases) ----
+
+  function pollYt() {
+    if (!ytPlayer || !activeBar) return;
+    var dur = 0, cur = 0, state = -1;
+    try {
+      dur = ytPlayer.getDuration() || 0;
+      cur = ytPlayer.getCurrentTime() || 0;
+      state = ytPlayer.getPlayerState();
+    } catch (err) { return; }
+    var justSeeked = false;
+    if (pendingSeekFraction !== null && dur > 0) {
+      var target = pendingSeekFraction; pendingSeekFraction = null;
+      ytPlayer.seekTo(target * dur, true);
+      cur = target * dur;
+      justSeeked = true;
+      if (pressLog && !pressLog.done) pressLog.seekTo = cur;
+    }
+    // A jump within the playing track that never stopped to buffer gives
+    // onYtState nothing to report; this sees it arrive instead.
+    if (!justSeeked && pressLog && !pressLog.done && pressLog.seekTo !== undefined &&
+        state === 1 && Math.abs(cur - pressLog.seekTo) < 3) {
+      logSound(cur);
+    }
+    // Hovering another row borrows the spare, so by the end of a track it
+    // may no longer hold the one auto-advance is about to ask for.
+    if (!nearEndDone && state === 1 && dur > 0 && dur - cur < 20) {
+      nearEndDone = true;
+      preloadNext();
+    }
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar),
+          state === 1 ? 'playing' : (state === 3 ? 'loading' : 'paused'));
+  }
+
+  function buildYt(host, onReady) {
+    return new YT.Player(host, {
+      height: '113', width: '200',
+      playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1 },
+      events: {
+        onReady: onReady, onStateChange: onYtState, onError: onYtError,
+        onAutoplayBlocked: onYtBlocked
+      }
+    });
+  }
+
+  // A tab opened in the background is not allowed to start anything, muted
+  // or not, so the spare's fetch never happens there. Forget it, or the
+  // first press would sit waiting on it; visibilitychange asks again.
+  function onYtBlocked(ev) {
+    if (ev.target === ytPlayer) return;
+    if (ev.target.__pool) { poolBlocked(ev.target.__pool); return; }
+    spareBar = null; spareVideoId = null;
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) return;
+    everShown = true; hiddenRefused = false;
+    preloadNext();
+    pumpPreload();
+  });
+
+  // Which video a player says it has, or '' when it does not say.
+  function ytVideoId(player) {
+    try { return player.getVideoData().video_id || ''; } catch (err) { return ''; }
+  }
+
+  function onYtState(ev) {
+    // A preloaded player that got as far as playing has its video; it
+    // counts as loaded whether it is held below or is already the one
+    // you hear (pressed while still on its way).
+    var entry = ev.target.__pool;
+    // Not a word from the video a reclaimed player held before.
+    if (entry && ev.data === 1 && ytVideoId(ev.target) && ytVideoId(ev.target) !== entry.key) {
+      return;
+    }
+    if (entry && ev.data === 1) { entry.held = true; poolSettle(entry, 'loaded'); }
+    if (ev.target !== ytPlayer) {
+      if (entry) {
+        if (ev.data === 1) { try { ev.target.pauseVideo(); } catch (err) {} }
+        return;
+      }
+      // The spare is there to fetch, never to be heard: hold it the moment
+      // it actually starts. Not earlier -- pausing a load that is still on
+      // its way throws the head start away (measured: paused 150ms in, the
+      // press then waited as long as a cold one).
+      if (ev.data === 1) {
+        // Unless this is the previous track's last word, arriving after
+        // the player was handed something new to fetch.
+        if (!ytVideoId(ev.target) || ytVideoId(ev.target) === spareVideoId) spareHeld = true;
+        try { ev.target.pauseVideo(); } catch (err) {}
+      }
+      return;
+    }
+    if (activeEngine !== 'yt' || !activeBar) return;
+    if (ev.data === 1 || ev.data === 3) swapPending = false;
+    if (ev.data === 1) {
+      // Not while a seek is still to come (length unknown until now):
+      // pollYt times that one once it lands.
+      if (pendingSeekFraction === null) logSound(ytNow());
+      preloadNext();
+    } else if (ev.data === YT.PlayerState.ENDED) {
+      var d = ytPlayer.getDuration() || knownDuration(activeBar);
+      paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+      stopPolling();
+      step(1);  // roll on to the next track, top to bottom
+    }
+  }
+
+  function onYtError(ev) {
+    if (ev.target !== ytPlayer && ev.target.__pool) {
+      // Same as the spare below: a dead video found while preloading greys
+      // its rows out now, so a press or auto-advance never stops on it.
+      var pooled = ev.target.__pool;
+      var gone = ytVideoId(ev.target);
+      if (gone && gone !== pooled.key) return;  // about the video it held before
+      if (ev.data === 100 || ev.data === 101 || ev.data === 150) {
+        markErrored('data-yt', pooled.key);
+      }
+      poolSettle(pooled, 'failed');
+      return;
+    }
+    if (ev.target !== ytPlayer) {
+      // Found out while fetching ahead that this one cannot play here
+      // (removed, or its owner switched embedding off). Grey the row out
+      // now rather than on the press, and line up the one after it, so
+      // auto-advance steps past a dead video instead of stopping on it.
+      // Unless it is about a fetch that has since been replaced: that must
+      // not grey out the row that replaced it.
+      var dead = ev.data === 100 || ev.data === 101 || ev.data === 150;
+      var failedId = ytVideoId(ev.target);
+      if (failedId && failedId !== spareVideoId) return;
+      var r = spareBar ? row(spareBar) : null;
+      spareBar = null; spareVideoId = null;
+      if (dead && r) { r.classList.add('errored'); preloadNext(); }
+      return;
+    }
+    if (activeEngine === 'yt' && activeBar) {
+      var ar = row(activeBar);
+      if (ar) ar.classList.add('errored');
+      logWarn('YouTube cannot play this video (error ' + ev.data + ')' +
+              (activeBar === steppedTo ? ', skipping to the next' : ''));
+      if (pressLog) pressLog.done = true;
+      // Listening top to bottom: one dead video must not stop the run.
+      if (activeBar === steppedTo) step(1);
+    }
+  }
+
+  function ensureYt(cb) {
+    if (ytUp) { if (cb) cb(); return; }
+    if (cb) ytQueued = cb;  // the latest press wins
+    if (ytPlayer || !ytApiReady) return;
+    var host = document.getElementById('yt-audio-host');
+    if (!host) return;
+    ytPlayer = ytMain = buildYt(host, function () {
+      ytUp = true;
+      var queued = ytQueued; ytQueued = null;
+      if (queued) queued();
+      buildSpare();
+      // Only now: the player a press needs first is standing, so building
+      // the rest cannot hold that up.
+      ytPoolStarted = true;
+      pumpPreload();
+    });
+  }
+
+  function buildSpare() {
+    // With every video preloaded there is nothing left for a spare to do.
+    // Only some of them (a windowed page), and it takes the row the mouse
+    // is aiming at when that is outside the pool.
+    if (ytSpare || !FETCH_AHEAD || (PRELOAD_ALL && !ytWindowed)) return;
+    // Off-screen rather than display:none, same as the first one: see
+    // render_player_page.
+    var wrap = document.createElement('div');
+    wrap.style.cssText =
+      'position:fixed;left:-9999px;top:130px;width:200px;height:113px;';
+    wrap.innerHTML = '<div></div>';
+    document.body.appendChild(wrap);
+    ytSpare = buildYt(wrap.firstChild, function () {
+      ytSpareUp = true;
+      preloadNext();
+    });
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytApiReady = true;
+    prewarm();
+  };
+
+  // Build the players while nothing is waiting on them, so the first press
+  // pays for none of the setup. A press that lands before they are up is
+  // queued in ensureYt and runs the moment the first one is.
+  function prewarm() {
+    ensureYt(null);
+  }
+
+  // ---- fetching ahead ----
+  //
+  // What makes a press slow is not the audio, it is everything YouTube does
+  // before the audio: loadVideoById() on a standing player still took
+  // 520-1060ms to first sound across five presses on a real digest page.
+  // The same video already sitting in a second player starts in 190-390ms.
+  // So the spare always holds the track most likely to be asked for next:
+  // the one after what is playing (the first on the page before anything
+  // is), or the row the mouse is aiming at, from the point on its bar the
+  // pointer is over. A press on that track swaps the two players.
+  //
+  // cueVideoById() looks like the call for this and is not: it fetches the
+  // thumbnail and nothing else, and playVideo() after it measured no faster
+  // than loading cold (726-1150ms). It has to be a real, muted
+  // loadVideoById(), held by onYtState as soon as it starts.
+
+  // Seconds into the track for a point along the bar, from the length
+  // Discogs gave us. 0 when that is unknown; the poll loop seeks then.
+  function startAt(bar, fraction) {
+    var known = knownDuration(bar);
+    return fraction > 0.01 && known > 0 ? Math.floor(fraction * known) : 0;
+  }
+
+  function ytLoadArg(videoId, start) {
+    return start > 0 ? { videoId: videoId, startSeconds: start } : videoId;
+  }
+
+  // Two points on a bar that are the same point to anyone listening: a
+  // few seconds apart, or a handful of pixels. What the spare fetched from
+  // one is played for a press on the other rather than fetched again.
+  function closeEnough(bar, a, b) {
+    return Math.abs(a - b) <= Math.max(3, knownDuration(bar) * 0.015);
+  }
+
+  // lastMoment: the press is already on its way (the button is down), so
+  // there is no time left to fetch the same track again from another point.
+  function preload(bar, fraction, lastMoment) {
+    if (!ytSpareUp || !bar) return;
+    var videoId = bar.getAttribute('data-yt');
+    if (!videoId) return;  // direct MP3s start fast enough as they are
+    if (activeEngine === 'yt' && videoId === activeVideoId) return;
+    if (poolPlayerFor(videoId)) return;  // a pooled player has it already
+    var start = startAt(bar, fraction);
+    if (videoId === spareVideoId) {
+      if (closeEnough(bar, start, spareStart)) return;
+      // Seeking a player that has the video beat fetching it over
+      // (530-860ms against 680ms and up), so the swap will seek instead.
+      if (lastMoment && spareHeld) return;
+    }
+    spareBar = bar; spareVideoId = videoId; spareStart = start; spareHeld = false;
+    spareAt = Date.now();
+    try {
+      ytSpare.mute();
+      ytSpare.loadVideoById(ytLoadArg(videoId, start));
+    } catch (err) { spareBar = null; spareVideoId = null; }
+  }
+
+  function preloadNext() {
+    if (!ytSpareUp) return;
+    // The pointer has only just settled on the track the spare is holding:
+    // that one is the better guess for the next press.
+    if (hoverBar && hoverBar === spareBar && Date.now() - hoverAt < 4000) return;
+    if (activeBar && !activeBar.isConnected) return;
+    preload(neighbour(activeBar, 1), 0);
+  }
+
+  // The swap asks a player that has only ever been muted and paused to
+  // play out loud. If a browser will not have that, fall back to loading
+  // the track the ordinary way rather than leave the press hanging.
+  function watchSwap(videoId, start) {
+    swapPending = true;
+    clearTimeout(swapTimer);
+    swapTimer = setTimeout(function () {
+      if (!swapPending || activeEngine !== 'yt' || activeVideoId !== videoId) return;
+      swapPending = false;
+      var state = -1;
+      try { state = ytPlayer.getPlayerState(); } catch (err) {}
+      // Buffering is slow, not stuck: it was swapped in mid-fetch on a poor
+      // connection, and starting that fetch over would only make it slower.
+      if (state === 1 || state === 3) return;
+      // Unstarted (-1) with this very video is YouTube holding it back
+      // before it starts (see playYtFrom). Loading it again restarts that
+      // wait, which the console log caught doing exactly that: 7.8s for one
+      // that was retried twice. Only paused or cued -- the browser would not
+      // let a muted player play out loud -- or a different video is stuck.
+      var holding = ytVideoId(ytPlayer);
+      if (state === -1 && (!holding || holding === videoId)) {
+        logWarn('YouTube is holding this video back before it starts; waiting for it');
+        return;
+      }
+      logWarn('not started after 1.5s (player state ' + state + '), loading it again');
+      try { ytPlayer.loadVideoById(ytLoadArg(videoId, start)); } catch (err) {}
+    }, 1500);
+  }
+
+  function playYtFrom(bar, fraction) {
+    var videoId = bar.getAttribute('data-yt');
+    logHow('waited for the YouTube player to start up');  // until the callback runs
+    ensureYt(function () {
+      if (activeBar && activeBar !== bar) resetBar(activeBar);
+      if (activeEngine !== 'yt' || activeVideoId !== videoId) {
+        var start = startAt(bar, fraction);
+        // startSeconds puts the first request at the right place. Loading
+        // from 0:00 and seeking afterwards, as this used to, fetches the
+        // opening of the track only to throw it away.
+        pendingSeekFraction = fraction > 0.01 && start === 0 ? fraction : null;
+        swapPending = false; nearEndDone = false;
+        // A pooled player still on its way is used too: it has a head start.
+        // YouTube holds some videos back before it starts them -- mostly
+        // official/label uploads, 6-20s of black at state -1, measured in a
+        // bare player on this site in a signed-in Chrome with no ad blocker,
+        // and the same in any player. Loading such a track again from cold,
+        // as this briefly did, starts that wait over from zero (17-18s in
+        // the console log, against a few for the ones that kept going).
+        var pooled = poolPlayerFor(videoId);
+        var swap = !pooled && ytSpareUp && spareVideoId === videoId;
+        if (swap && !spareHeld && Date.now() - spareAt > 1000) {
+          // Asked for over a second ago and not even buffering: that fetch
+          // is not coming (blocked, most likely). Quicker to load it here.
+          var spareState = -1;
+          try { spareState = ytSpare.getPlayerState(); } catch (err) {}
+          if (spareState !== 3) { swap = false; spareBar = null; spareVideoId = null; }
+        }
+        activeEngine = 'yt'; activeVideoId = videoId; activeSrc = null; activeBar = bar;
+        if (pooled) {
+          logHow((pooled.held ? 'preloaded' : 'preload still starting, ' +
+            Math.round((Date.now() - pooled.startedAt) / 1000) + 's head start') +
+            (pooled.at ? ', held at ' + fmt(pooled.at) : ''));
+          playPooled(pooled, bar, fraction);
+        } else if (swap) {
+          logHow(spareHeld ? 'fetched ahead (hover/next)' : 'fetched ahead, still loading');
+          // Muted on its way out: if it was itself still loading, it must
+          // not be heard for the instant before onYtState holds it.
+          try { ytPlayer.pauseVideo(); ytPlayer.mute(); } catch (err) {}
+          // A pooled player stays in the pool, holding its track: the
+          // main player is the one that becomes the next spare.
+          var was = ytPlayer.__pool ? ytMain : ytPlayer;
+          ytPlayer = ytSpare; ytSpare = was; ytMain = ytPlayer;
+          spareBar = null; spareVideoId = null;
+          ytPlayer.unMute();
+          var seek = !closeEnough(bar, start, spareStart);
+          if (seek) ytPlayer.seekTo(start, true);
+          watchSwap(videoId, start);
+          if (spareHeld) {
+            ytPlayer.playVideo();
+            // The player that just went quiet is free at once. Not waiting
+            // for this track to sound first is what keeps a run of quick
+            // "next" presses from outrunning the fetch every time.
+            if (!seek) preloadNext();
+          }
+          // Otherwise it is still fetching, and it is now the player you
+          // hear, so it starts by itself when it gets there. Both things
+          // done above for a held one make that later, not sooner:
+          // playVideo() into a load in progress, and a second player
+          // beginning its own load beside it (the two share a thread),
+          // each measured several hundred ms slower than leaving it be.
+          // A seek is a fetch too, hence no preloadNext() beside one;
+          // onYtState does it once this track is playing.
+        } else {
+          // Not preloaded yet. Never into a preloaded player that happens
+          // to be the one you hear: that would throw away the video it
+          // holds. Back to the main player instead.
+          var pe = ytPool[videoId];
+          logHow('cold load' + (pe ? ' (preload: ' + (pe.player ? pe.state : 'not near yet') + ')' : ''));
+          if (PRELOAD_ALL && ytMain && ytPlayer !== ytMain) {
+            silence(ytPlayer);
+            ytPlayer = ytMain;
+            try { ytPlayer.unMute(); } catch (err) {}
+          }
+          ytPlayer.loadVideoById(ytLoadArg(videoId, start));
+        }
+      } else {
+        // A click on the bar of the track already playing (or paused).
+        // Timed until it plays from the new point: onYtState when the seek
+        // made it buffer, pollYt when it had that part already.
+        logHow('jump within this track');
+        activeBar = bar;
+        var dur = ytPlayer.getDuration() || knownDuration(bar);
+        if (dur > 0) {
+          ytPlayer.seekTo(fraction * dur, true);
+          if (pressLog) pressLog.seekTo = fraction * dur;
+        }
+        ytPlayer.playVideo();
+      }
+      stopPolling();
+      pollTimer = setInterval(pollYt, 250);
+      paint(bar, fraction, fmt(fraction * (ytPlayer.getDuration() || knownDuration(bar))),
+            durLabel(bar), 'loading');
+    });
+  }
+
+  function silence(player) {
+    if (!player) return;
+    try { player.pauseVideo(); player.mute(); } catch (err) {}
+  }
+
+  // Make a preloaded player the one you hear. It keeps its video when it
+  // goes quiet again, so coming back to a track is as quick as the first
+  // time.
+  function playPooled(entry, bar, fraction) {
+    if (ytPlayer !== entry.player) {
+      silence(ytPlayer);
+      ytPlayer = entry.player;
+    }
+    try { ytPlayer.unMute(); } catch (err) {}
+    if (!entry.held) {
+      // Still on its way. It is now the one you hear, so it starts by
+      // itself when it gets there, and the poll loop seeks once it knows
+      // the length -- same as a swap onto a spare that is still fetching.
+      pendingSeekFraction = fraction > 0.01 ? fraction : null;
+      watchSwap(entry.key, 0);
+      return;
+    }
+    pendingSeekFraction = null;
+    var dur = 0, cur = 0;
+    try { dur = ytPlayer.getDuration() || 0; cur = ytPlayer.getCurrentTime() || 0; } catch (err) {}
+    dur = dur || knownDuration(bar);
+    var target = fraction > 0.01 && dur > 0 ? fraction * dur : 0;
+    // Held a split second after 0:00 when it was preloaded, or wherever it
+    // was left when last heard: only seek when that is noticeably off.
+    if (Math.abs(cur - target) > 2) ytPlayer.seekTo(target, true);
+    ytPlayer.playVideo();
+    watchSwap(entry.key, Math.floor(target));
+  }
+
+  // ---- direct-audio backend (clone.nl, or any source with real MP3s) ----
+
+  function pollAudio() {
+    if (!activeBar) return;
+    var dur = audioEl.duration || 0;
+    var cur = audioEl.currentTime || 0;
+    var effectiveDur = dur || knownDuration(activeBar);
+    var frac = effectiveDur > 0 ? cur / effectiveDur : 0;
+    var state = !audioEl.paused && !audioEl.ended ? 'playing'
+               : (audioEl.readyState < 2 ? 'loading' : 'paused');
+    paint(activeBar, frac, fmt(cur), dur > 0 ? fmt(dur) : durLabel(activeBar), state);
+  }
+
+  // Every <audio> gets these, preloaded ones included; each only acts while
+  // its element is the one you hear.
+  function wireAudio(el) {
+    el.addEventListener('ended', function () {
+      if (el === audioEl && activeEngine === 'audio' && activeBar) {
+        var d = audioEl.duration || knownDuration(activeBar);
+        paint(activeBar, 1, fmt(d), fmt(d), 'paused');
+        stopPolling();
+        step(1);  // roll on to the next track, top to bottom
+      }
+    });
+    el.addEventListener('error', function () {
+      if (el === audioEl && activeEngine === 'audio' && activeBar) {
+        var r = row(activeBar);
+        if (r) r.classList.add('errored');
+        logWarn('MP3 could not be played (error ' + (el.error ? el.error.code : '?') + ')' +
+                (activeBar === steppedTo ? ', skipping to the next' : ''));
+        if (pressLog) pressLog.done = true;
+        if (activeBar === steppedTo) step(1);  // same as a dead video
+      }
+    });
+    // An MP3 row can be followed by a YouTube one; line that up as well.
+    el.addEventListener('playing', function () {
+      if (el === audioEl && activeEngine === 'audio') { logSound(el.currentTime); preloadNext(); }
+    });
+    // A jump within a clip that is already playing fires no 'playing'.
+    el.addEventListener('seeked', function () {
+      if (el === audioEl && !el.paused && pressLog && pressLog.seekTo !== undefined) {
+        logSound(el.currentTime);
+      }
+    });
+  }
+  wireAudio(audioBase);
+
+  function safePlay() {
+    var p = audioEl.play();
+    if (p && p.catch) p.catch(function () {});  // ignore benign AbortError on rapid re-clicks
+  }
+
+  function playAudioFrom(bar, fraction) {
+    var src = bar.getAttribute('data-src');
+    if (activeBar && activeBar !== bar) resetBar(activeBar);
+    if (activeEngine !== 'audio' || activeSrc !== src) {
+      activeEngine = 'audio'; activeSrc = src; activeVideoId = null; activeBar = bar;
+      // A preloaded element has (some of) the file already: play that one
+      // rather than start the same download over in audioBase.
+      var pooled = audioPool[src] && audioPool[src].el;
+      logHow(pooled ? 'MP3, preload ' + audioPool[src].state : 'MP3, not preloaded');
+      var el = pooled || audioBase;
+      if (audioEl !== el) { audioEl.pause(); audioEl = el; }
+      if (!pooled) audioEl.src = src;
+      if (pooled && audioEl.duration) {
+        // Also rewinds a clip that was heard before and left halfway.
+        audioEl.currentTime = fraction > 0.01 ? fraction * audioEl.duration : 0;
+      } else if (fraction > 0.01) {
+        var onMeta = function () {
+          el.currentTime = fraction * (el.duration || 0);
+          el.removeEventListener('loadedmetadata', onMeta);
+        };
+        el.addEventListener('loadedmetadata', onMeta);
+      }
+      safePlay();
+    } else {
+      logHow('jump within this MP3');
+      activeBar = bar;
+      if (audioEl.duration) {
+        audioEl.currentTime = fraction * audioEl.duration;
+        if (pressLog) pressLog.seekTo = audioEl.currentTime;
+      }
+      safePlay();
+    }
+    stopPolling();
+    pollTimer = setInterval(pollAudio, 200);
+    paint(bar, fraction, fmt(fraction * (audioEl.duration || knownDuration(bar))),
+          durLabel(bar), 'loading');
+  }
+
+  // ---- preloading everything ----
+  //
+  // The spare above makes one press quick: the one most likely next. This
+  // makes every press quick, by loading the whole page before it is asked
+  // for. Each YouTube video gets a hidden, muted player of its own, which
+  // starts the video and is held right there (the same "held" state the
+  // spare reaches -- 190-390ms to sound instead of 520-1060ms); each MP3
+  // gets an <audio> of its own that downloads it. Both go top to bottom, a
+  // few at a time, and the counter at the top of the page shows how far.
+  //
+  // Every YouTube player is a whole embedded page, so they cannot all be
+  // standing at once: 2026-10-29 had 3008 videos on one page, one player
+  // each, and that brought the browser to its knees. There are at most
+  // POOL_MAX players, and they go where a press is most likely to land
+  // next -- the tracks after the one playing, then the rows on screen, then
+  // further ahead. When that moves (a press, a scroll), a player holding a
+  // track that is no longer near gets the new one: loading a video into a
+  // standing player is cheap, building the player is what is slow. On a
+  // day with no more videos than that, this is simply all of them, as
+  // before. Further than that, the spare takes the row the mouse is aiming
+  // at, so a press far down the page is still fetched ahead.
+  //
+  // ?pool=N sets the number of players by hand; ?ahead=0 or the browser's
+  // data saver turn all of it off, back to one track ahead.
+  var POOL_PARALLEL = 3;      // YouTube players being set up at once
+  var AUDIO_PARALLEL = 3;     // MP3s downloading at once
+  // Stop holding a slot for one after this; it keeps loading and still
+  // counts when it gets there. Short, because the slow ones are YouTube
+  // holding a video back (up to ~20s), which costs no bandwidth: waiting
+  // them out three at a time stalled the window behind them.
+  var POOL_TIMEOUT = 5000;
+  var PRESS_QUIET = 2000;     // after a press, start nothing new for this long
+  var poolArg = /[?&]pool=(\d+)/.exec(location.search);
+  // Measured on that page in Chrome: each standing player is ~40MB.
+  // Unbounded, Chrome grew by ~260MB a minute for as long as the tab was
+  // open (3.2GB at five minutes and climbing); with 24 it stays flat at
+  // ~1.9GB, against ~0.9GB for the page with no preloading at all.
+  var POOL_MAX = poolArg ? Math.max(1, parseInt(poolArg[1], 10)) : 24;
+  // Skimming a track every 5-10s (the console log of 2026-10-29) outran a
+  // dozen; some videos need up to 20s before YouTube lets them start.
+  var POOL_AHEAD = 18;        // tracks after the one playing, always first in line
+  var POOL_VIEW = 5;          // then this many from the top of the screen down
+  var ytPool = {}, audioPool = {};   // video id / MP3 url -> entry
+  var ytPlayers = [];         // every pooled player built so far (<= POOL_MAX)
+  var ytTargets = [];         // video ids the pool should hold right now, best first
+  var audioQueue = [], audioEntries = [];
+  var ytBusy = 0, audioBusy = 0, ytPoolStarted = false, ytRefused = false;
+  var ytWindowed = false;     // more videos on the page than POOL_MAX
+  var everShown = !document.hidden, hiddenRefused = false;
+
+  // ---- where you start a track ----
+  //
+  // The console log of 2026-10-29 had nearly every press somewhere along
+  // the bar, 1:00-2:30 in, hardly any at 0:00. A player held at 0:00 then
+  // has to fetch that part first: most of the 300-1200ms those presses
+  // took. So the pool holds each video where you tend to start instead --
+  // a little before it, because YouTube buffers ahead of where a player is
+  // paused, not behind: a press anywhere in the next stretch plays from
+  // what it already has. Learned from your last PRESS_HISTORY presses,
+  // kept in this browser; mostly "next" (from 0:00) keeps it at 0:00.
+  var PRESS_HISTORY = 20;
+  var PRESS_KEY = 'digest.pressFractions';
+  var pressFractions = [];
+  try { pressFractions = JSON.parse(localStorage.getItem(PRESS_KEY) || '[]') || []; } catch (err) {}
+
+  function rememberPress(fraction) {
+    pressFractions.push(Math.round(fraction * 1000) / 1000);
+    if (pressFractions.length > PRESS_HISTORY) pressFractions.shift();
+    try { localStorage.setItem(PRESS_KEY, JSON.stringify(pressFractions)); } catch (err) {}
+  }
+
+  // The fraction of a track to hold preloaded videos at: the middle of
+  // where you started, when at least 60% of recent presses were along the
+  // bar; 0 otherwise. The middle rather than lower down, because a paused
+  // player only buffers 10-22s ahead (measured on that page): held further
+  // back, most presses landed past what it had.
+  function holdFraction() {
+    var along = pressFractions.filter(function (f) { return f > 0.05; });
+    if (along.length < 3 || along.length < pressFractions.length * 0.6) return 0;
+    along.sort(function (a, b) { return a - b; });
+    return along[Math.floor((along.length - 1) / 2)];
+  }
+
+  // Seconds into this video to hold it at; 0 when its length is unknown.
+  // A few seconds early, so a press just short of the usual point is
+  // still inside what it buffered.
+  function holdAt(entry) {
+    var f = holdFraction();
+    return f > 0 && entry.dur > 0 ? Math.max(0, Math.floor(f * entry.dur) - 3) : 0;
+  }
+  var allBars = [], recFirstBar = [], visibleRecs = {};
+  var lastPressAt = 0, pumpTimer = null, scrollTimer = null, preloadLine = null;
+
+  function markErrored(attr, value) {
+    var bars = document.querySelectorAll('.bar[' + attr + ']');
+    for (var i = 0; i < bars.length; i++) {
+      if (bars[i].getAttribute(attr) !== value) continue;
+      var r = row(bars[i]);
+      if (r) r.classList.add('errored');
+    }
+  }
+
+  // Each video / clip once however many rows share it. MP3s are cheap (an
+  // <audio> each) and all go in line, top to bottom; YouTube videos only
+  // get an entry here, and a player once they are near (see ytWanted).
+  function collectPreload() {
+    allBars = Array.prototype.slice.call(document.querySelectorAll('.bar'));
+    var videos = 0;
+    for (var i = 0; i < allBars.length; i++) {
+      var yt = allBars[i].getAttribute('data-yt'), src = allBars[i].getAttribute('data-src');
+      if (yt && !ytPool[yt]) {
+        ytPool[yt] = { kind: 'yt', key: yt, state: 'queued', dur: knownDuration(allBars[i]) };
+        videos++;
+      } else if (!yt && src && !audioPool[src]) {
+        audioPool[src] = { kind: 'audio', key: src, state: 'queued' };
+        audioQueue.push(audioPool[src]);
+        audioEntries.push(audioPool[src]);
+      }
+    }
+    ytWindowed = videos > POOL_MAX;
+    console.info('[digest] ' + videos + ' YouTube videos, ' + audioEntries.length + ' MP3s; ' +
+      (ytWindowed ? 'preloading the ' + POOL_MAX + ' videos nearest to you' : 'preloading all of them'));
+    watchScreen();
+  }
+
+  // Which records are on screen, so the pool can follow a scroll. Records
+  // rather than bars: far fewer to watch, and a record that is off screen
+  // is not laid out at all (content-visibility in PLAYER_CSS).
+  function watchScreen() {
+    if (!ytWindowed || !window.IntersectionObserver) return;
+    var recs = document.querySelectorAll('.rec');
+    var recIndex = new Map();
+    for (var i = 0; i < recs.length; i++) recIndex.set(recs[i], i);
+    for (var b = 0; b < allBars.length; b++) {
+      var rec = allBars[b].closest('.rec');
+      var ri = rec ? recIndex.get(rec) : undefined;
+      if (ri !== undefined && recFirstBar[ri] === undefined) recFirstBar[ri] = b;
+    }
+    var io = new IntersectionObserver(function (changes) {
+      for (var c = 0; c < changes.length; c++) {
+        var idx = recIndex.get(changes[c].target);
+        if (changes[c].isIntersecting) visibleRecs[idx] = true; else delete visibleRecs[idx];
+      }
+      // Settle first: a flick down the page passes hundreds of rows that
+      // nobody is going to press.
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(pumpPreload, 400);
+    });
+    for (var r = 0; r < recs.length; r++) io.observe(recs[r]);
+  }
+
+  // The first bar on screen, or 0 when that is not known.
+  function firstBarOnScreen() {
+    var top = -1;
+    for (var k in visibleRecs) {
+      var n = +k;
+      if (top === -1 || n < top) top = n;
+    }
+    if (top === -1) return 0;
+    for (var ri = top; ri < recFirstBar.length; ri++) {
+      if (recFirstBar[ri] !== undefined) return recFirstBar[ri];
+    }
+    return 0;
+  }
+
+  // The videos the pool should hold, best first: the one playing and the
+  // ones after it, the one before it (a "previous" press), the rows on
+  // screen, then on down the page from whichever of those comes first.
+  function ytWanted() {
+    var out = [], have = {};
+    function take(from, dir, count) {
+      for (var i = from; count > 0 && out.length < POOL_MAX && i >= 0 && i < allBars.length; i += dir) {
+        var yt = allBars[i].getAttribute('data-yt');
+        if (!yt || have[yt]) continue;
+        var r = row(allBars[i]);
+        if (r && r.classList.contains('errored')) continue;
+        have[yt] = true; out.push(yt); count--;
+      }
+    }
+    var active = activeBar ? allBars.indexOf(activeBar) : -1;
+    var screen = ytWindowed ? firstBarOnScreen() : 0;
+    if (active !== -1) {
+      take(active, 1, POOL_AHEAD);
+      take(active - 1, -1, 1);
+    }
+    take(screen, 1, POOL_VIEW);
+    take(active !== -1 ? Math.min(active, screen) : screen, 1, POOL_MAX);
+    return out;
+  }
+
+  function pumpPreload() {
+    clearTimeout(pumpTimer); pumpTimer = null;
+    // A tab opened in the background may not start video, so wait for it
+    // to be shown once. After that, carry on while it is in the background:
+    // listening top to bottom in another tab is exactly when the pool must
+    // keep moving, or every track after the first dozen loads cold.
+    if (!PRELOAD_ALL || (document.hidden && (!everShown || hiddenRefused))) return;
+    // A press gets the connection to itself: a load starting beside it was
+    // measured to make it several hundred ms slower (see the swap above).
+    var quiet = PRESS_QUIET - (Date.now() - lastPressAt);
+    if (quiet > 0) { pumpTimer = setTimeout(pumpPreload, quiet); return; }
+    ytTargets = ytWanted();
+    if (ytPoolStarted && !ytRefused) {
+      var wanted = {};
+      for (var w = 0; w < ytTargets.length; w++) wanted[ytTargets[w]] = true;
+      for (var t = 0; t < ytTargets.length && ytBusy < POOL_PARALLEL; t++) {
+        var entry = ytPool[ytTargets[t]];
+        if (entry.state !== 'queued' || entry.busy) continue;
+        if (!entry.player && ytPlayers.length >= POOL_MAX && !reclaimPlayer(entry, wanted)) break;
+        startYtPreload(entry);
+      }
+    }
+    while (audioBusy < AUDIO_PARALLEL && audioQueue.length) startAudioPreload(audioQueue.shift());
+    paintPreload();
+  }
+
+  // Hand a player that holds a track nobody is near any more to `entry`.
+  // Never the one you hear, and never one still setting up.
+  function reclaimPlayer(entry, wanted) {
+    for (var i = 0; i < ytPlayers.length; i++) {
+      var p = ytPlayers[i], old = p.__pool;
+      if (p === ytPlayer || !old || old.busy || !old.up || wanted[old.key]) continue;
+      silence(p);
+      old.player = null; old.up = false; old.held = false; old.state = 'queued';
+      entry.player = p; entry.up = true; entry.held = false;
+      p.__pool = entry;
+      return true;
+    }
+    return false;
+  }
+
+  function startYtPreload(entry) {
+    ytBusy++; entry.busy = true; entry.state = 'loading'; entry.startedAt = Date.now();
+    entry.at = holdAt(entry);  // decided now, so playPooled knows where it is held
+    entry.timer = setTimeout(function () { poolRelease(entry); }, POOL_TIMEOUT);
+    if (entry.player) {
+      // A standing player: back from being blocked in a hidden tab, or
+      // handed over by reclaimPlayer.
+      if (entry.up) {
+        try {
+          entry.player.mute();
+          entry.player.loadVideoById(ytLoadArg(entry.key, entry.at));
+        } catch (err) { poolSettle(entry, 'failed'); }
+      }
+      return;
+    }
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;left:-9999px;top:260px;width:200px;height:113px;';
+    wrap.innerHTML = '<div></div>';
+    document.body.appendChild(wrap);
+    var player = buildYt(wrap.firstChild, function () {
+      // By whichever entry holds it now: it may have changed hands while
+      // it was being built.
+      var owner = player.__pool;
+      if (!owner) return;
+      owner.up = true;
+      try {
+        player.mute();
+        player.loadVideoById(ytLoadArg(owner.key, owner.at));
+      } catch (err) { poolSettle(owner, 'failed'); }
+    });
+    entry.player = player;
+    player.__pool = entry;
+    ytPlayers.push(player);
+  }
+
+  function startAudioPreload(entry) {
+    audioBusy++; entry.busy = true; entry.state = 'loading';
+    entry.timer = setTimeout(function () { poolRelease(entry); }, POOL_TIMEOUT);
+    var el = new Audio();
+    el.preload = 'auto';
+    wireAudio(el);
+    // canplaythrough: the browser reckons it can play to the end without
+    // stopping to buffer, which is the whole point.
+    el.addEventListener('canplaythrough', function () { poolSettle(entry, 'loaded'); });
+    el.addEventListener('error', function () {
+      // 4 is what a missing file (404) turns into; a network blip is not
+      // a reason to grey the row out.
+      if (el.error && el.error.code === 4) markErrored('data-src', entry.key);
+      poolSettle(entry, 'failed');
+    });
+    entry.el = el;
+    el.src = entry.key;
+  }
+
+  // Frees the slot, without saying how it went: one that timed out keeps
+  // loading, and still counts if it gets there.
+  function poolRelease(entry) {
+    if (!entry.busy) return;
+    entry.busy = false;
+    clearTimeout(entry.timer);
+    if (entry.kind === 'yt') ytBusy--; else audioBusy--;
+    pumpPreload();
+  }
+
+  function poolSettle(entry, state) {
+    if (entry.state !== 'loaded') entry.state = state;
+    poolRelease(entry);
+    paintPreload();
+  }
+
+  // A tab opened in the background may not start anything, muted or not.
+  // Those go back in line, first, for when the tab is shown.
+  function poolBlocked(entry) {
+    if (entry.state === 'loaded') return;
+    if (!document.hidden) {
+      // Shown, and still refused: this browser lets no page start video by
+      // itself, muted or not. Building the rest would only cost memory.
+      ytRefused = true;
+      poolSettle(entry, 'failed');
+      return;
+    }
+    // Back in line, and nothing more until the tab is shown again.
+    if (!hiddenRefused) console.info('[digest] browser paused preloading in this background tab');
+    hiddenRefused = true;
+    entry.state = 'queued';
+    poolRelease(entry);
+  }
+
+  // Only a player whose video is loaded or loading: one whose embed is
+  // still being built would be slower than loading into the main player.
+  function poolPlayerFor(videoId) {
+    var entry = ytPool[videoId];
+    return entry && entry.player && entry.up && entry.state !== 'failed' &&
+      entry.state !== 'queued' ? entry : null;
+  }
+
+  // Counted over what is wanted right now: on a windowed page that is the
+  // tracks near you, so the pill fills up again after a jump down the page.
+  function paintPreload() {
+    if (!preloadEl) return;
+    var entries = audioEntries.slice();
+    for (var t = 0; t < ytTargets.length; t++) entries.push(ytPool[ytTargets[t]]);
+    var total = entries.length, loaded = 0, failed = 0, waiting = 0;
+    for (var i = 0; i < total; i++) {
+      var st = entries[i].state;
+      if (st === 'loaded') loaded++;
+      else if (st === 'failed') failed++;
+      else if (st === 'queued' && !(entries[i].kind === 'yt' && ytRefused)) waiting++;
+    }
+    if (!total) return;
+    var pct = Math.floor(loaded * 100 / total);
+    var finished = !waiting && !ytBusy && !audioBusy;
+    var label = ytWindowed
+      ? (finished ? 'Ready ' : 'Preloading ') + loaded + '/' + total + ' nearby'
+      : (finished ? 'Preloaded ' : 'Preloading ') + pct + '%' +
+        (pct < 100 ? ' \u00b7 ' + loaded + '/' + total : '');
+    preloadEl.hidden = false;
+    preloadEl.classList.toggle('done', finished);
+    preloadEl.querySelector('.plabel').textContent = label;
+    preloadEl.querySelector('.pfill').style.width = pct + '%';
+    preloadEl.title = loaded + ' of ' + total + ' tracks ready to play' +
+      (ytWindowed ? ' (the ones after what is playing and on screen; ' +
+        'this moves along as you listen and scroll)' : '') +
+      (failed ? ', ' + failed + ' could not be loaded' : '') +
+      (ytRefused ? '. This browser does not allow preloading video.' : '');
+    // A thin line along the top of the window, so the progress stays in
+    // sight further down the page. Gone once there is nothing left to do.
+    if (!preloadLine) {
+      preloadLine = document.createElement('div');
+      preloadLine.id = 'preloadline';
+      document.body.appendChild(preloadLine);
+    }
+    preloadLine.style.width = pct + '%';
+    preloadLine.hidden = finished;
+  }
+
+  // ---- track navigation: walk the page top to bottom ----
+
+  // The first playable bar after (delta 1) or before (-1) `bar`, counted
+  // from where `bar` sits on the page even when it has just been greyed
+  // out itself. Looking it up among the playable ones only, as this used
+  // to, lost a dead track's place and "next" went back to the top.
+  // null at the ends: stop there, don't wrap. Read from the page on each
+  // call, so a row marked .errored mid-session (a dead YouTube video or a
+  // 404 preview) is skipped from then on.
+  function neighbour(bar, delta) {
+    var all = document.querySelectorAll('.bar');
+    var idx = bar ? Array.prototype.indexOf.call(all, bar) : -1;
+    var i = idx === -1 ? (delta > 0 ? 0 : all.length - 1) : idx + delta;
+    for (; i >= 0 && i < all.length; i += delta) {
+      var r = row(all[i]);
+      if (!r || !r.classList.contains('errored')) return all[i];
+    }
+    return null;
+  }
+
+  function step(delta) {
+    var target = neighbour(activeBar, delta);
+    if (!target) return;
+    playFrom(target, 0, true);
+    if (target.scrollIntoView) {
+      target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+    try { target.focus({ preventScroll: true }); } catch (err) { target.focus(); }
+  }
+
+  // ---- floating transport ----
+
+  // The generated digest pages ship this markup in their HTML; likes.html
+  // does not, and building it here rather than hand-copying it there keeps
+  // the transport defined in exactly one place. Both call sites end up with
+  // the same controls, and adding a third page costs nothing.
+  function ensureChrome() {
+    if (!document.body) return;
+    if (!document.getElementById('yt-audio-host')) {
+      var host = document.createElement('div');
+      host.style.cssText =
+        'position:fixed;left:-9999px;top:0;width:200px;height:113px;';
+      host.innerHTML = '<div id="yt-audio-host"></div>';
+      document.body.appendChild(host);
+    }
+    if (!document.getElementById('nowbar')) {
+      var nb = document.createElement('div');
+      nb.id = 'nowbar';
+      nb.innerHTML =
+        '<div class="nbseek" role="slider" aria-valuemin="0" aria-valuemax="100" ' +
+        'aria-valuenow="0" aria-label="Seek in current track">' +
+        '<div class="nbtrack"><div class="nbfill"></div></div></div>' +
+        '<div class="nbrow"><div class="nbctrls">' +
+        '<button type="button" data-step="-1" title="Previous track (p)" ' +
+        'aria-label="Previous track">' + ICON_PREV + '</button>' +
+        '<button type="button" data-toggle="1" title="Play / pause (space)" ' +
+        'aria-label="Play or pause">' + ICON_PAUSE + '</button>' +
+        '<button type="button" data-step="1" title="Next track (n)" ' +
+        'aria-label="Next track">' + ICON_NEXT + '</button>' +
+        '</div><span class="nowtitle"></span>' +
+        '<span class="nbtime"></span></div>';
+      document.body.appendChild(nb);
+    }
+  }
+
+  ensureChrome();
+  var nowbar = document.getElementById('nowbar');
+  var nowtitle = nowbar ? nowbar.querySelector('.nowtitle') : null;
+
+  function updateNowBar(bar) {
+    if (!nowbar) return;
+    if (!bar) { nowbar.classList.remove('show'); return; }
+    nowbar.classList.add('show');
+    if (nowtitle) {
+      var li = bar.closest ? bar.closest('li.track') : null;
+      var name = li ? li.querySelector('.tname') : null;
+      nowtitle.textContent = name ? name.textContent : (bar.getAttribute('aria-label') || '');
+    }
+  }
+
+  if (nowbar) {
+    nowbar.addEventListener('click', function (ev) {
+      var btn = ev.target.closest ? ev.target.closest('button') : null;
+      if (btn) {
+        ev.preventDefault();
+        if (btn.getAttribute('data-toggle')) {
+          if (activeBar) togglePlayPause(activeBar);
+        } else {
+          step(parseInt(btn.getAttribute('data-step'), 10) || 1);
+        }
+        return;
+      }
+      // Seeking from the bottom bar acts on whatever is currently playing,
+      // so you can scrub without scrolling back to that record's row.
+      var seek = ev.target.closest ? ev.target.closest('.nbseek') : null;
+      if (seek && activeBar) {
+        ev.preventDefault();
+        playFrom(activeBar, fractionFromEvent(seek, ev));
+      }
+    });
+  }
+
+  // ---- unified dispatch: only one backend plays at a time ----
+
+  // viaStep: reached by next/previous or auto-advance rather than picked
+  // by hand. A track like that which turns out to be dead is skipped; one
+  // you picked yourself just greys out.
+  function playFrom(bar, fraction, viaStep) {
+    lastPressAt = Date.now();
+    // Where a track was started, not a jump within the one playing.
+    if (bar !== activeBar) rememberPress(fraction);
+    steppedTo = viaStep ? bar : null;
+    var li = bar.closest ? bar.closest('li.track') : null;
+    var tn = li ? li.querySelector('.tname') : null;
+    pressLog = { t: performance.now(), how: '?', fromBar: fraction > 0.01,
+                 name: tn ? tn.textContent : (bar.getAttribute('aria-label') || '') };
+    var isAudio = !!bar.getAttribute('data-src');
+    if (isAudio) {
+      if (activeEngine === 'yt' && ytPlayer) { try { ytPlayer.pauseVideo(); } catch (err) {} }
+      playAudioFrom(bar, fraction);
+    } else {
+      if (activeEngine === 'audio') { audioEl.pause(); }
+      playYtFrom(bar, fraction);
+    }
+    updateNowBar(bar);
+    // Moves the pool along to the tracks after this one, once the press
+    // has had the connection to itself.
+    pumpPreload();
+  }
+
+  function togglePlayPause(bar) {
+    var isAudio = !!bar.getAttribute('data-src');
+    var isActiveTrack = isAudio
+      ? (activeEngine === 'audio' && activeSrc === bar.getAttribute('data-src'))
+      : (activeEngine === 'yt' && activeVideoId === bar.getAttribute('data-yt'));
+    if (!isActiveTrack) { playFrom(bar, 0); return; }
+    swapPending = false;  // a pause this soon after a swap is the listener's, not a failure
+    if (isAudio) {
+      if (audioEl.paused) { safePlay(); } else { audioEl.pause(); }
+    } else if (ytPlayer) {
+      var state = ytPlayer.getPlayerState();
+      if (state === 1) { ytPlayer.pauseVideo(); } else { ytPlayer.playVideo(); }
+    }
+  }
+
+  function fractionFromEvent(bar, ev) {
+    var rect = bar.getBoundingClientRect();
+    var x = (ev.clientX !== undefined && ev.clientX !== 0) ? ev.clientX
+          : (ev.changedTouches && ev.changedTouches[0] ? ev.changedTouches[0].clientX : rect.left);
+    return Math.min(1, Math.max(0, (x - rect.left) / rect.width));
+  }
+
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest ? ev.target.closest('button.ppbtn') : null;
+    if (btn) {
+      ev.preventDefault();
+      var pbar = row(btn).querySelector('.bar');
+      if (pbar) togglePlayPause(pbar);
+      return;
+    }
+    if (ev.target.closest && ev.target.closest('a.ytlink')) return; // let it navigate
+    var bar = ev.target.closest ? ev.target.closest('.bar') : null;
+    if (bar) {
+      ev.preventDefault();
+      playFrom(bar, fractionFromEvent(bar, ev));
+    }
+  });
+
+  // Start fetching before the press lands. A mouse comes to rest on a
+  // control a few hundred ms before its button goes down, and the button
+  // is down for another ~100ms before the click. Neither moment plays
+  // anything -- that still takes the click.
+  //
+  // Mouse only. A finger gives no hover, and its pointerdown is also how
+  // every scroll starts: fetching on that would spend mobile data on rows
+  // that were only being flicked past.
+
+  // The bar a play button or a bar belongs to; null anywhere else.
+  function barUnder(target) {
+    var el = target && target.closest ? target.closest('button.ppbtn, .bar') : null;
+    var r = el ? row(el) : null;
+    return r ? r.querySelector('.bar') : null;
+  }
+
+  function preloadAt(bar, target, x, lastMoment) {
+    var onBar = target.closest('.bar');
+    preload(bar, onBar ? fractionFromEvent(bar, { clientX: x }) : 0, lastMoment);
+  }
+
+  document.addEventListener('pointerdown', function (ev) {
+    if (ev.pointerType !== 'mouse' || ev.button) return;
+    var bar = barUnder(ev.target);
+    if (!bar) return;
+    clearTimeout(hoverTimer);
+    preloadAt(bar, ev.target, ev.clientX, true);
+  });
+
+  document.addEventListener('pointermove', function (ev) {
+    if (ev.pointerType !== 'mouse') return;
+    clearTimeout(hoverTimer);
+    var bar = barUnder(ev.target), target = ev.target, x = ev.clientX, now = Date.now();
+    if (bar !== hoverBar) { hoverBar = bar; hoverEnterAt = now; }
+    hoverAt = now;
+    if (!bar) {
+      // Off the controls again: hand the spare back to whatever plays
+      // next, in case a row the pointer paused on borrowed it.
+      hoverTimer = setTimeout(preloadNext, 1500);
+      return;
+    }
+    // A row the spare does not have yet: fetch once the pointer has been
+    // on its control for 100ms, still moving or not. That is long enough
+    // to tell aiming at it from passing over it, and every ms waited
+    // beyond that comes straight off the head start. Never within half a
+    // second of the last one, though, so a slow sweep down the list cannot
+    // turn into a burst of requests. A row it does have, from a different
+    // point on the bar: only once the pointer has stopped there.
+    var wait = spareBar === bar ? 150
+      : Math.max(100 - (now - hoverEnterAt), 500 - (now - hoverFetchAt), 0);
+    hoverTimer = setTimeout(function () {
+      if (spareBar !== bar) hoverFetchAt = Date.now();
+      preloadAt(bar, target, x, false);
+    }, wait);
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    var t = ev.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+
+    // Next / previous work from anywhere on the page, so you can skip
+    // through without first clicking a row to focus it. Deliberately NOT
+    // bound to bare Up/Down arrows at this level -- those still need to
+    // scroll the page normally.
+    var k = ev.key.toLowerCase();
+    if (k === 'n' || k === 'j' || ev.key === 'MediaTrackNext') {
+      ev.preventDefault(); step(1); return;
+    }
+    if (k === 'p' || k === 'k' || ev.key === 'MediaTrackPrevious') {
+      ev.preventDefault(); step(-1); return;
+    }
+
+    var el = document.activeElement;
+    if (!el || !el.classList || !el.classList.contains('bar')) return;
+    if (ev.key === ' ' || ev.key === 'Enter') {
+      ev.preventDefault();
+      togglePlayPause(el);
+    } else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+      // Only once a bar has focus, where arrow keys clearly belong to the
+      // player rather than to scrolling the page.
+      ev.preventDefault();
+      step(ev.key === 'ArrowDown' ? 1 : -1);
+    } else if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') {
+      ev.preventDefault();
+      if (activeBar !== el) return;
+      var delta = ev.key === 'ArrowRight' ? 5 : -5;
+      if (activeEngine === 'audio') {
+        audioEl.currentTime = Math.min(audioEl.duration || 1e9, Math.max(0, audioEl.currentTime + delta));
+      } else if (activeEngine === 'yt' && ytPlayer) {
+        var dur = ytPlayer.getDuration() || knownDuration(el);
+        var cur = ytPlayer.getCurrentTime() || 0;
+        ytPlayer.seekTo(Math.min(dur, Math.max(0, cur + delta)), true);
+      }
+    }
+  });
+
+  // Exported so likes.html can build identical track rows from the data
+  // stored in likes.json. One definition of the markup, several pages --
+  // a second hand-written copy over there would drift the moment either
+  // the structure or the icons change. The click/keyboard handlers above
+  // are delegated on document, so rows added later still work.
+  window.DigestPlayer = {
+    trackRowHtml: function (t) {
+      var esc = function (s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      };
+      var title = String(t.title || 'Listen');
+      var shown = title.length > 70 ? title.slice(0, 69).replace(/\s+$/, '') + '\u2026' : title;
+      var dur = parseInt(t.dur, 10) || 0;
+      var ytAttr = t.yt ? ' data-yt="' + esc(t.yt) + '"' : '';
+      var srcAttr = t.src ? ' data-src="' + esc(t.src) + '"' : '';
+      var link = t.yt
+        ? '<a class="ytlink" href="https://www.youtube.com/watch?v=' + esc(t.yt) +
+          '" target="_blank" rel="noopener noreferrer" title="Watch on YouTube" ' +
+          'aria-label="Watch on YouTube">\u2197</a>'
+        : '';
+      return '<li class="track"><div class="trow">' +
+        '<button class="ppbtn" aria-label="Play ' + esc(shown) + '">' + ICON_PLAY + '</button>' +
+        '<div class="bar" tabindex="0" role="slider" aria-valuemin="0" ' +
+        'aria-valuemax="100" aria-valuenow="0" aria-label="' + esc(title) + '"' +
+        ytAttr + srcAttr + ' data-dur="' + dur + '">' +
+        '<div class="track"><div class="fill"></div></div></div>' +
+        '<span class="time">0:00 / ' + (dur ? fmt(dur) : '--:--') + '</span>' +
+        link + '</div><div class="tname">' + esc(shown) + '</div></li>';
+    }
+  };
+
+  // The rows are all in the page by now (this script sits at the end of
+  // it). MP3s can start straight away; YouTube waits for the main player.
+  if (PRELOAD_ALL) {
+    collectPreload();
+    paintPreload();  // 0% from the start, even in a tab that waits until shown
+    pumpPreload();
+  }
+
+  // Three cases, in order: the API is already loaded (its ready callback
+  // fired before this script existed, so nothing will call ours -- warm up
+  // directly); the page's <head> has the request in flight (leave it, our
+  // onYouTubeIframeAPIReady above will fire); or nobody asked for it yet.
+  if (window.YT && window.YT.Player) {
+    ytApiReady = true;
+    prewarm();
+  } else if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
+})();
+</script><script>window.DIGEST_BASE_URL="https://joor241.github.io/discogs-genre-digest";</script><script src="https://joor241.github.io/discogs-genre-digest/assets/likes.js"></script></body></html>
