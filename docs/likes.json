@@ -3445,5 +3445,59 @@
     "want": 64,
     "release_id": 6820696,
     "liked_at": "2026-11-05T13:30:43.156Z"
+  },
+  "https://www.discogs.com/sell/item/4468586549": {
+    "description": "West Magnetic - Blue Royal (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4468586549",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/mmCi9hUt1VDImtWfJ_JYXFX4GCDGH4ejGKguWL6eAmE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4NDMt/MTM2NzY2NzIyOC03/MzMwLmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "West Magnetic - Blue Royal",
+        "yt": "GOIIzxBRx-c",
+        "src": null,
+        "dur": 437
+      },
+      {
+        "title": "Cut Less Supreme",
+        "yt": "q8jD_KhG3qE",
+        "src": null,
+        "dur": 340
+      },
+      {
+        "title": "Distance",
+        "yt": "vRf6adNQKoQ",
+        "src": null,
+        "dur": 338
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Blue Royal",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Cut Less Supreme",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Distance",
+        "dur": ""
+      }
+    ],
+    "have": 243,
+    "want": 72,
+    "release_id": 2843,
+    "liked_at": "2026-11-09T14:59:50.037Z"
   }
 }
