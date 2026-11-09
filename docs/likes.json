@@ -3499,5 +3499,71 @@
     "want": 72,
     "release_id": 2843,
     "liked_at": "2026-11-09T14:59:50.037Z"
+  },
+  "https://www.discogs.com/sell/item/4468816949": {
+    "description": "Matt Hughes - Groove Approved (12\")",
+    "price": "6.50 EUR",
+    "url": "https://www.discogs.com/sell/item/4468816949",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/hpb9c-Y7aYaTvT9CMaNiOYGldEIti6AtC-lRVubxVks/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgzOTMt/MTU1OTA1OTQ0MC0y/NzM3LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Matt Hughes - Groovin'on",
+        "yt": "Xdpv-FxMOX0",
+        "src": null,
+        "dur": 484
+      },
+      {
+        "title": "Matt Hughes - Dude I Know",
+        "yt": "IYFmmnRzOdE",
+        "src": null,
+        "dur": 379
+      },
+      {
+        "title": "Matt Hughes - Da Da Original",
+        "yt": "khxwSyM5eKU",
+        "src": null,
+        "dur": 421
+      },
+      {
+        "title": "Matt Hughes - Da Da (Edit For GU)",
+        "yt": "GcRSszGMcG8",
+        "src": null,
+        "dur": 428
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Groovin'on",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Dude I Know",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Da Da Original",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Da Da (Edit For G.U.)",
+        "dur": ""
+      }
+    ],
+    "have": 104,
+    "want": 59,
+    "release_id": 8393,
+    "liked_at": "2026-11-09T15:01:26.675Z"
   }
 }
