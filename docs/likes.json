@@ -3787,5 +3787,53 @@
     "want": 82,
     "release_id": 220656,
     "liked_at": "2026-11-11T21:02:25.149Z"
+  },
+  "https://www.discogs.com/sell/item/4477039469": {
+    "description": "2 Boys 1 Girl - U Know Nothing (12\", Promo)",
+    "price": "14.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4477039469",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/dIjFaQz6vGs9hZimjfuyfaUGhPWq4tGHE9LKjaPhp_8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY0MDA5/MTgtMTQxODMyMDMz/MS0xNDM0LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "2 Boys 1 Girl - U Know Nothing (Dub Mix)",
+        "yt": "PZH02AF-QoU",
+        "src": null,
+        "dur": 460
+      },
+      {
+        "title": "2 Boys 1 Girl U Know Nothing / Progressive House /",
+        "yt": "M7FWrlGbzf8",
+        "src": null,
+        "dur": 527
+      },
+      {
+        "title": "2 Boys 1 Girl - U Know Nothing (Xzique Remix) [2001]",
+        "yt": "madFFHkiuwA",
+        "src": null,
+        "dur": 550
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "U Know Nothing (Original Vocal)",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "U Know Nothing (Xzique Remix)",
+        "dur": ""
+      }
+    ],
+    "have": 43,
+    "want": 130,
+    "release_id": 6400918,
+    "liked_at": "2026-11-11T21:04:07.717Z"
   }
 }
