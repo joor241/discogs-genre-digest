@@ -3835,5 +3835,53 @@
     "want": 130,
     "release_id": 6400918,
     "liked_at": "2026-11-11T21:04:07.717Z"
+  },
+  "https://www.discogs.com/sell/item/4474975802": {
+    "description": "The Bomb Squad (3) - Pressure (12\", Promo)",
+    "price": "6.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4474975802",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/gJdcvzZqg9cVYoMCkAyMSm21ZaLAKWCW_rLI0_WeVZg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxMTMz/MS0xMjIwNTY1NTI4/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "THE PRESSURE-THE BOMB SQUAD 1995",
+        "yt": "R4PI63YNESo",
+        "src": null,
+        "dur": 373
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Pressure (Casanova's Live At The Palladium Mix)",
+        "dur": "6:04"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Pressure (Nasty Nova's Explosion Mix)",
+        "dur": "6:10"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Pressure (Anthony's Tribal Mix)",
+        "dur": "7:18"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Pressure (Gary's Storm Ghetto Break Mix)",
+        "dur": "6:00"
+      }
+    ],
+    "have": 57,
+    "want": 29,
+    "release_id": 311331,
+    "liked_at": "2026-11-11T21:14:51.078Z"
   }
 }
