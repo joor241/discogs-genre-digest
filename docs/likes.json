@@ -3565,5 +3565,71 @@
     "want": 59,
     "release_id": 8393,
     "liked_at": "2026-11-09T15:01:26.675Z"
+  },
+  "https://www.discogs.com/sell/item/4477981148": {
+    "description": "Antoine Clamaran - Rituel (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4477981148",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/8bDYVRuTXsN3GySoiI-91slKCG_-rn-K9C_U301RauY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwOTAx/NS0xNDE4OTg3MzEy/LTUyNjcuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Zumba é",
+        "yt": "Maq3ZP5rmvA",
+        "src": null,
+        "dur": 382
+      },
+      {
+        "title": "Easy",
+        "yt": "0hmFoF74Lvo",
+        "src": null,
+        "dur": 475
+      },
+      {
+        "title": "Feel The Drum",
+        "yt": "s1XHzHdiqa0",
+        "src": null,
+        "dur": 449
+      },
+      {
+        "title": "Antoine Clamaran - Zumba E'",
+        "yt": "GKgfrmMt4oc",
+        "src": null,
+        "dur": 372
+      },
+      {
+        "title": "04. Antoine Clamaran Presents Rituel - Feel The Drum",
+        "yt": "B5MDnGeTflA",
+        "src": null,
+        "dur": 318
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Zumba é",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Easy",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Feel The Drum",
+        "dur": ""
+      }
+    ],
+    "have": 581,
+    "want": 122,
+    "release_id": 109015,
+    "liked_at": "2026-11-11T20:54:08.760Z"
   }
 }
