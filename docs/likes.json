@@ -3709,5 +3709,83 @@
     "want": 365,
     "release_id": 10163,
     "liked_at": "2026-11-11T20:55:11.646Z"
+  },
+  "https://www.discogs.com/sell/item/4477047959": {
+    "description": "Evolution - Everybody Dance (12\")",
+    "price": "4.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4477047959",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/iw0L4wCha1MMyvnIlvFquguBdi9-NGqncuXYyrbFo7Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyMDY1/Ni0xNTc5MzkwMjk2/LTY0NDQuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Evolution - Everybody Dance (Chic Inspirational Mix)",
+        "yt": "g6Sfv57witc",
+        "src": null,
+        "dur": 385
+      },
+      {
+        "title": "Evolution - Everybody Dance (Evo Club mix) 1993",
+        "yt": "0sCHh54Xcns",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "EVOLUTION - Everybody Dance : Photogenic Supermodel Mix",
+        "yt": "OQRQhS1yC0k",
+        "src": null,
+        "dur": 440
+      },
+      {
+        "title": "Evolution-Get 2 Groove",
+        "yt": "WxWqFrLhpT8",
+        "src": null,
+        "dur": 205
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Everybody Dance (Chic Inspirational Mix)",
+        "dur": "6:18"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Everybody Dance (Evo Club Mix)",
+        "dur": "7:47"
+      },
+      {
+        "pos": "A3",
+        "artist": "",
+        "title": "Get 2 Groove",
+        "dur": "3:36"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Everybody Dance (US Mix)",
+        "dur": "6:35"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Photogenic (Supermodel Mix)",
+        "dur": "7:12"
+      },
+      {
+        "pos": "B3",
+        "artist": "",
+        "title": "Everybody Dance (US Mix Edit)",
+        "dur": "4:01"
+      }
+    ],
+    "have": 250,
+    "want": 82,
+    "release_id": 220656,
+    "liked_at": "2026-11-11T21:02:25.149Z"
   }
 }
