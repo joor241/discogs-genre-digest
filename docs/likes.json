@@ -3631,5 +3631,83 @@
     "want": 122,
     "release_id": 109015,
     "liked_at": "2026-11-11T20:54:08.760Z"
+  },
+  "https://www.discogs.com/sell/item/4477980983": {
+    "description": "Dajae* - Fakes & Phonies (12\")",
+    "price": "8.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4477980983",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/DgENqARBWPkZ8EabuyLBRykITXoWSNSWshtHhVgqMKU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMTYz/LTE2MzU4NDUxOTAt/MjkyMi5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Dajae - Fakes & Phonies GU Dedicated Mix",
+        "yt": "E3HRHSkDFKc",
+        "src": null,
+        "dur": 463
+      },
+      {
+        "title": "Dajae - \"Fakes & Phonies\"",
+        "yt": "DzD_PW3y5ik",
+        "src": null,
+        "dur": 229
+      },
+      {
+        "title": "Dajae - Fakes & Phonies (Johnny's Red Dog Mix)",
+        "yt": "N2htpjdBjic",
+        "src": null,
+        "dur": 337
+      },
+      {
+        "title": "Dajae   Fakes and Phonies!   Amir's Hard Body Edit!",
+        "yt": "65Vk3drzxYE",
+        "src": null,
+        "dur": 462
+      },
+      {
+        "title": "Dajaé - Fakes & Phonies (Gemini's Two Year Old Mix) [1996]",
+        "yt": "qKuc-RO7tIQ",
+        "src": null,
+        "dur": 318
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Fakes & Phonies (Johnny's Vocal Mix)",
+        "dur": "7:20"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Fakes & Phonies (GU's Dedicated Mix)",
+        "dur": "7:43"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Fakes & Phonies (Johnny's Red Dog Mix)",
+        "dur": "6:04"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Fakes & Phonies (Gemini's Two Year Old Mix)",
+        "dur": "5:17"
+      },
+      {
+        "pos": "B3",
+        "artist": "",
+        "title": "Fakes & Phonies (Original Version From The Album, \"Higher Power\")",
+        "dur": "4:48"
+      }
+    ],
+    "have": 736,
+    "want": 365,
+    "release_id": 10163,
+    "liked_at": "2026-11-11T20:55:11.646Z"
   }
 }
