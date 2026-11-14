@@ -4195,5 +4195,77 @@
     "want": 1009,
     "release_id": 41722,
     "liked_at": "2026-11-14T09:53:22.776Z"
+  },
+  "https://www.discogs.com/sell/item/4478115389": {
+    "description": "Xpansions - Move Your Body (Elevation) (12\", RE)",
+    "price": "20.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4478115389",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/lNrUtl2k4lCpH4VhKaqUS2_VU3LXsWWas45QoYcc2iM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk1Mjg0/NzgtMTQ4MjE1MjA5/My0zOTQyLmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Xpansions – Elevation (Club Mix)",
+        "yt": "Oz0SQ7Fc0Q4",
+        "src": null,
+        "dur": 434
+      },
+      {
+        "title": "Xpansions - Move Your Body (Official Video)",
+        "yt": "lSjj0vzTU_Y",
+        "src": null,
+        "dur": 183
+      },
+      {
+        "title": "Move Your Body",
+        "yt": "1umeh4GZmzE",
+        "src": null,
+        "dur": 232
+      },
+      {
+        "title": "Move Your Body (Elevation) (Alternative Mix)",
+        "yt": "XUxlxUtnreU",
+        "src": null,
+        "dur": 285
+      },
+      {
+        "title": "Move Your Body (Elevation) (Other Mix)",
+        "yt": "RutD4vhTgFI",
+        "src": null,
+        "dur": 286
+      },
+      {
+        "title": "Xpansions - Elevation (Puffasonic Mix) [HD]",
+        "yt": "ZLsAqq1DTg4",
+        "src": null,
+        "dur": 378
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Move Your Body (Elevation) (Club Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Move Your Body (Elevation) (Alternative Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Move Your Body (Elevation) (Other Mix)",
+        "dur": ""
+      }
+    ],
+    "have": 331,
+    "want": 519,
+    "release_id": 9528478,
+    "liked_at": "2026-11-14T09:55:34.349Z"
   }
 }
