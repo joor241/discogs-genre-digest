@@ -4027,5 +4027,53 @@
     "want": 241,
     "release_id": 32937,
     "liked_at": "2026-11-14T09:49:09.568Z"
+  },
+  "https://www.discogs.com/sell/item/4478260943": {
+    "description": "X-Press 2 - AC/DC (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4478260943",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/IlS-vXD2rB2vHLcJYhCoMRhAkP9lmz5jdUTVrykSAvk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExODk1/Mi0wMDEuanBn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "AC/DC (Gangbanger Mix)",
+        "yt": "MPJWa5W04P0",
+        "src": null,
+        "dur": 599
+      },
+      {
+        "title": "AC/DC (Tribal Beach Mix)",
+        "yt": "iB0DcFOUk88",
+        "src": null,
+        "dur": 574
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "AC/DC (Gangbanger Mix)",
+        "dur": "10:01"
+      },
+      {
+        "pos": "AA1",
+        "artist": "",
+        "title": "AC/DC (Tribal Beach Mix)",
+        "dur": "7:32"
+      },
+      {
+        "pos": "AA2",
+        "artist": "",
+        "title": "AC/DC (Radio Edit)",
+        "dur": "3:51"
+      }
+    ],
+    "have": 101,
+    "want": 136,
+    "release_id": 118952,
+    "liked_at": "2026-11-14T09:50:07.357Z"
   }
 }
