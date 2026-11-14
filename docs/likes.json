@@ -4075,5 +4075,47 @@
     "want": 136,
     "release_id": 118952,
     "liked_at": "2026-11-14T09:50:07.357Z"
+  },
+  "https://www.discogs.com/sell/item/4478232515": {
+    "description": "Bjørn Torske - Aerosoles (12\")",
+    "price": "10.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4478232515",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/fl24wvkzjS_oFz9ec6-ykl-w0H4q1vypsKmChtQcZ-0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5ODA2/LTE2ODQyNDQ3ODgt/NjMxNi5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Bjørn Torske ‎– Aerosoles",
+        "yt": "2p9QKYwsi5M",
+        "src": null,
+        "dur": 390
+      },
+      {
+        "title": "Bjørn Torske ‎– Aerosoles (Remix)",
+        "yt": "sWpWU8bIMmw",
+        "src": null,
+        "dur": 525
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Aerosoles",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Aerosoles (Remix)",
+        "dur": ""
+      }
+    ],
+    "have": 430,
+    "want": 347,
+    "release_id": 19806,
+    "liked_at": "2026-11-14T09:51:48.437Z"
   }
 }
