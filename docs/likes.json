@@ -4339,5 +4339,83 @@
     "want": 169,
     "release_id": 181439,
     "liked_at": "2026-11-14T09:58:00.883Z"
+  },
+  "https://www.discogs.com/sell/item/4478101841": {
+    "description": "Stacy Kidd - Chicago L.I.F.E (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4478101841",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/Eb6hSX5UjkZZpNiXXh9ndoIbdOo3xghqAu5ZhXWx2CU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMjQ2/LTExNDM2NDg1OTUu/anBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Stacy Kidd - Do What You Feel",
+        "yt": "4XkjeXi5ZsM",
+        "src": null,
+        "dur": 414
+      },
+      {
+        "title": "Stacy Kidd - Get It Funky",
+        "yt": "qQq5t2hdC3U",
+        "src": null,
+        "dur": 337
+      },
+      {
+        "title": "Stacy Kidd - Out Of Luck",
+        "yt": "yw9srq_UpDc",
+        "src": null,
+        "dur": 295
+      },
+      {
+        "title": "Stacy Kidd - War At Sea",
+        "yt": "OIj4vPxD6Q8",
+        "src": null,
+        "dur": 456
+      },
+      {
+        "title": "Stacy Kidd - Jammin' Interlude",
+        "yt": "S-7mu8GJwLY",
+        "src": null,
+        "dur": 99
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Do What U Feel",
+        "dur": "6:56"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Get It Funky",
+        "dur": "5:39"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Out Of Luck",
+        "dur": "4:54"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "War At Sea",
+        "dur": "7:36"
+      },
+      {
+        "pos": "B3",
+        "artist": "",
+        "title": "Jammin' Interlude",
+        "dur": "1:32"
+      }
+    ],
+    "have": 677,
+    "want": 223,
+    "release_id": 11246,
+    "liked_at": "2026-11-14T10:00:45.799Z"
   }
 }
