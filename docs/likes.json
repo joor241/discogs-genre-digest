@@ -3955,5 +3955,77 @@
     "want": 663,
     "release_id": 50883,
     "liked_at": "2026-11-14T09:47:57.693Z"
+  },
+  "https://www.discogs.com/sell/item/4478261468": {
+    "description": "Todd Terry - Fingertrips '96 (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4478261468",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/4RSKx07HsaRGESqETsk69ma3ecmFqV8LPV1OPeuAvMI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMyOTM3/LTE0MjQ5ODUxOTct/ODczOS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Never Get Enough (Tee's Freeze Mix)",
+        "yt": "-LU2XeZ0RyA",
+        "src": null,
+        "dur": 312
+      },
+      {
+        "title": "Never Get Enough (Sound on Sound Mix)",
+        "yt": "jdYCeIb9beo",
+        "src": null,
+        "dur": 204
+      },
+      {
+        "title": "I Thought Your Love (In House Mix)",
+        "yt": "TA_Ba075L7M",
+        "src": null,
+        "dur": 392
+      },
+      {
+        "title": "Never Get Enough (Rubber Dub)",
+        "yt": "0hAKdcmaKWs",
+        "src": null,
+        "dur": 390
+      },
+      {
+        "title": "Todd Terry ‎– Fingertrips (Tees Freeze Mix)",
+        "yt": "WOkVJeOOIEg",
+        "src": null,
+        "dur": 395
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Never Get Enough (Tee's Freeze Mix)",
+        "dur": "5:11"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Never Get Enough (Sound On Sound Mix)",
+        "dur": "3:22"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "I Thought Your Love (In House Remix)",
+        "dur": "6:30"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Never Get Enough (Rubber Dub)",
+        "dur": "6:22"
+      }
+    ],
+    "have": 775,
+    "want": 241,
+    "release_id": 32937,
+    "liked_at": "2026-11-14T09:49:09.568Z"
   }
 }
