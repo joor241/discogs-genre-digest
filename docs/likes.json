@@ -4267,5 +4267,77 @@
     "want": 519,
     "release_id": 9528478,
     "liked_at": "2026-11-14T09:55:34.349Z"
+  },
+  "https://www.discogs.com/sell/item/4478107607": {
+    "description": "Charles Dockins Feat. Lawrence D'Ior - Contagious Love (12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4478107607",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/h-YgvLilYbJ4WcodkwANttNjdd5ojOagAnqVTdI0nR8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4MTQz/OS0xMTU2MDgwODgy/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Charles Dockins feat. Lawrence D'Ior - Contagious Love (Charles Dockins Vocal Mix)",
+        "yt": "GsvEYNfAj78",
+        "src": null,
+        "dur": 424
+      },
+      {
+        "title": "Charles Dockins Feat Lawrence D'Ior - Contagious Love (London Connection Dub Mix)",
+        "yt": "irR1fudjob4",
+        "src": null,
+        "dur": 402
+      },
+      {
+        "title": "Charles Dockins feat. Lawrence D'Ior - Contagious Love (London Connection Dub Mix)",
+        "yt": "txG7yZvoxuc",
+        "src": null,
+        "dur": 401
+      },
+      {
+        "title": "Charles Dockins - Contagious Love (4007 Live In The House Mix)",
+        "yt": "pTnKLsF_i04",
+        "src": null,
+        "dur": 466
+      },
+      {
+        "title": "Garage - Contagious Love - (Ty Holdens Underground Lick)",
+        "yt": "XWFm4GxA70M",
+        "src": null,
+        "dur": 361
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Contagious Love (Charles Dockins Vocal Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Contagious Love (London Connection Dub Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Contagious Love (Live In The House Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Contagious Love (Charles Dockins Dub)",
+        "dur": ""
+      }
+    ],
+    "have": 270,
+    "want": 169,
+    "release_id": 181439,
+    "liked_at": "2026-11-14T09:58:00.883Z"
   }
 }
