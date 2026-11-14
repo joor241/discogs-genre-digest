@@ -3883,5 +3883,77 @@
     "want": 29,
     "release_id": 311331,
     "liked_at": "2026-11-11T21:14:51.078Z"
+  },
+  "https://www.discogs.com/sell/item/4478262659": {
+    "description": "Paul Johnson - Get Get Down (12\")",
+    "price": "20.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4478262659",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/X4WrcDlpclokRYJ7J0vw8COZUJO0FFT9VTxPWu0ZTz8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUwODgz/LTExNDE2NTYxMTQu/anBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Paul Johnson - Get Get Down (Official music video)",
+        "yt": "3YZLI26HYo8",
+        "src": null,
+        "dur": 181
+      },
+      {
+        "title": "Get Get Down (Original Mix)",
+        "yt": "7dVohOzvox8",
+        "src": null,
+        "dur": 552
+      },
+      {
+        "title": "Get Get Down",
+        "yt": "HR-_BMO7P-k",
+        "src": null,
+        "dur": 368
+      },
+      {
+        "title": "Get Get Down (The Dancefloor Dub Mix)",
+        "yt": "WaXvNk6b0Zo",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "Get Get Down (Loopapella)",
+        "yt": "r7FGhUbe6ds",
+        "src": null,
+        "dur": 95
+      },
+      {
+        "title": "Get Get Down (Latin Excursion Mix)",
+        "yt": "SuwWMGWDSRI",
+        "src": null,
+        "dur": 571
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Get Get Down (Original Extended Mix)",
+        "dur": "5:50"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Get Get Down (Radio Edit)",
+        "dur": "3:09"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Get Get Down (XXX Remix)",
+        "dur": "5:28"
+      }
+    ],
+    "have": 673,
+    "want": 663,
+    "release_id": 50883,
+    "liked_at": "2026-11-14T09:47:57.693Z"
   }
 }
