@@ -4483,5 +4483,48 @@
     "want": 119,
     "release_id": 150302,
     "liked_at": "2026-11-17T17:03:51.714Z"
+  },
+  "https://www.deejay.de/Demi_Riquisimo_%26_Kepler_Cafe_Gelato_EP_Disc_1_SEMID028A_Vinyl__1270918": {
+    "description": "Demi Riquisimo - Cafe Gelato EP Disc 1 (12inch)",
+    "price": "15.76 EUR",
+    "url": "https://www.deejay.de/Demi_Riquisimo_%26_Kepler_Cafe_Gelato_EP_Disc_1_SEMID028A_Vinyl__1270918",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/1/8/1270918.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Demi Riquisimo & Kepler - Work It Out",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/1270918a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "A2: Naajet - Fading Movement",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/1270918b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Kamma - Seashell",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/1270918c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: PACH - Rhythm N Groove",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/1270918d.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B3: Wilba - Coastal Mischief",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/1/8/1270918e.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-11-17T17:04:57.505Z"
   }
 }
