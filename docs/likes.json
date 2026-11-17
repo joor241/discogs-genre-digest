@@ -4417,5 +4417,71 @@
     "want": 223,
     "release_id": 11246,
     "liked_at": "2026-11-14T10:00:45.799Z"
+  },
+  "https://www.discogs.com/sell/item/4232626830": {
+    "description": "99 Allstars - Allstars EP (12\", EP)",
+    "price": "5.50 EUR",
+    "url": "https://www.discogs.com/sell/item/4232626830",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/n08pEIoWzVIq_hjdjoabWJelkVCw3DSYTQQSfmPk3m0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1MDMw/Mi0xMzYxMzY0NTg0/LTY3NjQuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "99 Allstars - Soakin Wet",
+        "yt": "NEm3sAdWmFA",
+        "src": null,
+        "dur": 400
+      },
+      {
+        "title": "99 Allstars - Luv Is All You Need (Get Another Cocktail' 12'' Mix)",
+        "yt": "9JVyxfZD3ts",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "99 AllStars - Luv Is All You  Need (Fet. Paul Alexander)",
+        "yt": "aGIRX7ZU7nQ",
+        "src": null,
+        "dur": 474
+      },
+      {
+        "title": "99 Allstars~Luv Is All You Need [Ralphi's Cha Cha Italo Dub]",
+        "yt": "wOpAcFFpCtU",
+        "src": null,
+        "dur": 395
+      },
+      {
+        "title": "99 Allstars-Keep It Up",
+        "yt": "aJv8ljTKNnQ",
+        "src": null,
+        "dur": 431
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Luv Is All U Need",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Keep It Up",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Soakin' Wet",
+        "dur": ""
+      }
+    ],
+    "have": 370,
+    "want": 119,
+    "release_id": 150302,
+    "liked_at": "2026-11-17T17:03:51.714Z"
   }
 }
