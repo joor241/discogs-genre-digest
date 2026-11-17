@@ -4551,5 +4551,54 @@
       }
     ],
     "liked_at": "2026-11-17T17:06:29.581Z"
+  },
+  "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_3_2x12_REPEAT10_Vinyl__1006161": {
+    "description": "Jay Tripwire - My Life With The Machines Vol 3 (2x12\") (excl)",
+    "price": "24.33 EUR",
+    "url": "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_3_2x12_REPEAT10_Vinyl__1006161",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/6/1/1006161.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Yabby You - King Pharoah's Plague ( Jay Tripwire Remix )",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/1/1006161a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Marky Starr - Disco Freak ( Jay's Acid Rerub )",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/1/1006161b.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B2: Nervous",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/1/1006161c.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C1: In Your Mind",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/1/1006161d.mp3",
+        "dur": 0
+      },
+      {
+        "title": "C2: The Midget Who Loves Dolphines",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/1/1006161e.mp3",
+        "dur": 0
+      },
+      {
+        "title": "D1: Dope Groove",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/6/1/1006161f.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-11-17T17:07:43.452Z"
   }
 }
