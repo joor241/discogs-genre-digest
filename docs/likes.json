@@ -4526,5 +4526,30 @@
       }
     ],
     "liked_at": "2026-11-17T17:04:57.505Z"
+  },
+  "https://www.deejay.de/Risar_Rientre_Meditio_RISAR001_Vinyl__1092496": {
+    "description": "Risar - Rientre Meditio (excl)",
+    "price": "12.56 EUR",
+    "url": "https://www.deejay.de/Risar_Rientre_Meditio_RISAR001_Vinyl__1092496",
+    "store": "deejay.de (new arrivals)",
+    "thumb": "https://www.deejay.de/images/l/9/6/1092496.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "A1: Rientre Meditio",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/9/6/1092496a.mp3",
+        "dur": 0
+      },
+      {
+        "title": "B1: Kedromo (Vinyl Only)",
+        "yt": null,
+        "src": "https://www.deejay.de/streamit/9/6/1092496b.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-11-17T17:06:29.581Z"
   }
 }
