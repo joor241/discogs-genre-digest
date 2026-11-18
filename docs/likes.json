@@ -4600,5 +4600,77 @@
       }
     ],
     "liked_at": "2026-11-17T17:07:43.452Z"
+  },
+  "https://www.discogs.com/sell/item/4494712328": {
+    "description": "Johnny Fiasco - Vital Signs (12\", Yel)",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4494712328",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/m-S-31NFaubDKxdvp4nJm2QSWCFbQbYZZjEkO0-CVDA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNjk1/NDEtMTUxNzQ3MDA4/Ni01MTc1LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Johnny Fiasco - Sabrosa (Original Mix) (1999)",
+        "yt": "UFPjsyB2WY8",
+        "src": null,
+        "dur": 387
+      },
+      {
+        "title": "Johnny Fiasco - Sabrosa (Hide N' Seek Mix)",
+        "yt": "NiW4SqnpNVQ",
+        "src": null,
+        "dur": 400
+      },
+      {
+        "title": "Johnny Fiasco – Turn It Around (Emphatic Mix) - (Vital Signs)",
+        "yt": "NZU9c7MGF44",
+        "src": null,
+        "dur": 357
+      },
+      {
+        "title": "Johhny Fiasco - Head Rush",
+        "yt": "rYY5b-sI3QY",
+        "src": null,
+        "dur": 305
+      },
+      {
+        "title": "Johnny Fiasco -Turn It Around (Emphatic Mix)",
+        "yt": "AwYfHACSfbs",
+        "src": null,
+        "dur": 344
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Sabrosa (Original Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Sabrosa (Hide N' Seek Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Turn It Around (Emphatic Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Head Rush",
+        "dur": ""
+      }
+    ],
+    "have": 135,
+    "want": 159,
+    "release_id": 2369541,
+    "liked_at": "2026-11-18T17:16:54.985Z"
   }
 }
