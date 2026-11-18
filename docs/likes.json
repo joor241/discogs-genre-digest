@@ -4672,5 +4672,83 @@
     "want": 159,
     "release_id": 2369541,
     "liked_at": "2026-11-18T17:16:54.985Z"
+  },
+  "https://www.discogs.com/sell/item/4494690215": {
+    "description": "Mighty Dub Katz - It's Just Another Groove (12\")",
+    "price": "10.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4494690215",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/n89HjmhTd7pHMa69LaUiMzO45k6T2HwFvFCILGQoqhU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1ODgz/MS0xNDM2ODk3MDgz/LTkzNDguanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Mighty Dub Katz - It's just another groove (Original version)",
+        "yt": "9SScEJCtKNw",
+        "src": null,
+        "dur": 382
+      },
+      {
+        "title": "The Mighty Dub Katz - It's Just Another Groove (Original Mix) (1997)",
+        "yt": "MZ86IjB4LxE",
+        "src": null,
+        "dur": 395
+      },
+      {
+        "title": "Mighty Dub Katz - It's Just Another Groove (Lisa Marie Experience Remix) (1996)",
+        "yt": "OV2h1jsBW6I",
+        "src": null,
+        "dur": 462
+      },
+      {
+        "title": "Mighty Dub Katz - It's Just Another Groove (I Think That We Should Get Back Together...)",
+        "yt": "QlweWNR1iFU",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "Mighty Dub Katz - Its just another groove (DJ Duke's Techdisco mix)",
+        "yt": "eMXWKMVdZFA",
+        "src": null,
+        "dur": 447
+      },
+      {
+        "title": "Mighty Dub Katz - Just Another Groove (Ashley Beedle's Amalgamation Disco Edit)",
+        "yt": "zO9JJSXNI5M",
+        "src": null,
+        "dur": 460
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "It's Just Another Groove (Lisa Marie Experience Remix)",
+        "dur": "7:54"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "It's Just Another Groove (Original Version)",
+        "dur": "6:19"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "It's Just Another Groove (Work Mix)",
+        "dur": "7:48"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Just A Groove",
+        "dur": "6:07"
+      }
+    ],
+    "have": 237,
+    "want": 243,
+    "release_id": 158831,
+    "liked_at": "2026-11-18T17:24:00.707Z"
   }
 }
