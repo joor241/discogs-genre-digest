@@ -4750,5 +4750,83 @@
     "want": 243,
     "release_id": 158831,
     "liked_at": "2026-11-18T17:24:00.707Z"
+  },
+  "https://www.discogs.com/sell/item/4494687143": {
+    "description": "K. London Posse* Featuring Maydie Myles - I've Been Waiting (2x12\")",
+    "price": "7.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4494687143",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/FRVLiv3LjTW3__JaC8jhGOO_ODdQqRajeYsCvigKuzo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1OTkw/Mi0xNDEwMjQ2NzUx/LTk4NTQuanBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "I've Been Waiting (feat. Maydie Myles) (Club Blast Mix)",
+        "yt": "oSbxwelWikc",
+        "src": null,
+        "dur": 395
+      },
+      {
+        "title": "Maydie Myles - I've Been Waiting (Dem 2 Remix)",
+        "yt": "F29bOIiLX68",
+        "src": null,
+        "dur": 384
+      },
+      {
+        "title": "Madie Myles - I've Been Waiting (DIY Reload Mix)(TO)",
+        "yt": "PJBNkJ6aWiM",
+        "src": null,
+        "dur": 240
+      },
+      {
+        "title": "I've Been Waiting (feat. Maydie Myles) (The Back Door Rub Dub)",
+        "yt": "TAlF46K_GOs",
+        "src": null,
+        "dur": 429
+      },
+      {
+        "title": "Madie Myles - I've Been Waiting (Tuff Jam Dub)",
+        "yt": "vvFXUpjqTXM",
+        "src": null,
+        "dur": 351
+      },
+      {
+        "title": "I've Been Waiting (Undertone Remix) - Maydie Myles - 2tuf 4u Records (Side AA2)",
+        "yt": "cyNxAC_HaWg",
+        "src": null,
+        "dur": 391
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "I've Been Waiting (Club Blast Mix)",
+        "dur": "6:32"
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "I've Been Waiting (The Back Door Rub Dub)",
+        "dur": "7:08"
+      },
+      {
+        "pos": "C",
+        "artist": "",
+        "title": "I've Been Waiting (New Heights Swing Mix)",
+        "dur": "7:45"
+      },
+      {
+        "pos": "D",
+        "artist": "",
+        "title": "I've Been Waiting (Dub Blast Mix)",
+        "dur": "7:39"
+      }
+    ],
+    "have": 269,
+    "want": 136,
+    "release_id": 259902,
+    "liked_at": "2026-11-18T17:25:06.426Z"
   }
 }
