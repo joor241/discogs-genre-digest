@@ -4900,5 +4900,42 @@
     "want": 89,
     "release_id": 166194,
     "liked_at": "2026-11-18T17:30:32.603Z"
+  },
+  "https://clone.nl/item85261.html": {
+    "description": "Lilac Road Productions - Skipton Bassett 2001 (12inch)",
+    "price": "price on request",
+    "url": "https://clone.nl/item85261.html",
+    "store": "Clone.nl (new arrivals)",
+    "thumb": "https://clone.nl/platen/artwork/large/plaatimage84333.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Lilac Road Productions - Skipton Bassett 2001 - 1 Feelz It",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/85261/1%20Feelz%20It.mp3",
+        "dur": 0
+      },
+      {
+        "title": "Lilac Road Productions - Skipton Bassett 2001 - 2 Untold",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/85261/2%20Untold.mp3",
+        "dur": 0
+      },
+      {
+        "title": "Lilac Road Productions - Skipton Bassett 2001 - 3 Double Dee",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/85261/3%20Double%20Dee.mp3",
+        "dur": 0
+      },
+      {
+        "title": "Lilac Road Productions - Skipton Bassett 2001 - 4 Korg Munger",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/85261/4%20Korg%20Munger.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-11-18T17:58:20.788Z"
   }
 }
