@@ -4937,5 +4937,30 @@
       }
     ],
     "liked_at": "2026-11-18T17:58:20.788Z"
+  },
+  "https://clone.nl/item84337.html": {
+    "description": "Demarkus Lewis - Every Night (12inch)",
+    "price": "price on request",
+    "url": "https://clone.nl/item84337.html",
+    "store": "Clone.nl (new arrivals)",
+    "thumb": "https://clone.nl/platen/artwork/large/plaatimage83425.jpg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Demarkus Lewis - Every Night - 1 Every Night",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/84337/1%20Every%20Night.mp3",
+        "dur": 0
+      },
+      {
+        "title": "Demarkus Lewis - Every Night - 2 Every Night - (Gil Aguilar 208 Westside Remix)",
+        "yt": null,
+        "src": "https://clone.nl/platen/mp3/84337/2%20Every%20Night%20-%20%28Gil%20Aguilar%20208%20Westside%20Remix%29.mp3",
+        "dur": 0
+      }
+    ],
+    "liked_at": "2026-11-18T18:00:28.056Z"
   }
 }
