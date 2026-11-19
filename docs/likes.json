@@ -4896,5 +4896,83 @@
       }
     ],
     "liked_at": "2026-11-18T18:00:28.056Z"
+  },
+  "https://www.discogs.com/sell/item/4494982595": {
+    "description": "636 Featuring Arnold Jarvis - Rain (12\")",
+    "price": "10.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4494982595",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/JoEwVIxbD7474mba9FXHFGzDLnxqu8VU4L-YPGGZM64/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1ODQ0/LTE1ODUyMjg0Mjkt/NjczMC5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "636 Featuring Arnold Jarvis – Rain 1994",
+        "yt": "a1IKXk_SmCo",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "Rain (feat. Arnold Jarvis) (80 Proof Garage Mix)",
+        "yt": "pJ2usfv2nxw",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "Rain (feat. Arnold Jarvis) (Doc Baron's \"Live In Spain\" Mix)",
+        "yt": "b7qKEFQAMlQ",
+        "src": null,
+        "dur": 409
+      },
+      {
+        "title": "Rain (feat. Arnold Jarvis) (80 Proof Mental Instrumental Mix)",
+        "yt": "fuZX7bTatrs",
+        "src": null,
+        "dur": 252
+      },
+      {
+        "title": "Rain (feat. Arnold Jarvis) (Doc Baron Radio Edit)",
+        "yt": "TYrbIh9n5eY",
+        "src": null,
+        "dur": 220
+      },
+      {
+        "title": "(1994) 636 feat. Arnold Jarvis - Rain [80 Proof Garage Mix]",
+        "yt": "dm1kfbIM8II",
+        "src": null,
+        "dur": 612
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Rain (80 Proof Garage Mix)",
+        "dur": "9:37"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Rain (Doc Baron's \"Live In Spain\" Mix)",
+        "dur": "6:05"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Rain (80 Proof Mental Instrum Mix)",
+        "dur": "4:11"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Rain (Doc Baron's Radio Edit)",
+        "dur": "4:00"
+      }
+    ],
+    "have": 397,
+    "want": 325,
+    "release_id": 25844,
+    "liked_at": "2026-11-19T15:21:27.390Z"
   }
 }
