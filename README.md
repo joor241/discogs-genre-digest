@@ -780,8 +780,8 @@ drift out of sync with where it actually points.
 #### Likes, synced across your devices
 
 Tap the heart on any record to save it — visible from a separate **Likes**
-page (linked at the top of the player page), in stock first and grouped by
-store, on any device.
+page (linked at the top of the player page), grouped by store with what's in
+stock first, on any device.
 
 This needed real syncing rather than a per-browser "favourites" list, since
 the point is opening the same likes on your phone and your laptop. There's no
@@ -821,11 +821,13 @@ fills it in.
 
 #### Still available? Checked every day
 
-Every run also checks each like at its shop again, and the Likes page is
-sorted by the answer: **In stock** on top, then **Pre-order**, **Not checked
-yet**, **Out of stock**, and **Gone** at the bottom. Nothing is ever removed
-for you: a Discogs listing that sold stays in your likes, dimmed and marked
-"Gone", until you press Unlike yourself.
+Every run also checks each like at its shop again, and the Likes page sorts
+each store's likes by the answer: **In stock** on top, then **Pre-order**,
+**Not checked yet**, **Out of stock**, and **Gone** at the bottom. Each store
+is a single section, with jump links to them at the top of the page: store
+first and availability inside it, since one store is one order. Nothing is
+ever removed for you: a Discogs listing that sold stays in your likes, dimmed
+and marked "Gone", until you press Unlike yourself.
 
 | Shop | How it's checked | What "gone" means |
 |---|---|---|

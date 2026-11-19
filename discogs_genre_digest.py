@@ -277,9 +277,10 @@ SOUNDCLOUD_MAX_ITEMS = 25      # releases listed in the "came in stock" block
 # Likes (the hearts on the player page): every run checks each liked record
 # at its shop again -- is the Discogs listing still for sale, is the shop's
 # copy in stock, on pre-order, sold out, or gone -- and writes the answer to
-# docs/likes_status.json, which likes.html sorts by: in stock on top, out of
-# stock and gone below. Nothing is ever removed from your likes: a sold
-# Discogs listing stays, marked gone, until you unlike it yourself.
+# docs/likes_status.json, which likes.html sorts each store's likes by: in
+# stock on top, out of stock and gone below. Nothing is ever removed from
+# your likes: a sold Discogs listing stays, marked gone, until you unlike it
+# yourself.
 # likes.json is written only by the browser and likes_status.json only by
 # this script, for the same never-two-writers reason as above.
 LIKES_STATUS_ENABLED = True

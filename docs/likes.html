@@ -28,24 +28,28 @@ body {
   font-size: 15px; line-height: 1.45;
 }
 .wrap { max-width: 760px; margin: 0 auto; }
-.topnav { margin: 0 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
-.topnav a {
+.topnav, .storenav { margin: 0 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.topnav a, .storenav a {
   color: #8a8a92; text-decoration: none; font-size: 13px;
   border: 1px solid #26262b; border-radius: 6px; padding: 6px 11px;
   display: inline-block;
 }
-.topnav a:hover { color: #e8e8ea; border-color: #3a3a44; }
+.topnav a:hover, .storenav a:hover { color: #e8e8ea; border-color: #3a3a44; }
+/* Jump links to each store's section, filled in by render(). */
+.storenav { margin: 0; }
+.storenav:empty { display: none; }
+.storenav a { font-size: 12.5px; padding: 4px 9px; }
+.storenav .n { color: #5f5f68; margin-left: 3px; }
 h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
-.sub { color: #8a8a92; font-size: 13px; margin: 0 0 24px; }
+.sub { color: #8a8a92; font-size: 13px; margin: 0 0 12px; }
 h2 {
   font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em;
   color: #8a8a92; margin: 34px 0 12px; padding-bottom: 8px;
   border-bottom: 1px solid #26262b;
 }
-h2.tier-in_stock { color: #6fcf8e; border-bottom-color: #1f3a28; }
 h3 { font-size: 13px; font-weight: 600; color: #8a8a92; margin: 18px 0 2px; }
-.tiernote { color: #6f6f78; font-size: 12.5px; margin: -6px 0 6px; }
-.sub a { color: inherit; }
+h3.tier-in_stock { color: #6fcf8e; }
+.tiernote { color: #6f6f78; font-size: 12.5px; margin: 0 0 4px; }
 .badge.instock { background: #12261a; color: #6fcf8e; }
 .badge.gone { background: #3a1616; color: #ff8c8c; }
 .was { color: #6f6f78; font-size: 12px; }
@@ -99,7 +103,8 @@ button.unlike:hover { background: #2a1414; }
     <a href="settings.html">&#9881; Settings</a>
   </div>
   <h1>Likes</h1>
-  <p class="sub" id="sub">Everything you've liked, what's in stock first. Synced across your devices via this site's repo, not this browser.</p>
+  <p class="sub" id="sub">Everything you've liked, per store, what's in stock first. Synced across your devices via this site's repo, not this browser.</p>
+  <div id="storenav" class="storenav"></div>
   <div id="connectHint" class="connect-hint">
     Not connected -- you can see likes here, but unliking needs a token.
     <a href="settings.html">Connect on Settings</a> to manage them from this device too.
@@ -178,44 +183,60 @@ button.unlike:hover { background: #2a1414; }
     var entries = Object.keys(likes).map(function (url) {
       return Object.assign({ url: url }, likes[url]);
     });
+    var storenav = document.getElementById("storenav");
     if (!entries.length) {
+      storenav.innerHTML = "";
       content.innerHTML = '<p class="none">No likes yet. Tap the heart on a record in the digest to save it here.</p>';
       return;
     }
     entries.sort(function (a, b) { return (b.liked_at || "").localeCompare(a.liked_at || ""); });
 
-    var byTier = {};
+    // One section per store -- that's one order and one shipping bill --
+    // with the tiers inside it, newest like first within each. Grouping by
+    // tier first put a store under every tier it had likes in, so the same
+    // shop turned up two or three times down the page.
+    var stores = [], byStore = {}, tierTotals = {};
     entries.forEach(function (it) {
       var st = items[it.url];
       var tier = st && TIERS.some(function (t) { return t[0] === st.status; }) ? st.status : "unknown";
-      (byTier[tier] = byTier[tier] || []).push(it);
+      var store = it.store || "Other";
+      if (!byStore[store]) {
+        byStore[store] = { n: 0, tiers: {} };
+        stores.push(store);
+      }
+      byStore[store].n++;
+      (byStore[store].tiers[tier] = byStore[store].tiers[tier] || []).push(it);
+      tierTotals[tier] = (tierTotals[tier] || 0) + 1;
     });
+    stores.sort(function (a, b) { return a.localeCompare(b, undefined, { sensitivity: "base" }); });
 
-    var summary = TIERS.filter(function (t) { return byTier[t[0]]; }).map(function (t) {
-      return '<a href="#tier-' + t[0] + '">' + byTier[t[0]].length + " " + e(t[1].toLowerCase()) + '</a>';
+    var summary = TIERS.filter(function (t) { return tierTotals[t[0]]; }).map(function (t) {
+      return tierTotals[t[0]] + " " + e(t[1].toLowerCase());
     }).join(" &middot; ");
     if (status && status.updated) {
       summary += " &middot; checked " + e(shortDate(status.updated) + ", " +
         new Date(status.updated).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }));
     }
     document.getElementById("sub").innerHTML = summary;
+    storenav.innerHTML = stores.map(function (store, i) {
+      return '<a href="#store-' + i + '">' + e(store) + '<span class="n">' + byStore[store].n + '</span></a>';
+    }).join("");
 
-    var html = "";
-    TIERS.forEach(function (tier) {
-      var tierItems = byTier[tier[0]];
-      if (!tierItems) return;
-      html += '<h2 id="tier-' + tier[0] + '" class="tier-' + tier[0] + '">' + e(tier[1]) +
-        ' &middot; ' + tierItems.length + '</h2>';
-      if (tier[2]) html += '<p class="tiernote">' + e(tier[2]) + '</p>';
-
-      var byStore = {};
-      tierItems.forEach(function (it) {
-        var store = it.store || "Other";
-        (byStore[store] = byStore[store] || []).push(it);
-      });
-      Object.keys(byStore).sort().forEach(function (store) {
-        html += '<h3>' + e(store) + ' &middot; ' + byStore[store].length + '</h3>';
-        byStore[store].forEach(function (it) { html += recHtml(it, items[it.url]); });
+    var html = "", explained = {};
+    stores.forEach(function (store, i) {
+      var group = byStore[store];
+      html += '<h2 id="store-' + i + '">' + e(store) + ' &middot; ' + group.n + '</h2>';
+      TIERS.forEach(function (tier) {
+        var tierItems = group.tiers[tier[0]];
+        if (!tierItems) return;
+        html += '<h3 class="tier-' + tier[0] + '">' + e(tier[1]) + ' &middot; ' + tierItems.length + '</h3>';
+        // What a tier means, said once where it first comes up rather
+        // than again under every store that has one.
+        if (tier[2] && !explained[tier[0]]) {
+          explained[tier[0]] = true;
+          html += '<p class="tiernote">' + e(tier[2]) + '</p>';
+        }
+        tierItems.forEach(function (it) { html += recHtml(it, items[it.url]); });
       });
     });
     content.innerHTML = html;
