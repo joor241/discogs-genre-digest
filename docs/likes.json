@@ -5100,5 +5100,59 @@
     "want": 1219,
     "release_id": 90131,
     "liked_at": "2026-11-22T13:27:11.514Z"
+  },
+  "https://www.discogs.com/sell/item/4507763136": {
+    "description": "iO (12) - Module EP (12\", EP)",
+    "price": "9.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4507763136",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/wzMuES3lXZCfcz7OpR9dzjsRSOY_dDoKIUs8lkrOsGo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyNDI5/ODc2LTE1MzUxMjkw/NjMtNDc5OS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "iO (Mulen) - Module [SM005]",
+        "yt": "lZC4JrAhsNg",
+        "src": null,
+        "dur": 474
+      },
+      {
+        "title": "iO (Mulen) - Angular [SM005]",
+        "yt": "fLho4IvOWdM",
+        "src": null,
+        "dur": 530
+      },
+      {
+        "title": "iO (Mulen) - Goliath [SM005]",
+        "yt": "uMMvuvzVhqA",
+        "src": null,
+        "dur": 470
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Module",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Angular",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Goliath",
+        "dur": ""
+      }
+    ],
+    "have": 186,
+    "want": 88,
+    "release_id": 12429876,
+    "liked_at": "2026-11-22T13:28:01.768Z"
   }
 }
