@@ -4974,5 +4974,83 @@
     "want": 325,
     "release_id": 25844,
     "liked_at": "2026-11-19T15:21:27.390Z"
+  },
+  "https://www.discogs.com/sell/item/4505238852": {
+    "description": "Jamiroquai - Little L (12\")",
+    "price": "15.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4505238852",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/mlLWLG2vfeoMH0CTUN9cR5bFiyjc2ntSGpOHsAdqv1Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyMTkz/LTE3NTM2NTMzMTkt/MTg0NS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Jamiroquai - Little L (Official Video)",
+        "yt": "1hHSH9sJUEo",
+        "src": null,
+        "dur": 237
+      },
+      {
+        "title": "Jamiroquai - Little L (Boris Dlugosch Remix)",
+        "yt": "8oaXN_MJt70",
+        "src": null,
+        "dur": 371
+      },
+      {
+        "title": "Jamiroquai - Little L (Boris Dlugosch Dub Mix - Official Audio)",
+        "yt": "o2HLdbWA27g",
+        "src": null,
+        "dur": 377
+      },
+      {
+        "title": "Jamiroquai - Little L (Wounded Buffalo Remix - Official Audio)",
+        "yt": "dTwIabv0274",
+        "src": null,
+        "dur": 312
+      },
+      {
+        "title": "Jamiroquai - Little L (Blaze Shelter Mix - Official Audio)",
+        "yt": "Qyc8Bsox3-U",
+        "src": null,
+        "dur": 383
+      },
+      {
+        "title": "Little L (Bob Sinclar Remix)",
+        "yt": "SUWupmX8xgI",
+        "src": null,
+        "dur": 449
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Little L (Single Edit)",
+        "dur": "3:58"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Little L (Wounded Buffalo Remix)",
+        "dur": "5:08"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Little L (Bob Sinclar Remix)",
+        "dur": "5:36"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Little L (Boris Dlugosch Remix)",
+        "dur": "5:14"
+      }
+    ],
+    "have": 1248,
+    "want": 556,
+    "release_id": 62193,
+    "liked_at": "2026-11-22T13:25:53.204Z"
   }
 }
