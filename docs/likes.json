@@ -8,7 +8,11 @@
     "formats": [
       "Vinyl"
     ],
-    "liked_at": "2026-08-27T18:39:01.577Z"
+    "liked_at": "2026-08-27T18:39:01.577Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-08-27"
+    }
   },
   "https://www.deejay.de/Pennyy_Espresso_Brodie_PRP024_Vinyl__1240462": {
     "description": "Pennyy - Espresso Brodie (12inch)",
@@ -19,7 +23,11 @@
     "formats": [
       "Vinyl"
     ],
-    "liked_at": "2026-08-27T18:39:35.568Z"
+    "liked_at": "2026-08-27T18:39:35.568Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-08-27"
+    }
   },
   "https://www.deejay.de/DANCE_PROTOCOL_Heads_Off_LV13_Vinyl__1258576": {
     "description": "DANCE PROTOCOL - Heads Off (12inch)",
@@ -50,7 +58,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-08-31T11:25:39.276Z"
+    "liked_at": "2026-08-31T11:25:39.276Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-08-31"
+    }
   },
   "https://www.deejay.de/BISOU_MORE_JOBERMI_GAMM207_Vinyl__1250791": {
     "description": "BISOU - MORE JOBERMI (12inch)",
@@ -75,7 +87,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-01T12:52:57.225Z"
+    "liked_at": "2026-09-01T12:52:57.225Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-01"
+    }
   },
   "https://www.deejay.de/Yansima_Catchplay_EP_KLMR001_Vinyl__1251418": {
     "description": "Yansima - Catchplay EP (12inch)",
@@ -100,7 +116,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-01T12:55:03.289Z"
+    "liked_at": "2026-09-01T12:55:03.289Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-01"
+    }
   },
   "https://www.deejay.de/Submod_x_Shuray_Walle_Pellegrin_EP_ETHERNAL006_Vinyl__1033349": {
     "description": "Submod - Pellegrin EP (12inch)",
@@ -137,7 +157,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-03T12:45:25.132Z"
+    "liked_at": "2026-09-03T12:45:25.132Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-03"
+    }
   },
   "https://www.deejay.de/Farsa_Roza_Terenzi_Promiscuous_Dubz_STEP19_Vinyl__1256539": {
     "description": "Farsa - Promiscuous Dubz (12inch)",
@@ -174,7 +198,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-05T11:06:37.602Z"
+    "liked_at": "2026-09-05T11:06:37.602Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-05"
+    }
   },
   "https://yoyaku.io/release/baka-g-diva-morgabine-ht28/": {
     "description": "Baka G - Diva Morgabine",
@@ -211,7 +239,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-05T11:10:52.070Z"
+    "liked_at": "2026-09-05T11:10:52.070Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-05"
+    }
   },
   "https://www.discogs.com/sell/item/4351006992": {
     "description": "Juice (3) - Do It Right! (12\")",
@@ -277,7 +309,11 @@
     ],
     "release_id": 160626,
     "have": 413,
-    "want": 127
+    "want": 127,
+    "source": {
+      "via": "mail",
+      "date": "2026-09-07"
+    }
   },
   "https://yoyaku.io/release/lazer-man-iveta-sonic-distorsion-ftj021/": {
     "description": "Lazer Man, Iveta - Sonic Distorsion",
@@ -314,7 +350,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-09T12:56:25.247Z"
+    "liked_at": "2026-09-09T12:56:25.247Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-09"
+    }
   },
   "https://www.discogs.com/sell/item/4359823233": {
     "description": "Travis Nelson - The Devil's Disco (12\")",
@@ -368,7 +408,11 @@
     ],
     "release_id": 93588,
     "have": 270,
-    "want": 164
+    "want": 164,
+    "source": {
+      "via": "mail",
+      "date": "2026-09-12"
+    }
   },
   "https://www.discogs.com/sell/item/4359712623": {
     "description": "Adventures Of Stevie V. - Dirty Cash (12\")",
@@ -440,7 +484,11 @@
     ],
     "release_id": 32911,
     "have": 2897,
-    "want": 725
+    "want": 725,
+    "source": {
+      "via": "mail",
+      "date": "2026-09-12"
+    }
   },
   "https://www.deejay.de/Daniel_Broesecke_VAM13_VAM13_Vinyl__1216283": {
     "description": "Daniel Broesecke - VAM13 (excl)",
@@ -477,7 +525,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-15T13:53:37.422Z"
+    "liked_at": "2026-09-15T13:53:37.422Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-15"
+    }
   },
   "https://www.deejay.de/Unknown_PVC_11_PVC011_Vinyl__1247755": {
     "description": "Unknown - PVC 11 (excl)",
@@ -514,7 +566,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-15T13:54:00.929Z"
+    "liked_at": "2026-09-15T13:54:00.929Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-15"
+    }
   },
   "https://www.deejay.de/Corrie_Re-Grooves_TREMREC003_Vinyl__1234216": {
     "description": "Corrie - Re-Grooves (12inch)",
@@ -551,7 +607,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-15T13:55:36.256Z"
+    "liked_at": "2026-09-15T13:55:36.256Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-15"
+    }
   },
   "https://www.deejay.de/Grant_Dell_Sounds_From_The_Front_Line_EP_FLF001_Vinyl__1262957": {
     "description": "Grant Dell - Sounds From The Front Line EP (12inch)",
@@ -588,7 +648,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-15T13:56:47.102Z"
+    "liked_at": "2026-09-15T13:56:47.102Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-15"
+    }
   },
   "https://yoyaku.io/release/paul-cut-circle-people-atwt021/": {
     "description": "Paul Cut - Circle People",
@@ -637,7 +701,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-21T13:37:48.416Z"
+    "liked_at": "2026-09-21T13:37:48.416Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-21"
+    }
   },
   "https://www.deejay.de/Kuyateh_One_Nation_PRVR001_Vinyl__1247284": {
     "description": "Kuyateh - One Nation (excl)",
@@ -668,7 +736,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-23T11:44:43.834Z"
+    "liked_at": "2026-09-23T11:44:43.834Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-22"
+    }
   },
   "https://www.deejay.de/Vitus_Silhouette_02_SILHOUETTE02_Vinyl__1234507": {
     "description": "Silhouette 02 - Silhouette 02 (12inch)",
@@ -711,7 +783,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-23T11:45:22.742Z"
+    "liked_at": "2026-09-23T11:45:22.742Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-22"
+    }
   },
   "https://www.deejay.de/Mihai_Popoviciu_Messages_EP_PRKV010_Vinyl__1246255": {
     "description": "Mihai Popoviciu - Messages EP (excl)",
@@ -748,7 +824,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-27T15:27:23.900Z"
+    "liked_at": "2026-09-27T15:27:23.900Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-25"
+    }
   },
   "https://www.deejay.de/Inland_Knights_Hollow_Legs_DRM036R_Vinyl__729718": {
     "description": "Inland Knights - Hollow Legs (12inch)",
@@ -773,7 +853,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-09-28T16:15:48.030Z"
+    "liked_at": "2026-09-28T16:15:48.030Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-09-28"
+    }
   },
   "https://www.discogs.com/sell/item/4385630391": {
     "description": "Sandy B - Make The World Go Round (12\", Ltd)",
@@ -839,7 +923,11 @@
     ],
     "release_id": 677194,
     "have": 425,
-    "want": 270
+    "want": 270,
+    "source": {
+      "via": "mail",
+      "date": "2026-09-30"
+    }
   },
   "https://clone.nl/item85137.html": {
     "description": "Cromby - Jackin Shit (12inch)",
@@ -876,7 +964,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-05T15:01:22.414Z"
+    "liked_at": "2026-10-05T15:01:22.414Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-05"
+    }
   },
   "https://www.discogs.com/sell/item/4414921776": {
     "description": "Moi (10) - 12 (12\")",
@@ -918,7 +1010,11 @@
     ],
     "release_id": 22284898,
     "have": 80,
-    "want": 51
+    "want": 51,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-17"
+    }
   },
   "https://www.discogs.com/sell/item/4414921764": {
     "description": "DiSKOP - Pavonine / Dusty Root (12\", Single)",
@@ -954,7 +1050,11 @@
     ],
     "release_id": 15636967,
     "have": 91,
-    "want": 66
+    "want": 66,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-17"
+    }
   },
   "https://www.discogs.com/sell/item/4418763402": {
     "description": "Clivillés & Cole - A Deeper Love (A Deeper Feeling Mix) (12\", Single)",
@@ -1020,7 +1120,11 @@
     ],
     "release_id": 100881,
     "have": 1858,
-    "want": 876
+    "want": 876,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-19"
+    }
   },
   "https://www.discogs.com/sell/item/4417570806": {
     "description": "Cassius - 1999 (2xLP, Album)",
@@ -1170,7 +1274,11 @@
     ],
     "release_id": 73261,
     "have": 2147,
-    "want": 1544
+    "want": 1544,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-19"
+    }
   },
   "https://www.discogs.com/sell/item/4417564011": {
     "description": "Eddie S. - The Eddie S. EP (12\", EP)",
@@ -1236,7 +1344,11 @@
     ],
     "release_id": 124357,
     "have": 436,
-    "want": 386
+    "want": 386,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-19"
+    }
   },
   "https://www.discogs.com/sell/item/4418756910": {
     "description": "Cece Peniston* - Somebody Else's Guy (Tuff Jam / Eric Kupper Mixes) (12\", Single)",
@@ -1314,7 +1426,11 @@
     ],
     "release_id": 22700,
     "have": 936,
-    "want": 268
+    "want": 268,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-19"
+    }
   },
   "https://www.discogs.com/sell/item/4207692717": {
     "description": "Sound Of One - As I Am (12\", Single)",
@@ -1392,7 +1508,11 @@
     ],
     "release_id": 176960,
     "have": 327,
-    "want": 118
+    "want": 118,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-19"
+    }
   },
   "https://www.discogs.com/sell/item/4420746288": {
     "description": "Cassius - Feeling For You (12\")",
@@ -1464,7 +1584,11 @@
     ],
     "release_id": 20683,
     "have": 2436,
-    "want": 935
+    "want": 935,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-21"
+    }
   },
   "https://www.discogs.com/sell/item/4420743486": {
     "description": "Reality Check - Fantasy (12\", RE, RM)",
@@ -1530,7 +1654,11 @@
     ],
     "release_id": 11498407,
     "have": 129,
-    "want": 99
+    "want": 99,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-21"
+    }
   },
   "https://www.discogs.com/sell/item/4420741413": {
     "description": "Ooze - Slipstream (12\")",
@@ -1584,7 +1712,11 @@
     ],
     "release_id": 16594,
     "have": 648,
-    "want": 330
+    "want": 330,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-21"
+    }
   },
   "https://www.discogs.com/sell/item/4420727265": {
     "description": "K-Hand* - Project 6 EP (12\", EP, W/Lbl)",
@@ -1638,7 +1770,11 @@
     ],
     "release_id": 14737191,
     "have": 6,
-    "want": 38
+    "want": 38,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-21"
+    }
   },
   "https://www.discogs.com/sell/item/4424161209": {
     "description": "Natural - Switch (12\")",
@@ -1686,7 +1822,11 @@
     ],
     "release_id": 34081,
     "have": 205,
-    "want": 287
+    "want": 287,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-22"
+    }
   },
   "https://www.discogs.com/sell/item/4424154423": {
     "description": "Indo - Are U Sleeping (12\")",
@@ -1776,7 +1916,11 @@
     ],
     "release_id": 23720,
     "have": 370,
-    "want": 348
+    "want": 348,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-22"
+    }
   },
   "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_1_2x12_REPEAT05_Vinyl__999173": {
     "description": "Jay Tripwire - My Life With The Machines Vol 1 (2x12\") (excl)",
@@ -1825,7 +1969,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-23T17:27:21.090Z"
+    "liked_at": "2026-10-23T17:27:21.090Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-23"
+    }
   },
   "https://www.discogs.com/sell/item/4427814624": {
     "description": "Brothers' Vibe - Dub Plates 5 (12\", Ora)",
@@ -1884,7 +2032,11 @@
       }
     ],
     "have": 223,
-    "want": 208
+    "want": 208,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-24"
+    }
   },
   "https://www.discogs.com/sell/item/4427880678": {
     "description": "Argy, Jerome Sydenham & DJ Said - Thick & Thin (12\")",
@@ -1961,7 +2113,11 @@
       }
     ],
     "have": 132,
-    "want": 143
+    "want": 143,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-24"
+    }
   },
   "https://www.discogs.com/sell/item/4429997694": {
     "description": "Mashupheadz - Sweet Tings (12\")",
@@ -2002,7 +2158,11 @@
       }
     ],
     "have": 408,
-    "want": 640
+    "want": 640,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-27"
+    }
   },
   "https://www.deejay.de/M%26M_Max_Jacobson_Matheiu_Stars_EP_WH8S003_Vinyl__1256557": {
     "description": "M&M - Stars EP (excl)",
@@ -2039,7 +2199,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-27T10:39:29.907Z"
+    "liked_at": "2026-10-27T10:39:29.907Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-27"
+    }
   },
   "https://www.deejay.de/Tonema_Verve_EP_BIFU02_Vinyl__1256569": {
     "description": "Tonema - Verve EP (excl)",
@@ -2076,7 +2240,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-27T10:40:17.308Z"
+    "liked_at": "2026-10-27T10:40:17.308Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-27"
+    }
   },
   "https://yoyaku.io/release/terry-francis-el-tel-collection-black-prtr37/": {
     "description": "Terry Francis - El Tel Collection (Black)",
@@ -2107,7 +2275,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-27T10:43:31.529Z"
+    "liked_at": "2026-10-27T10:43:31.529Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-27"
+    }
   },
   "https://www.deejay.de/Picasso_Abstract_Grooves_Vol_4_2x12_AGV004_Vinyl__1271004": {
     "description": "Picasso - Abstract Grooves Vol. 4 2x12\" (excl)",
@@ -2156,7 +2328,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-28T13:20:33.540Z"
+    "liked_at": "2026-10-28T13:20:33.540Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-28"
+    }
   },
   "https://www.deejay.de/Janeret_Vibrations_SPCS002_Vinyl__1263866": {
     "description": "Janeret - Vibrations (12inch)",
@@ -2193,7 +2369,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-28T13:21:01.944Z"
+    "liked_at": "2026-10-28T13:21:01.944Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-28"
+    }
   },
   "https://www.discogs.com/sell/item/4104154062": {
     "description": "Kenny Simpson - Classic Break Trax (Volume One) (12\", EP)",
@@ -2252,7 +2432,11 @@
       }
     ],
     "have": 77,
-    "want": 102
+    "want": 102,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://www.discogs.com/sell/item/3977037079": {
     "description": "Mark Grant - Jungle X (12\")",
@@ -2305,7 +2489,11 @@
       }
     ],
     "have": 120,
-    "want": 83
+    "want": 83,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://www.discogs.com/sell/item/3977030758": {
     "description": "Level 9 - Don't Stop (12\")",
@@ -2364,7 +2552,11 @@
       }
     ],
     "have": 255,
-    "want": 82
+    "want": 82,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://www.discogs.com/sell/item/3977021275": {
     "description": "Audiowhores - Subject Of My Affection (12\")",
@@ -2429,7 +2621,11 @@
       }
     ],
     "have": 357,
-    "want": 65
+    "want": 65,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://www.discogs.com/sell/item/4436849766": {
     "description": "Nigel Richards - Sextrax (12\")",
@@ -2470,7 +2666,11 @@
       }
     ],
     "have": 63,
-    "want": 47
+    "want": 47,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-30"
+    }
   },
   "https://www.discogs.com/sell/item/4436305743": {
     "description": "Jay Kaufman - The Fear (12\", W/Lbl)",
@@ -2523,7 +2723,11 @@
       }
     ],
     "have": 21,
-    "want": 55
+    "want": 55,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-30"
+    }
   },
   "https://www.discogs.com/sell/item/4435261200": {
     "description": "Various - Paradiso Vol #1 (12\")",
@@ -2588,7 +2792,11 @@
       }
     ],
     "have": 70,
-    "want": 32
+    "want": 32,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-30"
+    }
   },
   "https://clone.nl/item84566.html": {
     "description": "Philip Chernikov - Room 1 (12inch)",
@@ -2625,7 +2833,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-30T18:08:54.281Z"
+    "liked_at": "2026-10-30T18:08:54.281Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-30"
+    }
   },
   "https://www.discogs.com/sell/item/3977039422": {
     "description": "Benji Candelario - Benji Candelario Presents Killer Fillers Vol. 2 (12\", Promo)",
@@ -2690,7 +2902,11 @@
       }
     ],
     "have": 36,
-    "want": 71
+    "want": 71,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://www.discogs.com/sell/item/3977037709": {
     "description": "Sabrynaah Pope - Shelter (12\")",
@@ -2767,7 +2983,11 @@
       }
     ],
     "have": 225,
-    "want": 108
+    "want": 108,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://www.discogs.com/sell/item/3977036581": {
     "description": "Brothers' Vibe - Bang The Drum (12\", Lig)",
@@ -2832,7 +3052,11 @@
       }
     ],
     "have": 198,
-    "want": 127
+    "want": 127,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://www.discogs.com/sell/item/3977037493": {
     "description": "Love Tribe - Stand Up (2x12\", Single)",
@@ -2933,7 +3157,11 @@
       }
     ],
     "have": 229,
-    "want": 151
+    "want": 151,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://www.discogs.com/sell/item/3977035588": {
     "description": "Box Saga* - Blackfly (12\")",
@@ -2986,7 +3214,11 @@
       }
     ],
     "have": 320,
-    "want": 97
+    "want": 97,
+    "source": {
+      "via": "mail",
+      "date": "2026-10-29"
+    }
   },
   "https://clone.nl/item84472.html": {
     "description": "Rob Pearson vs Chris Pascoe - One More Time / Shadow Maker (Reissue) (12inch)",
@@ -3011,7 +3243,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-31T11:00:45.252Z"
+    "liked_at": "2026-10-31T11:00:45.252Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-31"
+    }
   },
   "https://www.deejay.de/Chris_Fry_Harvey_Lowe_Kid_Mark_Claudio_Various_People_Vol_5_PPR29_Vinyl__1239082": {
     "description": "Chris Fry - Various People Vol 5 (12inch)",
@@ -3048,7 +3284,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-10-31T11:01:35.288Z"
+    "liked_at": "2026-10-31T11:01:35.288Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-10-31"
+    }
   },
   "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_2_2x12_REPEAT06_Vinyl__999174": {
     "description": "Jay Tripwire - My Life With The Machines Vol. 2 (2x12\") (excl)",
@@ -3097,7 +3337,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-11-03T18:57:04.256Z"
+    "liked_at": "2026-11-03T18:57:04.256Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-03"
+    }
   },
   "https://www.discogs.com/sell/item/4453392064": {
     "description": "Goncharov - Outbreak (12\")",
@@ -3145,7 +3389,11 @@
     "have": 103,
     "want": 50,
     "release_id": 8379544,
-    "liked_at": "2026-11-04T13:10:01.644Z"
+    "liked_at": "2026-11-04T13:10:01.644Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-04"
+    }
   },
   "https://www.discogs.com/sell/item/1549633993": {
     "description": "D-Monsta - Got To Let You Know (12\")",
@@ -3205,7 +3453,11 @@
     "have": 66,
     "want": 13,
     "release_id": 667071,
-    "liked_at": "2026-11-05T13:20:09.684Z"
+    "liked_at": "2026-11-05T13:20:09.684Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-05"
+    }
   },
   "https://www.discogs.com/sell/item/2838872830": {
     "description": "Amr Diab - Habibe (Rhythm Masters Remixes) (12\")",
@@ -3253,7 +3505,11 @@
     "have": 65,
     "want": 40,
     "release_id": 24691,
-    "liked_at": "2026-11-05T13:20:48.353Z"
+    "liked_at": "2026-11-05T13:20:48.353Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-05"
+    }
   },
   "https://www.discogs.com/sell/item/461251566": {
     "description": "Robbie Rivera - The Beat Bandit EP (12\")",
@@ -3330,7 +3586,11 @@
     "have": 62,
     "want": 22,
     "release_id": 363039,
-    "liked_at": "2026-11-05T13:27:33.803Z"
+    "liked_at": "2026-11-05T13:27:33.803Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-05"
+    }
   },
   "https://www.discogs.com/sell/item/4458033217": {
     "description": "Dan Farserelli & Seb Zito - Takatakatak (12\")",
@@ -3378,7 +3638,11 @@
     "have": 108,
     "want": 64,
     "release_id": 6820696,
-    "liked_at": "2026-11-05T13:30:43.156Z"
+    "liked_at": "2026-11-05T13:30:43.156Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-05"
+    }
   },
   "https://www.discogs.com/sell/item/4468586549": {
     "description": "West Magnetic - Blue Royal (12\")",
@@ -3432,7 +3696,11 @@
     "have": 243,
     "want": 72,
     "release_id": 2843,
-    "liked_at": "2026-11-09T14:59:50.037Z"
+    "liked_at": "2026-11-09T14:59:50.037Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-09"
+    }
   },
   "https://www.discogs.com/sell/item/4468816949": {
     "description": "Matt Hughes - Groove Approved (12\")",
@@ -3498,7 +3766,11 @@
     "have": 104,
     "want": 59,
     "release_id": 8393,
-    "liked_at": "2026-11-09T15:01:26.675Z"
+    "liked_at": "2026-11-09T15:01:26.675Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-09"
+    }
   },
   "https://www.discogs.com/sell/item/4477980983": {
     "description": "Dajae* - Fakes & Phonies (12\")",
@@ -3576,7 +3848,11 @@
     "have": 736,
     "want": 365,
     "release_id": 10163,
-    "liked_at": "2026-11-11T20:55:11.646Z"
+    "liked_at": "2026-11-11T20:55:11.646Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-11"
+    }
   },
   "https://www.discogs.com/sell/item/4477047959": {
     "description": "Evolution - Everybody Dance (12\")",
@@ -3654,7 +3930,11 @@
     "have": 250,
     "want": 82,
     "release_id": 220656,
-    "liked_at": "2026-11-11T21:02:25.149Z"
+    "liked_at": "2026-11-11T21:02:25.149Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-11"
+    }
   },
   "https://www.discogs.com/sell/item/4477039469": {
     "description": "2 Boys 1 Girl - U Know Nothing (12\", Promo)",
@@ -3702,7 +3982,11 @@
     "have": 43,
     "want": 130,
     "release_id": 6400918,
-    "liked_at": "2026-11-11T21:04:07.717Z"
+    "liked_at": "2026-11-11T21:04:07.717Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-11"
+    }
   },
   "https://www.discogs.com/sell/item/4474975802": {
     "description": "The Bomb Squad (3) - Pressure (12\", Promo)",
@@ -3750,7 +4034,11 @@
     "have": 57,
     "want": 29,
     "release_id": 311331,
-    "liked_at": "2026-11-11T21:14:51.078Z"
+    "liked_at": "2026-11-11T21:14:51.078Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-11"
+    }
   },
   "https://www.discogs.com/sell/item/4478262659": {
     "description": "Paul Johnson - Get Get Down (12\")",
@@ -3822,7 +4110,11 @@
     "have": 673,
     "want": 663,
     "release_id": 50883,
-    "liked_at": "2026-11-14T09:47:57.693Z"
+    "liked_at": "2026-11-14T09:47:57.693Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-12"
+    }
   },
   "https://www.discogs.com/sell/item/4478261468": {
     "description": "Todd Terry - Fingertrips '96 (12\")",
@@ -3894,7 +4186,11 @@
     "have": 775,
     "want": 241,
     "release_id": 32937,
-    "liked_at": "2026-11-14T09:49:09.568Z"
+    "liked_at": "2026-11-14T09:49:09.568Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-12"
+    }
   },
   "https://www.discogs.com/sell/item/4478260943": {
     "description": "X-Press 2 - AC/DC (12\")",
@@ -3942,7 +4238,11 @@
     "have": 101,
     "want": 136,
     "release_id": 118952,
-    "liked_at": "2026-11-14T09:50:07.357Z"
+    "liked_at": "2026-11-14T09:50:07.357Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-12"
+    }
   },
   "https://www.discogs.com/sell/item/4478232515": {
     "description": "Bjørn Torske - Aerosoles (12\")",
@@ -3984,7 +4284,11 @@
     "have": 430,
     "want": 347,
     "release_id": 19806,
-    "liked_at": "2026-11-14T09:51:48.437Z"
+    "liked_at": "2026-11-14T09:51:48.437Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-12"
+    }
   },
   "https://www.discogs.com/sell/item/4478139845": {
     "description": "S. Rivera* - Liquid Interlude (12\")",
@@ -4062,7 +4366,11 @@
     "have": 337,
     "want": 1009,
     "release_id": 41722,
-    "liked_at": "2026-11-14T09:53:22.776Z"
+    "liked_at": "2026-11-14T09:53:22.776Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-12"
+    }
   },
   "https://www.discogs.com/sell/item/4478115389": {
     "description": "Xpansions - Move Your Body (Elevation) (12\", RE)",
@@ -4134,7 +4442,11 @@
     "have": 331,
     "want": 519,
     "release_id": 9528478,
-    "liked_at": "2026-11-14T09:55:34.349Z"
+    "liked_at": "2026-11-14T09:55:34.349Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-12"
+    }
   },
   "https://www.discogs.com/sell/item/4478107607": {
     "description": "Charles Dockins Feat. Lawrence D'Ior - Contagious Love (12\")",
@@ -4206,7 +4518,11 @@
     "have": 270,
     "want": 169,
     "release_id": 181439,
-    "liked_at": "2026-11-14T09:58:00.883Z"
+    "liked_at": "2026-11-14T09:58:00.883Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-12"
+    }
   },
   "https://www.discogs.com/sell/item/4478101841": {
     "description": "Stacy Kidd - Chicago L.I.F.E (12\")",
@@ -4284,7 +4600,11 @@
     "have": 677,
     "want": 223,
     "release_id": 11246,
-    "liked_at": "2026-11-14T10:00:45.799Z"
+    "liked_at": "2026-11-14T10:00:45.799Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-12"
+    }
   },
   "https://www.discogs.com/sell/item/4232626830": {
     "description": "99 Allstars - Allstars EP (12\", EP)",
@@ -4350,7 +4670,11 @@
     "have": 370,
     "want": 119,
     "release_id": 150302,
-    "liked_at": "2026-11-17T17:03:51.714Z"
+    "liked_at": "2026-11-17T17:03:51.714Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-17"
+    }
   },
   "https://www.deejay.de/Demi_Riquisimo_%26_Kepler_Cafe_Gelato_EP_Disc_1_SEMID028A_Vinyl__1270918": {
     "description": "Demi Riquisimo - Cafe Gelato EP Disc 1 (12inch)",
@@ -4393,7 +4717,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-11-17T17:04:57.505Z"
+    "liked_at": "2026-11-17T17:04:57.505Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-17"
+    }
   },
   "https://www.deejay.de/Risar_Rientre_Meditio_RISAR001_Vinyl__1092496": {
     "description": "Risar - Rientre Meditio (excl)",
@@ -4418,7 +4746,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-11-17T17:06:29.581Z"
+    "liked_at": "2026-11-17T17:06:29.581Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-17"
+    }
   },
   "https://www.deejay.de/Jay_Tripwire_My_Life_With_The_Machines_Vol_3_2x12_REPEAT10_Vinyl__1006161": {
     "description": "Jay Tripwire - My Life With The Machines Vol 3 (2x12\") (excl)",
@@ -4467,7 +4799,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-11-17T17:07:43.452Z"
+    "liked_at": "2026-11-17T17:07:43.452Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-17"
+    }
   },
   "https://www.discogs.com/sell/item/4494712328": {
     "description": "Johnny Fiasco - Vital Signs (12\", Yel)",
@@ -4539,7 +4875,11 @@
     "have": 135,
     "want": 159,
     "release_id": 2369541,
-    "liked_at": "2026-11-18T17:16:54.985Z"
+    "liked_at": "2026-11-18T17:16:54.985Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-18"
+    }
   },
   "https://www.discogs.com/sell/item/4494690215": {
     "description": "Mighty Dub Katz - It's Just Another Groove (12\")",
@@ -4617,7 +4957,11 @@
     "have": 237,
     "want": 243,
     "release_id": 158831,
-    "liked_at": "2026-11-18T17:24:00.707Z"
+    "liked_at": "2026-11-18T17:24:00.707Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-18"
+    }
   },
   "https://www.discogs.com/sell/item/4494673592": {
     "description": "Shakedown - Drowsy With Hope (12\")",
@@ -4689,7 +5033,11 @@
     "have": 427,
     "want": 89,
     "release_id": 166194,
-    "liked_at": "2026-11-18T17:30:32.603Z"
+    "liked_at": "2026-11-18T17:30:32.603Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-18"
+    }
   },
   "https://clone.nl/item85261.html": {
     "description": "Lilac Road Productions - Skipton Bassett 2001 (12inch)",
@@ -4726,7 +5074,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-11-18T17:58:20.788Z"
+    "liked_at": "2026-11-18T17:58:20.788Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-18"
+    }
   },
   "https://clone.nl/item84337.html": {
     "description": "Demarkus Lewis - Every Night (12inch)",
@@ -4751,7 +5103,11 @@
         "dur": 0
       }
     ],
-    "liked_at": "2026-11-18T18:00:28.056Z"
+    "liked_at": "2026-11-18T18:00:28.056Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-18"
+    }
   },
   "https://www.discogs.com/sell/item/4494982595": {
     "description": "636 Featuring Arnold Jarvis - Rain (12\")",
@@ -4829,7 +5185,11 @@
     "have": 397,
     "want": 325,
     "release_id": 25844,
-    "liked_at": "2026-11-19T15:21:27.390Z"
+    "liked_at": "2026-11-19T15:21:27.390Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-19"
+    }
   },
   "https://www.discogs.com/sell/item/4505238852": {
     "description": "Jamiroquai - Little L (12\")",
@@ -4907,7 +5267,11 @@
     "have": 1248,
     "want": 556,
     "release_id": 62193,
-    "liked_at": "2026-11-22T13:25:53.204Z"
+    "liked_at": "2026-11-22T13:25:53.204Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-22"
+    }
   },
   "https://www.discogs.com/sell/item/4505236803": {
     "description": "Bob Marley Vs. Funkstar De Luxe - Sun Is Shining (Remix) (12\")",
@@ -4955,7 +5319,11 @@
     "have": 3743,
     "want": 1219,
     "release_id": 90131,
-    "liked_at": "2026-11-22T13:27:11.514Z"
+    "liked_at": "2026-11-22T13:27:11.514Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-22"
+    }
   },
   "https://www.discogs.com/sell/item/4507763136": {
     "description": "iO (12) - Module EP (12\", EP)",
@@ -5009,6 +5377,10 @@
     "have": 186,
     "want": 88,
     "release_id": 12429876,
-    "liked_at": "2026-11-22T13:28:01.768Z"
+    "liked_at": "2026-11-22T13:28:01.768Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-22"
+    }
   }
 }
