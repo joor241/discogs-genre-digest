@@ -42,14 +42,62 @@ body {
 .storenav .n { color: #5f5f68; margin-left: 3px; }
 h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
 .sub { color: #8a8a92; font-size: 13px; margin: 0 0 12px; }
-h2 {
-  font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: #8a8a92; margin: 34px 0 12px; padding-bottom: 8px;
-  border-bottom: 1px solid #26262b;
+/* Expand / collapse everything at once; shown once there are likes. */
+.tools { display: flex; gap: 8px; margin: 14px 0 10px; }
+.tools[hidden] { display: none; }
+.tools button {
+  background: transparent; color: #8a8a92; font-family: inherit; font-size: 12.5px;
+  border: 1px solid #26262b; border-radius: 6px; padding: 4px 9px; cursor: pointer;
 }
-h3 { font-size: 13px; font-weight: 600; color: #8a8a92; margin: 18px 0 2px; }
-h3.tier-in_stock { color: #6fcf8e; }
+.tools button:hover { color: #e8e8ea; border-color: #3a3a44; }
+/* Every store, and every availability tier inside it, is a <details> that
+   starts closed: the summary lines say enough (counts per tier) to pick
+   which one to open. */
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before {
+  content: ""; flex: none; width: 0; height: 0; margin-right: 2px;
+  border-left: 5px solid currentColor; border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent; opacity: .7; transition: transform .15s;
+}
+details[open] > summary::before { transform: rotate(90deg); }
+details.store { border-bottom: 1px solid #26262b; }
+details.store > summary {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px;
+  padding: 15px 0 13px; color: #8a8a92;
+}
+details.store > summary .sname {
+  font-size: 15px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: #c8c8ce;
+}
+details.store > summary:hover .sname { color: #e8e8ea; }
+.scount { color: #5f5f68; font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-left: auto; }
+.chip {
+  font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 9px;
+  background: #202027; color: #9a9aa2;
+}
+.chip.t-in_stock { background: #12261a; color: #6fcf8e; }
+.chip.t-preorder { background: #2b2210; color: #e0af52; }
+.chip.t-out_of_stock { background: #2b1414; color: #e08a8a; }
+.chip.t-gone { background: #3a1616; color: #ff8c8c; }
+/* On a phone the counts get a line of their own, under the store's name,
+   rather than landing right- or left-aligned depending on how many. */
+@media (max-width: 560px) {
+  .chips { margin-left: 0; width: 100%; padding-left: 15px; }
+}
+.storebody { padding: 0 0 12px; }
+details.tier > summary {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: #8a8a92; padding: 9px 0 7px 14px;
+}
+details.tier > summary:hover { color: #c8c8ce; }
+details.tier.t-in_stock > summary { color: #6fcf8e; }
+details.tier > summary .n { color: #5f5f68; font-weight: 400; }
+details.tier > .tiernote, details.tier > .rec { margin-left: 14px; }
 .tiernote { color: #6f6f78; font-size: 12.5px; margin: 0 0 4px; }
+/* Where a like came from: the mail it was liked in. */
+.rec .src { color: #6f6f78; font-size: 12px; margin: -2px 0 6px; }
 .badge.instock { background: #12261a; color: #6fcf8e; }
 .badge.gone { background: #3a1616; color: #ff8c8c; }
 .was { color: #6f6f78; font-size: 12px; }
@@ -108,6 +156,10 @@ button.unlike:hover { background: #2a1414; }
   <div id="connectHint" class="connect-hint">
     Not connected -- you can see likes here, but unliking needs a token.
     <a href="settings.html">Connect on Settings</a> to manage them from this device too.
+  </div>
+  <div id="tools" class="tools" hidden>
+    <button type="button" data-open="1">Expand all</button>
+    <button type="button" data-open="0">Collapse all</button>
   </div>
   <div id="content"><p class="none">Loading&hellip;</p></div>
 </div>
@@ -178,14 +230,39 @@ button.unlike:hover { background: #2a1414; }
     return '<span class="badge ' + cls + '" title="' + e(title) + '">' + e(text) + '</span>';
   }
 
+  // Which <details> are open, by data-key. Read back before every render,
+  // so an Unlike (which renders the page again) keeps open what you opened;
+  // empty on the first render, so every visit starts with everything closed.
+  function openKeys() {
+    var keys = {};
+    Array.prototype.forEach.call(content.querySelectorAll("details[open]"), function (d) {
+      keys[d.getAttribute("data-key")] = true;
+    });
+    return keys;
+  }
+
+  // An id per store from its name, so a link to one keeps working when a
+  // store is added or emptied (an index would shift).
+  function storeId(store, used) {
+    var base = "store-" + (String(store).toLowerCase().normalize("NFKD")
+      .replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "other");
+    var id = base, n = 2;
+    while (used[id]) id = base + "-" + n++;
+    used[id] = true;
+    return id;
+  }
+
   function render(likes, status) {
     var items = (status && status.items) || {};
     var entries = Object.keys(likes).map(function (url) {
       return Object.assign({ url: url }, likes[url]);
     });
     var storenav = document.getElementById("storenav");
+    var tools = document.getElementById("tools");
     if (!entries.length) {
       storenav.innerHTML = "";
+      tools.hidden = true;
       content.innerHTML = '<p class="none">No likes yet. Tap the heart on a record in the digest to save it here.</p>';
       return;
     }
@@ -218,28 +295,75 @@ button.unlike:hover { background: #2a1414; }
         new Date(status.updated).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }));
     }
     document.getElementById("sub").innerHTML = summary;
-    storenav.innerHTML = stores.map(function (store, i) {
-      return '<a href="#store-' + i + '">' + e(store) + '<span class="n">' + byStore[store].n + '</span></a>';
-    }).join("");
 
-    var html = "", explained = {};
-    stores.forEach(function (store, i) {
+    var open = openKeys(), used = {}, ids = {};
+    stores.forEach(function (store) { ids[store] = storeId(store, used); });
+    storenav.innerHTML = stores.map(function (store) {
+      return '<a href="#' + ids[store] + '">' + e(store) + '<span class="n">' + byStore[store].n + '</span></a>';
+    }).join("");
+    tools.hidden = false;
+
+    // Closed, a store is one line: its name, how many, and how many of
+    // those per tier -- enough to see where something can be ordered
+    // without opening anything. The tiers inside start closed too.
+    var html = "";
+    stores.forEach(function (store) {
       var group = byStore[store];
-      html += '<h2 id="store-' + i + '">' + e(store) + ' &middot; ' + group.n + '</h2>';
-      TIERS.forEach(function (tier) {
+      var present = TIERS.filter(function (t) { return group.tiers[t[0]]; });
+      var chips = present.map(function (t) {
+        return '<span class="chip t-' + t[0] + '">' + group.tiers[t[0]].length + " " +
+          e(t[1].toLowerCase()) + '</span>';
+      }).join("");
+      var skey = "s:" + store;
+      html += '<details class="store" id="' + ids[store] + '" data-key="' + e(skey) + '"' +
+        (open[skey] ? " open" : "") + '><summary><span class="sname">' + e(store) + '</span>' +
+        '<span class="scount">' + group.n + '</span><span class="chips">' + chips + '</span>' +
+        '</summary><div class="storebody">';
+      present.forEach(function (tier) {
         var tierItems = group.tiers[tier[0]];
-        if (!tierItems) return;
-        html += '<h3 class="tier-' + tier[0] + '">' + e(tier[1]) + ' &middot; ' + tierItems.length + '</h3>';
-        // What a tier means, said once where it first comes up rather
-        // than again under every store that has one.
-        if (tier[2] && !explained[tier[0]]) {
-          explained[tier[0]] = true;
-          html += '<p class="tiernote">' + e(tier[2]) + '</p>';
-        }
+        var tkey = "t:" + store + "|" + tier[0];
+        html += '<details class="tier t-' + tier[0] + '" data-key="' + e(tkey) + '"' +
+          (open[tkey] ? " open" : "") + '><summary><span>' + e(tier[1]) + '</span>' +
+          '<span class="n">' + tierItems.length + '</span></summary>';
+        // What a tier means, inside each one: with every store closed,
+        // there is no longer one place on the page everybody passes.
+        if (tier[2]) html += '<p class="tiernote">' + e(tier[2]) + '</p>';
         tierItems.forEach(function (it) { html += recHtml(it, items[it.url]); });
+        html += '</details>';
       });
+      html += '</div></details>';
     });
     content.innerHTML = html;
+  }
+
+  function isoDay(d) {
+    function two(n) { return (n < 10 ? "0" : "") + n; }
+    return d.getFullYear() + "-" + two(d.getMonth() + 1) + "-" + two(d.getDate());
+  }
+
+  // Where a like came from. So far that is always a heart tapped on a
+  // digest page -- the web version of that day's mail -- and the like keeps
+  // that mail's date (likes from before it was stored got theirs from the
+  // archive pages in git history). The day you liked it as well, when that
+  // was later than the mail.
+  function sourceHtml(it) {
+    var src = it.source || {};
+    var liked = it.liked_at ? new Date(it.liked_at) : null;
+    if (liked && isNaN(liked)) liked = null;
+    var mail = "a digest mail";
+    if (src.date) {
+      var day = new Date(src.date + "T12:00:00Z");
+      var opts = { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" };
+      if (day.getUTCFullYear() !== new Date().getFullYear()) opts.year = "numeric";
+      if (!isNaN(day)) mail = "the mail of " + day.toLocaleDateString("en-GB", opts);
+    }
+    var later = liked && (!src.date || isoDay(liked) > src.date);
+    var text = "Liked " + (later ? shortDate(it.liked_at) + " " : "") + "from " + mail;
+    var title = liked ? "You tapped the heart on " + liked.toLocaleString("en-GB", {
+      weekday: "short", day: "numeric", month: "short", year: "numeric",
+      hour: "2-digit", minute: "2-digit",
+    }) : "";
+    return '<div class="src"' + (title ? ' title="' + e(title) + '"' : "") + '>' + e(text) + '</div>';
   }
 
   function recHtml(it, st) {
@@ -294,7 +418,7 @@ button.unlike:hover { background: #2a1414; }
     return '<div class="rec' + (st && st.status === "gone" ? " gone" : "") + '">' +
       thumb + '<div class="body">' +
       '<div class="title"><a href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">' +
-      e(it.description || it.url) + '</a></div>' +
+      e(it.description || it.url) + '</a></div>' + sourceHtml(it) +
       '<div class="meta">' + badges +
       '<a class="buy" href="' + e(it.url) + '" target="_blank" rel="noopener noreferrer">Open &rarr;</a>' +
       '<button class="unlike" data-url="' + e(it.url) + '" type="button">Unlike</button>' +
@@ -309,11 +433,66 @@ button.unlike:hover { background: #2a1414; }
       .catch(function () { return {}; });
   }
 
+  // A link straight to a store (likes.html#store-...) opens it.
+  function openFromHash() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    var el = id ? document.getElementById(id) : null;
+    if (el && el.tagName === "DETAILS") el.open = true;
+    return el;
+  }
+
+  var firstLoad = true;
   function load() {
     Promise.all([DigestLikes.fetchLikes(), fetchStatus()]).then(function (both) {
       render(both[0], both[1]);
+      if (firstLoad) {
+        firstLoad = false;
+        var el = openFromHash();
+        if (el) el.scrollIntoView();
+      }
     });
   }
+
+  window.addEventListener("hashchange", openFromHash);
+
+  // The jump links at the top open the store they jump to; the browser
+  // then scrolls there as usual.
+  document.getElementById("storenav").addEventListener("click", function (ev) {
+    var a = ev.target.closest ? ev.target.closest('a[href^="#"]') : null;
+    var el = a ? document.getElementById(a.getAttribute("href").slice(1)) : null;
+    if (el && el.tagName === "DETAILS") el.open = true;
+  });
+
+  document.getElementById("tools").addEventListener("click", function (ev) {
+    var btn = ev.target.closest ? ev.target.closest("button[data-open]") : null;
+    if (!btn) return;
+    var open = btn.getAttribute("data-open") === "1";
+    Array.prototype.forEach.call(content.querySelectorAll("details"), function (d) {
+      d.open = open;
+    });
+  });
+
+  // The player walks the whole page -- next, previous, and on to the next
+  // track when one ends -- closed stores and tiers included. Whatever hides
+  // the record it moves to is opened, once per record, so what's playing
+  // is always on screen. Watched on the row's classes, which the player
+  // sets when a track starts loading or playing.
+  var revealedRec = null;
+  new MutationObserver(function (changes) {
+    for (var i = 0; i < changes.length; i++) {
+      var cl = changes[i].target.classList;
+      if (!cl || !((cl.contains("trow") && cl.contains("playing")) ||
+                   (cl.contains("ppbtn") && cl.contains("loading")))) continue;
+      var rec = changes[i].target.closest(".rec");
+      if (!rec || rec === revealedRec) continue;
+      revealedRec = rec;
+      var opened = false;
+      for (var d = rec.parentElement; d && d !== content; d = d.parentElement) {
+        if (d.tagName === "DETAILS" && !d.open) { d.open = true; opened = true; }
+      }
+      if (opened) rec.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+  }).observe(content, { attributes: true, attributeFilter: ["class"], subtree: true });
 
   if (!DigestLikes.getToken()) hint.classList.add("show");
 

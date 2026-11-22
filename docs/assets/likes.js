@@ -77,10 +77,24 @@ window.DigestLikes = (function () {
     });
   }
 
+  // Where a like came from, kept with it so the Likes page can say so. A
+  // heart on a digest page is "mail" plus the date of that digest: the
+  // generated pages set DIGEST_DATE, and an archive page from before that
+  // still has its date in its file name.
+  function pageSource() {
+    var match = /(\d{4}-\d{2}-\d{2})\.html$/.exec(location.pathname);
+    var date = window.DIGEST_DATE || (match ? match[1] : "");
+    return date ? { via: "mail", date: date } : { via: "mail" };
+  }
+
   function likeItem(payload) {
+    var source = payload.source || pageSource();
     return mutateLikes(function (likes) {
       var copy = Object.assign({}, likes);
-      copy[payload.url] = Object.assign({}, payload, { liked_at: new Date().toISOString() });
+      copy[payload.url] = Object.assign({}, payload, {
+        liked_at: new Date().toISOString(),
+        source: source,
+      });
       return copy;
     });
   }

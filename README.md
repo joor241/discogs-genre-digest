@@ -819,15 +819,33 @@ Likes saved before this existed have no tracks stored, so they show without
 a tracklist rather than breaking the row; re-liking the record from a digest
 fills it in.
 
+Each like also says **where it came from**, under its title: "Liked from the
+mail of Tue 18 Nov", with the day you tapped the heart added when that was
+later than the mail ("Liked 20 Nov from the mail of Tue 18 Nov").
+`docs/assets/likes.js` stores it with the like as
+`"source": {"via": "mail", "date": "2026-11-18"}`: the generated pages set
+`window.DIGEST_DATE`, and an older archive page falls back on the date in its
+file name. Likes from before 2026-11-22 had it filled in once from the
+archive pages in git history (each of them turned up in exactly one digest).
+Your SoundCloud likes are not on this page: they live in the browser
+extension, and reach this repo only as `docs/soundcloud_likes.json` for the
+email (see [SoundCloud likes and Discogs sellers](#soundcloud-likes-and-discogs-sellers-from-the-browser-extension)).
+
 #### Still available? Checked every day
 
 Every run also checks each like at its shop again, and the Likes page sorts
 each store's likes by the answer: **In stock** on top, then **Pre-order**,
 **Not checked yet**, **Out of stock**, and **Gone** at the bottom. Each store
-is a single section, with jump links to them at the top of the page: store
-first and availability inside it, since one store is one order. Nothing is
-ever removed for you: a Discogs listing that sold stays in your likes, dimmed
-and marked "Gone", until you press Unlike yourself.
+is a single section: store first and availability inside it, since one store
+is one order. Every store starts **closed**, as one line with its count per
+tier ("3 in stock · 1 pre-order · 2 gone"), and so does every tier inside
+it, so the page opens as a short list of stores. The jump links at the top
+open the store they go to, **Expand all** / **Collapse all** do the lot, an
+Unlike keeps open what you had open, and when the player moves on to a
+record in a closed section it opens that section, so what's playing is
+always on screen. Nothing is ever removed for you: a Discogs listing that
+sold stays in your likes, dimmed and marked "Gone", until you press Unlike
+yourself.
 
 | Shop | How it's checked | What "gone" means |
 |---|---|---|

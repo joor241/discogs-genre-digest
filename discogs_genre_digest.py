@@ -4292,8 +4292,13 @@ def render_player_page(sections, cutoff: datetime, genres: list[str],
     # present but silently inert (no handler wired up) whenever
     # PAGES_BASE_URL is unset, e.g. during local testing.
     assets_href = f"{base_url}/assets/likes.js" if base_url else "assets/likes.js"
+    # DIGEST_DATE is the date in this page's archive name. likes.js stores it
+    # with every like made here, so the Likes page can say which mail a
+    # record was liked from -- docs/index.html, a copy of this page, has no
+    # date in its own name to fall back on.
     likes_script = (
-        f'<script>window.DIGEST_BASE_URL={json.dumps(base_url)};</script>'
+        f'<script>window.DIGEST_BASE_URL={json.dumps(base_url)};'
+        f'window.DIGEST_DATE={json.dumps(generated.strftime("%Y-%m-%d"))};</script>'
         f'<script src="{e(assets_href)}"></script>'
     )
     out.append(f'</div><script>{player_js()}</script>{likes_script}</body></html>')
