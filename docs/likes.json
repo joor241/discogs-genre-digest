@@ -5052,5 +5052,53 @@
     "want": 556,
     "release_id": 62193,
     "liked_at": "2026-11-22T13:25:53.204Z"
+  },
+  "https://www.discogs.com/sell/item/4505236803": {
+    "description": "Bob Marley Vs. Funkstar De Luxe - Sun Is Shining (Remix) (12\")",
+    "price": "10.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4505236803",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/T4wLkGmqzKvr7APlU9MGt1UrB28mzc5uBw12SX8Q3qg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkwMTMx/LTEyNzMyMjUwMzcu/anBlZw.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Bob Marley Vs. Funkstar De Luxe ‎- Sun Is Shining (Jonathan Peters Alt Vocal Mix)",
+        "yt": "RDx4fRpRorw",
+        "src": null,
+        "dur": 438
+      },
+      {
+        "title": "Funkstar De Luxe vs. Bob Marley - Sun Is Shining",
+        "yt": "9kPQV64eNrk",
+        "src": null,
+        "dur": 221
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Sun Is Shining (Funkstars Club Mix)",
+        "dur": "8:14"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Sun Is Shining (ATB Club Mix)",
+        "dur": "6:55"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Sun Is Shining (Rainbow Mix)",
+        "dur": "6:03"
+      }
+    ],
+    "have": 3743,
+    "want": 1219,
+    "release_id": 90131,
+    "liked_at": "2026-11-22T13:27:11.514Z"
   }
 }
