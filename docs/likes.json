@@ -5492,5 +5492,105 @@
       "via": "mail",
       "date": "2026-11-24"
     }
+  },
+  "https://www.discogs.com/sell/item/4514649708": {
+    "description": "Diana King - L-L-Lies (2x12\", Promo)",
+    "price": "5.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4514649708",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/nPjvDU7bAx5JQakDY28PYMMKaAV8jew3TTQgeHwjcpM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyMDUy/MzktMTI3ODQ3OTcw/My5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Diana King – L-L-Lies (Album Version) [Work – 42 78750]",
+        "yt": "VUAK2hnYdoU",
+        "src": null,
+        "dur": 246
+      },
+      {
+        "title": "Diana King – L-L-Lies (Love To Infinity's MoonRayka Mix) [Work – 42 78750]",
+        "yt": "Bsf1xooKT0A",
+        "src": null,
+        "dur": 452
+      },
+      {
+        "title": "Diana King – L-L-Lies (Love To Infinity's Step One Mix) [Work – 42 78750]",
+        "yt": "V6kjnym2Vqg",
+        "src": null,
+        "dur": 327
+      },
+      {
+        "title": "Diana King – L-L-Lies (Jamaican Dub Mix) [Work – 42 78750]",
+        "yt": "pLt2b-3lR5g",
+        "src": null,
+        "dur": 256
+      },
+      {
+        "title": "Diana King - L-L-Lies (Video)",
+        "yt": "N3Xq_VvcDeA",
+        "src": null,
+        "dur": 249
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "L-L-Lies (Double Deception Mix)",
+        "dur": "7:55"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "L-L-Lies (Moonrayka Mix)",
+        "dur": "7:29"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "L-L-Lies (Album Version)",
+        "dur": "4:07"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "L-L-Lies (Double Deception Instrumental)",
+        "dur": "7:55"
+      },
+      {
+        "pos": "C1",
+        "artist": "",
+        "title": "L-L-Lies (Step One Mix)",
+        "dur": "5:26"
+      },
+      {
+        "pos": "C2",
+        "artist": "",
+        "title": "L-L-Lies (Jamaican Dance Mix)",
+        "dur": "4:21"
+      },
+      {
+        "pos": "D1",
+        "artist": "",
+        "title": "L-L-Lies (Step One Instrumental)",
+        "dur": "5:25"
+      },
+      {
+        "pos": "D2",
+        "artist": "",
+        "title": "L-L-Lies (Jamaican Pop Mix)",
+        "dur": "4:20"
+      }
+    ],
+    "have": 192,
+    "want": 55,
+    "release_id": 1205239,
+    "liked_at": "2026-11-24T17:57:43.618Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-24"
+    }
   }
 }
