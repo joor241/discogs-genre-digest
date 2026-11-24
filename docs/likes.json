@@ -5452,5 +5452,45 @@
       "via": "mail",
       "date": "2026-11-24"
     }
+  },
+  "https://www.discogs.com/sell/item/4514654679": {
+    "description": "Fanciulli, Blewett & Owen - Blend (12\", W/Lbl)",
+    "price": "5.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4514654679",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/lp7CrAUjsR7mXyBKaePts-6i8qZz0d7byRl333I3qJM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExODgw/NjE4LTE1NTE3NDg4/NzAtMTI3Ni5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Fanciulli, Blewett & Owen - Blend (7 Till Congo Mix)",
+        "yt": "agmlex_tkRw",
+        "src": null,
+        "dur": 588
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Blend (7 Til 10 Conga Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Blend (Original Mix)",
+        "dur": ""
+      }
+    ],
+    "have": 11,
+    "want": 7,
+    "release_id": 11880618,
+    "liked_at": "2026-11-24T17:56:04.658Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-24"
+    }
   }
 }
