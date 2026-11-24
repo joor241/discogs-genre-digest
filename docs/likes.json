@@ -5382,5 +5382,75 @@
       "via": "mail",
       "date": "2026-11-22"
     }
+  },
+  "https://www.discogs.com/sell/item/4514711949": {
+    "description": "Chez Damier - Chuggles Remixes Revisited (12\", W/Lbl)",
+    "price": "9.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4514711949",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/605nU8qSTtgv5RtRJPhw_7cDr7CEaKsmzLaX6YkCusk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2NjY4/NDgtMTIzNTU5Mzgz/Mi5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Chuggles - Chuggles (Bonus Mix)",
+        "yt": "_NcFfwoCzwI",
+        "src": null,
+        "dur": 328
+      },
+      {
+        "title": "Chuggles - Chuggles revisited (extended version)",
+        "yt": "EKbO--rFr8c",
+        "src": null,
+        "dur": 467
+      },
+      {
+        "title": "Chez Damier - Chuggles (AM Mix)",
+        "yt": "1Gt3Gaf9l18",
+        "src": null,
+        "dur": 388
+      },
+      {
+        "title": "Chez Damier -  Chuggles (PM Mix)",
+        "yt": "7Z6UrcLETis",
+        "src": null,
+        "dur": 330
+      },
+      {
+        "title": "Chez Damier - Chuggles (Bonus Beats)",
+        "yt": "8zUH4j_s54E",
+        "src": null,
+        "dur": 378
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Chuggles (PM Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Chuggles (AM Mix)",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "Chuggles (Bonus Beats)",
+        "dur": ""
+      }
+    ],
+    "have": 68,
+    "want": 113,
+    "release_id": 1666848,
+    "liked_at": "2026-11-24T17:51:25.329Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-24"
+    }
   }
 }
