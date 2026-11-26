@@ -5994,5 +5994,51 @@
       "via": "mail",
       "date": "2026-11-26"
     }
+  },
+  "https://www.discogs.com/sell/item/4519472910": {
+    "description": "Terry Francis & James Wickison - Boombox (12\")",
+    "price": "25.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4519472910",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/EynGPj2XekwNZPviPWJNU_ycWIgM-T0fYJkVJAK6ufE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxODg4/MC0xMjA1MTE3ODUz/LmpwZWc.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Terry Francis - Boombox [wig 016]",
+        "yt": "y020IrYRIp8",
+        "src": null,
+        "dur": 391
+      },
+      {
+        "title": "Terry Francis & James Wickison - Ride The Octopussy / Wiggle [2002]",
+        "yt": "XBv6xU1dniI",
+        "src": null,
+        "dur": 467
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "Terry Francis",
+        "title": "Boombox",
+        "dur": ""
+      },
+      {
+        "pos": "B",
+        "artist": "Terry Francis & James Wickison",
+        "title": "Ride The Octopussy",
+        "dur": ""
+      }
+    ],
+    "have": 270,
+    "want": 580,
+    "release_id": 218880,
+    "liked_at": "2026-11-26T17:17:25.748Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-26"
+    }
   }
 }
