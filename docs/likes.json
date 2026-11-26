@@ -5796,5 +5796,75 @@
       "via": "mail",
       "date": "2026-11-26"
     }
+  },
+  "https://www.discogs.com/sell/item/4524222144": {
+    "description": "Various - Paradiso Vol #1 (12\")",
+    "price": "4.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4524222144",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/aZdbvCxTa-sT-cLRRw0bzOxWfQf0jJ6cooHgrT_emsA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyOTg0/OTk3LTE1NDU5MTcw/MzAtMjkxMi5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Katie Drover - Meridian",
+        "yt": "If-e-MMTXcI",
+        "src": null,
+        "dur": 401
+      },
+      {
+        "title": "Alexkid - Tone Simple",
+        "yt": "NMoJIcR012o",
+        "src": null,
+        "dur": 311
+      },
+      {
+        "title": "Stephan Bazbaz - Working Working",
+        "yt": "qSet6MjULWA",
+        "src": null,
+        "dur": 531
+      },
+      {
+        "title": "Retza - Explorer",
+        "yt": "gHCs9d2GzVE",
+        "src": null,
+        "dur": 646
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "Alexkid",
+        "title": "Tone Simple",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "Stephan Bazbaz",
+        "title": "Working Working",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "Katie Drover",
+        "title": "Meridian",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "Retza",
+        "title": "Explorer",
+        "dur": ""
+      }
+    ],
+    "have": 70,
+    "want": 32,
+    "release_id": 12984997,
+    "liked_at": "2026-11-26T17:14:13.239Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-26"
+    }
   }
 }
