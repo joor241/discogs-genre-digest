@@ -5714,5 +5714,87 @@
       "via": "mail",
       "date": "2026-11-26"
     }
+  },
+  "https://www.discogs.com/sell/item/4524064527": {
+    "description": "Sade - Pearls (12\", Unofficial, W/Lbl, Sil)",
+    "price": "15.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4524064527",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/9r8KFYzQgum2quNJRJRoH-cC4gV-fw5FsQsSzfx4qDU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5Mjk2/LTE0NDc4MDgzNzEt/MzE3Ny5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Sade ‎- Pearls",
+        "yt": "NXfd3lxkyCM",
+        "src": null,
+        "dur": 502
+      },
+      {
+        "title": "Sade - Pearls (Untitled A1)",
+        "yt": "o1vS3KODXJA",
+        "src": null,
+        "dur": 511
+      },
+      {
+        "title": "Sade - Pearls (White Label)",
+        "yt": "z1PPDFTO5pE",
+        "src": null,
+        "dur": 632
+      },
+      {
+        "title": "Sade - Pearls (Johnny Vicious Mix #1)",
+        "yt": "2zQKy2WoJBg",
+        "src": null,
+        "dur": 562
+      },
+      {
+        "title": "Sade - Pearls (A1 Untitled)",
+        "yt": "hobIBu3yq7o",
+        "src": null,
+        "dur": 511
+      },
+      {
+        "title": "Sade - Pearls (Untitled A2)",
+        "yt": "zPhCqvi17QA",
+        "src": null,
+        "dur": 195
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Untitled",
+        "dur": "8:33"
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Untitled",
+        "dur": "3:07"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Untitled",
+        "dur": "11:04"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Untitled",
+        "dur": "1:19"
+      }
+    ],
+    "have": 577,
+    "want": 490,
+    "release_id": 39296,
+    "liked_at": "2026-11-26T17:10:41.301Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-26"
+    }
   }
 }
