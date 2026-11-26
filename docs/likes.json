@@ -5918,5 +5918,81 @@
       "via": "mail",
       "date": "2026-11-26"
     }
+  },
+  "https://www.discogs.com/sell/item/4524184644": {
+    "description": "Gusto - Disco's Revenge (12\")",
+    "price": "17.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4524184644",
+    "store": "Rush Hour",
+    "thumb": "https://i.discogs.com/pxjX2OaR-R47gpYxWlHs6L2CoIsbyxmBQytZ75DRZmc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYwNDgx/LTE1NDAzMDM5MzIt/Njc2OS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Gusto - Disco's Revenge (Official Video)",
+        "yt": "6fytUcCS0_c",
+        "src": null,
+        "dur": 196
+      },
+      {
+        "title": "Gusto ‎– Disco's Revenge (Church Mix)(1995)",
+        "yt": "Tb_FMNZWtIw",
+        "src": null,
+        "dur": 425
+      },
+      {
+        "title": "Disco's Revenge (David Anthony & Tom Moulton Full Vocal Remix)",
+        "yt": "YZNRmzMypYw",
+        "src": null,
+        "dur": 0
+      },
+      {
+        "title": "Disco's Revenge (Short Dirty Mix)",
+        "yt": "pjX_r_if6EE",
+        "src": null,
+        "dur": 230
+      },
+      {
+        "title": "Gusto - Disco's Revenge (Temperance Vocal Remix) (HQ)",
+        "yt": "DG33KFfUnXE",
+        "src": null,
+        "dur": 331
+      },
+      {
+        "title": "El Mariachi - Desperado (Antonio's Gitarra Mix) (1996)",
+        "yt": "bzef-AM698U",
+        "src": null,
+        "dur": 411
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "Disco's Revenge (Mole Hole Dirty Mix)",
+        "dur": "6:13"
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Disco's Revenge (Church Mix)",
+        "dur": "7:04"
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Disco's Revenge (Mojo Beats)",
+        "dur": "7:08"
+      }
+    ],
+    "have": 846,
+    "want": 1235,
+    "release_id": 60481,
+    "liked_at": "2026-11-26T17:16:13.134Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-26"
+    }
   }
 }
