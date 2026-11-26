@@ -5866,5 +5866,57 @@
       "via": "mail",
       "date": "2026-11-26"
     }
+  },
+  "https://www.discogs.com/sell/item/4523239125": {
+    "description": "Tommy Vicari jnr - Vinyl Series 2 (12\")",
+    "price": "4.90 EUR",
+    "url": "https://www.discogs.com/sell/item/4523239125",
+    "store": "Killa Cutz",
+    "thumb": "https://i.discogs.com/XRhXDtmjibz0CwRPIpPhvE9RE9lwPrXYAn6BfthF3TQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMzk2/OTg0LTE1MTY0NjQ1/MTUtOTQwNS5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Tommy Vicari Jnr - Proofread (DePandis, Frank Martin remix)",
+        "yt": "2_rZJd4c8og",
+        "src": null,
+        "dur": 290
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "1",
+        "artist": "",
+        "title": "Cleeerer",
+        "dur": ""
+      },
+      {
+        "pos": "2",
+        "artist": "",
+        "title": "Proofread",
+        "dur": ""
+      },
+      {
+        "pos": "3",
+        "artist": "",
+        "title": "Ke Ko Ku Ki",
+        "dur": ""
+      },
+      {
+        "pos": "4",
+        "artist": "",
+        "title": "Proofread (Depandis, Frank Martin Rmx)",
+        "dur": ""
+      }
+    ],
+    "have": 72,
+    "want": 45,
+    "release_id": 11396984,
+    "liked_at": "2026-11-26T17:14:43.425Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-26"
+    }
   }
 }
