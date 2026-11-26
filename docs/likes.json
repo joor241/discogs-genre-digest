@@ -5644,5 +5644,75 @@
       "via": "mail",
       "date": "2026-11-26"
     }
+  },
+  "https://www.discogs.com/sell/item/4524134679": {
+    "description": "Johnny Fiasco - The Deepstate E.P. (12\", EP, TP)",
+    "price": "9.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4524134679",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/IqdQrIr9KNHaDSTzrvsIHhhtW6-8tO0Hp16YCvAcHEc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2Nzc2/OTQtMTIzNjI5NDU1/Ny5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Johnny Fiasco - Deepstate",
+        "yt": "pQR-trqgpsU",
+        "src": null,
+        "dur": 381
+      },
+      {
+        "title": "Johnny Fiasco – Dub Z (Deep State E.P.)",
+        "yt": "9EjTmfMxLDw",
+        "src": null,
+        "dur": 267
+      },
+      {
+        "title": "Johnny Fiasco - Mello-D",
+        "yt": "lw1H9MO-HSw",
+        "src": null,
+        "dur": 278
+      },
+      {
+        "title": "Johnny Fiasco – Ku Chee Xpress (Deep State E.P.)",
+        "yt": "qux9Gw0XDv8",
+        "src": null,
+        "dur": 311
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A1",
+        "artist": "",
+        "title": "Deepstate",
+        "dur": ""
+      },
+      {
+        "pos": "A2",
+        "artist": "",
+        "title": "Dub Z",
+        "dur": ""
+      },
+      {
+        "pos": "B1",
+        "artist": "",
+        "title": "Mello-D",
+        "dur": ""
+      },
+      {
+        "pos": "B2",
+        "artist": "",
+        "title": "Ku Chee Xpress",
+        "dur": ""
+      }
+    ],
+    "have": 124,
+    "want": 198,
+    "release_id": 1677694,
+    "liked_at": "2026-11-26T17:07:39.650Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-26"
+    }
   }
 }
