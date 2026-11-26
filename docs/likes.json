@@ -5592,5 +5592,57 @@
       "via": "mail",
       "date": "2026-11-24"
     }
+  },
+  "https://www.discogs.com/sell/item/4524224628": {
+    "description": "Earth Wind & Fire* - September 99 (Phats & Small Remix) (12\")",
+    "price": "12.00 EUR",
+    "url": "https://www.discogs.com/sell/item/4524224628",
+    "store": "Offbeat Records",
+    "thumb": "https://i.discogs.com/6dH4YMISzUZOZpGM1e_Xs0aK7C3NmbfdW3FUXXnAb24/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI2NDc3/LTE2Mzc5MjQ1MzUt/NTU5NC5qcGVn.jpeg",
+    "formats": [
+      "Vinyl"
+    ],
+    "videos": [
+      {
+        "title": "Earth, Wind & Fire - September '99 (Mutant Disco Vocal Mix) (1999)",
+        "yt": "_Hls56m_cCk",
+        "src": null,
+        "dur": 405
+      },
+      {
+        "title": "Earth, Wind & Fire - September (Phats & Small Remix) (Official HD Video)",
+        "yt": "wn5Q37qOiiA",
+        "src": null,
+        "dur": 214
+      },
+      {
+        "title": "Earth Wind & Fire - September '99 (1999 Mutant disco dub)",
+        "yt": "PVyfz1Gh7fw",
+        "src": null,
+        "dur": 371
+      }
+    ],
+    "tracklist": [
+      {
+        "pos": "A",
+        "artist": "",
+        "title": "September 99 (Mutant Disco Vocal Mix)",
+        "dur": "6:45"
+      },
+      {
+        "pos": "B",
+        "artist": "",
+        "title": "September 99 (Mutant Disco Dub)",
+        "dur": "6:10"
+      }
+    ],
+    "have": 1335,
+    "want": 452,
+    "release_id": 26477,
+    "liked_at": "2026-11-26T17:04:01.985Z",
+    "source": {
+      "via": "mail",
+      "date": "2026-11-26"
+    }
   }
 }
